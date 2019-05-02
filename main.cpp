@@ -32,6 +32,7 @@ Instructions for compiling and running the program
 #include <vector>
 #include <list>
 #include <queue>
+#include <cassert>
 #include "random.h"
 #include "individual.h"
 #include "analysis.h"
@@ -66,7 +67,7 @@ bool isTypeIIResourceUtilisation = true;
 bool isTypeIIMateChoice = true;
 
 int  tBurnIn                 = 1;
-int  tEndSim                 = 10;
+int  tEndSim                 = 5;
 int  tGetDat                 = 1;
 int  tSavDat                 = 1;
 
@@ -399,13 +400,29 @@ void competitionAndReproduction(const size_t hab,
     }
 }
 
+
+/*=======================================================================================================
+                                               Tests
+========================================================================================================*/
+
+void test()
+{
+    static_assert(1 + 1 == 2);
+}
+
+
 /*=======================================================================================================
                                             main()
 ========================================================================================================*/
 
 int main(int argc, char * argv[])
 {
+
+    // Test the program
+    test();
+
     try {
+
         // *** preliminaries ***
         // set parameter values
         if(argc == 1) {
