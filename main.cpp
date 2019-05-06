@@ -33,6 +33,7 @@ Instructions for compiling and running the program
 #include <list>
 #include <queue>
 #include <cassert>
+#include <gtest/gtest.h>
 #include "random.h"
 #include "individual.h"
 #include "analysis.h"
@@ -402,27 +403,20 @@ void competitionAndReproduction(const size_t hab,
 
 
 /*=======================================================================================================
-                                               Tests
-========================================================================================================*/
-
-// Run my tests
-void test()
-{
-
-    // Dummy test
-    static_assert(1 + 1 == 2);
-}
-
-
-/*=======================================================================================================
                                             main()
 ========================================================================================================*/
 
 int main(int argc, char * argv[])
 {
 
-    // Test the program
-    test();
+    #if !defined(NDEBUG)
+
+        // In debug mode run tests only
+        std::cout << "Running tests in debug mode...";
+        testing::InitGoogleTest(&argc, argv);
+        RUN_ALL_TESTS();
+
+    #else
 
     try {
 
@@ -435,7 +429,7 @@ int main(int argc, char * argv[])
         else if(argc == 2)
             readParameters(argv[1]);
         else throw std::runtime_error("invalid number of program arguments in main()");
-        
+
         // initialise genetic architecture
         if(generateArchitecture) {
             std::ostringstream oss;
@@ -445,7 +439,7 @@ int main(int argc, char * argv[])
             Individual::storeGeneticArchitecture(architecture);
         }
         else Individual::loadGeneticArchitecture(architecture);
-        
+
         // open files and data buffers
         std::clog << "opening files and data buffers.";
         std::ostringstream oss;
@@ -469,7 +463,7 @@ int main(int argc, char * argv[])
         bufferVarD = new Buffer("varD");
         bufferVarI = new Buffer("varI");
         std::clog << "..done\n";
-        
+
         // store parameter values
         std::clog << "storing parameter values..";
         logFile << "parameters: ";
@@ -477,7 +471,7 @@ int main(int argc, char * argv[])
         else logFile << "imported from file " << argv[1] << '\n';
         writeParameters(logFile);
         std::clog << "..done\n";
-        
+
         // write data file header
         std::clog << "writing data file header.";
         datFile << '\t' << "pop.size"
@@ -510,10 +504,10 @@ int main(int argc, char * argv[])
                 << '\t' << "speciation.cube.mating.isolation"
                 << '\t' << "post.zygotic.isolation"<< '\n';
         std::clog << "..done\n";
-        
+
         // record start of simulation
         auto tStart = std::chrono::system_clock::now();
-        
+
         // *** simulation ***
         // create initial population
         std::clog << "creating initial population.";
@@ -523,7 +517,7 @@ int main(int argc, char * argv[])
         else for(size_t i = 0u; i < nIndividualInit ; ++i)
                 population.push_back(new Individual);
         std::clog << "..done\n";
-        
+
         // enter simulation loop
         std::clog << "entering simulation loop:\n";
         for(int t = 1 - tBurnIn; t <= tEndSim; ++t) {
@@ -541,18 +535,18 @@ int main(int argc, char * argv[])
             if(t % tGetDat == 0u) decomposeVariance(t);
             if(t % tSavDat == 0u) analyseNetwork(t);
         }
-        
+
         // *** finalisation ***
         // record end of simulation
         auto tEnd = std::chrono::system_clock::now();
         std::chrono::duration<double> diff = tEnd-tStart;
         logFile << "Time to complete simulation: " << diff.count() << " s\n";
-        
+
         // close output file
         logFile.close();
         datFile.close();
         arcFile.close();
-        
+
         // free allocated memory
         while(!population.empty()) {
             delete population.back();
@@ -564,5 +558,9 @@ int main(int argc, char * argv[])
         logFile << "exception: " << err.what() << '\n';
         exit(EXIT_FAILURE);
     }
+
+    #endif
+
+
     return EXIT_SUCCESS;
 }

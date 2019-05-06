@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 project(ExplicitGenomeSpeciation)
 
 set(CMAKE_CXX_STANDARD 11)
-set(SOURCE_FILES ../ExplicitGenomeSpeciation/main.cpp ../ExplicitGenomeSpeciation/random.cpp ../ExplicitGenomeSpeciation/individual.cpp ../ExplicitGenomeSpeciation/architecture.cpp ../ExplicitGenomeSpeciation/analysis.cpp)
 
-add_executable(ExplicitGenomeSpeciation ../ExplicitGenomeSpeciation/main.cpp ../ExplicitGenomeSpeciation/random.cpp ../ExplicitGenomeSpeciation/random.h ../ExplicitGenomeSpeciation/individual.cpp ../ExplicitGenomeSpeciation/individual.h ../ExplicitGenomeSpeciation/analysis.cpp ../ExplicitGenomeSpeciation/analysis.h ../ExplicitGenomeSpeciation/architecture.cpp)
+add_subdirectory(lib/googletest-master)
+include_directories(lib/googletest-master/googletest/include)
+include_directories(lib/googletest-master/googlemock/include)
+
+add_executable(ExplicitGenomeSpeciation main.cpp random.cpp individual.cpp analysis.cpp architecture.cpp Tests/test.cpp)
+target_link_libraries(ExplicitGenomeSpeciation gtest gtest_main)
+
