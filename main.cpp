@@ -405,8 +405,11 @@ void competitionAndReproduction(const size_t hab,
                                                Tests
 ========================================================================================================*/
 
+// Run my tests
 void test()
 {
+
+    // Dummy test
     static_assert(1 + 1 == 2);
 }
 
