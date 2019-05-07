@@ -33,7 +33,6 @@
 // parameters of the allelic and interaction effect size distributions
 const double alphaAdditive = 2.0;
 const double alphaInteraction = 5.0;
-extern double networkSkewness;
 
 /*=======================================================================================================
                 static members of class Individual
@@ -121,7 +120,7 @@ void preferentialAttachmentNetwork(const size_t n, size_t e, const double expone
     std::clog << ':';
 }
 
-void Individual::generateGeneticArchitecture()
+void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
 {
     std::clog << "generating a new genetic architecture\n";
     
@@ -181,7 +180,7 @@ void Individual::generateGeneticArchitecture()
     std::array<size_t, nCharacter> nEdg {nEcoInteractions, nMatInteractions, nNtrInteractions};
     for(size_t crctr = 0u, offset = 0u; crctr < nCharacter; ++crctr) {
         std::vector<Edge> edges;
-        preferentialAttachmentNetwork(nVtx[crctr], nEdg[crctr], networkSkewness, edges);
+        preferentialAttachmentNetwork(nVtx[crctr], nEdg[crctr], parameters.networkSkewness, edges);
         
         // map network vertices to loci
         double sumww = 0.0;

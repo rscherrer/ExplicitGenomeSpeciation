@@ -31,10 +31,10 @@ Instructions for compiling and running the program
 
 class Buffer {
 public:
-    Buffer(const std::string&);
+    Buffer(const std::string&, const ParameterSet&);
     ~Buffer() { ofs.close(); }
     double &operator[](size_t j) {return data[i][j];}
-    void flush();
+    void flush(const ParameterSet&);
 private:
     size_t i, k;
     int t;

@@ -33,7 +33,6 @@ Instructions for compiling and running the program
 #include "random.h"
 
 extern int tSavDat, tGetDat, tBurnIn;
-extern unsigned int seed;
 extern double mateEvaluationCost;
 extern double costIncompat;
 extern std::array<double, nCharacter> scaleA, scaleD, scaleI, scaleE;
@@ -52,14 +51,14 @@ extern Individual::TradeOffPt breakEvenPoint;
 
 const char Buffer::sep = ',';
 
-Buffer::Buffer(const std::string &str) :
-    i(0u), k(0u), t(-tBurnIn), n(static_cast<size_t>(tSavDat / tGetDat)), label(str)
+Buffer::Buffer(const std::string &str, const ParameterSet& parameters) :
+    i(0u), k(0u), t(-parameters.tBurnIn), n(static_cast<size_t>(parameters.tSavDat / parameters.tGetDat)), label(str)
 {
     data = std::vector< std::vector<double> >(n, std::vector<double>(nLoci, 0.0));
     
     // open table data file
     std::ostringstream oss;
-    oss << "simulation_" << seed << "_table_" << label << ".csv";
+    oss << "simulation_" << parameters.seed << "_table_" << label << ".csv";
     ofs.open(oss.str());
     if(!ofs.is_open())
         throw std::runtime_error("unable to open output file in Buffer::Buffer()");
@@ -95,13 +94,13 @@ Buffer::Buffer(const std::string &str) :
     ofs << '\n';
 }
 
-void Buffer::flush()
+void Buffer::flush(const ParameterSet& parameters)
 {
-    t += tGetDat;
+    t += parameters.tGetDat;
     ++i;
-    if(t % tSavDat == 0u) {
+    if(t % parameters.tSavDat == 0u) {
         ++k;
-        ofs << "point." << k << sep << t - (tSavDat >> 1u);
+        ofs << "point." << k << sep << t - (parameters.tSavDat >> 1u);
         for(size_t j = 0u; j < nLoci; ++j) {
             double sum = 0.0;
             for(i = 0u; i < n; ++i) sum += data[i][j];
@@ -124,7 +123,7 @@ double computePostIsolation(const ParameterSet& parameters)
     std::queue<PInd> females;
     std::vector<PInd> males;
     for(PInd pInd : population) {
-        if(pInd->isFemale()) females.push(pInd);
+        if(pInd->isFemale(parameters.isFemaleHeteroGamety)) females.push(pInd);
         else males.push_back(pInd);
     }
 
@@ -166,13 +165,13 @@ double computePostIsolation(const ParameterSet& parameters)
 
 }
 
-double computeMatingIsolation()
+double computeMatingIsolation(const ParameterSet& parameters)
 {
     // sort out females and males
     std::queue<PInd> females;
     std::vector<PInd> males;
     for(PInd pInd : population) {
-        if(pInd->isFemale()) females.push(pInd);
+        if(pInd->isFemale(parameters.isFemaleHeteroGamety)) females.push(pInd);
         else males.push_back(pInd);
     }
     
@@ -188,13 +187,13 @@ double computeMatingIsolation()
         females.pop();
         
         fem->prepareChoice();
-        size_t nMale = rnd::poisson(1.0 / mateEvaluationCost);
+        size_t nMale = rnd::poisson(1.0 / parameters.mateEvaluationCost);
         while(nMale) {
             // assess male
             size_t j  = rnd::random_int(n);
-            if(fem->acceptMate(males[j])) {
-                size_t f = fem->ecotype - 1u;
-                size_t m = males[j]->ecotype - 1u;
+            if(fem->acceptMate(males[j], parameters)) {
+                size_t f = fem->getEcotype() - 1u;
+                size_t m = males[j]->getEcotype() - 1u;
                 ++ki[f];
                 ++ki[2u + m];
                 ++kij[2u * f + m];
@@ -264,8 +263,8 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
        
         SI = (n1_ == 0u || n2_ == 0u) ? 0.0 : (1.0 * n[3u] * n[6u] - 1.0 * n[4u] * n[5u]) / sqrt(1.0 * n_1 * n_2 * n1_ * n2_);
         EI = Individual::P_st[0u];
-        RI = computeMatingIsolation();
-        if(costIncompat > 0.0) {
+        RI = computeMatingIsolation(parameters);
+        if(parameters.costIncompat > 0.0) {
             PI = computePostIsolation(parameters);
         }
         else {
@@ -525,19 +524,19 @@ void decomposeVariance(int t, const ParameterSet& parameters)
         (*bufferVarD)[i] = Individual::characterLocus[i].varD;
         (*bufferVarI)[i] = Individual::characterLocus[i].varI[0u];
     }
-    bufferFreq->flush();
-    bufferF_it->flush();
-    bufferF_is->flush();
-    bufferF_st->flush();
-    bufferP_st->flush();
-    bufferG_st->flush();
-    bufferQ_st->flush();
-    bufferC_st->flush();
-    bufferVarP->flush();
-    bufferVarG->flush();
-    bufferVarA->flush();
-    bufferVarD->flush();
-    bufferVarI->flush();
+    bufferFreq->flush(parameters);
+    bufferF_it->flush(parameters);
+    bufferF_is->flush(parameters);
+    bufferF_st->flush(parameters);
+    bufferP_st->flush(parameters);
+    bufferG_st->flush(parameters);
+    bufferQ_st->flush(parameters);
+    bufferC_st->flush(parameters);
+    bufferVarP->flush(parameters);
+    bufferVarG->flush(parameters);
+    bufferVarA->flush(parameters);
+    bufferVarD->flush(parameters);
+    bufferVarI->flush(parameters);
 
     // *** genome-wide decomposition of genetic variance (continued) ***
     // compute varA, varD, varI, and Fst by accumulating single locus contributions
@@ -584,7 +583,7 @@ void analyseNetwork(int t, const ParameterSet& parameters)
     // *** node properties ***
     // open network link file
     std::ostringstream oss1;
-    oss1 << "simulation_" << seed << '_' << t << "_nodes.csv";
+    oss1 << "simulation_" << parameters.seed << '_' << t << "_nodes.csv";
     std::ofstream ofs(oss1.str());
     if(!ofs.is_open())
         throw std::runtime_error("unable to open output file in networkAnalysis()");
@@ -630,7 +629,7 @@ void analyseNetwork(int t, const ParameterSet& parameters)
     // *** edge properties ***
     // open network link file
     std::ostringstream oss2;
-    oss2 << "simulation_" << seed << '_' << t << "_links.csv";
+    oss2 << "simulation_" << parameters.seed << '_' << t << "_links.csv";
     ofs.open(oss2.str());
     if(!ofs.is_open())
         throw std::runtime_error("unable to open output file in networkAnalysis()");
@@ -718,7 +717,7 @@ void analyseNetwork(int t, const ParameterSet& parameters)
     // *** trait distributions ***
     // open file
     std::ostringstream oss3;
-    oss3 << "simulation_" << seed << '_' << t << "_dump.csv";
+    oss3 << "simulation_" << parameters.seed << '_' << t << "_dump.csv";
     ofs.open(oss3.str());
     if(!ofs.is_open())
         throw std::runtime_error("unable to open output file in networkAnalysis()");

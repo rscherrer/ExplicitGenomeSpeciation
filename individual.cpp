@@ -34,8 +34,7 @@ Instructions for compiling and running the program
 #include "random.h"
 #include "ParameterSet.h"
 
-extern double mutationRate, mapLength, ecoSelCoeff, matePreferenceStrength, costIncompat;
-extern bool isTypeIIMateChoice;
+
 
 /*=======================================================================================================
                                          member functions
@@ -51,7 +50,7 @@ isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
         if(rnd::uniform() < parameters.freqSNP) genome.flip(i);
         if(rnd::uniform() < parameters.freqSNP) genome.flip(i + 1u);
     }
-    mutate();
+    mutate(parameters);
     develop(parameters);
 }
 
@@ -59,7 +58,7 @@ Individual::Individual(const std::string &sequence, const ParameterSet& paramete
 genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
-    mutate();
+    mutate(parameters);
     develop(parameters);
 }
 
@@ -84,10 +83,10 @@ Individual::Individual(Individual const * const mother, Individual const * const
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point
-            crossOverPoint += rnd::exponential(0.01 * mapLength);
+            crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
         genome[i << 1] = mother->genome[(i << 1u) + hpltp];
-        if(i == 0u && hpltp == 0u && isFemaleHeteroGamety) isHeteroGamous = true;
+        if(i == 0u && hpltp == 0u && parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
     
     // transmission of genes from father
@@ -107,19 +106,19 @@ Individual::Individual(Individual const * const mother, Individual const * const
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point
-            crossOverPoint += rnd::exponential(0.01 * mapLength);
+            crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
         genome[(i << 1) + 1u] = father->genome[(i << 1u) + hpltp];
-        if(i == 0u && hpltp == 1u && !isFemaleHeteroGamety) isHeteroGamous = true;
+        if(i == 0u && hpltp == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
-    mutate();
+    mutate(parameters);
     develop(parameters);
 }
 
-void Individual::mutate()
+void Individual::mutate(const ParameterSet& parameters)
 // implements mutation
 {
-    size_t k = rnd::poisson(nBits * mutationRate);
+    size_t k = rnd::poisson(nBits * parameters.mutationRate);
     while(k) {
         size_t i = rnd::random_int(nBits);
         genome.flip(i);
@@ -178,7 +177,7 @@ void Individual::develop(const ParameterSet& parameters)
     }
 
     // compute viability
-    if(costIncompat > 0.0) {
+    if(parameters.costIncompat > 0.0) {
         // initialize the number of incompatibilities
         size_t nIncompatibilities = 0;
         // for each vertex underlying trait Z
@@ -196,15 +195,15 @@ void Individual::develop(const ParameterSet& parameters)
             }
         }
         // compute viability
-        viability = exp(- nIncompatibilities * costIncompat);
+        viability = exp(- nIncompatibilities * parameters.costIncompat);
     }
     else {
         viability = 1.0;
     }
     
     // compute attack rate
-    attackRate.first  = exp(-ecoSelCoeff * sqr(traitP[0u] + 1.0));
-    attackRate.second = exp(-ecoSelCoeff * sqr(traitP[0u] - 1.0));
+    attackRate.first  = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] + 1.0));
+    attackRate.second = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] - 1.0));
 
 }
 
@@ -217,19 +216,19 @@ void Individual::prepareChoice() const
     xxsum = xi * xi;
 }
 
-bool Individual::acceptMate(Individual const * const male) const
+bool Individual::acceptMate(Individual const * const male, const ParameterSet& parameters) const
 {
 
-    double scale = matePreferenceStrength * traitP[1u];
+    double scale = parameters.matePreferenceStrength * traitP[1u];
     if(scale == 0.0) return true;
 
     // observed male
     const double xj = male->traitP[0u];
     const double dij = sqr(traitP[0u] - xj);
 
-    if(isTypeIIMateChoice) {
+    if(parameters.isTypeIIMateChoice) {
 
-        double matingProb = scale >= 0 ? exp(- matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u])) * exp(- matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0);
+        double matingProb = scale >= 0 ? exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u])) * exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0);
         matingProb = matingProb < tiny ? 0.0 : matingProb;
         matingProb = matingProb > 1.0 - tiny ? 1.0 : matingProb;
         if(matingProb < 0.0 || matingProb > 1.0) throw std::logic_error("mating probability out of bounds");

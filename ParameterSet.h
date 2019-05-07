@@ -47,7 +47,8 @@ public:
     bool generateArchitecture;
     std::string architecture, sequence;
 
-
+//private:
+    //ParameterSet(const ParameterSet&) = delete;
 };
 
 

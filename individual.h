@@ -79,13 +79,13 @@ public:
     Individual(const std::string&, const ParameterSet&);
     Individual(Individual const * const, Individual const * const, const ParameterSet&);
     void disperse() const { habitat = (habitat + 1u) % nHabitat; }
-    bool isFemale() const {return isHeteroGamous == isFemaleHeteroGamety;}
+    bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
     std::string getSequence() const { return genome.to_string();}
     TradeOffPt getAttackRate() const { return attackRate; }
     double getBurnInRpSc(double) const;
     double getViability() const {return viability; }
     void prepareChoice() const;
-    bool acceptMate(Individual const * const) const;
+    bool acceptMate(Individual const * const, const ParameterSet&) const;
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
     std::bitset<nBits> getGenome() const { return genome; }
@@ -94,7 +94,7 @@ public:
     std::array<double, nCharacter> getTraitE() const { return traitE; }
     std::array<Trait, nLoci> getTraitLocus() const { return traitLocus; }
     size_t setEcotype(const Individual::TradeOffPt &threshold) const;
-    static void generateGeneticArchitecture();
+    static void generateGeneticArchitecture(const ParameterSet&);
     static void storeGeneticArchitecture(const std::string&);
     static void loadGeneticArchitecture(const std::string&);
     static std::array<std::array<double, 3u>, nCharacter>
@@ -104,7 +104,7 @@ public:
     static std::array<std::set<size_t>, nCharacter> vertices;
     static std::array<Character, nLoci> characterLocus;
 private:
-    void mutate();
+    void mutate(const ParameterSet&);
     void develop(const ParameterSet&);
     bool isHeteroGamous;
     mutable size_t habitat, ecotype;
