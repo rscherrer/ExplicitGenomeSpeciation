@@ -69,11 +69,13 @@ class Individual {
     friend void analyseNetwork(int);
     friend double computeMatingIsolation();
     friend double computePostIsolation();
+
     friend class Buffer;
 
 public:
 
     typedef std::pair<double, double> TradeOffPt;
+
     struct Character
     {
         size_t character, linkageGroup;
@@ -82,53 +84,59 @@ public:
         std::array<double, 3u> alleleFrequency, meanEffect, varP, varG, varA, varI;
         std::list<std::pair<size_t, double> > edges;
     };
+
     struct Trait
     {
         size_t alleleCount;
         double expression, geneticValue;
     };
 
+    // Constructors
     Individual(const ParameterSet&);
     Individual(const std::vector<bool>&, const ParameterSet&);
     Individual(Individual const * const, Individual const * const, const ParameterSet&);
 
-    void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
+    // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
-
-    std::string getSequence() const { return to_string(genome); }
-
     TradeOffPt getAttackRate() const { return attackRate; }
     double getBurnInRpSc(double) const;
     double getViability() const {return viability; }
-    void prepareChoice() const;
-    bool acceptMate(Individual const * const, const ParameterSet&) const;
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
-
     std::vector<bool> getGenome() const { return genome; }
-
     std::vector<double> getTraitP() const { return traitP; } // size nCharacter
     std::vector<double> getTraitG() const { return traitG; } // size nCharacter
     std::vector<double> getTraitE() const { return traitE; } // size nCharacter
-
     std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
-    size_t setEcotype(const Individual::TradeOffPt &threshold) const;
 
+    // Setters
+    void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
+    size_t setEcotype(const Individual::TradeOffPt &threshold) const;
+    void prepareChoice() const;
+    bool acceptMate(Individual const * const, const ParameterSet&) const;
+
+    // Static functions
     static void generateGeneticArchitecture(const ParameterSet&);
     static void storeGeneticArchitecture(const std::string&, const ParameterSet&);
     static void loadGeneticArchitecture(const std::string&, const ParameterSet&);
 
+    // Static variables -- these should belong to population
+    /*
     static std::vector<std::vector<double> > // 3 by 3
             avgG, varP, varG, varA, varI;
     static std::vector<double> varD, F_st, P_st, G_st, Q_st, C_st; // size nCharacter
     static std::vector<double> chromosomeSize; // size nchromosomes - 1
     static std::vector<std::set<size_t> > vertices; // size nCharacter
     static std::vector<Character> characterLocus; // size nLoci
+     */
 
 private:
 
+    // Private setters
     void mutate(const ParameterSet&);
     void develop(const ParameterSet&);
+
+    // Fields
     bool isHeteroGamous;
     mutable size_t habitat, ecotype;
     mutable std::list<double> obs;
@@ -142,6 +150,7 @@ private:
 };
 
 typedef Individual const * PInd;
+
 bool tradeOffCompare (const Individual::TradeOffPt&, const Individual::TradeOffPt&);
 
 #endif
