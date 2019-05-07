@@ -421,6 +421,8 @@ int main(int argc, char * argv[])
             readParameters(argv[1], parameters);
         else throw std::runtime_error("invalid number of program arguments in main()");
 
+        Population population;
+
         // initialise genetic architecture
         if(parameters.generateArchitecture) {
             std::ostringstream oss;
@@ -429,7 +431,7 @@ int main(int argc, char * argv[])
             Individual::generateGeneticArchitecture(parameters);
             Individual::storeGeneticArchitecture(parameters.architecture, parameters);
         }
-        else Individual::loadGeneticArchitecture(parameters.architecture, parameters);
+        else Individual::loadGeneticArchitecture(parameters.architecture, parameters, population);
 
 
 

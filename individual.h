@@ -33,6 +33,7 @@ Instructions for compiling and running the program
 #include <list>
 #include <vector>
 #include "ParameterSet.h"
+#include "Population.h"
 
 /*
 const size_t nEcoLoci         = 400u;
@@ -76,15 +77,7 @@ public:
 
     typedef std::pair<double, double> TradeOffPt;
 
-    // A Character object is locus-specific and population-wide
-    struct Character
-    {
-        size_t character, linkageGroup;
-        double location, effectSize, dominanceCoeff, avgEffectOfSubstitution,
-            varD, F_it, F_is, F_st, P_st, G_st, Q_st, C_st;
-        std::array<double, 3u> alleleFrequency, meanEffect, varP, varG, varA, varI;
-        std::list<std::pair<size_t, double> > edges;
-    };
+
 
     // A Trait object is locus- and individual-specific
     struct Trait
@@ -96,7 +89,10 @@ public:
     // Constructors
     Individual(const ParameterSet&);
     Individual(const std::vector<bool>&, const ParameterSet&);
-    Individual(Individual const * const, Individual const * const, const ParameterSet&);
+    Individual(Individual const * const,
+            Individual const * const,
+            const ParameterSet&,
+            const Population&);
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
@@ -120,7 +116,7 @@ public:
     // Static functions
     static void generateGeneticArchitecture(const ParameterSet&);
     static void storeGeneticArchitecture(const std::string&, const ParameterSet&);
-    static void loadGeneticArchitecture(const std::string&, const ParameterSet&);
+    static void loadGeneticArchitecture(const std::string&, const ParameterSet&, const Population&);
 
     // Static variables -- these should belong to population
     /*

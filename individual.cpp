@@ -33,6 +33,7 @@ Instructions for compiling and running the program
 #include "individual.h"
 #include "random.h"
 #include "ParameterSet.h"
+#include "Population.h"
 
 size_t divide_rounding_up( std::size_t dividend, std::size_t divisor )
 { return ( dividend + divisor - 1 ) / divisor; }
@@ -79,24 +80,27 @@ genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
     develop(parameters);
 }
 
-Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters) :
+Individual::Individual(Individual const * const mother,
+        Individual const * const father,
+        const ParameterSet& parameters,
+        const Population& population) :
     isHeteroGamous(false), habitat(mother->habitat)
 // constructor implementing sexual reproduction
 {
     // transmission of genes from mother
     double freeRecombinationPoint = 0.0, crossOverPoint = 0.0;
     for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(characterLocus[i].location > freeRecombinationPoint) {
+        if(population.characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
             if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = chromosomeSize[lnkgr];
+                freeRecombinationPoint = population.chromosomeSize[lnkgr];
                 ++lnkgr;
             }
             else freeRecombinationPoint = 1.0;
         }
-        if(characterLocus[i].location > crossOverPoint) {
+        if(population.characterLocus[i].location > crossOverPoint) {
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point
@@ -109,17 +113,17 @@ Individual::Individual(Individual const * const mother, Individual const * const
     // transmission of genes from father
     freeRecombinationPoint = crossOverPoint = 0.0;
     for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(characterLocus[i].location > freeRecombinationPoint) {
+        if(population.characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
             if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = chromosomeSize[lnkgr];
+                freeRecombinationPoint = population.chromosomeSize[lnkgr];
                 ++lnkgr;
             }
             else freeRecombinationPoint = 1.0;
         }
-        if(characterLocus[i].location > crossOverPoint) {
+        if(population.characterLocus[i].location > crossOverPoint) {
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point

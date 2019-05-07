@@ -214,7 +214,9 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
 
 }
 
-void Individual::loadGeneticArchitecture(const std::string &filename, const ParameterSet& parameters)
+void Individual::loadGeneticArchitecture(const std::string &filename,
+        const ParameterSet& parameters,
+        const Population& population)
 {
     std::clog << "loading genetic architecture from file " << filename << '\n';
     
@@ -237,7 +239,7 @@ void Individual::loadGeneticArchitecture(const std::string &filename, const Para
     
     // chromosome sizes
     std::clog << "  loading recombination map.";
-    for(double &x : chromosomeSize) ifs >> x;
+    for(double &x : population.chromosomeSize) ifs >> x;
     std::clog << "..done\n";
     
     std::clog << "  loading locus properties.";
@@ -245,14 +247,14 @@ void Individual::loadGeneticArchitecture(const std::string &filename, const Para
     for(size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
         size_t j;
         ifs >> j;
-        ifs >> characterLocus[j].character
-            >> characterLocus[j].location
-            >> characterLocus[j].effectSize
-            >> characterLocus[j].dominanceCoeff;
-        vertices[characterLocus[j].character].insert(j);
+        ifs >> population.characterLocus[j].character
+            >> population.characterLocus[j].location
+            >> population.characterLocus[j].effectSize
+            >> population.characterLocus[j].dominanceCoeff;
+        population.vertices[population.characterLocus[j].character].insert(j);
         
-        while(lg < parameters.nChromosomes - 1u && characterLocus[j].location > chromosomeSize[lg]) ++lg;
-        characterLocus[i].linkageGroup = lg;
+        while(lg < parameters.nChromosomes - 1u && population.characterLocus[j].location > population.chromosomeSize[lg]) ++lg;
+        population.characterLocus[i].linkageGroup = lg;
     }
     std::clog << "..done\n";
     
@@ -261,7 +263,7 @@ void Individual::loadGeneticArchitecture(const std::string &filename, const Para
     size_t i, j;
     double w;
     while(ifs >> i >> j >> w)
-        characterLocus[i].edges.push_back(std::make_pair(j, w));
+        population.characterLocus[i].edges.push_back(std::make_pair(j, w));
     std::clog << "..done\n";
 }
 
