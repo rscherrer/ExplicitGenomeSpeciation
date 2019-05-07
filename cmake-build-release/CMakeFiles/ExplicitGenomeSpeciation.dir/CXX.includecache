@@ -307,6 +307,8 @@ individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
 array
 -
+vector
+-
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp
 gtest/gtest.h
@@ -335,6 +337,8 @@ random.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
 BufferBox.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h
+individual.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h
 individual.h
@@ -386,6 +390,8 @@ array
 set
 -
 list
+-
+vector
 -
 ParameterSet.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h

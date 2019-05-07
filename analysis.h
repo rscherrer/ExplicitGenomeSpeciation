@@ -50,11 +50,11 @@ void decomposeVariance(int,
         const ParameterSet&,
         BufferBox&,
         const Individual::TradeOffPt&,
-        const std::array<std::pair<double, double>, nHabitat>&,
-        const std::array<std::pair<double, double>, nHabitat>&,
+        const std::vector<std::pair<double, double> >&, // size nHabitat
+        const std::vector<std::pair<double, double> >&, // size nHabitat
         std::ofstream&,
         std::ofstream&,
-        std::array<std::pair<size_t, size_t>, nHabitat>&,
+        std::vector<std::pair<size_t, size_t> >&, // size nHabitat
         const std::list<PInd>&);
 void analyseNetwork(int, const ParameterSet&, const std::list<PInd>&);
 

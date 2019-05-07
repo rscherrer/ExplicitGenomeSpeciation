@@ -34,7 +34,24 @@ Instructions for compiling and running the program
 #include "random.h"
 #include "ParameterSet.h"
 
+size_t divide_rounding_up( std::size_t dividend, std::size_t divisor )
+{ return ( dividend + divisor - 1 ) / divisor; }
 
+std::string to_string( std::vector< bool > const & bitvector ) {
+    std::string ret( divide_rounding_up( bitvector.size(), 8 ), 0 );
+    auto out = ret.begin();
+    int shift = 0;
+
+    for ( bool bit : bitvector ) {
+        * out |= bit << shift;
+
+        if ( ++ shift == 8 ) {
+            ++ out;
+            shift = 0;
+        }
+    }
+    return ret;
+}
 
 /*=======================================================================================================
                                          member functions
@@ -45,16 +62,16 @@ isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
     // initial genotype
-    for(size_t i = 0u; i < nBits; i += 2u) {
+    for(size_t i = 0u; i < parameters.nBits; i += 2u) {
         genome[i] = genome[i + 1u] = (i % 4u == 0u);
-        if(rnd::uniform() < parameters.freqSNP) genome.flip(i);
-        if(rnd::uniform() < parameters.freqSNP) genome.flip(i + 1u);
+        if(rnd::uniform() < parameters.freqSNP) genome[i] = !genome[i];
+        if(rnd::uniform() < parameters.freqSNP) genome[i + 1u] = !genome[i + 1u];
     }
     mutate(parameters);
     develop(parameters);
 }
 
-Individual::Individual(const std::string &sequence, const ParameterSet& parameters) :
+Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters) :
 genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
@@ -68,12 +85,12 @@ Individual::Individual(Individual const * const mother, Individual const * const
 {
     // transmission of genes from mother
     double freeRecombinationPoint = 0.0, crossOverPoint = 0.0;
-    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < nLoci; ++i) {
+    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
         if(characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
-            if(lnkgr < nChromosomes - 1u) {
+            if(lnkgr < parameters.nChromosomes - 1u) {
                 freeRecombinationPoint = chromosomeSize[lnkgr];
                 ++lnkgr;
             }
@@ -91,12 +108,12 @@ Individual::Individual(Individual const * const mother, Individual const * const
     
     // transmission of genes from father
     freeRecombinationPoint = crossOverPoint = 0.0;
-    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < nLoci; ++i) {
+    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
         if(characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
-            if(lnkgr < nChromosomes - 1u) {
+            if(lnkgr < parameters.nChromosomes - 1u) {
                 freeRecombinationPoint = chromosomeSize[lnkgr];
                 ++lnkgr;
             }
@@ -118,10 +135,10 @@ Individual::Individual(Individual const * const mother, Individual const * const
 void Individual::mutate(const ParameterSet& parameters)
 // implements mutation
 {
-    size_t k = rnd::poisson(nBits * parameters.mutationRate);
+    size_t k = rnd::poisson(parameters.nBits * parameters.mutationRate);
     while(k) {
-        size_t i = rnd::random_int(nBits);
-        genome.flip(i);
+        size_t i = rnd::random_int(parameters.nBits);
+        genome[i] = !genome[i];
         --k;
     }
 }
@@ -130,7 +147,7 @@ void Individual::develop(const ParameterSet& parameters)
 // implements genotype->phenotype map
 {
     // additive component
-    for(size_t i = 0u; i < nLoci; ++i) {
+    for(size_t i = 0u; i < parameters.nLoci; ++i) {
         
         size_t k = i << 1u;
         size_t crctr = characterLocus[i].character;
@@ -155,7 +172,7 @@ void Individual::develop(const ParameterSet& parameters)
             characterLocus[i].effectSize * traitLocus[i].expression;
     }
     // epistatic interactions
-    for(size_t i = 0u; i < nLoci; ++i) {
+    for(size_t i = 0u; i < parameters.nLoci; ++i) {
         size_t crctr = characterLocus[i].character;
         for(std::pair<size_t, double> edge : characterLocus[i].edges) {
             size_t j = edge.first;
@@ -168,7 +185,7 @@ void Individual::develop(const ParameterSet& parameters)
         }
     }
     // accumulate phenotypic contributions and add environmental effect
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         traitG[crctr] = 0.0;
         for(size_t i : vertices[crctr])
             traitG[crctr] += traitLocus[i].geneticValue;
@@ -229,8 +246,8 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
     if(parameters.isTypeIIMateChoice) {
 
         double matingProb = scale >= 0 ? exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u])) * exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0);
-        matingProb = matingProb < tiny ? 0.0 : matingProb;
-        matingProb = matingProb > 1.0 - tiny ? 1.0 : matingProb;
+        matingProb = matingProb < parameters.tiny ? 0.0 : matingProb;
+        matingProb = matingProb > 1.0 - parameters.tiny ? 1.0 : matingProb;
         if(matingProb < 0.0 || matingProb > 1.0) throw std::logic_error("mating probability out of bounds");
 
         return(rnd::bernoulli(matingProb));
@@ -252,7 +269,7 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
             // preference towards higher ecotype distance (disassortative mating)
 
             // reject male if there is no variation in the sample
-            if(var < tiny) return false;
+            if(var < parameters.tiny) return false;
             scale /= var;
 
             // determine threshold for mate acceptance
@@ -280,7 +297,7 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
             // preference towards lower ecotype distance (assortative mating)
 
             // accept male if there is no variation in the sample
-            if(var < tiny) return true;
+            if(var < parameters.tiny) return true;
             scale /= var;
 
             // determine threshold for mate acceptance

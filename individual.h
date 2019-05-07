@@ -31,6 +31,7 @@ Instructions for compiling and running the program
 #include <array>
 #include <set>
 #include <list>
+#include <vector>
 #include "ParameterSet.h"
 
 /*
@@ -53,18 +54,25 @@ extern bool isFemaleHeteroGamety;
 
 */
 
+size_t divide_rounding_up( std::size_t dividend, std::size_t divisor );
+
+std::string to_string( std::vector< bool > const & bitvector );
+
 class Buffer;
 
 inline double sqr(double x) { return x * x;}
 
 class Individual {
+
     friend void decomposeVariance(int);
     friend void recordData(int, const std::array<size_t, 7u>&);
     friend void analyseNetwork(int);
     friend double computeMatingIsolation();
     friend double computePostIsolation();
     friend class Buffer;
+
 public:
+
     typedef std::pair<double, double> TradeOffPt;
     struct Character
     {
@@ -79,12 +87,16 @@ public:
         size_t alleleCount;
         double expression, geneticValue;
     };
+
     Individual(const ParameterSet&);
-    Individual(const std::string&, const ParameterSet&);
+    Individual(const std::vector<bool>&, const ParameterSet&);
     Individual(Individual const * const, Individual const * const, const ParameterSet&);
-    void disperse() const { habitat = (habitat + 1u) % nHabitat; }
+
+    void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
-    std::string getSequence() const { return genome.to_string();}
+
+    std::string getSequence() const { return to_string(genome); }
+
     TradeOffPt getAttackRate() const { return attackRate; }
     double getBurnInRpSc(double) const;
     double getViability() const {return viability; }
@@ -93,37 +105,39 @@ public:
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
 
-    static void setNBits(const size_t& nbits) { nBits = nbits; }
+    std::vector<bool> getGenome() const { return genome; }
 
-    std::bitset<nBits> getGenome() { return genome; }
+    std::vector<double> getTraitP() const { return traitP; } // size nCharacter
+    std::vector<double> getTraitG() const { return traitG; } // size nCharacter
+    std::vector<double> getTraitE() const { return traitE; } // size nCharacter
 
-    std::array<double, nCharacter> getTraitP() const { return traitP; }
-    std::array<double, nCharacter> getTraitG() const { return traitG; }
-    std::array<double, nCharacter> getTraitE() const { return traitE; }
-    std::array<Trait, nLoci> getTraitLocus() const { return traitLocus; }
+    std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
     size_t setEcotype(const Individual::TradeOffPt &threshold) const;
+
     static void generateGeneticArchitecture(const ParameterSet&);
-    static void storeGeneticArchitecture(const std::string&);
-    static void loadGeneticArchitecture(const std::string&);
-    static std::array<std::array<double, 3u>, nCharacter>
+    static void storeGeneticArchitecture(const std::string&, const ParameterSet&);
+    static void loadGeneticArchitecture(const std::string&, const ParameterSet&);
+
+    static std::vector<std::vector<double> > // 3 by 3
             avgG, varP, varG, varA, varI;
-    static std::array<double, nCharacter> varD, F_st, P_st, G_st, Q_st, C_st;
-    static std::array<double, nChromosomes - 1u> chromosomeSize;
-    static std::array<std::set<size_t>, nCharacter> vertices;
-    static std::array<Character, nLoci> characterLocus;
+    static std::vector<double> varD, F_st, P_st, G_st, Q_st, C_st; // size nCharacter
+    static std::vector<double> chromosomeSize; // size nchromosomes - 1
+    static std::vector<std::set<size_t> > vertices; // size nCharacter
+    static std::vector<Character> characterLocus; // size nLoci
+
 private:
-    static size_t nBits;
+
     void mutate(const ParameterSet&);
     void develop(const ParameterSet&);
     bool isHeteroGamous;
     mutable size_t habitat, ecotype;
     mutable std::list<double> obs;
     mutable double xsum, xxsum;
-    std::array<double, nCharacter> traitP, traitG, traitE;
+    std::vector<double> traitP, traitG, traitE; // size nCharacter
     double viability;
     TradeOffPt attackRate;
-    std::bitset<nBits> genome;
-    std::array<Trait, nLoci> traitLocus;
+    std::vector<bool> genome;
+    std::vector<Trait> traitLocus; // size nLoci
 
 };
 

@@ -38,12 +38,14 @@ const double alphaInteraction = 5.0;
                 static members of class Individual
  ========================================================================================================*/
 
+/*
 std::array<double, nChromosomes - 1u> Individual::chromosomeSize;
 std::array<Individual::Character, nLoci> Individual::characterLocus;
 std::array<std::set<size_t>, nCharacter> Individual::vertices;
 std::array<double, nCharacter> Individual::varD, Individual::F_st, Individual::P_st, Individual::G_st, Individual::Q_st, Individual::C_st;
 std::array<std::array<double, 3u>, nCharacter> Individual::avgG,
 Individual::varP, Individual::varG,Individual::varA, Individual::varI;
+ */
 
 /*=======================================================================================================
                 static functions of class Individual
@@ -124,22 +126,21 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
 {
     std::clog << "generating a new genetic architecture\n";
 
-    // Set static parameters
-    nBits = parameters.nBits;
-
     // recombination map ***
     std::clog << "  creating recombination map.";
     // chromosomes are identical in size
-    for(size_t i = 0u; i < nChromosomes - 1u; ++i)
-        chromosomeSize[i] = (i + 1.0) / nChromosomes;
-    
+
+    for(size_t i = 0u; i < parameters.nChromosomes - 1u; ++i)
+        chromosomeSize[i] = (i + 1.0) / parameters.nChromosomes;
+
+
     // genes are distributed uniformly across genome
-    std::array<double, nLoci> geneLocations;
-    for(size_t i = 0u; i < nLoci; ++i)
+    std::vector<double> geneLocations;
+    for(size_t i = 0u; i < parameters.nLoci; ++i)
         geneLocations[i] = rnd::uniform();
     std::sort(geneLocations.begin(), geneLocations.end());
-    for(size_t i = 0u, lg = 0u; i < nLoci; ++i) {
-        while(lg < nChromosomes - 1u && geneLocations[i] > chromosomeSize[lg]) ++lg;
+    for(size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
+        while(lg < parameters.nChromosomes - 1u && geneLocations[i] > chromosomeSize[lg]) ++lg;
         characterLocus[i].linkageGroup = lg;
         characterLocus[i].location = geneLocations[i];
     }
@@ -147,11 +148,11 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
     
     // randomize gene sequence and assign loci to characters
     std::clog << "  assigning loci to characters.";
-    std::array<size_t, nLoci> seq;
-    for(size_t i = 0u; i < nLoci; ++i) seq[i] = i;
+    std::vector<size_t> seq;
+    for(size_t i = 0u; i < parameters.nLoci; ++i) seq[i] = i;
     std::shuffle(seq.begin(), seq.end(), rnd::rng);
-    std::array<size_t, nCharacter> nVtx {nEcoLoci, nMatLoci, nNtrLoci};
-    for(size_t crctr = 0u, k = 0u; crctr < nCharacter; ++crctr)
+    std::vector<size_t> nVtx {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
+    for(size_t crctr = 0u, k = 0u; crctr < parameters.nCharacter; ++crctr)
         for(size_t j = 0u; j < nVtx[crctr]; ++j, ++k) {
             vertices[crctr].insert(seq[k]);
             characterLocus[seq[k]].character = crctr;
@@ -160,7 +161,7 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
     
     // assign additive & dominance effects
     std::clog << "  sampling additive and dominance effect.";
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         double sumaa = 0.0, sumhh = 0.0;
         for(size_t i : vertices[crctr]) {
             characterLocus[i].effectSize = std::gamma_distribution<double>(alphaAdditive, 1.0)(rnd::rng);
@@ -180,8 +181,8 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
     
     // gene interactions
     std::clog << "  creating gene interaction network.";
-    std::array<size_t, nCharacter> nEdg {nEcoInteractions, nMatInteractions, nNtrInteractions};
-    for(size_t crctr = 0u, offset = 0u; crctr < nCharacter; ++crctr) {
+    std::vector<size_t> nEdg {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
+    for(size_t crctr = 0u, offset = 0u; crctr < parameters.nCharacter; ++crctr) {
         std::vector<Edge> edges;
         preferentialAttachmentNetwork(nVtx[crctr], nEdg[crctr], parameters.networkSkewness, edges);
         
@@ -213,7 +214,7 @@ void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
 
 }
 
-void Individual::loadGeneticArchitecture(const std::string &filename)
+void Individual::loadGeneticArchitecture(const std::string &filename, const ParameterSet& parameters)
 {
     std::clog << "loading genetic architecture from file " << filename << '\n';
     
@@ -228,9 +229,9 @@ void Individual::loadGeneticArchitecture(const std::string &filename)
     ifs >> tmpEcoLoci >> tmpMatLoci >> tmpNtrLoci >> tmpEcoInteractions >> tmpMatInteractions >> tmpChromosomes;
     
     // validation
-    if(!(tmpEcoLoci == nEcoLoci && tmpMatLoci == nMatLoci && tmpNtrLoci == nNtrLoci &&
-         tmpEcoInteractions == nEcoInteractions && tmpMatInteractions == nMatInteractions &&
-         tmpChromosomes == nChromosomes))
+    if(!(tmpEcoLoci == parameters.nEcoLoci && tmpMatLoci == parameters.nMatLoci && tmpNtrLoci == parameters.nNtrLoci &&
+         tmpEcoInteractions == parameters.nEcoInteractions && tmpMatInteractions == parameters.nMatInteractions &&
+         tmpChromosomes == parameters.nChromosomes))
         throw std::logic_error("genetic architecture in file is incompatible with current settings in loadGeneticArchitecture()");
     std::clog << "..done\n";
     
@@ -241,7 +242,7 @@ void Individual::loadGeneticArchitecture(const std::string &filename)
     
     std::clog << "  loading locus properties.";
     // gene location, effect size and dominance coefficient
-    for(size_t i = 0u, lg = 0u; i < nLoci; ++i) {
+    for(size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
         size_t j;
         ifs >> j;
         ifs >> characterLocus[j].character
@@ -250,7 +251,7 @@ void Individual::loadGeneticArchitecture(const std::string &filename)
             >> characterLocus[j].dominanceCoeff;
         vertices[characterLocus[j].character].insert(j);
         
-        while(lg < nChromosomes - 1u && characterLocus[j].location > chromosomeSize[lg]) ++lg;
+        while(lg < parameters.nChromosomes - 1u && characterLocus[j].location > chromosomeSize[lg]) ++lg;
         characterLocus[i].linkageGroup = lg;
     }
     std::clog << "..done\n";
@@ -264,26 +265,26 @@ void Individual::loadGeneticArchitecture(const std::string &filename)
     std::clog << "..done\n";
 }
 
-void Individual::storeGeneticArchitecture(const std::string &filename)
+void Individual::storeGeneticArchitecture(const std::string &filename, const ParameterSet& parameters)
 {
     //open genetic architecture file
     std::ofstream ofs(filename);
     if(!ofs.is_open())
         throw std::runtime_error("unable to open file in storeGeneticArchitecture()");
     
-    ofs << nEcoLoci << '\n'
-    << nMatLoci << '\n'
-    << nNtrLoci << '\n'
-    << nEcoInteractions << '\n'
-    << nMatInteractions << '\n'
-    << nChromosomes << '\n';
+    ofs << parameters.nEcoLoci << '\n'
+    << parameters.nMatLoci << '\n'
+    << parameters.nNtrLoci << '\n'
+    << parameters.nEcoInteractions << '\n'
+    << parameters.nMatInteractions << '\n'
+    << parameters.nChromosomes << '\n';
     
     // chromosome sizes
     for(double x : chromosomeSize) ofs << x << '\t';
     ofs << '\n';
     
     // gene location, effect size and dominance coefficient
-    for(size_t i = 0u; i < nLoci; ++i)
+    for(size_t i = 0u; i < parameters.nLoci; ++i)
         ofs << i << '\t'
         << characterLocus[i].character << '\t'
         << characterLocus[i].location << '\t'
@@ -291,7 +292,7 @@ void Individual::storeGeneticArchitecture(const std::string &filename)
         << characterLocus[i].dominanceCoeff << '\n';
     
     // epistatic interactions
-    for(size_t i = 0u; i < nLoci; ++i)
+    for(size_t i = 0u; i < parameters.nLoci; ++i)
         for(const std::pair<size_t, double> &edge : characterLocus[i].edges)
             ofs << i << '\t' << edge.first << '\t' << edge.second << '\n';
 }

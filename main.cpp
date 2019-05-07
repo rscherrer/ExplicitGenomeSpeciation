@@ -88,27 +88,33 @@ void readParameters(const std::string& filename, ParameterSet& parameters)
     else throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
     
     while(ifs >> str) {
-        if(read(str, "initial_sequence", parameters.sequence, ifs));
+        if(read(str, "initial_sequence", parameters.sequenceString, ifs))
+        {
+            for(auto a : parameters.sequenceString)
+            {
+                parameters.sequence.push_back(a == '1');
+            }
+        }
         else if(str == "scale_A")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+            for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
                 ifs >> parameters.scaleA[crctr];
                 std::clog   << "parameter " << "scale_A[" << crctr
                             << "] set to " << parameters.scaleA[crctr] << '\n';
             }
         else if(str == "scale_D")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+            for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
                 ifs >> parameters.scaleD[crctr];
                 std::clog   << "parameter " << "scale_D[" << crctr
                             << "] set to " << parameters.scaleD[crctr] << '\n';
             }
         else if(str == "scale_I")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+            for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
                 ifs >> parameters.scaleI[crctr];
                 std::clog   << "parameter " << "scale_I[" << crctr
                             << "] set to " << parameters.scaleI[crctr] << '\n';
             }
         else if(str == "scale_E")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
+            for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
                 ifs >> parameters.scaleE[crctr];
                 std::clog   << "parameter " << "scale_E[" << crctr
                             << "] set to " << parameters.scaleE[crctr] << '\n';
@@ -148,19 +154,19 @@ void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const c
     ofs << "rng_seed"       << sep  << parameters.seed         << '\n';
     ofs << "architecture"   << sep  << parameters.architecture << '\n';
     ofs << "scale_A";
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
         ofs << sep << parameters.scaleA[crctr];
     ofs << '\n';
     ofs << "scale_D";
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
         ofs << sep << parameters.scaleD[crctr];
     ofs << '\n';
     ofs << "scale_I";
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
         ofs << sep << parameters.scaleI[crctr];
     ofs << '\n';
     ofs << "scale_E";
-    for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
+    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
         ofs << sep << parameters.scaleE[crctr];
     ofs << '\n';
     ofs << "mutation_rate"  << sep  << parameters.mutationRate << '\n';
@@ -180,8 +186,10 @@ void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const c
     ofs << "network_skewness" << sep << parameters.networkSkewness << '\n';
     ofs << "t_end" << sep  << parameters.tBurnIn << sep << parameters.tEndSim << '\n';
     ofs << "t_dat" << sep  << parameters.tGetDat << sep << parameters.tSavDat << '\n';
-    ofs << "initial_sequence" << sep << (parameters.sequence.length() == nBits ? parameters.sequence : "random") << '\n';
+    ofs << "initial_sequence" << sep << (parameters.sequence.size() == parameters.nBits ? to_string(parameters.sequence) : "random") << '\n';
 }
+
+
 
 
 /*=======================================================================================================
@@ -192,7 +200,7 @@ void dispersal(std::list<PInd>& population, const ParameterSet& parameters)
 {
     if(parameters.dispersalRate > 0.5) {
         for(PInd pInd : population)
-            if(rnd::bernoulli(parameters.dispersalRate)) pInd -> disperse();
+            if(rnd::bernoulli(parameters.dispersalRate)) pInd -> disperse(parameters.nHabitat);
     }
     else {
         const size_t n = population.size();
@@ -207,7 +215,7 @@ void dispersal(std::list<PInd>& population, const ParameterSet& parameters)
         size_t j = 0u;
         for(size_t i : migrants) {
             std::advance(it, i - j);
-            (*it) -> disperse();
+            (*it) -> disperse(parameters.nHabitat);
             j = i;
         }
     }
@@ -229,10 +237,10 @@ bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOf
 void competitionAndReproduction(const size_t hab,
                                 const ParameterSet& parameters,
                                 std::list<PInd>& population,
-                                std::array<std::pair<double, double>, nHabitat>& resourceConsumption,
+                                std::vector<std::pair<double, double> >& resourceConsumption,
                                 Individual::TradeOffPt& breakEvenPoint,
-                                std::array<std::pair<double, double>, nHabitat>& resourceEql,
-                                std::array<std::pair<size_t, size_t>, nHabitat>& genderCounts,
+                                std::vector<std::pair<double, double> >& resourceEql,
+                                std::vector<std::pair<size_t, size_t> >& genderCounts,
                                 const size_t nAccessibleResource = 2u)
 {
     // accumulate attack rates and sort out females and males
@@ -321,7 +329,7 @@ void competitionAndReproduction(const size_t hab,
         sum += maleSuccess[i];
         
     }
-    if(sum < tiny) maleSuccess = std::vector<double>(nm, 1.0);
+    if(sum < parameters.tiny) maleSuccess = std::vector<double>(nm, 1.0);
     std::discrete_distribution<size_t> maleMarket(maleSuccess.begin(), maleSuccess.end());
 
     // sample family sizes for females and implement mate choice
@@ -419,10 +427,9 @@ int main(int argc, char * argv[])
             oss << "architecture_" << parameters.seed << ".txt";
             parameters.architecture = oss.str();
             Individual::generateGeneticArchitecture(parameters);
-            Individual::setNBits(2000u);
-            Individual::storeGeneticArchitecture(parameters.architecture);
+            Individual::storeGeneticArchitecture(parameters.architecture, parameters);
         }
-        else Individual::loadGeneticArchitecture(parameters.architecture);
+        else Individual::loadGeneticArchitecture(parameters.architecture, parameters);
 
 
 
@@ -464,13 +471,13 @@ int main(int argc, char * argv[])
         datFile << '\t' << "pop.size"
                 << '\t' << "females"
                 << '\t' << "males";
-        for(size_t hab = 0u; hab < nHabitat; ++hab)
+        for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
             datFile << '\t' << "pop.size." << hab;
-        for(size_t hab = 0u; hab < nHabitat; ++hab)
+        for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
             datFile << '\t' << "attack.rate." << hab << ".1" << '\t' << "attack.rate." << hab << ".2";
-        for(size_t hab = 0u; hab < nHabitat; ++hab)
+        for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
             datFile << '\t' << "resource." << hab << ".1" << '\t' << "resource." << hab << ".2";
-        for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
+        for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
             datFile << '\t' << "pop.1.size" << crctr
                     << '\t' << "pop.2.size" << crctr
                     << '\t' << "mean.all." << crctr
@@ -503,12 +510,12 @@ int main(int argc, char * argv[])
         // create initial population
 
         std::list<PInd> population;
-        std::array<std::pair<double, double>, nHabitat> resourceConsumption, resourceEql;
-        std::array<std::pair<size_t, size_t>, nHabitat> genderCounts;
+        std::vector<std::pair<double, double> > resourceConsumption, resourceEql;
+        std::vector<std::pair<size_t, size_t> > genderCounts;
         Individual::TradeOffPt breakEvenPoint;
 
         std::clog << "creating initial population.";
-        if(parameters.sequence.length() == nBits)
+        if(parameters.sequence.size() == parameters.nBits)
             for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
                 population.push_back(new Individual(parameters.sequence, parameters));
         else for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)

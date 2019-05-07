@@ -28,28 +28,28 @@ The CXX compiler identification is GNU, found in "/cygdrive/d/CLionProjects/Expl
 Determining if the C compiler works passed with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_c8241/fast"
-/usr/bin/make -f CMakeFiles/cmTC_c8241.dir/build.make CMakeFiles/cmTC_c8241.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_90b61/fast"
+/usr/bin/make -f CMakeFiles/cmTC_90b61.dir/build.make CMakeFiles/cmTC_90b61.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_c8241.dir/testCCompiler.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_c8241.dir/testCCompiler.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_c8241.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_c8241.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_c8241.dir/testCCompiler.c.o  -o cmTC_c8241.exe -Wl,--out-implib,libcmTC_c8241.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_90b61.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_90b61.dir/testCCompiler.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_90b61.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_90b61.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_90b61.dir/testCCompiler.c.o  -o cmTC_90b61.exe -Wl,--out-implib,libcmTC_90b61.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_2d840/fast"
-/usr/bin/make -f CMakeFiles/cmTC_2d840.dir/build.make CMakeFiles/cmTC_2d840.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_7add0/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7add0.dir/build.make CMakeFiles/cmTC_7add0.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o   -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_2d840.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_2d840.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import -v CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o  -o cmTC_2d840.exe -Wl,--out-implib,libcmTC_2d840.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o   -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_7add0.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_7add0.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import -v CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o  -o cmTC_7add0.exe -Wl,--out-implib,libcmTC_7add0.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe
@@ -59,9 +59,9 @@ Thread model: posix
 gcc version 7.3.0 (GCC) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/bin/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_2d840.exe' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccNHtTBl.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_2d840.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o --out-implib libcmTC_2d840.dll.a --major-image-version 0 --minor-image-version 0 -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_2d840.exe' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7add0.exe' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/cc5zBWFh.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_7add0.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o --out-implib libcmTC_7add0.dll.a --major-image-version 0 --minor-image-version 0 -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7add0.exe' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -69,14 +69,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make.exe" "cmTC_2d840/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_2d840.dir/build.make CMakeFiles/cmTC_2d840.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make.exe" "cmTC_7add0/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_7add0.dir/build.make CMakeFiles/cmTC_7add0.dir/build]
   ignore line: [make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o   -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_2d840.exe]
-  ignore line: [/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_2d840.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc    -Wl,--enable-auto-import -v CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o  -o cmTC_2d840.exe -Wl,--out-implib,libcmTC_2d840.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ]
+  ignore line: [Building C object CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o   -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_7add0.exe]
+  ignore line: [/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_7add0.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc    -Wl,--enable-auto-import -v CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o  -o cmTC_7add0.exe -Wl,--out-implib,libcmTC_7add0.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe]
@@ -86,13 +86,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 7.3.0 (GCC) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/bin/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_2d840.exe' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccNHtTBl.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_2d840.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o --out-implib libcmTC_2d840.dll.a --major-image-version 0 --minor-image-version 0 -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7add0.exe' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/cc5zBWFh.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_7add0.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o --out-implib libcmTC_7add0.dll.a --major-image-version 0 --minor-image-version 0 -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o]
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccNHtTBl.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cc5zBWFh.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lcygwin] ==> ignore
@@ -125,7 +125,7 @@ Parsed C implicit link information from above output:
     arg [--dll-search-prefix=cyg] ==> ignore
     arg [--tsaware] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_2d840.exe] ==> ignore
+    arg [cmTC_7add0.exe] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o] ==> ignore
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0]
@@ -136,9 +136,9 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib]
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../..] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../..]
     arg [--enable-auto-import] ==> ignore
-    arg [CMakeFiles/cmTC_2d840.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_7add0.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [--out-implib] ==> ignore
-    arg [libcmTC_2d840.dll.a] ==> ignore
+    arg [libcmTC_7add0.dll.a] ==> ignore
     arg [--major-image-version] ==> ignore
     arg [0] ==> ignore
     arg [--minor-image-version] ==> ignore
@@ -171,14 +171,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_9b0d8/fast"
-/usr/bin/make -f CMakeFiles/cmTC_9b0d8.dir/build.make CMakeFiles/cmTC_9b0d8.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_d6bd4/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d6bd4.dir/build.make CMakeFiles/cmTC_d6bd4.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_9b0d8.dir/feature_tests.c.o
-/usr/bin/cc   -std=c11 -o CMakeFiles/cmTC_9b0d8.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
-Linking C executable cmTC_9b0d8.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_9b0d8.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_9b0d8.dir/feature_tests.c.o  -o cmTC_9b0d8.exe -Wl,--out-implib,libcmTC_9b0d8.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_d6bd4.dir/feature_tests.c.o
+/usr/bin/cc   -std=c11 -o CMakeFiles/cmTC_d6bd4.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
+Linking C executable cmTC_d6bd4.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_d6bd4.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_d6bd4.dir/feature_tests.c.o  -o cmTC_d6bd4.exe -Wl,--out-implib,libcmTC_d6bd4.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -191,14 +191,14 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_4c358/fast"
-/usr/bin/make -f CMakeFiles/cmTC_4c358.dir/build.make CMakeFiles/cmTC_4c358.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_18bbe/fast"
+/usr/bin/make -f CMakeFiles/cmTC_18bbe.dir/build.make CMakeFiles/cmTC_18bbe.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_4c358.dir/feature_tests.c.o
-/usr/bin/cc   -std=c99 -o CMakeFiles/cmTC_4c358.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
-Linking C executable cmTC_4c358.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_4c358.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_4c358.dir/feature_tests.c.o  -o cmTC_4c358.exe -Wl,--out-implib,libcmTC_4c358.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_18bbe.dir/feature_tests.c.o
+/usr/bin/cc   -std=c99 -o CMakeFiles/cmTC_18bbe.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
+Linking C executable cmTC_18bbe.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_18bbe.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_18bbe.dir/feature_tests.c.o  -o cmTC_18bbe.exe -Wl,--out-implib,libcmTC_18bbe.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -211,14 +211,14 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_3e602/fast"
-/usr/bin/make -f CMakeFiles/cmTC_3e602.dir/build.make CMakeFiles/cmTC_3e602.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_f9408/fast"
+/usr/bin/make -f CMakeFiles/cmTC_f9408.dir/build.make CMakeFiles/cmTC_f9408.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_3e602.dir/feature_tests.c.o
-/usr/bin/cc   -std=c90 -o CMakeFiles/cmTC_3e602.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
-Linking C executable cmTC_3e602.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_3e602.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_3e602.dir/feature_tests.c.o  -o cmTC_3e602.exe -Wl,--out-implib,libcmTC_3e602.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_f9408.dir/feature_tests.c.o
+/usr/bin/cc   -std=c90 -o CMakeFiles/cmTC_f9408.dir/feature_tests.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.c
+Linking C executable cmTC_f9408.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_f9408.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_f9408.dir/feature_tests.c.o  -o cmTC_f9408.exe -Wl,--out-implib,libcmTC_f9408.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -229,28 +229,28 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_2b125/fast"
-/usr/bin/make -f CMakeFiles/cmTC_2b125.dir/build.make CMakeFiles/cmTC_2b125.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_0c969/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0c969.dir/build.make CMakeFiles/cmTC_0c969.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_2b125.dir/testCXXCompiler.cxx.o
-/usr/bin/c++.exe     -o CMakeFiles/cmTC_2b125.dir/testCXXCompiler.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_2b125.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_2b125.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_2b125.dir/testCXXCompiler.cxx.o  -o cmTC_2b125.exe -Wl,--out-implib,libcmTC_2b125.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_0c969.dir/testCXXCompiler.cxx.o
+/usr/bin/c++.exe     -o CMakeFiles/cmTC_0c969.dir/testCXXCompiler.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_0c969.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_0c969.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_0c969.dir/testCXXCompiler.cxx.o  -o cmTC_0c969.exe -Wl,--out-implib,libcmTC_0c969.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_52277/fast"
-/usr/bin/make -f CMakeFiles/cmTC_52277.dir/build.make CMakeFiles/cmTC_52277.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_ba9d5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ba9d5.dir/build.make CMakeFiles/cmTC_ba9d5.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++.exe     -o CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_52277.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_52277.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import -v CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_52277.exe -Wl,--out-implib,libcmTC_52277.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++.exe     -o CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_ba9d5.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_ba9d5.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import -v CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_ba9d5.exe -Wl,--out-implib,libcmTC_ba9d5.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe
@@ -260,9 +260,9 @@ Thread model: posix
 gcc version 7.3.0 (GCC) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/bin/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_52277.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccPBXJ0y.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_52277.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o --out-implib libcmTC_52277.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_52277.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_ba9d5.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccF4yan5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_ba9d5.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o --out-implib libcmTC_ba9d5.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_ba9d5.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -270,14 +270,14 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make.exe" "cmTC_52277/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_52277.dir/build.make CMakeFiles/cmTC_52277.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make.exe" "cmTC_ba9d5/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_ba9d5.dir/build.make CMakeFiles/cmTC_ba9d5.dir/build]
   ignore line: [make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/c++.exe     -o CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTC_52277.exe]
-  ignore line: [/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_52277.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/c++.exe    -Wl,--enable-auto-import -v CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_52277.exe -Wl,--out-implib,libcmTC_52277.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ]
+  ignore line: [Building CXX object CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++.exe     -o CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o -c /cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/share/cmake-3.13.2/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_ba9d5.exe]
+  ignore line: [/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_ba9d5.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++.exe    -Wl,--enable-auto-import -v CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_ba9d5.exe -Wl,--out-implib,libcmTC_ba9d5.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe]
@@ -287,13 +287,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 7.3.0 (GCC) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/bin/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/:/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_52277.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccPBXJ0y.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_52277.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o --out-implib libcmTC_52277.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_ba9d5.exe' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe -plugin /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll -plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe -plugin-opt=-fresolution=/tmp/ccF4yan5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lcygwin -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id -m i386pep --wrap _Znwm --wrap _Znam --wrap _ZdlPv --wrap _ZdaPv --wrap _ZnwmRKSt9nothrow_t --wrap _ZnamRKSt9nothrow_t --wrap _ZdlPvRKSt9nothrow_t --wrap _ZdaPvRKSt9nothrow_t -Bdynamic --dll-search-prefix=cyg --tsaware -o cmTC_ba9d5.exe /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0 -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib -L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../.. --enable-auto-import CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o --out-implib libcmTC_ba9d5.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lgcc_s -lgcc -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lgcc_s -lgcc /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/default-manifest.o /usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtend.o]
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/collect2.exe] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/cyglto_plugin.dll] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/lto-wrapper.exe] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccPBXJ0y.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccF4yan5.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lcygwin] ==> ignore
@@ -326,7 +326,7 @@ Parsed CXX implicit link information from above output:
     arg [--dll-search-prefix=cyg] ==> ignore
     arg [--tsaware] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_52277.exe] ==> ignore
+    arg [cmTC_ba9d5.exe] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../lib/crt0.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/crtbegin.o] ==> ignore
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0]
@@ -337,9 +337,9 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../../../x86_64-pc-cygwin/lib]
     arg [-L/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../..] ==> dir [/usr/lib/gcc/x86_64-pc-cygwin/7.3.0/../../..]
     arg [--enable-auto-import] ==> ignore
-    arg [CMakeFiles/cmTC_52277.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_ba9d5.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [--out-implib] ==> ignore
-    arg [libcmTC_52277.dll.a] ==> ignore
+    arg [libcmTC_ba9d5.dll.a] ==> ignore
     arg [--major-image-version] ==> ignore
     arg [0] ==> ignore
     arg [--minor-image-version] ==> ignore
@@ -373,14 +373,14 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++1z] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_d56ab/fast"
-/usr/bin/make -f CMakeFiles/cmTC_d56ab.dir/build.make CMakeFiles/cmTC_d56ab.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_599d1/fast"
+/usr/bin/make -f CMakeFiles/cmTC_599d1.dir/build.make CMakeFiles/cmTC_599d1.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_d56ab.dir/feature_tests.cxx.o
-/usr/bin/c++.exe    -std=c++1z -o CMakeFiles/cmTC_d56ab.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_d56ab.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_d56ab.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_d56ab.dir/feature_tests.cxx.o  -o cmTC_d56ab.exe -Wl,--out-implib,libcmTC_d56ab.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_599d1.dir/feature_tests.cxx.o
+/usr/bin/c++.exe    -std=c++1z -o CMakeFiles/cmTC_599d1.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_599d1.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_599d1.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_599d1.dir/feature_tests.cxx.o  -o cmTC_599d1.exe -Wl,--out-implib,libcmTC_599d1.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -446,14 +446,14 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_29e14/fast"
-/usr/bin/make -f CMakeFiles/cmTC_29e14.dir/build.make CMakeFiles/cmTC_29e14.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_934e5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_934e5.dir/build.make CMakeFiles/cmTC_934e5.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_29e14.dir/feature_tests.cxx.o
-/usr/bin/c++.exe    -std=c++14 -o CMakeFiles/cmTC_29e14.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_29e14.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_29e14.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_29e14.dir/feature_tests.cxx.o  -o cmTC_29e14.exe -Wl,--out-implib,libcmTC_29e14.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_934e5.dir/feature_tests.cxx.o
+/usr/bin/c++.exe    -std=c++14 -o CMakeFiles/cmTC_934e5.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_934e5.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_934e5.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_934e5.dir/feature_tests.cxx.o  -o cmTC_934e5.exe -Wl,--out-implib,libcmTC_934e5.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -519,14 +519,14 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_4e2b3/fast"
-/usr/bin/make -f CMakeFiles/cmTC_4e2b3.dir/build.make CMakeFiles/cmTC_4e2b3.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_179f1/fast"
+/usr/bin/make -f CMakeFiles/cmTC_179f1.dir/build.make CMakeFiles/cmTC_179f1.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_4e2b3.dir/feature_tests.cxx.o
-/usr/bin/c++.exe    -std=c++11 -o CMakeFiles/cmTC_4e2b3.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_4e2b3.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_4e2b3.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_4e2b3.dir/feature_tests.cxx.o  -o cmTC_4e2b3.exe -Wl,--out-implib,libcmTC_4e2b3.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_179f1.dir/feature_tests.cxx.o
+/usr/bin/c++.exe    -std=c++11 -o CMakeFiles/cmTC_179f1.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_179f1.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_179f1.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_179f1.dir/feature_tests.cxx.o  -o cmTC_179f1.exe -Wl,--out-implib,libcmTC_179f1.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -592,14 +592,14 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_26ff7/fast"
-/usr/bin/make -f CMakeFiles/cmTC_26ff7.dir/build.make CMakeFiles/cmTC_26ff7.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_44601/fast"
+/usr/bin/make -f CMakeFiles/cmTC_44601.dir/build.make CMakeFiles/cmTC_44601.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_26ff7.dir/feature_tests.cxx.o
-/usr/bin/c++.exe    -std=c++98 -o CMakeFiles/cmTC_26ff7.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_26ff7.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_26ff7.dir/link.txt --verbose=1
-/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_26ff7.dir/feature_tests.cxx.o  -o cmTC_26ff7.exe -Wl,--out-implib,libcmTC_26ff7.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building CXX object CMakeFiles/cmTC_44601.dir/feature_tests.cxx.o
+/usr/bin/c++.exe    -std=c++98 -o CMakeFiles/cmTC_44601.dir/feature_tests.cxx.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_44601.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_44601.dir/link.txt --verbose=1
+/usr/bin/c++.exe    -Wl,--enable-auto-import  CMakeFiles/cmTC_44601.dir/feature_tests.cxx.o  -o cmTC_44601.exe -Wl,--out-implib,libcmTC_44601.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
@@ -663,28 +663,28 @@ make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/c
 Determining if the include file pthread.h exists passed with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_35200/fast"
-/usr/bin/make -f CMakeFiles/cmTC_35200.dir/build.make CMakeFiles/cmTC_35200.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_4b797/fast"
+/usr/bin/make -f CMakeFiles/cmTC_4b797.dir/build.make CMakeFiles/cmTC_4b797.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_35200.dir/CheckIncludeFile.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_35200.dir/CheckIncludeFile.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/CheckIncludeFile.c
-Linking C executable cmTC_35200.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_35200.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_35200.dir/CheckIncludeFile.c.o  -o cmTC_35200.exe -Wl,--out-implib,libcmTC_35200.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_4b797.dir/CheckIncludeFile.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_4b797.dir/CheckIncludeFile.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_4b797.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_4b797.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_4b797.dir/CheckIncludeFile.c.o  -o cmTC_4b797.exe -Wl,--out-implib,libcmTC_4b797.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 
 Determining if the pthread_create exist passed with the following output:
 Change Dir: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make.exe" "cmTC_3ff1c/fast"
-/usr/bin/make -f CMakeFiles/cmTC_3ff1c.dir/build.make CMakeFiles/cmTC_3ff1c.dir/build
+Run Build Command:"/usr/bin/make.exe" "cmTC_c6935/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c6935.dir/build.make CMakeFiles/cmTC_c6935.dir/build
 make[1]: Entering directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_3ff1c.dir/CheckSymbolExists.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_3ff1c.dir/CheckSymbolExists.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTC_3ff1c.exe
-/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_3ff1c.dir/link.txt --verbose=1
-/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_3ff1c.dir/CheckSymbolExists.c.o  -o cmTC_3ff1c.exe -Wl,--out-implib,libcmTC_3ff1c.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+Building C object CMakeFiles/cmTC_c6935.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_c6935.dir/CheckSymbolExists.c.o   -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_c6935.exe
+/cygdrive/c/Users/p278834/.CLion2018.3/system/cygwin_cmake/bin/cmake.exe -E cmake_link_script CMakeFiles/cmTC_c6935.dir/link.txt --verbose=1
+/usr/bin/cc    -Wl,--enable-auto-import  CMakeFiles/cmTC_c6935.dir/CheckSymbolExists.c.o  -o cmTC_c6935.exe -Wl,--out-implib,libcmTC_c6935.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
 make[1]: Leaving directory '/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp'
 
 File /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
