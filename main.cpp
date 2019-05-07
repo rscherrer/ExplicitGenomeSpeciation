@@ -414,7 +414,7 @@ int main(int argc, char * argv[])
         // In debug mode run tests only
         std::cout << "Running tests in debug mode...";
         testing::InitGoogleTest(&argc, argv);
-        RUN_ALL_TESTS();
+        int testResult = RUN_ALL_TESTS();
 
     #else
 
