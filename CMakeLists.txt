@@ -3,6 +3,11 @@ project(ExplicitGenomeSpeciation)
 
 set(CMAKE_CXX_STANDARD 11)
 
+find_package(Boost)
+IF (Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIR})
+endif()
+
 add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)

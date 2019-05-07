@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/BankAccount.dir/main.cpp.o CMakeFiles/BankAccount.dir/Tests/test.cpp.o  -o BankAccount.exe -Wl,--out-implib,libBankAccount.dll.a -Wl,--major-image-version,0,--minor-image-version,0 lib/libgtestd.a lib/libgtest_maind.a lib/libgtestd.a 

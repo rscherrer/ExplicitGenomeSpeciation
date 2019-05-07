@@ -47,6 +47,19 @@ public:
     bool generateArchitecture;
     std::string architecture, sequence;
 
+    const size_t nEcoLoci         = 400u;
+    const size_t nMatLoci         = 200u;
+    const size_t nNtrLoci         = 400u;
+    const size_t nEcoInteractions = 1000u;
+    const size_t nMatInteractions = 500u;
+    const size_t nNtrInteractions = 0u;
+    const size_t nChromosomes     = 3u;
+    const size_t nHabitat         = 2u;
+    const size_t nCharacter       = 3u;
+    const double tiny             = 1.0e-12;    // for clipping towards zero
+    const size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
+    const size_t nBits = 2u * nLoci;
+
 //private:
     //ParameterSet(const ParameterSet&) = delete;
 };

@@ -33,6 +33,7 @@ Instructions for compiling and running the program
 #include <list>
 #include "ParameterSet.h"
 
+/*
 const size_t nEcoLoci         = 400u;
 const size_t nMatLoci         = 200u;
 const size_t nNtrLoci         = 400u;
@@ -47,7 +48,10 @@ const size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
 const size_t nBits = 2u * nLoci;
 
 
+
 extern bool isFemaleHeteroGamety;
+
+*/
 
 class Buffer;
 
@@ -88,7 +92,11 @@ public:
     bool acceptMate(Individual const * const, const ParameterSet&) const;
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
-    std::bitset<nBits> getGenome() const { return genome; }
+
+    static void setNBits(const size_t& nbits) { nBits = nbits; }
+
+    std::bitset<nBits> getGenome() { return genome; }
+
     std::array<double, nCharacter> getTraitP() const { return traitP; }
     std::array<double, nCharacter> getTraitG() const { return traitG; }
     std::array<double, nCharacter> getTraitE() const { return traitE; }
@@ -104,6 +112,7 @@ public:
     static std::array<std::set<size_t>, nCharacter> vertices;
     static std::array<Character, nLoci> characterLocus;
 private:
+    static size_t nBits;
     void mutate(const ParameterSet&);
     void develop(const ParameterSet&);
     bool isHeteroGamous;

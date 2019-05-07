@@ -44,15 +44,6 @@ Instructions for compiling and running the program
 
 
 
-/* std::ofstream logFile, datFile, arcFile;
-Buffer *bufferFreq, *bufferF_it, *bufferF_is, *bufferF_st,
-    *bufferP_st, *bufferG_st, *bufferQ_st, *bufferC_st,
-    *bufferVarP, *bufferVarG, *bufferVarA, *bufferVarD, *bufferVarI;
-std::list<PInd> population;
-std::array<std::pair<double, double>, nHabitat> resourceConsumption, resourceEql;
-std::array<std::pair<size_t, size_t>, nHabitat> genderCounts;
-Individual::TradeOffPt breakEvenPoint;
-*/
 
 /*=======================================================================================================
                                             I/O routines
@@ -428,6 +419,7 @@ int main(int argc, char * argv[])
             oss << "architecture_" << parameters.seed << ".txt";
             parameters.architecture = oss.str();
             Individual::generateGeneticArchitecture(parameters);
+            Individual::setNBits(2000u);
             Individual::storeGeneticArchitecture(parameters.architecture);
         }
         else Individual::loadGeneticArchitecture(parameters.architecture);

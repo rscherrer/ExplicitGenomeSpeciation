@@ -123,7 +123,10 @@ void preferentialAttachmentNetwork(const size_t n, size_t e, const double expone
 void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
 {
     std::clog << "generating a new genetic architecture\n";
-    
+
+    // Set static parameters
+    nBits = parameters.nBits;
+
     // recombination map ***
     std::clog << "  creating recombination map.";
     // chromosomes are identical in size
