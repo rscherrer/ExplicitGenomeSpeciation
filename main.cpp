@@ -42,12 +42,12 @@ Instructions for compiling and running the program
                                 Parameter definitions and default values
 ========================================================================================================*/
 
-const size_t nIndividualInit    = 100u;
 
 std::array<double, nCharacter> scaleA {1.0, 1.0, 1.0};
 std::array<double, nCharacter> scaleD {0.0, 0.0, 0.0};
 std::array<double, nCharacter> scaleI {0.0, 0.0, 0.0};
 std::array<double, nCharacter> scaleE {0.0, 0.0, 0.0};
+
 
 double  mutationRate            = 1.0e-5;
 double  mapLength               = 300.0;
@@ -99,7 +99,46 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
     else return false;
 }
 
-void readParameters(const std::string& filename)
+struct ParameterSet
+{
+
+    const size_t nIndividualInit = 100u;
+
+    std::array<double, nCharacter> scaleA {1.0, 1.0, 1.0};
+    std::array<double, nCharacter> scaleD {0.0, 0.0, 0.0};
+    std::array<double, nCharacter> scaleI {0.0, 0.0, 0.0};
+    std::array<double, nCharacter> scaleE {0.0, 0.0, 0.0};
+
+    double  mutationRate            = 1.0e-5;
+    double  mapLength               = 300.0;
+    bool    isFemaleHeteroGamety    = false;
+
+    double  dispersalRate           = 1.0e-3;
+    double  alpha                   = 5.0e-3;
+    double  beta                    = 4.0;
+    double  habitatAsymmetry        = 0.5;
+    double  survivalProb            = 0.8;
+    double  ecoSelCoeff             = 1.0;
+    double  matePreferenceStrength  = 10.0;
+    double  mateEvaluationCost      = 0.01;
+    double  costIncompat            = 0.0;
+    double  networkSkewness         = 1.0;
+
+    bool isTypeIIResourceUtilisation = true;
+    bool isTypeIIMateChoice = true;
+
+    int  tBurnIn                 = 1;
+    int  tEndSim                 = 5;
+    int  tGetDat                 = 1;
+    int  tSavDat                 = 1;
+
+    unsigned int seed;
+    bool generateArchitecture;
+    std::string architecture, sequence;
+
+};
+
+void readParameters(const std::string& filename, ParameterSet& parameters)
 {
     std::clog << "reading parameters from file " << filename << '\n';
     
@@ -111,18 +150,18 @@ void readParameters(const std::string& filename)
     std::string str;
     
     ifs >> str;
-    if(str == "rng_seed_clock") seed = rnd::set_seed();
+    if(str == "rng_seed_clock") parameters.seed = rnd::set_seed();
     else if(str == "rng_seed_user") {
-        ifs >> seed;
-        rnd::set_seed(seed);
+        ifs >> parameters.seed;
+        rnd::set_seed(parameters.seed);
     }
     else throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
     
     ifs >> str;
-    if(str == "architecture_generate") generateArchitecture = true;
+    if(str == "architecture_generate") parameters.generateArchitecture = true;
     else if(str == "architecture_load") {
-        generateArchitecture = false;
-        ifs >> architecture;
+        parameters.generateArchitecture = false;
+        ifs >> parameters.architecture;
     }
     else throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
     
@@ -130,52 +169,52 @@ void readParameters(const std::string& filename)
         if(read(str, "initial_sequence", sequence, ifs));
         else if(str == "scale_A")
             for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleA[crctr];
+                ifs >> parameters.scaleA[crctr];
                 std::clog   << "parameter " << "scale_A[" << crctr
-                            << "] set to " << scaleA[crctr] << '\n';
+                            << "] set to " << parameters.scaleA[crctr] << '\n';
             }
         else if(str == "scale_D")
             for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleD[crctr];
+                ifs >> parameters.scaleD[crctr];
                 std::clog   << "parameter " << "scale_D[" << crctr
-                            << "] set to " << scaleD[crctr] << '\n';
+                            << "] set to " << parameters.scaleD[crctr] << '\n';
             }
         else if(str == "scale_I")
             for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleI[crctr];
+                ifs >> parameters.scaleI[crctr];
                 std::clog   << "parameter " << "scale_I[" << crctr
-                            << "] set to " << scaleI[crctr] << '\n';
+                            << "] set to " << parameters.scaleI[crctr] << '\n';
             }
         else if(str == "scale_E")
             for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleE[crctr];
+                ifs >> parameters.scaleE[crctr];
                 std::clog   << "parameter " << "scale_E[" << crctr
-                            << "] set to " << scaleE[crctr] << '\n';
+                            << "] set to " << parameters.scaleE[crctr] << '\n';
             }
-        else if(read(str, "mutation_rate", mutationRate, ifs));
-        else if(read(str, "genome_size_cm", mapLength, ifs));
-        else if(read(str, "female_heterogamety", isFemaleHeteroGamety, ifs));
-        else if(read(str, "dispersal_rate", dispersalRate, ifs));
-        else if(read(str, "alpha", alpha, ifs));
-        else if(read(str, "beta", beta, ifs));
-        else if(read(str, "prob_survival", survivalProb, ifs));
-        else if(read(str, "habitat_asymmetry", habitatAsymmetry, ifs));
-        else if(read(str, "sel_coeff_ecol", ecoSelCoeff, ifs));
-        else if(read(str, "preference_strength", matePreferenceStrength, ifs));
-        else if(read(str, "preference_cost", mateEvaluationCost, ifs));
-        else if(read(str, "incompatibility_cost", costIncompat, ifs));
-        else if(read(str, "typeII_resource_utilisation", isTypeIIResourceUtilisation, ifs));
-        else if(read(str, "typeII_mate_choice", isTypeIIMateChoice, ifs));
-        else if(read(str, "network_skewness", networkSkewness, ifs));
+        else if(read(str, "mutation_rate", parameters.mutationRate, ifs));
+        else if(read(str, "genome_size_cm", parameters.mapLength, ifs));
+        else if(read(str, "female_heterogamety", parameters.isFemaleHeteroGamety, ifs));
+        else if(read(str, "dispersal_rate", parameters.dispersalRate, ifs));
+        else if(read(str, "alpha", parameters.alpha, ifs));
+        else if(read(str, "beta", parameters.beta, ifs));
+        else if(read(str, "prob_survival", parameters.survivalProb, ifs));
+        else if(read(str, "habitat_asymmetry", parameters.habitatAsymmetry, ifs));
+        else if(read(str, "sel_coeff_ecol", parameters.ecoSelCoeff, ifs));
+        else if(read(str, "preference_strength", parameters.matePreferenceStrength, ifs));
+        else if(read(str, "preference_cost", parameters.mateEvaluationCost, ifs));
+        else if(read(str, "incompatibility_cost", parameters.costIncompat, ifs));
+        else if(read(str, "typeII_resource_utilisation", parameters.isTypeIIResourceUtilisation, ifs));
+        else if(read(str, "typeII_mate_choice", parameters.isTypeIIMateChoice, ifs));
+        else if(read(str, "network_skewness", parameters.networkSkewness, ifs));
         else if(str == "t_end") {
-            ifs >> tBurnIn >> tEndSim;
-            std::clog   << "burn-in period  " << tBurnIn << " generations \n";
-            std::clog   << "simulation time " << tEndSim << " generations \n";
+            ifs >> parameters.tBurnIn >> parameters.tEndSim;
+            std::clog   << "burn-in period  " << parameters.tBurnIn << " generations \n";
+            std::clog   << "simulation time " << parameters.tEndSim << " generations \n";
         }
         else if(str == "t_dat") {
-            ifs >> tGetDat >> tSavDat;
-            std::clog   << "data collected every " << tGetDat << " generations \n";
-            std::clog   << "data stored    every " << tSavDat << " generations \n";
+            ifs >> parameters.tGetDat >> parameters.tSavDat;
+            std::clog   << "data collected every " << parameters.tGetDat << " generations \n";
+            std::clog   << "data stored    every " << parameters.tSavDat << " generations \n";
         }
         else throw std::runtime_error("unknown parameter " + str);
     }
@@ -402,6 +441,8 @@ void competitionAndReproduction(const size_t hab,
 }
 
 
+
+
 /*=======================================================================================================
                                             main()
 ========================================================================================================*/
@@ -421,13 +462,20 @@ int main(int argc, char * argv[])
     try {
 
         // *** preliminaries ***
+
+        // Default parameters
+        const size_t nIndividualInit    = 100u;
+
+        // Parameters
+        ParameterSet parameters;
+
         // set parameter values
         if(argc == 1) {
             seed = rnd::set_seed(); // use default parameters values and use clock to set random seed
             generateArchitecture = true;
         }
         else if(argc == 2)
-            readParameters(argv[1]);
+            readParameters(argv[1], parameters);
         else throw std::runtime_error("invalid number of program arguments in main()");
 
         // initialise genetic architecture
@@ -439,6 +487,8 @@ int main(int argc, char * argv[])
             Individual::storeGeneticArchitecture(architecture);
         }
         else Individual::loadGeneticArchitecture(architecture);
+
+
 
         // open files and data buffers
         std::clog << "opening files and data buffers.";
@@ -504,6 +554,10 @@ int main(int argc, char * argv[])
                 << '\t' << "speciation.cube.mating.isolation"
                 << '\t' << "post.zygotic.isolation"<< '\n';
         std::clog << "..done\n";
+
+
+
+
 
         // record start of simulation
         auto tStart = std::chrono::system_clock::now();
