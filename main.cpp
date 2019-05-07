@@ -463,9 +463,6 @@ int main(int argc, char * argv[])
 
         // *** preliminaries ***
 
-        // Default parameters
-        const size_t nIndividualInit    = 100u;
-
         // Parameters
         ParameterSet parameters;
 
@@ -566,9 +563,9 @@ int main(int argc, char * argv[])
         // create initial population
         std::clog << "creating initial population.";
         if(sequence.length() == nBits)
-            for(size_t i = 0u; i < nIndividualInit ; ++i)
+            for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
                 population.push_back(new Individual(sequence));
-        else for(size_t i = 0u; i < nIndividualInit ; ++i)
+        else for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
                 population.push_back(new Individual);
         std::clog << "..done\n";
 
