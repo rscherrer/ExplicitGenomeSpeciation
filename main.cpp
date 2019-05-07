@@ -44,7 +44,7 @@ Instructions for compiling and running the program
 
 
 
-std::ofstream logFile, datFile, arcFile;
+/* std::ofstream logFile, datFile, arcFile;
 Buffer *bufferFreq, *bufferF_it, *bufferF_is, *bufferF_st,
     *bufferP_st, *bufferG_st, *bufferQ_st, *bufferC_st,
     *bufferVarP, *bufferVarG, *bufferVarA, *bufferVarD, *bufferVarI;
@@ -52,6 +52,7 @@ std::list<PInd> population;
 std::array<std::pair<double, double>, nHabitat> resourceConsumption, resourceEql;
 std::array<std::pair<size_t, size_t>, nHabitat> genderCounts;
 Individual::TradeOffPt breakEvenPoint;
+*/
 
 /*=======================================================================================================
                                             I/O routines
@@ -196,7 +197,7 @@ void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const c
                                     biological model implementation
 ========================================================================================================*/
 
-void dispersal(const ParameterSet& parameters)
+void dispersal(std::list<PInd>& population, const ParameterSet& parameters)
 {
     if(parameters.dispersalRate > 0.5) {
         for(PInd pInd : population)
@@ -236,6 +237,11 @@ bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOf
 
 void competitionAndReproduction(const size_t hab,
                                 const ParameterSet& parameters,
+                                std::list<PInd>& population,
+                                std::array<std::pair<double, double>, nHabitat>& resourceConsumption,
+                                Individual::TradeOffPt& breakEvenPoint,
+                                std::array<std::pair<double, double>, nHabitat>& resourceEql,
+                                std::array<std::pair<size_t, size_t>, nHabitat>& genderCounts,
                                 const size_t nAccessibleResource = 2u)
 {
     // accumulate attack rates and sort out females and males
@@ -390,12 +396,22 @@ int main(int argc, char * argv[])
 
     #else
 
+    std::ofstream logFile; // must be accessible from catch
+
     try {
 
         // *** preliminaries ***
 
         // Parameters
         ParameterSet parameters;
+
+        std::ofstream datFile, arcFile;
+
+        // Declare pointers to addresses where buffers are stored
+        // The values (the buffers) are accessed with (*pointerName)
+        Buffer *bufferFreq, *bufferF_it, *bufferF_is, *bufferF_st,
+                *bufferP_st, *bufferG_st, *bufferQ_st, *bufferC_st,
+                *bufferVarP, *bufferVarG, *bufferVarA, *bufferVarD, *bufferVarI;
 
         // set parameter values
         if(argc == 1) {
@@ -427,19 +443,20 @@ int main(int argc, char * argv[])
         arcFile.open(oss.str() + "_fossil_record.txt");
         if(!(logFile.is_open() && datFile.is_open() && arcFile.is_open()))
             throw std::runtime_error("unable to open output files in main()");
-        bufferFreq = new Buffer("freq", parameters);
-        bufferF_it = new Buffer("Fit", parameters);
-        bufferF_is = new Buffer("Fis", parameters);
-        bufferF_st = new Buffer("Fst", parameters);
-        bufferP_st = new Buffer("Pst", parameters);
-        bufferG_st = new Buffer("Gst", parameters);
-        bufferQ_st = new Buffer("Qst", parameters);
-        bufferC_st = new Buffer("Cst", parameters);
-        bufferVarP = new Buffer("varP", parameters);
-        bufferVarG = new Buffer("varG", parameters);
-        bufferVarA = new Buffer("varA", parameters);
-        bufferVarD = new Buffer("varD", parameters);
-        bufferVarI = new Buffer("varI", parameters);
+        BufferBox bufferPointers;
+        bufferPointers.bufferFreq = new Buffer("freq", parameters);
+        bufferPointers.bufferF_it = new Buffer("Fit", parameters);
+        bufferPointers.bufferF_is = new Buffer("Fis", parameters);
+        bufferPointers.bufferF_st = new Buffer("Fst", parameters);
+        bufferPointers.bufferP_st = new Buffer("Pst", parameters);
+        bufferPointers.bufferG_st = new Buffer("Gst", parameters);
+        bufferPointers.bufferQ_st = new Buffer("Qst", parameters);
+        bufferPointers.bufferC_st = new Buffer("Cst", parameters);
+        bufferPointers.bufferVarP = new Buffer("varP", parameters);
+        bufferPointers.bufferVarG = new Buffer("varG", parameters);
+        bufferPointers.bufferVarA = new Buffer("varA", parameters);
+        bufferPointers.bufferVarD = new Buffer("varD", parameters);
+        bufferPointers.bufferVarI = new Buffer("varI", parameters);
         std::clog << "..done\n";
 
         // store parameter values
@@ -492,6 +509,12 @@ int main(int argc, char * argv[])
 
         // *** simulation ***
         // create initial population
+
+        std::list<PInd> population;
+        std::array<std::pair<double, double>, nHabitat> resourceConsumption, resourceEql;
+        std::array<std::pair<size_t, size_t>, nHabitat> genderCounts;
+        Individual::TradeOffPt breakEvenPoint;
+
         std::clog << "creating initial population.";
         if(parameters.sequence.length() == nBits)
             for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
@@ -505,17 +528,18 @@ int main(int argc, char * argv[])
         for(int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if(t > 0) {
                 // default
-                dispersal(parameters);
-                competitionAndReproduction(0u, parameters);
-                competitionAndReproduction(1u, parameters);
+                dispersal(population, parameters);
+                competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
+                competitionAndReproduction(1u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
+
             }
-            else competitionAndReproduction(0u, parameters, 1u); // burn-in period
+            else competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts, 1u); // burn-in period
             if(population.size() < 2u) {
                 std::clog << "population size underflow at t = " << t << '\n';
                 break;
             }
-            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters);
-            if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters);
+            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, breakEvenPoint, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population);
+            if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population);
         }
 
         // *** finalisation ***

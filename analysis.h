@@ -28,6 +28,7 @@ Instructions for compiling and running the program
 #define __genomic_signatures_of_speciation__analysis__
 
 #include "individual.h"
+#include "BufferBox.h"
 
 class Buffer {
 public:
@@ -45,7 +46,16 @@ private:
     static const char sep;
 };
 
-void decomposeVariance(int, const ParameterSet&);
-void analyseNetwork(int, const ParameterSet&);
+void decomposeVariance(int,
+        const ParameterSet&,
+        BufferBox&,
+        const Individual::TradeOffPt&,
+        const std::array<std::pair<double, double>, nHabitat>&,
+        const std::array<std::pair<double, double>, nHabitat>&,
+        std::ofstream&,
+        std::ofstream&,
+        std::array<std::pair<size_t, size_t>, nHabitat>&,
+        const std::list<PInd>&);
+void analyseNetwork(int, const ParameterSet&, const std::list<PInd>&);
 
 #endif

@@ -31,18 +31,15 @@ Instructions for compiling and running the program
 #include <queue>
 #include "analysis.h"
 #include "random.h"
+#include "BufferBox.h"
 
 extern int tSavDat, tGetDat, tBurnIn;
 extern double mateEvaluationCost;
 extern double costIncompat;
 extern std::array<double, nCharacter> scaleA, scaleD, scaleI, scaleE;
-extern std::list<PInd> population;
-extern std::ofstream datFile, arcFile;
 extern Buffer *bufferFreq, *bufferF_it, *bufferF_is, *bufferF_st,
     *bufferP_st, *bufferG_st, *bufferQ_st, *bufferC_st,
     *bufferVarP, *bufferVarG, *bufferVarA, *bufferVarD, *bufferVarI;
-extern std::array<std::pair<double, double>, nHabitat> resourceConsumption, resourceEql;
-extern std::array<std::pair<size_t, size_t>, nHabitat> genderCounts;
 extern Individual::TradeOffPt breakEvenPoint;
 
 /*=======================================================================================================
@@ -116,7 +113,7 @@ void Buffer::flush(const ParameterSet& parameters)
                                      data analysis functions
 ========================================================================================================*/
 
-double computePostIsolation(const ParameterSet& parameters)
+double computePostIsolation(const ParameterSet& parameters, const std::list<PInd>& population)
 {
 
     // sort out females and males
@@ -165,7 +162,7 @@ double computePostIsolation(const ParameterSet& parameters)
 
 }
 
-double computeMatingIsolation(const ParameterSet& parameters)
+double computeMatingIsolation(const ParameterSet& parameters, const std::list<PInd>& population)
 {
     // sort out females and males
     std::queue<PInd> females;
@@ -211,7 +208,13 @@ double computeMatingIsolation(const ParameterSet& parameters)
 }
 
 
-void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters)
+void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters,
+        const std::array<std::pair<double, double>, nHabitat>& resourceConsumption,
+        const std::array<std::pair<double, double>, nHabitat>& resourceEql,
+        std::ofstream& arcFile,
+        std::ofstream& datFile,
+        std::array<std::pair<size_t, size_t>, nHabitat>& genderCounts,
+        std::list<PInd> population)
 {
 
     // n = (whole pop, hab0, hab1, eco1 hab0, eco2 hab0, eco1 hab1, eco2 hab1)
@@ -263,9 +266,9 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
        
         SI = (n1_ == 0u || n2_ == 0u) ? 0.0 : (1.0 * n[3u] * n[6u] - 1.0 * n[4u] * n[5u]) / sqrt(1.0 * n_1 * n_2 * n1_ * n2_);
         EI = Individual::P_st[0u];
-        RI = computeMatingIsolation(parameters);
+        RI = computeMatingIsolation(parameters, population);
         if(parameters.costIncompat > 0.0) {
-            PI = computePostIsolation(parameters);
+            PI = computePostIsolation(parameters, population);
         }
         else {
             PI = 0.0;
@@ -294,7 +297,16 @@ double Xst(const double &var0, const double &var1, const double &var2, const std
     }
 }
 
-void decomposeVariance(int t, const ParameterSet& parameters)
+void decomposeVariance(int t,
+        const ParameterSet& parameters,
+        BufferBox& bufferPointers,
+        const Individual::TradeOffPt& breakEvenPoint,
+        const std::array<std::pair<double, double>, nHabitat>& resourceConsumption,
+        const std::array<std::pair<double, double>, nHabitat>& resourceEql,
+        std::ofstream& arcFile,
+        std::ofstream& datFile,
+        std::array<std::pair<size_t, size_t>, nHabitat>& genderCounts,
+        const std::list<PInd>& population)
 {
     std::array<size_t, 7u> n {population.size(), 0u, 0u};
     
@@ -510,33 +522,33 @@ void decomposeVariance(int t, const ParameterSet& parameters)
 
     // write data to output buffer
     for(size_t i = 0u; i < nLoci; ++i) {
-        (*bufferFreq)[i] = Individual::characterLocus[i].alleleFrequency[0u];
-        (*bufferF_it)[i] = Individual::characterLocus[i].F_it;
-        (*bufferF_is)[i] = Individual::characterLocus[i].F_is;
-        (*bufferF_st)[i] = Individual::characterLocus[i].F_st;
-        (*bufferP_st)[i] = Individual::characterLocus[i].P_st;
-        (*bufferG_st)[i] = Individual::characterLocus[i].G_st;
-        (*bufferQ_st)[i] = Individual::characterLocus[i].Q_st;
-        (*bufferC_st)[i] = Individual::characterLocus[i].C_st;
-        (*bufferVarP)[i] = Individual::characterLocus[i].varP[0u];
-        (*bufferVarG)[i] = Individual::characterLocus[i].varG[0u];
-        (*bufferVarA)[i] = Individual::characterLocus[i].varA[0u];
-        (*bufferVarD)[i] = Individual::characterLocus[i].varD;
-        (*bufferVarI)[i] = Individual::characterLocus[i].varI[0u];
+        (*bufferPointers.bufferFreq)[i] = Individual::characterLocus[i].alleleFrequency[0u];
+        (*bufferPointers.bufferF_it)[i] = Individual::characterLocus[i].F_it;
+        (*bufferPointers.bufferF_is)[i] = Individual::characterLocus[i].F_is;
+        (*bufferPointers.bufferF_st)[i] = Individual::characterLocus[i].F_st;
+        (*bufferPointers.bufferP_st)[i] = Individual::characterLocus[i].P_st;
+        (*bufferPointers.bufferG_st)[i] = Individual::characterLocus[i].G_st;
+        (*bufferPointers.bufferQ_st)[i] = Individual::characterLocus[i].Q_st;
+        (*bufferPointers.bufferC_st)[i] = Individual::characterLocus[i].C_st;
+        (*bufferPointers.bufferVarP)[i] = Individual::characterLocus[i].varP[0u];
+        (*bufferPointers.bufferVarG)[i] = Individual::characterLocus[i].varG[0u];
+        (*bufferPointers.bufferVarA)[i] = Individual::characterLocus[i].varA[0u];
+        (*bufferPointers.bufferVarD)[i] = Individual::characterLocus[i].varD;
+        (*bufferPointers.bufferVarI)[i] = Individual::characterLocus[i].varI[0u];
     }
-    bufferFreq->flush(parameters);
-    bufferF_it->flush(parameters);
-    bufferF_is->flush(parameters);
-    bufferF_st->flush(parameters);
-    bufferP_st->flush(parameters);
-    bufferG_st->flush(parameters);
-    bufferQ_st->flush(parameters);
-    bufferC_st->flush(parameters);
-    bufferVarP->flush(parameters);
-    bufferVarG->flush(parameters);
-    bufferVarA->flush(parameters);
-    bufferVarD->flush(parameters);
-    bufferVarI->flush(parameters);
+    bufferPointers.bufferFreq->flush(parameters);
+    bufferPointers.bufferF_it->flush(parameters);
+    bufferPointers.bufferF_is->flush(parameters);
+    bufferPointers.bufferF_st->flush(parameters);
+    bufferPointers.bufferP_st->flush(parameters);
+    bufferPointers.bufferG_st->flush(parameters);
+    bufferPointers.bufferQ_st->flush(parameters);
+    bufferPointers.bufferC_st->flush(parameters);
+    bufferPointers.bufferVarP->flush(parameters);
+    bufferPointers.bufferVarG->flush(parameters);
+    bufferPointers.bufferVarA->flush(parameters);
+    bufferPointers.bufferVarD->flush(parameters);
+    bufferPointers.bufferVarI->flush(parameters);
 
     // *** genome-wide decomposition of genetic variance (continued) ***
     // compute varA, varD, varI, and Fst by accumulating single locus contributions
@@ -574,10 +586,10 @@ void decomposeVariance(int t, const ParameterSet& parameters)
                 Individual::varI[crctr][1u],
                 Individual::varI[crctr][2u], n);
     }
-    recordData(t, n, parameters);
+    recordData(t, n, parameters, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population);
 }
 
-void analyseNetwork(int t, const ParameterSet& parameters)
+void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>& population)
 {
     const char sep = ',';
     // *** node properties ***
