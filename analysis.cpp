@@ -48,7 +48,8 @@ extern Individual::TradeOffPt breakEvenPoint;
 
 const char Buffer::sep = ',';
 
-Buffer::Buffer(const std::string &str, const ParameterSet& parameters) :
+Buffer::Buffer(const std::string &str,
+        const ParameterSet& parameters) :
     i(0u), k(0u), t(-parameters.tBurnIn), n(static_cast<size_t>(parameters.tSavDat / parameters.tGetDat)), label(str)
 {
     data = std::vector< std::vector<double> >(n, std::vector<double>(parameters.nLoci, 0.0));

@@ -7,6 +7,6 @@ add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)
 
-add_executable(ExplicitGenomeSpeciation main.cpp random.cpp individual.cpp analysis.cpp architecture.cpp Tests/test.cpp ParameterSet.cpp ParameterSet.h BufferBox.cpp BufferBox.h)
+add_executable(ExplicitGenomeSpeciation main.cpp random.cpp individual.cpp analysis.cpp architecture.cpp Tests/test.cpp ParameterSet.cpp ParameterSet.h BufferBox.cpp BufferBox.h Population.cpp Population.h)
 target_link_libraries(ExplicitGenomeSpeciation gtest gtest_main)
 

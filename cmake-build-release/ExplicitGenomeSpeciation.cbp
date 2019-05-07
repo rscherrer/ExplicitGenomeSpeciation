@@ -330,6 +330,12 @@
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>

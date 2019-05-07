@@ -76,6 +76,7 @@ public:
 
     typedef std::pair<double, double> TradeOffPt;
 
+    // A Character object is locus-specific and population-wide
     struct Character
     {
         size_t character, linkageGroup;
@@ -85,6 +86,7 @@ public:
         std::list<std::pair<size_t, double> > edges;
     };
 
+    // A Trait object is locus- and individual-specific
     struct Trait
     {
         size_t alleleCount;
