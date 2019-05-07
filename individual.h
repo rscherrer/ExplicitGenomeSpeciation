@@ -31,6 +31,7 @@ Instructions for compiling and running the program
 #include <array>
 #include <set>
 #include <list>
+#include "ParameterSet.h"
 
 const size_t nEcoLoci         = 400u;
 const size_t nMatLoci         = 200u;
@@ -74,9 +75,9 @@ public:
         size_t alleleCount;
         double expression, geneticValue;
     };
-    Individual(double = 0.02);
-    Individual(const std::string&);
-    Individual(Individual const * const, Individual const * const);
+    Individual(const ParameterSet&);
+    Individual(const std::string&, const ParameterSet&);
+    Individual(Individual const * const, Individual const * const, const ParameterSet&);
     void disperse() const { habitat = (habitat + 1u) % nHabitat; }
     bool isFemale() const {return isHeteroGamous == isFemaleHeteroGamety;}
     std::string getSequence() const { return genome.to_string();}
@@ -86,13 +87,25 @@ public:
     void prepareChoice() const;
     bool acceptMate(Individual const * const) const;
     size_t getHabitat() const { return habitat; }
+    size_t getEcotype() const { return ecotype; }
+    std::bitset<nBits> getGenome() const { return genome; }
+    std::array<double, nCharacter> getTraitP() const { return traitP; }
+    std::array<double, nCharacter> getTraitG() const { return traitG; }
+    std::array<double, nCharacter> getTraitE() const { return traitE; }
+    std::array<Trait, nLoci> getTraitLocus() const { return traitLocus; }
     size_t setEcotype(const Individual::TradeOffPt &threshold) const;
     static void generateGeneticArchitecture();
     static void storeGeneticArchitecture(const std::string&);
     static void loadGeneticArchitecture(const std::string&);
+    static std::array<std::array<double, 3u>, nCharacter>
+            avgG, varP, varG, varA, varI;
+    static std::array<double, nCharacter> varD, F_st, P_st, G_st, Q_st, C_st;
+    static std::array<double, nChromosomes - 1u> chromosomeSize;
+    static std::array<std::set<size_t>, nCharacter> vertices;
+    static std::array<Character, nLoci> characterLocus;
 private:
     void mutate();
-    void develop();
+    void develop(const ParameterSet&);
     bool isHeteroGamous;
     mutable size_t habitat, ecotype;
     mutable std::list<double> obs;
@@ -102,12 +115,7 @@ private:
     TradeOffPt attackRate;
     std::bitset<nBits> genome;
     std::array<Trait, nLoci> traitLocus;
-    static std::array<double, nCharacter> varD, F_st, P_st, G_st, Q_st, C_st;
-    static std::array<std::array<double, 3u>, nCharacter>
-        avgG, varP, varG, varA, varI;
-    static std::array<double, nChromosomes - 1u> chromosomeSize;
-    static std::array<std::set<size_t>, nCharacter> vertices;
-    static std::array<Character, nLoci> characterLocus;
+
 };
 
 typedef Individual const * PInd;

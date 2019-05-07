@@ -43,10 +43,6 @@ Instructions for compiling and running the program
 ========================================================================================================*/
 
 
-std::array<double, nCharacter> scaleA {1.0, 1.0, 1.0};
-std::array<double, nCharacter> scaleD {0.0, 0.0, 0.0};
-std::array<double, nCharacter> scaleI {0.0, 0.0, 0.0};
-std::array<double, nCharacter> scaleE {0.0, 0.0, 0.0};
 
 
 double  mutationRate            = 1.0e-5;
@@ -98,45 +94,6 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
     }
     else return false;
 }
-
-struct ParameterSet
-{
-
-    const size_t nIndividualInit = 100u;
-
-    std::array<double, nCharacter> scaleA {1.0, 1.0, 1.0};
-    std::array<double, nCharacter> scaleD {0.0, 0.0, 0.0};
-    std::array<double, nCharacter> scaleI {0.0, 0.0, 0.0};
-    std::array<double, nCharacter> scaleE {0.0, 0.0, 0.0};
-
-    double  mutationRate            = 1.0e-5;
-    double  mapLength               = 300.0;
-    bool    isFemaleHeteroGamety    = false;
-
-    double  dispersalRate           = 1.0e-3;
-    double  alpha                   = 5.0e-3;
-    double  beta                    = 4.0;
-    double  habitatAsymmetry        = 0.5;
-    double  survivalProb            = 0.8;
-    double  ecoSelCoeff             = 1.0;
-    double  matePreferenceStrength  = 10.0;
-    double  mateEvaluationCost      = 0.01;
-    double  costIncompat            = 0.0;
-    double  networkSkewness         = 1.0;
-
-    bool isTypeIIResourceUtilisation = true;
-    bool isTypeIIMateChoice = true;
-
-    int  tBurnIn                 = 1;
-    int  tEndSim                 = 5;
-    int  tGetDat                 = 1;
-    int  tSavDat                 = 1;
-
-    unsigned int seed;
-    bool generateArchitecture;
-    std::string architecture, sequence;
-
-};
 
 void readParameters(const std::string& filename, ParameterSet& parameters)
 {
@@ -221,25 +178,25 @@ void readParameters(const std::string& filename, ParameterSet& parameters)
     std::clog << "parameters were read in successfully\n";
 }
 
-void writeParameters(std::ofstream &ofs, const char sep = ' ')
+void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const char sep = ' ')
 {
     ofs << "rng_seed"       << sep  << seed         << '\n';
     ofs << "architecture"   << sep  << architecture << '\n';
     ofs << "scale_A";
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
-        ofs << sep << scaleA[crctr];
+        ofs << sep << parameters.scaleA[crctr];
     ofs << '\n';
     ofs << "scale_D";
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
-        ofs << sep << scaleD[crctr];
+        ofs << sep << parameters.scaleD[crctr];
     ofs << '\n';
     ofs << "scale_I";
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
-        ofs << sep << scaleI[crctr];
+        ofs << sep << parameters.scaleI[crctr];
     ofs << '\n';
     ofs << "scale_E";
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
-        ofs << sep << scaleE[crctr];
+        ofs << sep << parameters.scaleE[crctr];
     ofs << '\n';
     ofs << "mutation_rate"  << sep  << mutationRate << '\n';
     ofs << "genome_size_cm" << sep  << mapLength    << '\n';
@@ -305,6 +262,7 @@ bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOf
 }
 
 void competitionAndReproduction(const size_t hab,
+                                const ParameterSet& parameters,
                                 const size_t nAccessibleResource = 2u)
 {
     // accumulate attack rates and sort out females and males
@@ -420,7 +378,7 @@ void competitionAndReproduction(const size_t hab,
 
             if(fem->acceptMate(males[j])) {
                 // add offspring to the population only if it survives development
-                population.push_back(new Individual(fem, males[j]));
+                population.push_back(new Individual(fem, males[j], parameters));
                 if(costIncompat > 0.0) {
                     if(rnd::bernoulli(population.back()->getViability()))
                         population.pop_back();
@@ -516,7 +474,7 @@ int main(int argc, char * argv[])
         logFile << "parameters: ";
         if(argc == 1) logFile << "default values\n";
         else logFile << "imported from file " << argv[1] << '\n';
-        writeParameters(logFile);
+        writeParameters(logFile, parameters);
         std::clog << "..done\n";
 
         // write data file header
@@ -564,9 +522,9 @@ int main(int argc, char * argv[])
         std::clog << "creating initial population.";
         if(sequence.length() == nBits)
             for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
-                population.push_back(new Individual(sequence));
+                population.push_back(new Individual(sequence, parameters));
         else for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
-                population.push_back(new Individual);
+                population.push_back(new Individual(parameters));
         std::clog << "..done\n";
 
         // enter simulation loop
@@ -575,16 +533,16 @@ int main(int argc, char * argv[])
             if(t > 0) {
                 // default
                 dispersal();
-                competitionAndReproduction(0u);
-                competitionAndReproduction(1u);
+                competitionAndReproduction(0u, parameters);
+                competitionAndReproduction(1u, parameters);
             }
-            else competitionAndReproduction(0u, 1u); // burn-in period
+            else competitionAndReproduction(0u, parameters, 1u); // burn-in period
             if(population.size() < 2u) {
                 std::clog << "population size underflow at t = " << t << '\n';
                 break;
             }
-            if(t % tGetDat == 0u) decomposeVariance(t);
-            if(t % tSavDat == 0u) analyseNetwork(t);
+            if(t % tGetDat == 0u) decomposeVariance(t, parameters);
+            if(t % tSavDat == 0u) analyseNetwork(t, parameters);
         }
 
         // *** finalisation ***

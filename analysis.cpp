@@ -117,7 +117,7 @@ void Buffer::flush()
                                      data analysis functions
 ========================================================================================================*/
 
-double computePostIsolation()
+double computePostIsolation(const ParameterSet& parameters)
 {
 
     // sort out females and males
@@ -142,14 +142,14 @@ double computePostIsolation()
         // sample mate at random
         size_t j = rnd::random_int(n);
 
-        size_t f = fem->ecotype - 1u;
-        size_t m = males[j]->ecotype - 1u;
+        size_t f = fem->getEcotype() - 1u;
+        size_t m = males[j]->getEcotype() - 1u;
 
         ++ki[f];
         ++ki[2u + m];
 
         // create offspring
-        PInd offsp = new Individual(fem, males[j]);
+        PInd offsp = new Individual(fem, males[j], parameters);
 
         // developmental viability
         if(rnd::bernoulli(offsp->getViability())) {
@@ -212,7 +212,7 @@ double computeMatingIsolation()
 }
 
 
-void recordData(int t, const std::array<size_t, 7u> &n)
+void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters)
 {
 
     // n = (whole pop, hab0, hab1, eco1 hab0, eco2 hab0, eco1 hab1, eco2 hab1)
@@ -221,7 +221,7 @@ void recordData(int t, const std::array<size_t, 7u> &n)
     arcFile << t;
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
         arcFile  << '\t' << Individual::avgG[crctr][0u];
-    arcFile << '\t' << population.front()->genome.to_string() << '\n';
+    arcFile << '\t' << population.front()->getGenome().to_string() << '\n';
     
     // write output to data file
     size_t nfem = 0u, nmal = 0u;
@@ -266,7 +266,7 @@ void recordData(int t, const std::array<size_t, 7u> &n)
         EI = Individual::P_st[0u];
         RI = computeMatingIsolation();
         if(costIncompat > 0.0) {
-            PI = computePostIsolation();
+            PI = computePostIsolation(parameters);
         }
         else {
             PI = 0.0;
@@ -295,7 +295,7 @@ double Xst(const double &var0, const double &var1, const double &var2, const std
     }
 }
 
-void decomposeVariance(int t)
+void decomposeVariance(int t, const ParameterSet& parameters)
 {
     std::array<size_t, 7u> n {population.size(), 0u, 0u};
     
@@ -313,10 +313,10 @@ void decomposeVariance(int t)
     for(PInd pInd : population) {
         size_t cl =  pInd->setEcotype(breakEvenPoint);
         ++n[cl];
-        ++n[2u + cl + (2u * pInd->habitat)];
+        ++n[2u + cl + (2u * pInd->getHabitat())];
         for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-            double g = pInd->traitG[crctr];
-            double pp = sqr(pInd->traitP[crctr]);
+            double g = pInd->getTraitG()[crctr];
+            double pp = sqr(pInd->getTraitP()[crctr]);
             Individual::avgG[crctr][0u] += g;
             Individual::varG[crctr][0u] += g * g;
             Individual::varP[crctr][0u] += pp;
@@ -345,7 +345,7 @@ void decomposeVariance(int t)
     std::array<double, nCharacter> varE;
     for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
         size_t nloc = Individual::vertices[crctr].size();
-        varE[crctr] = nLoci ? sqr(scaleE[crctr]) / nloc : 0.0;
+        varE[crctr] = nLoci ? sqr(parameters.scaleE[crctr]) / nloc : 0.0;
     }
     
     for(size_t i = 0u; i < nLoci; ++i) {
@@ -360,9 +360,9 @@ void decomposeVariance(int t)
             sumu[cl] = 0u;
         }
         for(PInd pInd : population) {
-            size_t u = pInd->traitLocus[i].alleleCount;
-            double g = pInd->traitLocus[i].geneticValue;
-            size_t cl = pInd->ecotype;
+            size_t u = pInd->getTraitLocus()[i].alleleCount;
+            double g = pInd->getTraitLocus()[i].geneticValue;
+            size_t cl = pInd->getEcotype();
             ++m[u];
             dev[u] += g;
             sumu[0u] += u;
@@ -462,9 +462,9 @@ void decomposeVariance(int t)
         std::array<double, 3u> sumdva1 {0.0, 0.0, 0.0};
         std::array<double, 3u> sumdva2 {0.0, 0.0, 0.0};
         for(PInd pInd : population) {
-            size_t cl = pInd->ecotype;
-            size_t u = pInd->traitLocus[i].alleleCount;
-            double g = pInd->traitLocus[i].geneticValue;
+            size_t cl = pInd->getEcotype();
+            size_t u = pInd->getTraitLocus()[i].alleleCount;
+            double g = pInd->getTraitLocus()[i].geneticValue;
             double brv = alpha * (u - avgu);    // breeding value
             double dva = g - (mu + brv);        // deviation from additivity
             double eps = dva - dev[u];          // deviation by epitasis
@@ -575,10 +575,10 @@ void decomposeVariance(int t)
                 Individual::varI[crctr][1u],
                 Individual::varI[crctr][2u], n);
     }
-    recordData(t, n);
+    recordData(t, n, parameters);
 }
 
-void analyseNetwork(int t)
+void analyseNetwork(int t, const ParameterSet& parameters)
 {
     const char sep = ',';
     // *** node properties ***
@@ -607,8 +607,8 @@ void analyseNetwork(int t)
             << Individual::characterLocus[i].linkageGroup << sep
             << Individual::characterLocus[i].edges.size() << sep
             << Individual::characterLocus[i].location << sep
-            << scaleA[crctr] * Individual::characterLocus[i].effectSize << sep
-            << scaleD[crctr] * Individual::characterLocus[i].dominanceCoeff << sep
+            << parameters.scaleA[crctr] * Individual::characterLocus[i].effectSize << sep
+            << parameters.scaleD[crctr] * Individual::characterLocus[i].dominanceCoeff << sep
             << pi << sep
             << Individual::characterLocus[i].meanEffect[0u] << sep
             << Individual::characterLocus[i].avgEffectOfSubstitution << sep
@@ -646,7 +646,7 @@ void analyseNetwork(int t)
         const size_t crctr = Individual::characterLocus[i].character;
         for(const std::pair<size_t, double> &edge : Individual::characterLocus[i].edges) {
             const size_t j = edge.first;
-            const double eij = scaleI[crctr] * edge.second;
+            const double eij = parameters.scaleI[crctr] * edge.second;
             double sumpipj = 0.0, sumgigj = 0.0, sumbibj = 0.0,
                 sumxi = 0.0, sumxj = 0.0, sumxixi = 0.0, sumxjxj;
             double pi = Individual::characterLocus[i].alleleFrequency[0u];
@@ -654,12 +654,12 @@ void analyseNetwork(int t)
             double alphai = Individual::characterLocus[i].avgEffectOfSubstitution;
             double alphaj = Individual::characterLocus[j].avgEffectOfSubstitution;
             for(PInd pInd : population) {
-                size_t ui = pInd->traitLocus[i].alleleCount;
-                size_t uj = pInd->traitLocus[j].alleleCount;
-                double xi = pInd->traitLocus[i].expression;
-                double xj = pInd->traitLocus[j].expression;
-                double gi = pInd->traitLocus[i].geneticValue;
-                double gj = pInd->traitLocus[j].geneticValue;
+                size_t ui = pInd->getTraitLocus()[i].alleleCount;
+                size_t uj = pInd->getTraitLocus()[j].alleleCount;
+                double xi = pInd->getTraitLocus()[i].expression;
+                double xj = pInd->getTraitLocus()[j].expression;
+                double gi = pInd->getTraitLocus()[i].geneticValue;
+                double gj = pInd->getTraitLocus()[j].geneticValue;
                 double bi = (ui - 2.0 * pi) * alphai;
                 double bj = (uj - 2.0 * pj) * alphaj;
                 sumpipj += 0.25 * ui * uj;
@@ -676,8 +676,8 @@ void analyseNetwork(int t)
             sumxj /= n;
             sumxixi = (sumxixi - n * sumxi * sumxi) / (n - 1u);
             sumxjxj = (sumxjxj - n * sumxj * sumxj) / (n - 1u);
-            double ai = scaleA[crctr] * Individual::characterLocus[i].effectSize;
-            double aj = scaleA[crctr] * Individual::characterLocus[j].effectSize;
+            double ai = parameters.scaleA[crctr] * Individual::characterLocus[i].effectSize;
+            double aj = parameters.scaleA[crctr] * Individual::characterLocus[j].effectSize;
             double weightij = fabs(aj) < tiny ? 0.0 :
                 sqrt(sqr(Individual::characterLocus[j].avgEffectOfSubstitution * eij / aj)
                     * sumxixi);
@@ -728,10 +728,10 @@ void analyseNetwork(int t)
     ofs << '\n';
     size_t i = 0u;
     for(PInd pInd : population) {
-        ofs << i  << sep << pInd->ecotype << sep << pInd->habitat
-            << sep << pInd->attackRate.first << sep << pInd->attackRate.second;
+        ofs << i  << sep << pInd->getEcotype() << sep << pInd->getHabitat()
+            << sep << pInd->getAttackRate().first << sep << pInd->getAttackRate().second;
         for(size_t crctr = 0u; crctr < nCharacter; ++crctr)
-            ofs << sep << pInd->traitP[crctr];
+            ofs << sep << pInd->getTraitP()[crctr];
         ofs << '\n';
         ++i;
     }

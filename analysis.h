@@ -45,7 +45,7 @@ private:
     static const char sep;
 };
 
-void decomposeVariance(int);
-void analyseNetwork(int);
+void decomposeVariance(int, const ParameterSet&);
+void analyseNetwork(int, const ParameterSet&);
 
 #endif

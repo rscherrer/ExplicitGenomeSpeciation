@@ -32,38 +32,38 @@ Instructions for compiling and running the program
 #include <set>
 #include "individual.h"
 #include "random.h"
+#include "ParameterSet.h"
 
 extern double mutationRate, mapLength, ecoSelCoeff, matePreferenceStrength, costIncompat;
 extern bool isTypeIIMateChoice;
-extern std::array<double, nCharacter> scaleA, scaleD, scaleI, scaleE;
 
 /*=======================================================================================================
                                          member functions
 ========================================================================================================*/
 
-Individual::Individual(double freqSNP) :
+Individual::Individual(const ParameterSet& parameters) :
 isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
     // initial genotype
     for(size_t i = 0u; i < nBits; i += 2u) {
         genome[i] = genome[i + 1u] = (i % 4u == 0u);
-        if(rnd::uniform() < freqSNP) genome.flip(i);
-        if(rnd::uniform() < freqSNP) genome.flip(i + 1u);
+        if(rnd::uniform() < parameters.freqSNP) genome.flip(i);
+        if(rnd::uniform() < parameters.freqSNP) genome.flip(i + 1u);
     }
     mutate();
-    develop();
+    develop(parameters);
 }
 
-Individual::Individual(const std::string &sequence) :
+Individual::Individual(const std::string &sequence, const ParameterSet& parameters) :
 genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
     mutate();
-    develop();
+    develop(parameters);
 }
 
-Individual::Individual(Individual const * const mother, Individual const * const father) :
+Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters) :
     isHeteroGamous(false), habitat(mother->habitat)
 // constructor implementing sexual reproduction
 {
@@ -113,7 +113,7 @@ Individual::Individual(Individual const * const mother, Individual const * const
         if(i == 0u && hpltp == 1u && !isFemaleHeteroGamety) isHeteroGamous = true;
     }
     mutate();
-    develop();
+    develop(parameters);
 }
 
 void Individual::mutate()
@@ -127,7 +127,7 @@ void Individual::mutate()
     }
 }
 
-void Individual::develop()
+void Individual::develop(const ParameterSet& parameters)
 // implements genotype->phenotype map
 {
     // additive component
@@ -150,9 +150,9 @@ void Individual::develop()
         else {                      // heterozygote Aa
             traitLocus[i].alleleCount = 1u;
             traitLocus[i].expression =
-                scaleD[crctr] * characterLocus[i].dominanceCoeff;
+                    parameters.scaleD[crctr] * characterLocus[i].dominanceCoeff;
         }
-        traitLocus[i].geneticValue = scaleA[crctr] *
+        traitLocus[i].geneticValue = parameters.scaleA[crctr] *
             characterLocus[i].effectSize * traitLocus[i].expression;
     }
     // epistatic interactions
@@ -162,7 +162,7 @@ void Individual::develop()
             size_t j = edge.first;
             
             // compute interaction strength and distribute phenotypic effect over contributing loci
-            double Iij = 0.5 * scaleI[crctr] * edge.second *
+            double Iij = 0.5 * parameters.scaleI[crctr] * edge.second *
                 traitLocus[i].expression * traitLocus[j].expression;
             traitLocus[i].geneticValue += Iij;
             traitLocus[j].geneticValue += Iij;
@@ -173,7 +173,7 @@ void Individual::develop()
         traitG[crctr] = 0.0;
         for(size_t i : vertices[crctr])
             traitG[crctr] += traitLocus[i].geneticValue;
-        traitE[crctr] = rnd::normal(0.0, scaleE[crctr]);
+        traitE[crctr] = rnd::normal(0.0, parameters.scaleE[crctr]);
         traitP[crctr] = traitG[crctr] + traitE[crctr];
     }
 
