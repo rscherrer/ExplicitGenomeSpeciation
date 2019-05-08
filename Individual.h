@@ -48,22 +48,6 @@ typedef Individual const * PInd;
 
 class Individual {
 
-    /*
-
-    friend void decomposeVariance(int);
-    friend void recordData(int, const std::array<size_t, 7u>&,
-            const ParameterSet&,
-            const std::vector<std::pair<double, double> >&,
-            const std::vector<std::pair<double, double> >&,
-            std::ofstream&, std::ofstream&, std::vector<std::pair<size_t, size_t> >&
-            const std::list<PInd>&,
-            const Genome& genome);
-    friend void analyseNetwork(int);
-    friend double computeMatingIsolation();
-    friend double computePostIsolation();
-
-     */
-
     friend class Buffer;
 
 public:
@@ -84,7 +68,6 @@ public:
     Individual(Individual const * const,
             Individual const * const,
             const ParameterSet&,
-            const Population&,
             const Genome&);
 
     // Getters

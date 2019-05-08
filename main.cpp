@@ -38,6 +38,7 @@ Instructions for compiling and running the program
 #include "Individual.h"
 #include "analysis.h"
 #include "Genome.h"
+#include "Buffer.h"
 
 /*=======================================================================================================
                                 Parameter definitions and default values
@@ -197,30 +198,6 @@ void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const c
                                     biological model implementation
 ========================================================================================================*/
 
-void dispersal(std::list<PInd>& population, const ParameterSet& parameters)
-{
-    if(parameters.dispersalRate > 0.5) {
-        for(PInd pInd : population)
-            if(rnd::bernoulli(parameters.dispersalRate)) pInd -> disperse(parameters.nHabitat);
-    }
-    else {
-        const size_t n = population.size();
-        size_t k = rnd::binomial(n, parameters.dispersalRate);
-        if(k == 0u) return;
-    
-        std::set<size_t> migrants;
-        while(migrants.size() < k)
-            migrants.insert(rnd::random_int(n));
-    
-        std::list<PInd>::const_iterator it = population.cbegin();
-        size_t j = 0u;
-        for(size_t i : migrants) {
-            std::advance(it, i - j);
-            (*it) -> disperse(parameters.nHabitat);
-            j = i;
-        }
-    }
-}
 
 
 bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOffPt &y) {
@@ -235,147 +212,7 @@ bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOf
     }
 }
 
-void competitionAndReproduction(const size_t hab,
-                                const ParameterSet& parameters,
-                                std::list<PInd>& population,
-                                std::vector<std::pair<double, double> >& resourceConsumption,
-                                Individual::TradeOffPt& breakEvenPoint,
-                                std::vector<std::pair<double, double> >& resourceEql,
-                                std::vector<std::pair<size_t, size_t> >& genderCounts,
-                                const size_t nAccessibleResource = 2u)
-{
-    // accumulate attack rates and sort out females and males
-    std::queue<PInd> females;
-    std::vector<PInd> males;
-    std::list<Individual::TradeOffPt> pts;
-    std::list<PInd>::iterator iti = population.begin();
-    resourceConsumption[hab].first = resourceConsumption[hab].second = 0.0;
-        
-    for(std::list<PInd>::iterator itj = population.end(); iti != itj;) {
-        if((*iti)->getHabitat() == hab) {
-            Individual::TradeOffPt pt = (*iti)->getAttackRate();
-            if(nAccessibleResource < 2u) pt.second = 0.0;
-            pts.push_back(pt);
-            
-            // for the moment, assume that the individual utilises the first resource
-            resourceConsumption[hab].first += pt.first;
 
-            // but sum the attack rates on the second resource anyway if type II resource utilisation
-            if(parameters.isTypeIIResourceUtilisation) resourceConsumption[hab].second += pt.second;
-
-            if((*iti)->isFemale(parameters.isFemaleHeteroGamety)) females.push(*iti);
-            else males.push_back(*iti);
-            ++iti;
-        }
-        else { // move individuals in the other habitat towards the end
-            --itj;
-            std::swap(*iti, *itj);
-        }
-    }
-    population.erase(population.begin(), iti);
-    
-    // determine equilibrium scaled resource densities and assign final ecotype
-
-    pts.sort(tradeOffCompare);
-    breakEvenPoint = pts.back();
-    breakEvenPoint.first *= 0.5;
-    breakEvenPoint.second = 0.0;
-
-    // security check
-    if(!parameters.isTypeIIResourceUtilisation) if(resourceConsumption[hab].second != 0.0) throw std::logic_error("consumption of the second resource should be zero");
-
-    // find resource equilibrium and break-even point (used only for ecotype classification in type II resource utilisation)
-    resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
-    resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
-
-    for(const Individual::TradeOffPt &pt : pts) {
-        if(!parameters.isTypeIIResourceUtilisation) {
-            resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
-            resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
-        }
-        if(pt.first * resourceEql[hab].first < pt.second * resourceEql[hab].second) {
-            if(!parameters.isTypeIIResourceUtilisation) {
-                // switching from resource 1 to 2 is beneficial
-                resourceConsumption[hab].first -= pt.first;
-                resourceConsumption[hab].second += pt.second;
-            }
-        }
-        else {
-            // set break-even point to be used in later ecotype classification
-            breakEvenPoint = pt;
-            break;
-        }
-    }
-
-    //std::cout << hab << " : " << resourceEql[hab].first << ' ' << resourceEql[hab].second << '\n';
-    
-    // mate choice and offspring production
-    const size_t nf = genderCounts[hab].first = females.size();
-    const size_t nm = genderCounts[hab].second = males.size();
-    
-    // terminate if there are no males or no females
-    if(nf == 0u || nm == 0u) return;
-    
-    // compute reproductive success for males
-    std::vector<double> maleSuccess(nm);
-    double sum = 0.0;
-    for(size_t i = 0u; i < nm; ++i) {
-        // pick the resource that yields the highest payoff (not if type II resource utilisation)
-        Individual::TradeOffPt pt = males[i]->getAttackRate();
-        if(nAccessibleResource < 2u) pt.second = 0.0;
-        maleSuccess[i] = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-        // add stabilising selection on mating trait during burn-in period
-        if(nAccessibleResource < 2u)
-            maleSuccess[i] *= males[i]->getBurnInRpSc(parameters.ecoSelCoeff);
-        sum += maleSuccess[i];
-        
-    }
-    if(sum < parameters.tiny) maleSuccess = std::vector<double>(nm, 1.0);
-    std::discrete_distribution<size_t> maleMarket(maleSuccess.begin(), maleSuccess.end());
-
-    // sample family sizes for females and implement mate choice
-    const size_t seasonEnd = rnd::geometric(parameters.mateEvaluationCost);
-    while(!females.empty())
-    {
-        PInd fem = females.front();
-        females.pop();
-    
-        // compute female reproductive success
-        Individual::TradeOffPt pt = fem->getAttackRate();
-        if(nAccessibleResource < 2u) pt.second = 0.0;
-        double femaleSuccess = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-        if(nAccessibleResource < 2u)
-            femaleSuccess *= fem->getBurnInRpSc(parameters.ecoSelCoeff);
-    
-        // sample family size for female
-        size_t nOffspring = rnd::poisson(parameters.beta * femaleSuccess);
-        fem->prepareChoice();
-        for(size_t t = 0u; nOffspring && t < seasonEnd; ++t) {
-            
-            // sample a male
-            const size_t j = maleMarket(rnd::rng);
-
-            if(fem->acceptMate(males[j], parameters)) {
-                // add offspring to the population only if it survives development
-                population.push_back(new Individual(fem, males[j], parameters));
-                if(parameters.costIncompat > 0.0) {
-                    if(rnd::bernoulli(population.back()->getViability()))
-                        population.pop_back();
-                }
-                --nOffspring;
-            }
-        }
-        // female survival
-        if(rnd::bernoulli(parameters.survivalProb)) population.push_back(fem);
-        else delete fem;
-    }
-    // male survival
-    for(size_t i = 0u; i < nm; ++i) {
-        if(rnd::bernoulli(parameters.survivalProb)) population.push_back(males[i]);
-        else delete males[i];
-        males[i] = nullptr;
-    }
-}
 
 
 
@@ -447,19 +284,19 @@ int main(int argc, char * argv[])
         if(!(logFile.is_open() && datFile.is_open() && arcFile.is_open()))
             throw std::runtime_error("unable to open output files in main()");
         BufferBox bufferPointers;
-        bufferPointers.bufferFreq = new Buffer("freq", parameters);
-        bufferPointers.bufferF_it = new Buffer("Fit", parameters);
-        bufferPointers.bufferF_is = new Buffer("Fis", parameters);
-        bufferPointers.bufferF_st = new Buffer("Fst", parameters);
-        bufferPointers.bufferP_st = new Buffer("Pst", parameters);
-        bufferPointers.bufferG_st = new Buffer("Gst", parameters);
-        bufferPointers.bufferQ_st = new Buffer("Qst", parameters);
-        bufferPointers.bufferC_st = new Buffer("Cst", parameters);
-        bufferPointers.bufferVarP = new Buffer("varP", parameters);
-        bufferPointers.bufferVarG = new Buffer("varG", parameters);
-        bufferPointers.bufferVarA = new Buffer("varA", parameters);
-        bufferPointers.bufferVarD = new Buffer("varD", parameters);
-        bufferPointers.bufferVarI = new Buffer("varI", parameters);
+        bufferPointers.bufferFreq = new Buffer("freq", parameters, population, genome);
+        bufferPointers.bufferF_it = new Buffer("Fit", parameters, population, genome);
+        bufferPointers.bufferF_is = new Buffer("Fis", parameters, population, genome);
+        bufferPointers.bufferF_st = new Buffer("Fst", parameters, population, genome);
+        bufferPointers.bufferP_st = new Buffer("Pst", parameters, population, genome);
+        bufferPointers.bufferG_st = new Buffer("Gst", parameters, population, genome);
+        bufferPointers.bufferQ_st = new Buffer("Qst", parameters, population, genome);
+        bufferPointers.bufferC_st = new Buffer("Cst", parameters, population, genome);
+        bufferPointers.bufferVarP = new Buffer("varP", parameters, population, genome);
+        bufferPointers.bufferVarG = new Buffer("varG", parameters, population, genome);
+        bufferPointers.bufferVarA = new Buffer("varA", parameters, population, genome);
+        bufferPointers.bufferVarD = new Buffer("varD", parameters, population, genome);
+        bufferPointers.bufferVarI = new Buffer("varI", parameters, population, genome);
         std::clog << "..done\n";
 
         // store parameter values
@@ -513,7 +350,6 @@ int main(int argc, char * argv[])
         // *** simulation ***
         // create initial population
 
-        std::list<PInd> population;
         std::vector<std::pair<double, double> > resourceConsumption, resourceEql;
         std::vector<std::pair<size_t, size_t> > genderCounts;
         Individual::TradeOffPt breakEvenPoint;
@@ -521,9 +357,9 @@ int main(int argc, char * argv[])
         std::clog << "creating initial population.";
         if(parameters.sequence.size() == parameters.nBits)
             for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
-                population.push_back(new Individual(parameters.sequence, parameters));
+                population.individuals.push_back(new Individual(parameters.sequence, parameters, genome));
         else for(size_t i = 0u; i < parameters.nIndividualInit ; ++i)
-                population.push_back(new Individual(parameters));
+                population.individuals.push_back(new Individual(parameters, genome));
         std::clog << "..done\n";
 
         // enter simulation loop
@@ -531,13 +367,13 @@ int main(int argc, char * argv[])
         for(int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if(t > 0) {
                 // default
-                dispersal(population, parameters);
-                competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
-                competitionAndReproduction(1u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
+                population.dispersal(parameters);
+                population.competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
+                population.competitionAndReproduction(1u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
 
             }
-            else competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts, 1u); // burn-in period
-            if(population.size() < 2u) {
+            else population.competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts, 1u); // burn-in period
+            if(population.individuals.size() < 2u) {
                 std::clog << "population size underflow at t = " << t << '\n';
                 break;
             }
@@ -557,9 +393,9 @@ int main(int argc, char * argv[])
         arcFile.close();
 
         // free allocated memory
-        while(!population.empty()) {
-            delete population.back();
-            population.pop_back();
+        while(!population.individuals.empty()) {
+            delete population.individuals.back();
+            population.individuals.pop_back();
         }
     }
     catch(const std::exception &err) {

@@ -84,7 +84,6 @@ genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecot
 Individual::Individual(Individual const * const mother,
         Individual const * const father,
         const ParameterSet& parameters,
-        const Population& population,
         const Genome& genome) :
     isHeteroGamous(false), habitat(mother->habitat)
 // constructor implementing sexual reproduction
