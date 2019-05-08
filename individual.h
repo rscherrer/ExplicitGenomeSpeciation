@@ -46,8 +46,22 @@ inline double sqr(double x) { return x * x;}
 
 class Individual {
 
+    int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters,
+    const std::vector<std::pair<double, double> >& resourceConsumption,
+    const std::vector<std::pair<double, double> >& resourceEql,
+            std::ofstream& arcFile,
+    std::ofstream& datFile,
+            std::vector<std::pair<size_t, size_t> >& genderCounts,
+    const std::list<PInd> &population, const Genome& genome
+
     friend void decomposeVariance(int);
-    friend void recordData(int, const std::array<size_t, 7u>&);
+    friend void recordData(int, const std::array<size_t, 7u>&,
+            const ParameterSet&,
+            const std::vector<std::pair<double, double> >&,
+            const std::vector<std::pair<double, double> >&,
+            std::ofstream&, std::ofstream&, std::vector<std::pair<size_t, size_t> >&
+            const std::list<PInd>&,
+            const Genome& genome);
     friend void analyseNetwork(int);
     friend double computeMatingIsolation();
     friend double computePostIsolation();

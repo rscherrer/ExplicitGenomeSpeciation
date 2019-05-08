@@ -111,7 +111,7 @@ void Buffer::flush(const ParameterSet& parameters)
                                      data analysis functions
 ========================================================================================================*/
 
-double computePostIsolation(const ParameterSet& parameters, const std::list<PInd>& population)
+double computePostIsolation(const ParameterSet& parameters, const std::list<PInd>& population, const Genome& genome)
 {
 
     // sort out females and males
@@ -143,7 +143,7 @@ double computePostIsolation(const ParameterSet& parameters, const std::list<PInd
         ++ki[2u + m];
 
         // create offspring
-        PInd offsp = new Individual(fem, males[j], parameters);
+        PInd offsp = new Individual(fem, males[j], parameters, population, genome);
 
         // developmental viability
         if(rnd::bernoulli(offsp->getViability())) {
@@ -212,7 +212,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
         std::ofstream& arcFile,
         std::ofstream& datFile,
         std::vector<std::pair<size_t, size_t> >& genderCounts,
-        std::list<PInd> population)
+        const std::list<PInd> &population, const Genome& genome)
 {
 
     // n = (whole pop, hab0, hab1, eco1 hab0, eco2 hab0, eco1 hab1, eco2 hab1)
@@ -220,7 +220,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     // export trait means and sequence to fossil record file
     arcFile << t;
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
-        arcFile  << '\t' << Individual::avgG[crctr][0u];
+        arcFile  << '\t' << genome.avgG[crctr][0u];
     arcFile << '\t' << to_string(population.front()->getGenome()) << '\n';
     
     // write output to data file
@@ -242,19 +242,19 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
 
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         datFile << '\t' << n[1u + 2 * crctr] << '\t' << n[2u + 2 * crctr]
-        << '\t' << Individual::avgG[crctr][0u]
-        << '\t' << Individual::avgG[crctr][1u]
-        << '\t' << Individual::avgG[crctr][2u]
-        << '\t' << Individual::varP[crctr][0u]
-        << '\t' << Individual::varG[crctr][0u]
-        << '\t' << Individual::varA[crctr][0u]
-        << '\t' << Individual::varD[crctr]
-        << '\t' << Individual::varI[crctr][0u]
-        << '\t' << Individual::F_st[crctr]
-        << '\t' << Individual::P_st[crctr]
-        << '\t' << Individual::G_st[crctr]
-        << '\t' << Individual::Q_st[crctr]
-        << '\t' << Individual::C_st[crctr];
+        << '\t' << genome.avgG[crctr][0u]
+        << '\t' << genome.avgG[crctr][1u]
+        << '\t' << genome.avgG[crctr][2u]
+        << '\t' << genome.varP[crctr][0u]
+        << '\t' << genome.varG[crctr][0u]
+        << '\t' << genome.varA[crctr][0u]
+        << '\t' << genome.varD[crctr]
+        << '\t' << genome.varI[crctr][0u]
+        << '\t' << genome.F_st[crctr]
+        << '\t' << genome.P_st[crctr]
+        << '\t' << genome.G_st[crctr]
+        << '\t' << genome.Q_st[crctr]
+        << '\t' << genome.C_st[crctr];
     }
     
     double SI, EI, RI, PI;
@@ -263,7 +263,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     else {
        
         SI = (n1_ == 0u || n2_ == 0u) ? 0.0 : (1.0 * n[3u] * n[6u] - 1.0 * n[4u] * n[5u]) / sqrt(1.0 * n_1 * n_2 * n1_ * n2_);
-        EI = Individual::P_st[0u];
+        EI = genome.P_st[0u];
         RI = computeMatingIsolation(parameters, population);
         if(parameters.costIncompat > 0.0) {
             PI = computePostIsolation(parameters, population);
@@ -280,7 +280,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     // screen output
     std::cout << "t = " << t << ", n = " << population.size() << ", SI =  " << SI << ", EI = " << EI << ", RI = " << RI << ", PI = " << PI << '\n';
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
-        std::cout   << "\ttrait." << crctr << " : " << Individual::avgG[crctr][0u] << " +/- " << sqrt(Individual::varG[crctr][0u]) << '\n';
+        std::cout   << "\ttrait." << crctr << " : " << genome.avgG[crctr][0u] << " +/- " << sqrt(genome.varG[crctr][0u]) << '\n';
 }
 
 double Xst(const double &var0, const double &var1, const double &var2, const std::array<size_t, 7u> &n, const double& tiny)
@@ -304,7 +304,8 @@ void decomposeVariance(int t,
         std::ofstream& arcFile,
         std::ofstream& datFile,
         std::vector<std::pair<size_t, size_t> >& genderCounts,
-        const std::list<PInd>& population)
+        const std::list<PInd>& population,
+        Genome& genome)
 {
     std::array<size_t, 7u> n {population.size(), 0u, 0u};
     
@@ -312,9 +313,9 @@ void decomposeVariance(int t,
     // set initial values
     for(size_t cl = 0u; cl < 3u; ++cl)
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-            Individual::avgG[crctr][cl] = 0.0;
-            Individual::varP[crctr][cl] = 0.0;
-            Individual::varG[crctr][cl] = 0.0;
+            genome.avgG[crctr][cl] = 0.0;
+            genome.varP[crctr][cl] = 0.0;
+            genome.varG[crctr][cl] = 0.0;
         }
     
 
@@ -326,26 +327,26 @@ void decomposeVariance(int t,
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
             double g = pInd->getTraitG()[crctr];
             double pp = sqr(pInd->getTraitP()[crctr]);
-            Individual::avgG[crctr][0u] += g;
-            Individual::varG[crctr][0u] += g * g;
-            Individual::varP[crctr][0u] += pp;
-            Individual::avgG[crctr][cl] += g;
-            Individual::varG[crctr][cl] += g * g;
-            Individual::varP[crctr][cl] += pp;
+            genome.avgG[crctr][0u] += g;
+            genome.varG[crctr][0u] += g * g;
+            genome.varP[crctr][0u] += pp;
+            genome.avgG[crctr][cl] += g;
+            genome.varG[crctr][cl] += g * g;
+            genome.varP[crctr][cl] += pp;
         }
     }
     for(size_t cl = 0u; cl < 3u; ++cl)
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
             if(n[cl] > 1u) {
-                double mu = Individual::avgG[crctr][cl] /= n[cl];
-                double aux = (Individual::varG[crctr][cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
-                Individual::varG[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
-                aux = (Individual::varP[crctr][cl] / n[cl] - sqr(mu));
-                Individual::varP[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
+                double mu = genome.avgG[crctr][cl] /= n[cl];
+                double aux = (genome.varG[crctr][cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
+                genome.varG[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
+                aux = (genome.varP[crctr][cl] / n[cl] - sqr(mu));
+                genome.varP[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
             }
             else {
-                Individual::avgG[crctr][cl] = Individual::avgG[crctr][0u];
-                Individual::varP[crctr][cl] = Individual::varG[crctr][cl] = 0.0;
+                genome.avgG[crctr][cl] = genome.avgG[crctr][0u];
+                genome.varP[crctr][cl] = genome.varG[crctr][cl] = 0.0;
             }
         }
     
@@ -353,7 +354,7 @@ void decomposeVariance(int t,
     // loop over all loci
     std::vector<double> varE;
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-        size_t nloc = Individual::vertices[crctr].size();
+        size_t nloc = genome.vertices[crctr].size();
         varE[crctr] = parameters.nLoci ? sqr(parameters.scaleE[crctr]) / nloc : 0.0;
     }
     
@@ -364,8 +365,8 @@ void decomposeVariance(int t,
         std::array<double, 3u> dev {0.0, 0.0, 0.0};
         std::array<double, 3u> sumu;
         for(size_t cl = 0u; cl < 3u; ++cl) {
-            Individual::characterLocus[i].meanEffect[cl] = 0.0;
-            Individual::characterLocus[i].varG[cl] = 0.0;
+            genome.characterLocus[i].meanEffect[cl] = 0.0;
+            genome.characterLocus[i].varG[cl] = 0.0;
             sumu[cl] = 0u;
         }
         for(PInd pInd : population) {
@@ -376,31 +377,31 @@ void decomposeVariance(int t,
             dev[u] += g;
             sumu[0u] += u;
             sumu[cl] += u;
-            Individual::characterLocus[i].meanEffect[0u] += g;
-            Individual::characterLocus[i].meanEffect[cl] += g;
-            Individual::characterLocus[i].varG[0u] += g * g;
-            Individual::characterLocus[i].varG[cl] += g * g;
+            genome.characterLocus[i].meanEffect[0u] += g;
+            genome.characterLocus[i].meanEffect[cl] += g;
+            genome.characterLocus[i].varG[0u] += g * g;
+            genome.characterLocus[i].varG[cl] += g * g;
         }
         // allele frequency, mean effect and genetic variance
-        size_t ci = Individual::characterLocus[i].character;
+        size_t ci = genome.characterLocus[i].character;
         double varEi = varE[ci];
         for(size_t cl = 0u; cl < 3u; ++cl) {
             if(n[cl] > 1u) {
-                double mu = Individual::characterLocus[i].meanEffect[cl] /= n[cl];
-                double aux = (Individual::characterLocus[i].varG[cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
-                Individual::characterLocus[i].varG[cl] = aux > parameters.tiny ? aux : 0.0;
+                double mu = genome.characterLocus[i].meanEffect[cl] /= n[cl];
+                double aux = (genome.characterLocus[i].varG[cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
+                genome.characterLocus[i].varG[cl] = aux > parameters.tiny ? aux : 0.0;
                 sumu[cl] /= n[cl];
                 aux = 0.5 * sumu[cl];
                 if(aux < parameters.tiny) aux = 0.0;
                 if(aux > 1.0 - parameters.tiny) aux = 1.0;
-                Individual::characterLocus[i].alleleFrequency[cl] = aux;
+                genome.characterLocus[i].alleleFrequency[cl] = aux;
             }
             else {
-                Individual::characterLocus[i].meanEffect[cl] = Individual::characterLocus[i].meanEffect[0u];
-                Individual::characterLocus[i].varG[cl] = 0.0;
-                Individual::characterLocus[i].alleleFrequency[cl] = Individual::characterLocus[i].alleleFrequency[0u];
+                genome.characterLocus[i].meanEffect[cl] = genome.characterLocus[i].meanEffect[0u];
+                genome.characterLocus[i].varG[cl] = 0.0;
+                genome.characterLocus[i].alleleFrequency[cl] = genome.characterLocus[i].alleleFrequency[0u];
             }
-            Individual::characterLocus[i].varP[cl] = Individual::characterLocus[i].varG[cl] + varEi;
+            genome.characterLocus[i].varP[cl] = genome.characterLocus[i].varG[cl] + varEi;
         }
         double avgu = sumu[0u];
 
@@ -415,30 +416,30 @@ void decomposeVariance(int t,
         }
 
         // variance in allele count (= 2pq in Hardy Weinberg Eql)
-        double mu = Individual::characterLocus[i].meanEffect[0u];
+        double mu = genome.characterLocus[i].meanEffect[0u];
         double varuu = (sumuu - n[0u] * sqr(avgu)) / (n[0] - 1u);
 
         // covariance between genetic value and allele count
         double covug = (sumug - n[0u] * mu * avgu) / (n[0] - 1u);
 
         // average effect
-        double alpha = Individual::characterLocus[i].avgEffectOfSubstitution =
+        double alpha = genome.characterLocus[i].avgEffectOfSubstitution =
             varuu > parameters.tiny ? covug / varuu : 0.0;
 
         // additive genetic variance
-        Individual::characterLocus[i].varA[0u] = sqr(alpha) * varuu;
+        genome.characterLocus[i].varA[0u] = sqr(alpha) * varuu;
 
         // observed and expected heterozygosity ~ F_it
         double H_t = avgu * (1.0 - 0.5 * avgu);
         double Fit = H_t > parameters.tiny ? 1.0 - frq[1u] / H_t : 0.0;
         if(Fit < parameters.tiny) Fit = 0.0;
         if(Fit > 1.0 - parameters.tiny) Fit = 1.0;
-        Individual::characterLocus[i].F_it = Fit;
+        genome.characterLocus[i].F_it = Fit;
 
         // mean heterozygosity in subpopulations
         double H_within = 0.0;
         for(size_t cl = 1u; cl < 3u; ++cl) {
-            double pi = Individual::characterLocus[i].alleleFrequency[cl];
+            double pi = genome.characterLocus[i].alleleFrequency[cl];
             H_within += n[cl] * 2.0 * pi * (1.0 - pi);
         }
         H_within /= n[0u];
@@ -453,14 +454,14 @@ void decomposeVariance(int t,
         else Fis = 1.0 - (1.0 - Fit) / (1.0 - Fst);
         if(Fis < parameters.tiny) Fis = 0.0;
         if(Fis > 1.0 - parameters.tiny) Fis = 1.0;
-        Individual::characterLocus[i].F_is = Fis;
-        Individual::characterLocus[i].F_st = Fst;
+        genome.characterLocus[i].F_is = Fis;
+        genome.characterLocus[i].F_st = Fst;
         
         // dominance deviations and dominance variance
-        Individual::characterLocus[i].varD = 0.0;
+        genome.characterLocus[i].varD = 0.0;
         for(size_t u = 0u; u < 3u; ++u) {
             dev[u] -= mu + alpha * (u - avgu);
-            Individual::characterLocus[i].varD += frq[u] * sqr(dev[u]);
+            genome.characterLocus[i].varD += frq[u] * sqr(dev[u]);
         }
 
         // epistatic deviations and epistatic variance
@@ -483,45 +484,45 @@ void decomposeVariance(int t,
             sumdva2[cl] += dva * dva;
             sumeps2 += eps * eps;
         }
-        Individual::characterLocus[i].varI[0u] = 2.0 * sumeps2 / (n[0] - 1u);
+        genome.characterLocus[i].varI[0u] = 2.0 * sumeps2 / (n[0] - 1u);
         for(size_t cl = 1u; cl < 3u; ++cl) {
             if(n[cl] > 1u) {
                 sumbrv1[cl] /= n[cl];
                 sumdva1[cl] /= n[cl];
                 double aux = (sumbrv2[cl] - n[cl] * sqr(sumbrv1[cl])) / (n[cl] - 1u);
-                Individual::characterLocus[i].varA[cl] = aux > parameters.tiny ? aux : 0.0;
+                genome.characterLocus[i].varA[cl] = aux > parameters.tiny ? aux : 0.0;
                 aux = (sumdva2[cl] - n[cl] * sqr(sumdva1[cl])) / (n[cl] - 1u);
-                Individual::characterLocus[i].varI[cl] = aux > parameters.tiny ? aux : 0.0;
+                genome.characterLocus[i].varI[cl] = aux > parameters.tiny ? aux : 0.0;
             }
             else {
-                Individual::characterLocus[i].varA[cl] = 0.0;
-                Individual::characterLocus[i].varI[cl] = 0.0;
+                genome.characterLocus[i].varA[cl] = 0.0;
+                genome.characterLocus[i].varI[cl] = 0.0;
             }
         }
         
         // Pst, Gst, Qst and Cst
-        Individual::characterLocus[i].P_st =
-        Xst(Individual::characterLocus[i].varP[0u],
-            Individual::characterLocus[i].varP[1u],
-            Individual::characterLocus[i].varP[2u], n, parameters.tiny);
-        Individual::characterLocus[i].G_st =
-            Xst(Individual::characterLocus[i].varG[0u],
-                Individual::characterLocus[i].varG[1u],
-                Individual::characterLocus[i].varG[2u], n, parameters.tiny);
-        Individual::characterLocus[i].Q_st =
-            Xst(Individual::characterLocus[i].varA[0u],
-                Individual::characterLocus[i].varA[1u],
-                Individual::characterLocus[i].varA[2u], n, parameters.tiny);
-        Individual::characterLocus[i].C_st =
-            Xst(Individual::characterLocus[i].varD + 0.5 * Individual::characterLocus[i].varI[0u],
-            Individual::characterLocus[i].varI[1u],
-            Individual::characterLocus[i].varI[2u], n, parameters.tiny);
+        genome.characterLocus[i].P_st =
+        Xst(genome.characterLocus[i].varP[0u],
+            genome.characterLocus[i].varP[1u],
+            genome.characterLocus[i].varP[2u], n, parameters.tiny);
+        genome.characterLocus[i].G_st =
+            Xst(genome.characterLocus[i].varG[0u],
+                genome.characterLocus[i].varG[1u],
+                genome.characterLocus[i].varG[2u], n, parameters.tiny);
+        genome.characterLocus[i].Q_st =
+            Xst(genome.characterLocus[i].varA[0u],
+                genome.characterLocus[i].varA[1u],
+                genome.characterLocus[i].varA[2u], n, parameters.tiny);
+        genome.characterLocus[i].C_st =
+            Xst(genome.characterLocus[i].varD + 0.5 * genome.characterLocus[i].varI[0u],
+                genome.characterLocus[i].varI[1u],
+                genome.characterLocus[i].varI[2u], n, parameters.tiny);
     }
 
     // write data to output buffer
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
-        (*bufferPointers.bufferFreq)[i] = Individual::characterLocus[i].alleleFrequency[0u];
-        (*bufferPointers.bufferF_it)[i] = Individual::characterLocus[i].F_it;
+        (*bufferPointers.bufferFreq)[i] = genome.characterLocus[i].alleleFrequency[0u];
+        (*bufferPointers.bufferF_it)[i] = genome.characterLocus[i].F_it;
         (*bufferPointers.bufferF_is)[i] = Individual::characterLocus[i].F_is;
         (*bufferPointers.bufferF_st)[i] = Individual::characterLocus[i].F_st;
         (*bufferPointers.bufferP_st)[i] = Individual::characterLocus[i].P_st;
@@ -584,10 +585,10 @@ void decomposeVariance(int t,
                 Individual::varI[crctr][1u],
                 Individual::varI[crctr][2u], n, parameters.tiny);
     }
-    recordData(t, n, parameters, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population);
+    recordData(t, n, parameters, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population, genome);
 }
 
-void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>& population)
+void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>& population, const Genome& genome)
 {
     const char sep = ',';
     // *** node properties ***
@@ -609,30 +610,30 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
         << "Gst" << sep << "Qst" << sep << "Cst" << '\n';
     
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
-        const size_t crctr = Individual::characterLocus[i].character;
-        double pi = Individual::characterLocus[i].alleleFrequency[0u];
+        const size_t crctr = genome.characterLocus[i].character;
+        double pi = genome.characterLocus[i].alleleFrequency[0u];
         ofs << i << sep
-            << Individual::characterLocus[i].character << sep
-            << Individual::characterLocus[i].linkageGroup << sep
-            << Individual::characterLocus[i].edges.size() << sep
-            << Individual::characterLocus[i].location << sep
-            << parameters.scaleA[crctr] * Individual::characterLocus[i].effectSize << sep
-            << parameters.scaleD[crctr] * Individual::characterLocus[i].dominanceCoeff << sep
+            << genome.characterLocus[i].character << sep
+            << genome.characterLocus[i].linkageGroup << sep
+            << genome.characterLocus[i].edges.size() << sep
+            << genome.characterLocus[i].location << sep
+            << parameters.scaleA[crctr] * genome.characterLocus[i].effectSize << sep
+            << parameters.scaleD[crctr] * genome.characterLocus[i].dominanceCoeff << sep
             << pi << sep
-            << Individual::characterLocus[i].meanEffect[0u] << sep
-            << Individual::characterLocus[i].avgEffectOfSubstitution << sep
-            << Individual::characterLocus[i].varP[0u] << sep
-            << Individual::characterLocus[i].varG[0u] << sep
-            << Individual::characterLocus[i].varA[0u] << sep
-            << Individual::characterLocus[i].varD << sep
-            << Individual::characterLocus[i].varI[0u] << sep
+            << genome.characterLocus[i].meanEffect[0u] << sep
+            << genome.characterLocus[i].avgEffectOfSubstitution << sep
+            << genome.characterLocus[i].varP[0u] << sep
+            << genome.characterLocus[i].varG[0u] << sep
+            << genome.characterLocus[i].varA[0u] << sep
+            << genome.characterLocus[i].varD << sep
+            << genome.characterLocus[i].varI[0u] << sep
             << 2.0 * pi * (1.0 - pi) << sep
-            << Individual::characterLocus[i].F_it << sep
-            << Individual::characterLocus[i].F_is << sep
-            << Individual::characterLocus[i].F_st << sep
-            << Individual::characterLocus[i].G_st << sep
-            << Individual::characterLocus[i].Q_st << sep
-            << Individual::characterLocus[i].C_st <<'\n';
+            << genome.characterLocus[i].F_it << sep
+            << genome.characterLocus[i].F_is << sep
+            << genome.characterLocus[i].F_st << sep
+            << genome.characterLocus[i].G_st << sep
+            << genome.characterLocus[i].Q_st << sep
+            << genome.characterLocus[i].C_st <<'\n';
     }
     ofs.close();
 
@@ -652,16 +653,16 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
     // determine edge properties
     const size_t n = population.size();
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
-        const size_t crctr = Individual::characterLocus[i].character;
-        for(const std::pair<size_t, double> &edge : Individual::characterLocus[i].edges) {
+        const size_t crctr = genome.characterLocus[i].character;
+        for(const std::pair<size_t, double> &edge : genome.characterLocus[i].edges) {
             const size_t j = edge.first;
             const double eij = parameters.scaleI[crctr] * edge.second;
             double sumpipj = 0.0, sumgigj = 0.0, sumbibj = 0.0,
                 sumxi = 0.0, sumxj = 0.0, sumxixi = 0.0, sumxjxj;
-            double pi = Individual::characterLocus[i].alleleFrequency[0u];
-            double pj = Individual::characterLocus[j].alleleFrequency[0u];
-            double alphai = Individual::characterLocus[i].avgEffectOfSubstitution;
-            double alphaj = Individual::characterLocus[j].avgEffectOfSubstitution;
+            double pi = genome.characterLocus[i].alleleFrequency[0u];
+            double pj = genome.characterLocus[j].alleleFrequency[0u];
+            double alphai = genome.characterLocus[i].avgEffectOfSubstitution;
+            double alphaj = genome.characterLocus[j].avgEffectOfSubstitution;
             for(PInd pInd : population) {
                 size_t ui = pInd->getTraitLocus()[i].alleleCount;
                 size_t uj = pInd->getTraitLocus()[j].alleleCount;
@@ -685,13 +686,13 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
             sumxj /= n;
             sumxixi = (sumxixi - n * sumxi * sumxi) / (n - 1u);
             sumxjxj = (sumxjxj - n * sumxj * sumxj) / (n - 1u);
-            double ai = parameters.scaleA[crctr] * Individual::characterLocus[i].effectSize;
-            double aj = parameters.scaleA[crctr] * Individual::characterLocus[j].effectSize;
+            double ai = parameters.scaleA[crctr] * genome.characterLocus[i].effectSize;
+            double aj = parameters.scaleA[crctr] * genome.characterLocus[j].effectSize;
             double weightij = fabs(aj) < parameters.tiny ? 0.0 :
-                sqrt(sqr(Individual::characterLocus[j].avgEffectOfSubstitution * eij / aj)
+                sqrt(sqr(genome.characterLocus[j].avgEffectOfSubstitution * eij / aj)
                     * sumxixi);
             double weightji = fabs(ai) < parameters.tiny ? 0.0 :
-                sqrt(sqr(Individual::characterLocus[i].avgEffectOfSubstitution * eij / ai)
+                sqrt(sqr(genome.characterLocus[i].avgEffectOfSubstitution * eij / ai)
                     * sumxjxj);
         
             // correlation between allele frequencies ~ population LD
@@ -700,17 +701,17 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
             double rp = norm > parameters.tiny ? sumpipj / norm : 0.0;
             
             // correlation between genetic values ~ genetic covariance
-            double mui = Individual::characterLocus[i].meanEffect[0u];
-            double muj = Individual::characterLocus[j].meanEffect[0u];
-            double vari = Individual::characterLocus[i].varG[0u];
-            double varj = Individual::characterLocus[j].varG[0u];
+            double mui = genome.characterLocus[i].meanEffect[0u];
+            double muj = genome.characterLocus[j].meanEffect[0u];
+            double vari = genome.characterLocus[i].varG[0u];
+            double varj = genome.characterLocus[j].varG[0u];
             sumgigj = (sumgigj - n * mui * muj) / (n - 1u);
             norm = sqrt(vari * varj);
             double rG = norm > parameters.tiny ? sumgigj / norm : 0.0;
             
             // correlation between breeding values ~ additive genetic covariance
-            vari = Individual::characterLocus[i].varA[0u];
-            varj = Individual::characterLocus[j].varA[0u];
+            vari = genome.characterLocus[i].varA[0u];
+            varj = genome.characterLocus[j].varA[0u];
             sumbibj /= (n - 1u);
             norm = sqrt(vari * varj);
             double rA = norm > parameters.tiny ? sumbibj / norm : 0.0;
