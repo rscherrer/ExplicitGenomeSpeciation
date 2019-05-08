@@ -324,6 +324,12 @@
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.cpp">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>

@@ -34,14 +34,8 @@ Instructions for compiling and running the program
 #include "BufferBox.h"
 #include "individual.h"
 #include "Population.h"
+#include "Genome.h"
 
-extern int tSavDat, tGetDat, tBurnIn;
-extern double mateEvaluationCost;
-extern double costIncompat;
-extern Buffer *bufferFreq, *bufferF_it, *bufferF_is, *bufferF_st,
-    *bufferP_st, *bufferG_st, *bufferQ_st, *bufferC_st,
-    *bufferVarP, *bufferVarG, *bufferVarA, *bufferVarD, *bufferVarI;
-extern Individual::TradeOffPt breakEvenPoint;
 
 /*=======================================================================================================
                                      output buffer file
@@ -51,7 +45,8 @@ const char Buffer::sep = ',';
 
 Buffer::Buffer(const std::string &str,
         const ParameterSet& parameters,
-        const Population& population) :
+        const Population& population,
+        const Genome& genome) :
     i(0u), k(0u), t(-parameters.tBurnIn), n(static_cast<size_t>(parameters.tSavDat / parameters.tGetDat)), label(str)
 {
     data = std::vector< std::vector<double> >(n, std::vector<double>(parameters.nLoci, 0.0));
@@ -70,27 +65,27 @@ Buffer::Buffer(const std::string &str,
     ofs << '\n';
     ofs << "character" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].character;
+        ofs << sep << genome.characterLocus[j].character;
     ofs << '\n';
     ofs << "linkage.group" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].linkageGroup;
+        ofs << sep << genome.characterLocus[j].linkageGroup;
     ofs << '\n';
     ofs << "degree" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].edges.size();
+        ofs << sep << genome.characterLocus[j].edges.size();
     ofs << '\n';
     ofs << "location" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].location;
+        ofs << sep << genome.characterLocus[j].location;
     ofs << '\n';
     ofs << "effect.size" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].effectSize;
+        ofs << sep << genome.characterLocus[j].effectSize;
     ofs << '\n';
     ofs << "dominance.coeff" << sep << "NA";
     for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << population.characterLocus[j].dominanceCoeff;
+        ofs << sep << genome.characterLocus[j].dominanceCoeff;
     ofs << '\n';
 }
 

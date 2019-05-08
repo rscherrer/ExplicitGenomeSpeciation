@@ -34,6 +34,7 @@ Instructions for compiling and running the program
 #include "random.h"
 #include "ParameterSet.h"
 #include "Population.h"
+#include "Genome.h"
 
 size_t divide_rounding_up( std::size_t dividend, std::size_t divisor )
 { return ( dividend + divisor - 1 ) / divisor; }
@@ -64,16 +65,16 @@ isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 {
     // initial genotype
     for(size_t i = 0u; i < parameters.nBits; i += 2u) {
-        genome[i] = genome[i + 1u] = (i % 4u == 0u);
-        if(rnd::uniform() < parameters.freqSNP) genome[i] = !genome[i];
-        if(rnd::uniform() < parameters.freqSNP) genome[i + 1u] = !genome[i + 1u];
+        genomeSequence[i] = genomeSequence[i + 1u] = (i % 4u == 0u);
+        if(rnd::uniform() < parameters.freqSNP) genomeSequence[i] = !genomeSequence[i];
+        if(rnd::uniform() < parameters.freqSNP) genomeSequence[i + 1u] = !genomeSequence[i + 1u];
     }
     mutate(parameters);
     develop(parameters);
 }
 
 Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters) :
-genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
     mutate(parameters);
@@ -83,53 +84,54 @@ genome(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 Individual::Individual(Individual const * const mother,
         Individual const * const father,
         const ParameterSet& parameters,
-        const Population& population) :
+        const Population& population,
+        const Genome& genome) :
     isHeteroGamous(false), habitat(mother->habitat)
 // constructor implementing sexual reproduction
 {
     // transmission of genes from mother
     double freeRecombinationPoint = 0.0, crossOverPoint = 0.0;
     for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(population.characterLocus[i].location > freeRecombinationPoint) {
+        if(genome.characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
             if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = population.chromosomeSize[lnkgr];
+                freeRecombinationPoint = genome.chromosomeSize[lnkgr];
                 ++lnkgr;
             }
             else freeRecombinationPoint = 1.0;
         }
-        if(population.characterLocus[i].location > crossOverPoint) {
+        if(genome.characterLocus[i].location > crossOverPoint) {
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point
             crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
-        genome[i << 1] = mother->genome[(i << 1u) + hpltp];
+        genomeSequence[i << 1] = mother->genomeSequence[(i << 1u) + hpltp];
         if(i == 0u && hpltp == 0u && parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
     
     // transmission of genes from father
     freeRecombinationPoint = crossOverPoint = 0.0;
     for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(population.characterLocus[i].location > freeRecombinationPoint) {
+        if(genome.characterLocus[i].location > freeRecombinationPoint) {
             // switch to random haplotype
             hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
             // set next free recombination point
             if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = population.chromosomeSize[lnkgr];
+                freeRecombinationPoint = genome.chromosomeSize[lnkgr];
                 ++lnkgr;
             }
             else freeRecombinationPoint = 1.0;
         }
-        if(population.characterLocus[i].location > crossOverPoint) {
+        if(genome.characterLocus[i].location > crossOverPoint) {
             // cross over to other haplotype
             hpltp = (hpltp + 1u) % 2u;
             // set next cross-over point
             crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
-        genome[(i << 1) + 1u] = father->genome[(i << 1u) + hpltp];
+        genomeSequence[(i << 1) + 1u] = father->genomeSequence[(i << 1u) + hpltp];
         if(i == 0u && hpltp == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
     mutate(parameters);
@@ -142,23 +144,23 @@ void Individual::mutate(const ParameterSet& parameters)
     size_t k = rnd::poisson(parameters.nBits * parameters.mutationRate);
     while(k) {
         size_t i = rnd::random_int(parameters.nBits);
-        genome[i] = !genome[i];
+        genomeSequence[i] = !genomeSequence[i];
         --k;
     }
 }
 
-void Individual::develop(const ParameterSet& parameters)
+void Individual::develop(const ParameterSet& parameters, const Genome& genome)
 // implements genotype->phenotype map
 {
     // additive component
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
         
         size_t k = i << 1u;
-        size_t crctr = characterLocus[i].character;
+        size_t crctr = genome.characterLocus[i].character;
         
         // determine genotype and locus phenotypic effect
-        if(genome[k] == genome[k + 1u]) {
-            if(genome[k]) {         // homozygote AA
+        if(genomeSequence[k] == genomeSequence[k + 1u]) {
+            if(genomeSequence[k]) {         // homozygote AA
                 traitLocus[i].alleleCount = 2u;
                 traitLocus[i].expression = +1.0;
             }
@@ -170,15 +172,15 @@ void Individual::develop(const ParameterSet& parameters)
         else {                      // heterozygote Aa
             traitLocus[i].alleleCount = 1u;
             traitLocus[i].expression =
-                    parameters.scaleD[crctr] * characterLocus[i].dominanceCoeff;
+                    parameters.scaleD[crctr] * genome.characterLocus[i].dominanceCoeff;
         }
         traitLocus[i].geneticValue = parameters.scaleA[crctr] *
-            characterLocus[i].effectSize * traitLocus[i].expression;
+                genome.characterLocus[i].effectSize * traitLocus[i].expression;
     }
     // epistatic interactions
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
-        size_t crctr = characterLocus[i].character;
-        for(std::pair<size_t, double> edge : characterLocus[i].edges) {
+        size_t crctr = genome.characterLocus[i].character;
+        for(std::pair<size_t, double> edge : genome.characterLocus[i].edges) {
             size_t j = edge.first;
             
             // compute interaction strength and distribute phenotypic effect over contributing loci
@@ -191,7 +193,7 @@ void Individual::develop(const ParameterSet& parameters)
     // accumulate phenotypic contributions and add environmental effect
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         traitG[crctr] = 0.0;
-        for(size_t i : vertices[crctr])
+        for(size_t i : genome.vertices[crctr])
             traitG[crctr] += traitLocus[i].geneticValue;
         traitE[crctr] = rnd::normal(0.0, parameters.scaleE[crctr]);
         traitP[crctr] = traitG[crctr] + traitE[crctr];
@@ -202,9 +204,9 @@ void Individual::develop(const ParameterSet& parameters)
         // initialize the number of incompatibilities
         size_t nIncompatibilities = 0;
         // for each vertex underlying trait Z
-        for(size_t i : vertices[2u]) {
+        for(size_t i : genome.vertices[2u]) {
             // for each of its edges
-            for(std::pair<size_t, double> edge : characterLocus[i].edges) {
+            for(std::pair<size_t, double> edge : genome.characterLocus[i].edges) {
                 // record expression level of i and j
                 size_t j = edge.first;
                 double ei = traitLocus[i].expression;

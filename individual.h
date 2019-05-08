@@ -34,26 +34,7 @@ Instructions for compiling and running the program
 #include <vector>
 #include "ParameterSet.h"
 #include "Population.h"
-
-/*
-const size_t nEcoLoci         = 400u;
-const size_t nMatLoci         = 200u;
-const size_t nNtrLoci         = 400u;
-const size_t nEcoInteractions = 1000u;
-const size_t nMatInteractions = 500u;
-const size_t nNtrInteractions = 0u;
-const size_t nChromosomes     = 3u;
-const size_t nHabitat         = 2u;
-const size_t nCharacter       = 3u;
-const double tiny             = 1.0e-12;    // for clipping towards zero
-const size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
-const size_t nBits = 2u * nLoci;
-
-
-
-extern bool isFemaleHeteroGamety;
-
-*/
+#include "Genome.h"
 
 size_t divide_rounding_up( std::size_t dividend, std::size_t divisor );
 
@@ -77,8 +58,6 @@ public:
 
     typedef std::pair<double, double> TradeOffPt;
 
-
-
     // A Trait object is locus- and individual-specific
     struct Trait
     {
@@ -92,7 +71,8 @@ public:
     Individual(Individual const * const,
             Individual const * const,
             const ParameterSet&,
-            const Population&);
+            const Population&,
+            const Genome&);
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
@@ -101,7 +81,7 @@ public:
     double getViability() const {return viability; }
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
-    std::vector<bool> getGenome() const { return genome; }
+    std::vector<bool> getGenome() const { return genomeSequence; }
     std::vector<double> getTraitP() const { return traitP; } // size nCharacter
     std::vector<double> getTraitG() const { return traitG; } // size nCharacter
     std::vector<double> getTraitE() const { return traitE; } // size nCharacter
@@ -113,26 +93,12 @@ public:
     void prepareChoice() const;
     bool acceptMate(Individual const * const, const ParameterSet&) const;
 
-    // Static functions
-    static void generateGeneticArchitecture(const ParameterSet&);
-    static void storeGeneticArchitecture(const std::string&, const ParameterSet&);
-    static void loadGeneticArchitecture(const std::string&, const ParameterSet&, const Population&);
-
-    // Static variables -- these should belong to population
-    /*
-    static std::vector<std::vector<double> > // 3 by 3
-            avgG, varP, varG, varA, varI;
-    static std::vector<double> varD, F_st, P_st, G_st, Q_st, C_st; // size nCharacter
-    static std::vector<double> chromosomeSize; // size nchromosomes - 1
-    static std::vector<std::set<size_t> > vertices; // size nCharacter
-    static std::vector<Character> characterLocus; // size nLoci
-     */
 
 private:
 
     // Private setters
     void mutate(const ParameterSet&);
-    void develop(const ParameterSet&);
+    void develop(const ParameterSet&, const Genome&);
 
     // Fields
     bool isHeteroGamous;
@@ -142,7 +108,7 @@ private:
     std::vector<double> traitP, traitG, traitE; // size nCharacter
     double viability;
     TradeOffPt attackRate;
-    std::vector<bool> genome;
+    std::vector<bool> genomeSequence;
     std::vector<Trait> traitLocus; // size nLoci
 
 };

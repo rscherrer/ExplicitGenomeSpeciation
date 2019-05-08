@@ -248,6 +248,33 @@ BufferBox.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.s
 .PHONY : BufferBox.cpp.s
 
+Genome.o: Genome.cpp.o
+
+.PHONY : Genome.o
+
+# target to build an object file
+Genome.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o
+.PHONY : Genome.cpp.o
+
+Genome.i: Genome.cpp.i
+
+.PHONY : Genome.i
+
+# target to preprocess a source file
+Genome.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.i
+.PHONY : Genome.cpp.i
+
+Genome.s: Genome.cpp.s
+
+.PHONY : Genome.s
+
+# target to generate assembly for a file
+Genome.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.s
+.PHONY : Genome.cpp.s
+
 ParameterSet.o: ParameterSet.cpp.o
 
 .PHONY : ParameterSet.o
@@ -484,6 +511,9 @@ help:
 	@echo "... BufferBox.o"
 	@echo "... BufferBox.i"
 	@echo "... BufferBox.s"
+	@echo "... Genome.o"
+	@echo "... Genome.i"
+	@echo "... Genome.s"
 	@echo "... ParameterSet.o"
 	@echo "... ParameterSet.i"
 	@echo "... ParameterSet.s"

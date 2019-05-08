@@ -29,10 +29,11 @@ Instructions for compiling and running the program
 
 #include "individual.h"
 #include "BufferBox.h"
+#include "Genome.h"
 
 class Buffer {
 public:
-    Buffer(const std::string&, const ParameterSet&);
+    Buffer(const std::string&, const ParameterSet&, const Population&, const Genome&);
     ~Buffer() { ofs.close(); }
     double &operator[](size_t j) {return data[i][j];}
     void flush(const ParameterSet&);

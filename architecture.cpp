@@ -29,6 +29,7 @@
 #include <algorithm>
 #include "individual.h"
 #include "random.h"
+#include "Genome.h"
 
 // parameters of the allelic and interaction effect size distributions
 const double alphaAdditive = 2.0;
@@ -122,7 +123,7 @@ void preferentialAttachmentNetwork(const size_t n, size_t e, const double expone
     std::clog << ':';
 }
 
-void Individual::generateGeneticArchitecture(const ParameterSet& parameters)
+void Genome::generateGeneticArchitecture(const ParameterSet& parameters)
 {
     std::clog << "generating a new genetic architecture\n";
 

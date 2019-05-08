@@ -304,6 +304,24 @@ BufferBox.h
 individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.cpp
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+vector
+-
+array
+-
+list
+-
+set
+-
+ParameterSet.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
+Population.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
 array
 -
@@ -353,12 +371,16 @@ individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 Population.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h
 individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 BufferBox.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/architecture.cpp
 iostream
@@ -373,6 +395,8 @@ individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 random.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.cpp
 iostream
@@ -397,6 +421,8 @@ ParameterSet.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
 Population.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/individual.h
 bitset
@@ -413,6 +439,8 @@ ParameterSet.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
 Population.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/main.cpp
 iostream
