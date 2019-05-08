@@ -38,8 +38,7 @@ public:
     // Setters
     void generateGeneticArchitecture(const ParameterSet&);
     void storeGeneticArchitecture(const std::string&, const ParameterSet&);
-    void loadGeneticArchitecture(const std::string&, const ParameterSet&, const Population&);
-
+    void loadGeneticArchitecture(const std::string&, const ParameterSet&);
     void preferentialAttachmentNetwork(const size_t n, size_t e, const double exponent, std::vector<Edge> &edges);
 
 

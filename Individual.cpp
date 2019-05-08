@@ -332,7 +332,7 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
 
 }
 
-size_t Individual::setEcotype(const Individual::TradeOffPt &threshold) const
+size_t Individual::setEcotype(const TradeOffPt &threshold) const
 {
     return ecotype = tradeOffCompare(attackRate, threshold) ? 2u : 1u;
 }

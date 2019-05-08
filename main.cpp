@@ -39,6 +39,7 @@ Instructions for compiling and running the program
 #include "analysis.h"
 #include "Genome.h"
 #include "Buffer.h"
+#include "Population.h"
 
 /*=======================================================================================================
                                 Parameter definitions and default values
@@ -200,17 +201,7 @@ void writeParameters(std::ofstream &ofs, const ParameterSet& parameters, const c
 
 
 
-bool tradeOffCompare (const Individual::TradeOffPt &x, const Individual::TradeOffPt &y) {
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
-    }
-}
+
 
 
 
@@ -259,7 +250,7 @@ int main(int argc, char * argv[])
             readParameters(argv[1], parameters);
         else throw std::runtime_error("invalid number of program arguments in main()");
 
-        Population population;
+        Population population = new Population;
         Genome genome;
 
         // initialise genetic architecture
@@ -270,7 +261,7 @@ int main(int argc, char * argv[])
             genome.generateGeneticArchitecture(parameters);
             genome.storeGeneticArchitecture(parameters.architecture, parameters);
         }
-        else genome.loadGeneticArchitecture(parameters.architecture, parameters, population);
+        else genome.loadGeneticArchitecture(parameters.architecture, parameters);
 
 
 

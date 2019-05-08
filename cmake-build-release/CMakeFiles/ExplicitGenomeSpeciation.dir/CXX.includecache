@@ -403,6 +403,10 @@ vector
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp
 Population.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+random.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+queue
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/queue
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
 vector
@@ -411,6 +415,10 @@ set
 -
 Individual.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
+ParameterSet.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
+Genome.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp
 gtest/gtest.h
@@ -487,6 +495,10 @@ analysis.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h
 Genome.h
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+Buffer.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h
+Population.h
+/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
 
 /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
 random

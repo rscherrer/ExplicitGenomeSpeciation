@@ -9,15 +9,30 @@
 #include <set>
 #include "Individual.h"
 #include "ParameterSet.h"
+#include "Genome.h"
 
 class Individual;
 typedef Individual const * PInd;
+
+typedef std::pair<double, double> TradeOffPt;
+
+bool tradeOffCompare (const TradeOffPt &x, const TradeOffPt &y) {
+    bool yOnLeft = y.first < y.second;
+    if(x.first < x.second) {
+        if(yOnLeft) return (x.first < y.first);
+        else return true;
+    }
+    else {
+        if(yOnLeft) return false;
+        else return (x.second < y.second);
+    }
+}
 
 class Population {
 
 public:
 
-    typedef std::pair<double, double> TradeOffPt;
+    Population() = default;
 
     std::list<PInd> individuals;
 
@@ -32,12 +47,7 @@ public:
     std::vector<double> varD, F_st, P_st, G_st, Q_st, C_st; // size nCharacter
 
     void dispersal(const ParameterSet&);
-
-    void competitionAndReproduction(const size_t,
-                                    const ParameterSet&,
-                                    const Genome&)
-
-
+    void competitionAndReproduction(const size_t, const ParameterSet&, const Genome&);
 
 
 private:

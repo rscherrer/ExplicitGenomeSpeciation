@@ -167,8 +167,7 @@ void Genome::generateGeneticArchitecture(const ParameterSet& parameters)
 }
 
 void Genome::loadGeneticArchitecture(const std::string &filename,
-                                     const ParameterSet& parameters,
-                                     const Population& population)
+                                     const ParameterSet& parameters)
 {
     std::clog << "loading genetic architecture from file " << filename << '\n';
 

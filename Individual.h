@@ -41,19 +41,15 @@ size_t divide_rounding_up( std::size_t dividend, std::size_t divisor );
 std::string to_string( std::vector< bool > const & bitvector );
 
 class Buffer;
+typedef std::pair<double, double> TradeOffPt;
 
 inline double sqr(double x) { return x * x;}
-
-typedef Individual const * PInd;
 
 class Individual {
 
     friend class Buffer;
 
 public:
-
-
-
 
     // A Trait object is locus- and individual-specific
     struct Trait
@@ -85,7 +81,7 @@ public:
 
     // Setters
     void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
-    size_t setEcotype(const Individual::TradeOffPt &threshold) const;
+    size_t setEcotype(const TradeOffPt &threshold) const;
     void prepareChoice() const;
     bool acceptMate(Individual const * const, const ParameterSet&) const;
 
@@ -109,8 +105,7 @@ private:
 
 };
 
+typedef Individual const * PInd;
 
-
-bool tradeOffCompare (const Individual::TradeOffPt&, const Individual::TradeOffPt&);
 
 #endif
