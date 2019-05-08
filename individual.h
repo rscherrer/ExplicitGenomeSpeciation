@@ -46,13 +46,7 @@ inline double sqr(double x) { return x * x;}
 
 class Individual {
 
-    int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters,
-    const std::vector<std::pair<double, double> >& resourceConsumption,
-    const std::vector<std::pair<double, double> >& resourceEql,
-            std::ofstream& arcFile,
-    std::ofstream& datFile,
-            std::vector<std::pair<size_t, size_t> >& genderCounts,
-    const std::list<PInd> &population, const Genome& genome
+    /*
 
     friend void decomposeVariance(int);
     friend void recordData(int, const std::array<size_t, 7u>&,
@@ -66,9 +60,13 @@ class Individual {
     friend double computeMatingIsolation();
     friend double computePostIsolation();
 
+     */
+
     friend class Buffer;
 
 public:
+
+
 
     typedef std::pair<double, double> TradeOffPt;
 
@@ -80,8 +78,8 @@ public:
     };
 
     // Constructors
-    Individual(const ParameterSet&);
-    Individual(const std::vector<bool>&, const ParameterSet&);
+    Individual(const ParameterSet&, const Genome&);
+    Individual(const std::vector<bool>&, const ParameterSet&, const Genome&);
     Individual(Individual const * const,
             Individual const * const,
             const ParameterSet&,

@@ -14,6 +14,7 @@ class Population {
 public:
 
 
+    std::list<PInd> individuals;
 
     // Static variables -- these should belong to population
 

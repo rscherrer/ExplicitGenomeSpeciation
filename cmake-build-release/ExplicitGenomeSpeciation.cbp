@@ -318,6 +318,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>

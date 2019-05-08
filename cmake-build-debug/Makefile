@@ -221,6 +221,33 @@ gtest/fast:
 	$(MAKE) -f lib/googletest-master/googletest/CMakeFiles/gtest.dir/build.make lib/googletest-master/googletest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
+Buffer.o: Buffer.cpp.o
+
+.PHONY : Buffer.o
+
+# target to build an object file
+Buffer.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o
+.PHONY : Buffer.cpp.o
+
+Buffer.i: Buffer.cpp.i
+
+.PHONY : Buffer.i
+
+# target to preprocess a source file
+Buffer.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.i
+.PHONY : Buffer.cpp.i
+
+Buffer.s: Buffer.cpp.s
+
+.PHONY : Buffer.s
+
+# target to generate assembly for a file
+Buffer.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.s
+.PHONY : Buffer.cpp.s
+
 BufferBox.o: BufferBox.cpp.o
 
 .PHONY : BufferBox.o
@@ -508,6 +535,9 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... Buffer.o"
+	@echo "... Buffer.i"
+	@echo "... Buffer.s"
 	@echo "... BufferBox.o"
 	@echo "... BufferBox.i"
 	@echo "... BufferBox.s"

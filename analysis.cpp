@@ -41,83 +41,21 @@ Instructions for compiling and running the program
                                      output buffer file
 ========================================================================================================*/
 
-const char Buffer::sep = ',';
 
-Buffer::Buffer(const std::string &str,
-        const ParameterSet& parameters,
-        const Population& population,
-        const Genome& genome) :
-    i(0u), k(0u), t(-parameters.tBurnIn), n(static_cast<size_t>(parameters.tSavDat / parameters.tGetDat)), label(str)
-{
-    data = std::vector< std::vector<double> >(n, std::vector<double>(parameters.nLoci, 0.0));
-    
-    // open table data file
-    std::ostringstream oss;
-    oss << "simulation_" << parameters.seed << "_table_" << label << ".csv";
-    ofs.open(oss.str());
-    if(!ofs.is_open())
-        throw std::runtime_error("unable to open output file in Buffer::Buffer()");
-    
-    // write header
-    ofs << sep << "generation";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << "loc." << j;
-    ofs << '\n';
-    ofs << "character" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].character;
-    ofs << '\n';
-    ofs << "linkage.group" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].linkageGroup;
-    ofs << '\n';
-    ofs << "degree" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].edges.size();
-    ofs << '\n';
-    ofs << "location" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].location;
-    ofs << '\n';
-    ofs << "effect.size" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].effectSize;
-    ofs << '\n';
-    ofs << "dominance.coeff" << sep << "NA";
-    for(size_t j = 0u; j < parameters.nLoci; ++j)
-        ofs << sep << genome.characterLocus[j].dominanceCoeff;
-    ofs << '\n';
-}
 
-void Buffer::flush(const ParameterSet& parameters)
-{
-    t += parameters.tGetDat;
-    ++i;
-    if(t % parameters.tSavDat == 0u) {
-        ++k;
-        ofs << "point." << k << sep << t - (parameters.tSavDat >> 1u);
-        for(size_t j = 0u; j < parameters.nLoci; ++j) {
-            double sum = 0.0;
-            for(i = 0u; i < n; ++i) sum += data[i][j];
-            ofs << sep << sum / n;
-        }
-        ofs << '\n';
-        i = 0u;
-    }
-    ofs.flush();
-}
+
 
 /*=======================================================================================================
                                      data analysis functions
 ========================================================================================================*/
 
-double computePostIsolation(const ParameterSet& parameters, const std::list<PInd>& population, const Genome& genome)
+double computePostIsolation(const ParameterSet& parameters, const Population& population, const Genome& genome)
 {
 
     // sort out females and males
     std::queue<PInd> females;
     std::vector<PInd> males;
-    for(PInd pInd : population) {
+    for(PInd pInd : population.individuals) {
         if(pInd->isFemale(parameters.isFemaleHeteroGamety)) females.push(pInd);
         else males.push_back(pInd);
     }
@@ -160,12 +98,12 @@ double computePostIsolation(const ParameterSet& parameters, const std::list<PInd
 
 }
 
-double computeMatingIsolation(const ParameterSet& parameters, const std::list<PInd>& population)
+double computeMatingIsolation(const ParameterSet& parameters, const Population& population)
 {
     // sort out females and males
     std::queue<PInd> females;
     std::vector<PInd> males;
-    for(PInd pInd : population) {
+    for(PInd pInd : population.individuals) {
         if(pInd->isFemale(parameters.isFemaleHeteroGamety)) females.push(pInd);
         else males.push_back(pInd);
     }
@@ -212,7 +150,8 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
         std::ofstream& arcFile,
         std::ofstream& datFile,
         std::vector<std::pair<size_t, size_t> >& genderCounts,
-        const std::list<PInd> &population, const Genome& genome)
+        const Population& population,
+        const Genome& genome)
 {
 
     // n = (whole pop, hab0, hab1, eco1 hab0, eco2 hab0, eco1 hab1, eco2 hab1)
@@ -220,8 +159,8 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     // export trait means and sequence to fossil record file
     arcFile << t;
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
-        arcFile  << '\t' << genome.avgG[crctr][0u];
-    arcFile << '\t' << to_string(population.front()->getGenome()) << '\n';
+        arcFile  << '\t' << population.avgG[crctr][0u];
+    arcFile << '\t' << to_string(population.individuals.front()->getGenome()) << '\n';
     
     // write output to data file
     size_t nfem = 0u, nmal = 0u;
@@ -230,7 +169,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
         nmal += genderCounts[hab].second;
     }
     datFile << t
-    << '\t' << population.size()
+    << '\t' << population.individuals.size()
     << '\t' << nfem
     << '\t' << nmal;
     for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
@@ -242,19 +181,19 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
 
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         datFile << '\t' << n[1u + 2 * crctr] << '\t' << n[2u + 2 * crctr]
-        << '\t' << genome.avgG[crctr][0u]
-        << '\t' << genome.avgG[crctr][1u]
-        << '\t' << genome.avgG[crctr][2u]
-        << '\t' << genome.varP[crctr][0u]
-        << '\t' << genome.varG[crctr][0u]
-        << '\t' << genome.varA[crctr][0u]
-        << '\t' << genome.varD[crctr]
-        << '\t' << genome.varI[crctr][0u]
-        << '\t' << genome.F_st[crctr]
-        << '\t' << genome.P_st[crctr]
-        << '\t' << genome.G_st[crctr]
-        << '\t' << genome.Q_st[crctr]
-        << '\t' << genome.C_st[crctr];
+        << '\t' << population.avgG[crctr][0u]
+        << '\t' << population.avgG[crctr][1u]
+        << '\t' << population.avgG[crctr][2u]
+        << '\t' << population.varP[crctr][0u]
+        << '\t' << population.varG[crctr][0u]
+        << '\t' << population.varA[crctr][0u]
+        << '\t' << population.varD[crctr]
+        << '\t' << population.varI[crctr][0u]
+        << '\t' << population.F_st[crctr]
+        << '\t' << population.P_st[crctr]
+        << '\t' << population.G_st[crctr]
+        << '\t' << population.Q_st[crctr]
+        << '\t' << population.C_st[crctr];
     }
     
     double SI, EI, RI, PI;
@@ -263,7 +202,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     else {
        
         SI = (n1_ == 0u || n2_ == 0u) ? 0.0 : (1.0 * n[3u] * n[6u] - 1.0 * n[4u] * n[5u]) / sqrt(1.0 * n_1 * n_2 * n1_ * n2_);
-        EI = genome.P_st[0u];
+        EI = population.P_st[0u];
         RI = computeMatingIsolation(parameters, population);
         if(parameters.costIncompat > 0.0) {
             PI = computePostIsolation(parameters, population);
@@ -278,9 +217,9 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     datFile.flush();
     
     // screen output
-    std::cout << "t = " << t << ", n = " << population.size() << ", SI =  " << SI << ", EI = " << EI << ", RI = " << RI << ", PI = " << PI << '\n';
+    std::cout << "t = " << t << ", n = " << population.individuals.size() << ", SI =  " << SI << ", EI = " << EI << ", RI = " << RI << ", PI = " << PI << '\n';
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)
-        std::cout   << "\ttrait." << crctr << " : " << genome.avgG[crctr][0u] << " +/- " << sqrt(genome.varG[crctr][0u]) << '\n';
+        std::cout   << "\ttrait." << crctr << " : " << population.avgG[crctr][0u] << " +/- " << sqrt(population.varG[crctr][0u]) << '\n';
 }
 
 double Xst(const double &var0, const double &var1, const double &var2, const std::array<size_t, 7u> &n, const double& tiny)
@@ -304,49 +243,49 @@ void decomposeVariance(int t,
         std::ofstream& arcFile,
         std::ofstream& datFile,
         std::vector<std::pair<size_t, size_t> >& genderCounts,
-        const std::list<PInd>& population,
+        Population& population,
         Genome& genome)
 {
-    std::array<size_t, 7u> n {population.size(), 0u, 0u};
+    std::array<size_t, 7u> n {population.individuals.size(), 0u, 0u};
     
     // *** genome-wide decomposition of genetic variance ***
     // set initial values
     for(size_t cl = 0u; cl < 3u; ++cl)
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-            genome.avgG[crctr][cl] = 0.0;
-            genome.varP[crctr][cl] = 0.0;
-            genome.varG[crctr][cl] = 0.0;
+            population.avgG[crctr][cl] = 0.0;
+            population.varP[crctr][cl] = 0.0;
+            population.varG[crctr][cl] = 0.0;
         }
     
 
     // assign ecotype, compute avgG, varG and varP from phenotypic values,
-    for(PInd pInd : population) {
+    for(PInd pInd : population.individuals) {
         size_t cl =  pInd->setEcotype(breakEvenPoint);
         ++n[cl];
         ++n[2u + cl + (2u * pInd->getHabitat())];
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
             double g = pInd->getTraitG()[crctr];
             double pp = sqr(pInd->getTraitP()[crctr]);
-            genome.avgG[crctr][0u] += g;
-            genome.varG[crctr][0u] += g * g;
-            genome.varP[crctr][0u] += pp;
-            genome.avgG[crctr][cl] += g;
-            genome.varG[crctr][cl] += g * g;
-            genome.varP[crctr][cl] += pp;
+            population.avgG[crctr][0u] += g;
+            population.varG[crctr][0u] += g * g;
+            population.varP[crctr][0u] += pp;
+            population.avgG[crctr][cl] += g;
+            population.varG[crctr][cl] += g * g;
+            population.varP[crctr][cl] += pp;
         }
     }
     for(size_t cl = 0u; cl < 3u; ++cl)
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
             if(n[cl] > 1u) {
-                double mu = genome.avgG[crctr][cl] /= n[cl];
-                double aux = (genome.varG[crctr][cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
-                genome.varG[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
-                aux = (genome.varP[crctr][cl] / n[cl] - sqr(mu));
-                genome.varP[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
+                double mu = population.avgG[crctr][cl] /= n[cl];
+                double aux = (population.varG[crctr][cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
+                population.varG[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
+                aux = (population.varP[crctr][cl] / n[cl] - sqr(mu));
+                population.varP[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
             }
             else {
-                genome.avgG[crctr][cl] = genome.avgG[crctr][0u];
-                genome.varP[crctr][cl] = genome.varG[crctr][cl] = 0.0;
+                population.avgG[crctr][cl] = population.avgG[crctr][0u];
+                population.varP[crctr][cl] = population.varG[crctr][cl] = 0.0;
             }
         }
     
@@ -369,7 +308,7 @@ void decomposeVariance(int t,
             genome.characterLocus[i].varG[cl] = 0.0;
             sumu[cl] = 0u;
         }
-        for(PInd pInd : population) {
+        for(PInd pInd : population.individuals) {
             size_t u = pInd->getTraitLocus()[i].alleleCount;
             double g = pInd->getTraitLocus()[i].geneticValue;
             size_t cl = pInd->getEcotype();
@@ -471,7 +410,7 @@ void decomposeVariance(int t,
         std::array<double, 3u> sumbrv2 {0.0, 0.0, 0.0};
         std::array<double, 3u> sumdva1 {0.0, 0.0, 0.0};
         std::array<double, 3u> sumdva2 {0.0, 0.0, 0.0};
-        for(PInd pInd : population) {
+        for(PInd pInd : population.individuals) {
             size_t cl = pInd->getEcotype();
             size_t u = pInd->getTraitLocus()[i].alleleCount;
             double g = pInd->getTraitLocus()[i].geneticValue;
@@ -523,17 +462,17 @@ void decomposeVariance(int t,
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
         (*bufferPointers.bufferFreq)[i] = genome.characterLocus[i].alleleFrequency[0u];
         (*bufferPointers.bufferF_it)[i] = genome.characterLocus[i].F_it;
-        (*bufferPointers.bufferF_is)[i] = Individual::characterLocus[i].F_is;
-        (*bufferPointers.bufferF_st)[i] = Individual::characterLocus[i].F_st;
-        (*bufferPointers.bufferP_st)[i] = Individual::characterLocus[i].P_st;
-        (*bufferPointers.bufferG_st)[i] = Individual::characterLocus[i].G_st;
-        (*bufferPointers.bufferQ_st)[i] = Individual::characterLocus[i].Q_st;
-        (*bufferPointers.bufferC_st)[i] = Individual::characterLocus[i].C_st;
-        (*bufferPointers.bufferVarP)[i] = Individual::characterLocus[i].varP[0u];
-        (*bufferPointers.bufferVarG)[i] = Individual::characterLocus[i].varG[0u];
-        (*bufferPointers.bufferVarA)[i] = Individual::characterLocus[i].varA[0u];
-        (*bufferPointers.bufferVarD)[i] = Individual::characterLocus[i].varD;
-        (*bufferPointers.bufferVarI)[i] = Individual::characterLocus[i].varI[0u];
+        (*bufferPointers.bufferF_is)[i] = genome.characterLocus[i].F_is;
+        (*bufferPointers.bufferF_st)[i] = genome.characterLocus[i].F_st;
+        (*bufferPointers.bufferP_st)[i] = genome.characterLocus[i].P_st;
+        (*bufferPointers.bufferG_st)[i] = genome.characterLocus[i].G_st;
+        (*bufferPointers.bufferQ_st)[i] = genome.characterLocus[i].Q_st;
+        (*bufferPointers.bufferC_st)[i] = genome.characterLocus[i].C_st;
+        (*bufferPointers.bufferVarP)[i] = genome.characterLocus[i].varP[0u];
+        (*bufferPointers.bufferVarG)[i] = genome.characterLocus[i].varG[0u];
+        (*bufferPointers.bufferVarA)[i] = genome.characterLocus[i].varA[0u];
+        (*bufferPointers.bufferVarD)[i] = genome.characterLocus[i].varD;
+        (*bufferPointers.bufferVarI)[i] = genome.characterLocus[i].varI[0u];
     }
     bufferPointers.bufferFreq->flush(parameters);
     bufferPointers.bufferF_it->flush(parameters);
@@ -553,42 +492,42 @@ void decomposeVariance(int t,
     // compute varA, varD, varI, and Fst by accumulating single locus contributions
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         for(size_t cl = 0u; cl < 3u; ++cl) {
-            Individual::varA[crctr][cl] = 0.0;
-            Individual::varI[crctr][cl] = 0.0;
+            population.varA[crctr][cl] = 0.0;
+            population.varI[crctr][cl] = 0.0;
         }
-        Individual::varD[crctr] = 0.0;
+        population.varD[crctr] = 0.0;
         double var_t = 0.0, var_s = 0.0;
-        for(size_t i : Individual::vertices[crctr]) {
+        for(size_t i : genome.vertices[crctr]) {
             for(size_t cl = 0u; cl < 3u; ++cl) {
-                Individual::varA[crctr][cl] += Individual::characterLocus[i].varA[cl];
-                Individual::varI[crctr][cl] += Individual::characterLocus[i].varI[cl];
+                population.varA[crctr][cl] += genome.characterLocus[i].varA[cl];
+                population.varI[crctr][cl] += genome.characterLocus[i].varI[cl];
             }
-            Individual::varD[crctr] += Individual::characterLocus[i].varD;
-            double p0 = Individual::characterLocus[i].alleleFrequency[0u];
-            double p1 = Individual::characterLocus[i].alleleFrequency[1u];
-            double p2 = Individual::characterLocus[i].alleleFrequency[2u];
+            population.varD[crctr] += genome.characterLocus[i].varD;
+            double p0 = genome.characterLocus[i].alleleFrequency[0u];
+            double p1 = genome.characterLocus[i].alleleFrequency[1u];
+            double p2 = genome.characterLocus[i].alleleFrequency[2u];
             var_s += (n[1u] * sqr(p1) + n[2u] * sqr(p2)) / n[0u] - sqr(p0);
             var_t += p0 * (1.0 - p0);
         }
-        Individual::F_st[crctr] = var_t < parameters.tiny ? 0.0 : var_s / var_t;
-        Individual::P_st[crctr] = Xst(Individual::varP[crctr][0u],
-                                      Individual::varP[crctr][1u],
-                                      Individual::varP[crctr][2u], n, parameters.tiny);
-        Individual::G_st[crctr] = Xst(Individual::varG[crctr][0u],
-                                      Individual::varG[crctr][1u],
-                                      Individual::varG[crctr][2u], n, parameters.tiny);
-        Individual::Q_st[crctr] = Xst(Individual::varA[crctr][0u],
-                                      Individual::varA[crctr][1u],
-                                      Individual::varA[crctr][2u], n, parameters.tiny);
-        Individual::C_st[crctr] =
-            Xst(Individual::varD[crctr] + 0.5 * Individual::varI[crctr][0u],
-                Individual::varI[crctr][1u],
-                Individual::varI[crctr][2u], n, parameters.tiny);
+        population.F_st[crctr] = var_t < parameters.tiny ? 0.0 : var_s / var_t;
+        population.P_st[crctr] = Xst(population.varP[crctr][0u],
+                                      population.varP[crctr][1u],
+                                      population.varP[crctr][2u], n, parameters.tiny);
+        population.G_st[crctr] = Xst(population.varG[crctr][0u],
+                                      population.varG[crctr][1u],
+                                      population.varG[crctr][2u], n, parameters.tiny);
+        population.Q_st[crctr] = Xst(population.varA[crctr][0u],
+                                      population.varA[crctr][1u],
+                                      population.varA[crctr][2u], n, parameters.tiny);
+        population.C_st[crctr] =
+            Xst(population.varD[crctr] + 0.5 * population.varI[crctr][0u],
+                population.varI[crctr][1u],
+                population.varI[crctr][2u], n, parameters.tiny);
     }
     recordData(t, n, parameters, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population, genome);
 }
 
-void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>& population, const Genome& genome)
+void analyseNetwork(int t, const ParameterSet& parameters, const Population& population, const Genome& genome)
 {
     const char sep = ',';
     // *** node properties ***
@@ -651,7 +590,7 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
         << "additive.genetic.correlation" << '\n';
     
     // determine edge properties
-    const size_t n = population.size();
+    const size_t n = population.individuals.size();
     for(size_t i = 0u; i < parameters.nLoci; ++i) {
         const size_t crctr = genome.characterLocus[i].character;
         for(const std::pair<size_t, double> &edge : genome.characterLocus[i].edges) {
@@ -663,7 +602,7 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
             double pj = genome.characterLocus[j].alleleFrequency[0u];
             double alphai = genome.characterLocus[i].avgEffectOfSubstitution;
             double alphaj = genome.characterLocus[j].avgEffectOfSubstitution;
-            for(PInd pInd : population) {
+            for(PInd pInd : population.individuals) {
                 size_t ui = pInd->getTraitLocus()[i].alleleCount;
                 size_t uj = pInd->getTraitLocus()[j].alleleCount;
                 double xi = pInd->getTraitLocus()[i].expression;
@@ -737,7 +676,7 @@ void analyseNetwork(int t, const ParameterSet& parameters, const std::list<PInd>
         ofs << sep << "trait." << crctr;
     ofs << '\n';
     size_t i = 0u;
-    for(PInd pInd : population) {
+    for(PInd pInd : population.individuals) {
         ofs << i  << sep << pInd->getEcotype() << sep << pInd->getHabitat()
             << sep << pInd->getAttackRate().first << sep << pInd->getAttackRate().second;
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr)

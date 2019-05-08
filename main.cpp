@@ -37,6 +37,7 @@ Instructions for compiling and running the program
 #include "random.h"
 #include "individual.h"
 #include "analysis.h"
+#include "Genome.h"
 
 /*=======================================================================================================
                                 Parameter definitions and default values
@@ -422,16 +423,17 @@ int main(int argc, char * argv[])
         else throw std::runtime_error("invalid number of program arguments in main()");
 
         Population population;
+        Genome genome;
 
         // initialise genetic architecture
         if(parameters.generateArchitecture) {
             std::ostringstream oss;
             oss << "architecture_" << parameters.seed << ".txt";
             parameters.architecture = oss.str();
-            Individual::generateGeneticArchitecture(parameters);
-            Individual::storeGeneticArchitecture(parameters.architecture, parameters);
+            genome.generateGeneticArchitecture(parameters);
+            genome.storeGeneticArchitecture(parameters.architecture, parameters);
         }
-        else Individual::loadGeneticArchitecture(parameters.architecture, parameters, population);
+        else genome.loadGeneticArchitecture(parameters.architecture, parameters, population);
 
 
 
@@ -539,8 +541,8 @@ int main(int argc, char * argv[])
                 std::clog << "population size underflow at t = " << t << '\n';
                 break;
             }
-            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, breakEvenPoint, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population);
-            if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population);
+            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, breakEvenPoint, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population, genome);
+            if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 
         // *** finalisation ***

@@ -59,7 +59,7 @@ std::string to_string( std::vector< bool > const & bitvector ) {
                                          member functions
 ========================================================================================================*/
 
-Individual::Individual(const ParameterSet& parameters) :
+Individual::Individual(const ParameterSet& parameters, const Genome& genome) :
 isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
@@ -70,15 +70,15 @@ isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
         if(rnd::uniform() < parameters.freqSNP) genomeSequence[i + 1u] = !genomeSequence[i + 1u];
     }
     mutate(parameters);
-    develop(parameters);
+    develop(parameters, genome);
 }
 
-Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters) :
+Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const Genome& genome) :
 genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 // default constructor; called on initialisation
 {
     mutate(parameters);
-    develop(parameters);
+    develop(parameters, genome);
 }
 
 Individual::Individual(Individual const * const mother,
@@ -135,7 +135,7 @@ Individual::Individual(Individual const * const mother,
         if(i == 0u && hpltp == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
     mutate(parameters);
-    develop(parameters);
+    develop(parameters, genome);
 }
 
 void Individual::mutate(const ParameterSet& parameters)

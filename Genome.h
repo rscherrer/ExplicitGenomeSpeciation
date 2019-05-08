@@ -12,6 +12,11 @@
 #include "ParameterSet.h"
 #include "Population.h"
 
+bool edgeCompare (const Edge &x, const Edge &y) {
+    if(x.first == y.first) return (x.second < y.second);
+    else return (x.first < y.first);
+}
+
 class Genome {
 
 public:
@@ -26,15 +31,19 @@ public:
         std::list<std::pair<size_t, double> > edges;
     };
 
+    typedef std::pair<size_t, size_t> Edge;
+
     // These are genome specific
     std::vector<double> chromosomeSize; // size nchromosomes - 1
     std::vector<std::set<size_t> > vertices; // size nCharacter
     std::vector<Character> characterLocus; // size nLoci
 
-    // Static functions
+    // Setters
     void generateGeneticArchitecture(const ParameterSet&);
     void storeGeneticArchitecture(const std::string&, const ParameterSet&);
     void loadGeneticArchitecture(const std::string&, const ParameterSet&, const Population&);
+
+    void preferentialAttachmentNetwork(const size_t n, size_t e, const double exponent, std::vector<Edge> &edges);
 
 
 private:

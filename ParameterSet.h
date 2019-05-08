@@ -63,6 +63,9 @@ public:
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     size_t nBits = 2u * nLoci;
 
+    double alphaAdditive = 2.0;
+    double alphaInteraction = 5.0;
+
 //private:
     //ParameterSet(const ParameterSet&) = delete;
 };
