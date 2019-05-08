@@ -34,23 +34,18 @@ void Population::dispersal(const ParameterSet& parameters)
 
 void Population::competitionAndReproduction(const size_t hab,
                                 const ParameterSet& parameters,
-                                std::vector<std::pair<double, double> >& resourceConsumption,
-                                Individual::TradeOffPt& breakEvenPoint,
-                                std::vector<std::pair<double, double> >& resourceEql,
-                                std::vector<std::pair<size_t, size_t> >& genderCounts,
-                                const Genome& genome,
-                                const size_t nAccessibleResource = 2u)
+                                const Genome& genome)
 {
     // accumulate attack rates and sort out females and males
     std::queue<PInd> females;
     std::vector<PInd> males;
-    std::list<Individual::TradeOffPt> pts;
+    std::list<TradeOffPt> pts;
     std::list<PInd>::iterator iti = individuals.begin();
     resourceConsumption[hab].first = resourceConsumption[hab].second = 0.0;
 
     for(std::list<PInd>::iterator itj = individuals.end(); iti != itj;) {
         if((*iti)->getHabitat() == hab) {
-            Individual::TradeOffPt pt = (*iti)->getAttackRate();
+            TradeOffPt pt = (*iti)->getAttackRate();
             if(nAccessibleResource < 2u) pt.second = 0.0;
             pts.push_back(pt);
 
@@ -85,7 +80,7 @@ void Population::competitionAndReproduction(const size_t hab,
     resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
     resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
 
-    for(const Individual::TradeOffPt &pt : pts) {
+    for(const TradeOffPt &pt : pts) {
         if(!parameters.isTypeIIResourceUtilisation) {
             resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
             resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
@@ -118,7 +113,7 @@ void Population::competitionAndReproduction(const size_t hab,
     double sum = 0.0;
     for(size_t i = 0u; i < nm; ++i) {
         // pick the resource that yields the highest payoff (not if type II resource utilisation)
-        Individual::TradeOffPt pt = males[i]->getAttackRate();
+        TradeOffPt pt = males[i]->getAttackRate();
         if(nAccessibleResource < 2u) pt.second = 0.0;
         maleSuccess[i] = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
         // add stabilising selection on mating trait during burn-in period
@@ -138,7 +133,7 @@ void Population::competitionAndReproduction(const size_t hab,
         females.pop();
 
         // compute female reproductive success
-        Individual::TradeOffPt pt = fem->getAttackRate();
+        TradeOffPt pt = fem->getAttackRate();
         if(nAccessibleResource < 2u) pt.second = 0.0;
         double femaleSuccess = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
         if(nAccessibleResource < 2u)

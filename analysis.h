@@ -35,12 +35,8 @@ Instructions for compiling and running the program
 void decomposeVariance(int,
         const ParameterSet&,
         BufferBox&,
-        const Individual::TradeOffPt&,
-        const std::vector<std::pair<double, double> >&, // size nHabitat
-        const std::vector<std::pair<double, double> >&, // size nHabitat
         std::ofstream&,
         std::ofstream&,
-        std::vector<std::pair<size_t, size_t> >&, // size nHabitat
         Population&,
         Genome&);
 

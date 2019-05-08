@@ -350,9 +350,11 @@ int main(int argc, char * argv[])
         // *** simulation ***
         // create initial population
 
+        /*
         std::vector<std::pair<double, double> > resourceConsumption, resourceEql;
         std::vector<std::pair<size_t, size_t> > genderCounts;
         Individual::TradeOffPt breakEvenPoint;
+         */
 
         std::clog << "creating initial population.";
         if(parameters.sequence.size() == parameters.nBits)
@@ -368,16 +370,16 @@ int main(int argc, char * argv[])
             if(t > 0) {
                 // default
                 population.dispersal(parameters);
-                population.competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
-                population.competitionAndReproduction(1u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts);
+                population.competitionAndReproduction(0u, parameters, population);
+                population.competitionAndReproduction(1u, parameters, population);
 
             }
-            else population.competitionAndReproduction(0u, parameters, population, resourceConsumption, breakEvenPoint, resourceEql, genderCounts, 1u); // burn-in period
+            else population.competitionAndReproduction(0u, parameters, population); // burn-in period
             if(population.individuals.size() < 2u) {
                 std::clog << "population size underflow at t = " << t << '\n';
                 break;
             }
-            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, breakEvenPoint, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population, genome);
+            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
             if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 

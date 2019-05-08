@@ -17,7 +17,15 @@ class Population {
 
 public:
 
+    typedef std::pair<double, double> TradeOffPt;
+
     std::list<PInd> individuals;
+
+    std::vector<std::pair<double, double> > resourceConsumption, resourceEql;
+    std::vector<std::pair<size_t, size_t> > genderCounts;
+    TradeOffPt breakEvenPoint;
+
+    const size_t nAccessibleResource;
 
     std::vector<std::vector<double> > // 3 by 3
             avgG, varP, varG, varA, varI;
@@ -27,12 +35,7 @@ public:
 
     void competitionAndReproduction(const size_t,
                                     const ParameterSet&,
-                                    std::vector<std::pair<double, double> >&,
-                                    Individual::TradeOffPt&,
-                                    std::vector<std::pair<double, double> >&,
-                                    std::vector<std::pair<size_t, size_t> >&,
-                                    const Genome&,
-                                    const size_t)
+                                    const Genome&)
 
 
 

@@ -52,7 +52,7 @@ class Individual {
 
 public:
 
-    typedef std::pair<double, double> TradeOffPt;
+
 
 
     // A Trait object is locus- and individual-specific

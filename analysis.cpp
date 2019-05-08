@@ -82,7 +82,7 @@ double computePostIsolation(const ParameterSet& parameters, const Population& po
         ++ki[2u + m];
 
         // create offspring
-        PInd offsp = new Individual(fem, males[j], parameters, population, genome);
+        PInd offsp = new Individual(fem, males[j], parameters, genome);
 
         // developmental viability
         if(rnd::bernoulli(offsp->getViability())) {
@@ -146,11 +146,8 @@ double computeMatingIsolation(const ParameterSet& parameters, const Population& 
 
 
 void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& parameters,
-        const std::vector<std::pair<double, double> >& resourceConsumption,
-        const std::vector<std::pair<double, double> >& resourceEql,
         std::ofstream& arcFile,
         std::ofstream& datFile,
-        std::vector<std::pair<size_t, size_t> >& genderCounts,
         const Population& population,
         const Genome& genome)
 {
@@ -166,19 +163,19 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
     // write output to data file
     size_t nfem = 0u, nmal = 0u;
     for(size_t hab = 0u; hab < parameters.nHabitat; ++hab) {
-        nfem += genderCounts[hab].first;
-        nmal += genderCounts[hab].second;
+        nfem += population.genderCounts[hab].first;
+        nmal += population.genderCounts[hab].second;
     }
     datFile << t
     << '\t' << population.individuals.size()
     << '\t' << nfem
     << '\t' << nmal;
     for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
-        datFile << '\t' << genderCounts[hab].first + genderCounts[hab].second;
+        datFile << '\t' << population.genderCounts[hab].first + population.genderCounts[hab].second;
     for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
-        datFile << '\t' << resourceConsumption[hab].first << '\t' << resourceConsumption[hab].second;
+        datFile << '\t' << population.resourceConsumption[hab].first << '\t' << population.resourceConsumption[hab].second;
     for(size_t hab = 0u; hab < parameters.nHabitat; ++hab)
-        datFile << '\t' << resourceEql[hab].first << '\t' << resourceEql[hab].second;
+        datFile << '\t' << population.resourceEql[hab].first << '\t' << population.resourceEql[hab].second;
 
     for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
         datFile << '\t' << n[1u + 2 * crctr] << '\t' << n[2u + 2 * crctr]
@@ -238,12 +235,8 @@ double Xst(const double &var0, const double &var1, const double &var2, const std
 void decomposeVariance(int t,
         const ParameterSet& parameters,
         BufferBox& bufferPointers,
-        const Individual::TradeOffPt& breakEvenPoint,
-        const std::vector<std::pair<double, double> >& resourceConsumption,
-        const std::vector<std::pair<double, double> >& resourceEql,
         std::ofstream& arcFile,
         std::ofstream& datFile,
-        std::vector<std::pair<size_t, size_t> >& genderCounts,
         Population& population,
         Genome& genome)
 {
@@ -261,7 +254,7 @@ void decomposeVariance(int t,
 
     // assign ecotype, compute avgG, varG and varP from phenotypic values,
     for(PInd pInd : population.individuals) {
-        size_t cl =  pInd->setEcotype(breakEvenPoint);
+        size_t cl =  pInd->setEcotype(population.breakEvenPoint);
         ++n[cl];
         ++n[2u + cl + (2u * pInd->getHabitat())];
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
@@ -525,7 +518,7 @@ void decomposeVariance(int t,
                 population.varI[crctr][1u],
                 population.varI[crctr][2u], n, parameters.tiny);
     }
-    recordData(t, n, parameters, resourceConsumption, resourceEql, arcFile, datFile, genderCounts, population, genome);
+    recordData(t, n, parameters, arcFile, datFile, population, genome);
 }
 
 void analyseNetwork(int t, const ParameterSet& parameters, const Population& population, const Genome& genome)
