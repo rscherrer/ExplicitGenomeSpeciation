@@ -44,6 +44,8 @@ class Buffer;
 
 inline double sqr(double x) { return x * x;}
 
+typedef Individual const * PInd;
+
 class Individual {
 
     /*
@@ -66,9 +68,8 @@ class Individual {
 
 public:
 
-
-
     typedef std::pair<double, double> TradeOffPt;
+
 
     // A Trait object is locus- and individual-specific
     struct Trait
@@ -125,7 +126,7 @@ private:
 
 };
 
-typedef Individual const * PInd;
+
 
 bool tradeOffCompare (const Individual::TradeOffPt&, const Individual::TradeOffPt&);
 

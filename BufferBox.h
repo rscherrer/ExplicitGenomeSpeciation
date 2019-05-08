@@ -5,7 +5,7 @@
 #ifndef EXPLICITGENOMESPECIATION_BUFFERBOX_H
 #define EXPLICITGENOMESPECIATION_BUFFERBOX_H
 
-#include "individual.h"
+#include "Individual.h"
 
 class BufferBox {
 

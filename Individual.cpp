@@ -30,7 +30,7 @@ Instructions for compiling and running the program
 #include <string>
 #include <algorithm>
 #include <set>
-#include "individual.h"
+#include "Individual.h"
 #include "random.h"
 #include "ParameterSet.h"
 #include "Population.h"

@@ -35,7 +35,7 @@ Instructions for compiling and running the program
 #include <cassert>
 #include <gtest/gtest.h>
 #include "random.h"
-#include "individual.h"
+#include "Individual.h"
 #include "analysis.h"
 #include "Genome.h"
 

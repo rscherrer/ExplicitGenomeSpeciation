@@ -302,6 +302,33 @@ Genome.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.s
 .PHONY : Genome.cpp.s
 
+Individual.o: Individual.cpp.o
+
+.PHONY : Individual.o
+
+# target to build an object file
+Individual.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o
+.PHONY : Individual.cpp.o
+
+Individual.i: Individual.cpp.i
+
+.PHONY : Individual.i
+
+# target to preprocess a source file
+Individual.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i
+.PHONY : Individual.cpp.i
+
+Individual.s: Individual.cpp.s
+
+.PHONY : Individual.s
+
+# target to generate assembly for a file
+Individual.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s
+.PHONY : Individual.cpp.s
+
 ParameterSet.o: ParameterSet.cpp.o
 
 .PHONY : ParameterSet.o
@@ -410,60 +437,6 @@ analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.s
 .PHONY : analysis.cpp.s
 
-architecture.o: architecture.cpp.o
-
-.PHONY : architecture.o
-
-# target to build an object file
-architecture.cpp.o:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/architecture.cpp.o
-.PHONY : architecture.cpp.o
-
-architecture.i: architecture.cpp.i
-
-.PHONY : architecture.i
-
-# target to preprocess a source file
-architecture.cpp.i:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/architecture.cpp.i
-.PHONY : architecture.cpp.i
-
-architecture.s: architecture.cpp.s
-
-.PHONY : architecture.s
-
-# target to generate assembly for a file
-architecture.cpp.s:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/architecture.cpp.s
-.PHONY : architecture.cpp.s
-
-individual.o: individual.cpp.o
-
-.PHONY : individual.o
-
-# target to build an object file
-individual.cpp.o:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/individual.cpp.o
-.PHONY : individual.cpp.o
-
-individual.i: individual.cpp.i
-
-.PHONY : individual.i
-
-# target to preprocess a source file
-individual.cpp.i:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/individual.cpp.i
-.PHONY : individual.cpp.i
-
-individual.s: individual.cpp.s
-
-.PHONY : individual.s
-
-# target to generate assembly for a file
-individual.cpp.s:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/individual.cpp.s
-.PHONY : individual.cpp.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -544,6 +517,9 @@ help:
 	@echo "... Genome.o"
 	@echo "... Genome.i"
 	@echo "... Genome.s"
+	@echo "... Individual.o"
+	@echo "... Individual.i"
+	@echo "... Individual.s"
 	@echo "... ParameterSet.o"
 	@echo "... ParameterSet.i"
 	@echo "... ParameterSet.s"
@@ -556,12 +532,6 @@ help:
 	@echo "... analysis.o"
 	@echo "... analysis.i"
 	@echo "... analysis.s"
-	@echo "... architecture.o"
-	@echo "... architecture.i"
-	@echo "... architecture.s"
-	@echo "... individual.o"
-	@echo "... individual.i"
-	@echo "... individual.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

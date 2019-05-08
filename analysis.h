@@ -27,7 +27,7 @@ Instructions for compiling and running the program
 #ifndef __genomic_signatures_of_speciation__analysis__
 #define __genomic_signatures_of_speciation__analysis__
 
-#include "individual.h"
+#include "Individual.h"
 #include "BufferBox.h"
 #include "Genome.h"
 

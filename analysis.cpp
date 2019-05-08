@@ -32,9 +32,10 @@ Instructions for compiling and running the program
 #include "analysis.h"
 #include "random.h"
 #include "BufferBox.h"
-#include "individual.h"
+#include "Individual.h"
 #include "Population.h"
 #include "Genome.h"
+#include "Buffer.h"
 
 
 /*=======================================================================================================
@@ -205,7 +206,7 @@ void recordData(int t, const std::array<size_t, 7u> &n, const ParameterSet& para
         EI = population.P_st[0u];
         RI = computeMatingIsolation(parameters, population);
         if(parameters.costIncompat > 0.0) {
-            PI = computePostIsolation(parameters, population);
+            PI = computePostIsolation(parameters, population, genome);
         }
         else {
             PI = 0.0;
@@ -416,7 +417,7 @@ void decomposeVariance(int t,
             double g = pInd->getTraitLocus()[i].geneticValue;
             double brv = alpha * (u - avgu);    // breeding value
             double dva = g - (mu + brv);        // deviation from additivity
-            double eps = dva - dev[u];          // deviation by epitasis
+            double eps = dva - dev[u];          // deviation by epistasis
             sumbrv1[cl] += brv;
             sumbrv2[cl] += brv * brv;
             sumdva1[cl] += dva;

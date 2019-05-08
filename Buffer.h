@@ -16,10 +16,10 @@ class Buffer {
 
 public:
     Buffer(const std::string&, const ParameterSet&, const Population&, const Genome&);
-
-
     ~Buffer() { ofs.close(); }
+
     double &operator[](size_t j) {return data[i][j];}
+
     void flush(const ParameterSet&);
 
 private:

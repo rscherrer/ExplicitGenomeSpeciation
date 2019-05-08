@@ -12,10 +12,7 @@
 #include "ParameterSet.h"
 #include "Population.h"
 
-bool edgeCompare (const Edge &x, const Edge &y) {
-    if(x.first == y.first) return (x.second < y.second);
-    else return (x.first < y.first);
-}
+typedef std::pair<size_t, size_t> Edge;
 
 class Genome {
 
@@ -31,7 +28,7 @@ public:
         std::list<std::pair<size_t, double> > edges;
     };
 
-    typedef std::pair<size_t, size_t> Edge;
+
 
     // These are genome specific
     std::vector<double> chromosomeSize; // size nchromosomes - 1
@@ -50,6 +47,11 @@ private:
 
 
 };
+
+bool edgeCompare (const Edge &x, const Edge &y) {
+    if(x.first == y.first) return (x.second < y.second);
+    else return (x.first < y.first);
+}
 
 
 #endif //EXPLICITGENOMESPECIATION_GENOME_H

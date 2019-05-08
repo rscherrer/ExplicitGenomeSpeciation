@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "../individual.h"
+#include "../Individual.h"
 
 using testing::Eq;
 
