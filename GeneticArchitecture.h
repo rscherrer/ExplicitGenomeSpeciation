@@ -39,6 +39,7 @@ public:
     void storeGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);
     std::vector<Edge> preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
+    void createRecombinationMap(const ParameterSet&);
 
 };
 

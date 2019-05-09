@@ -22,14 +22,10 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &parameters)
     }
 }
 
-void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parameters)
+void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
 {
-    std::clog << "Generating a new genetic architecture\n";
-
-    // Recombination map
-    std::clog << "  Placing loci across the genome.";
-
     // Chromosome all have the same size
+    // setChromosomeSizes();
     for (size_t i = 0u; i < parameters.nChromosomes - 1u; ++i) {
         chromosomeSizes[i] = (i + 1.0) / parameters.nChromosomes;
     }
@@ -62,6 +58,15 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
         }
     }
     std::clog << "..done\n";
+}
+
+void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parameters)
+{
+    std::clog << "Generating a new genetic architecture\n";
+
+    // Recombination map
+    std::clog << "  Placing loci across the genome.";
+    createRecombinationMap(parameters);
 
     // Assign additive and dominance effects
     std::clog << "  Sampling additive and dominance effects.";
