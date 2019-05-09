@@ -79,6 +79,9 @@ public:
     void prepareChoice() const;
     bool acceptMate(Individual const * const, const ParameterSet&) const;
 
+    void expressGene(const size_t&, const size_t&, const double&, const double&);
+    void setAdditiveValue(const size_t&, const double&, const double&);
+    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<double> >&)
 
 private:
 

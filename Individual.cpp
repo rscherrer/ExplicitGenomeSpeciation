@@ -163,94 +163,92 @@ void Individual::mutate(const ParameterSet& parameters)
     }
 }
 
-void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
+void Individual::expressGene(const size_t &nt, const size_t &i, const double &scaleD, const double &dominanceCoeff)
 {
+    // Determine genotype and local effect on the phenotype
+    if (genomeSequence[nt] == genomeSequence[nt + 1u]) {
 
-    // Non-epistatic component (additive and dominance) of each locus
-
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        
-        size_t k = i << 1u;
-        size_t crctr = geneticArchitecture.locusConstants[i].character;
-
-        expressGene();
-
-        // Determine genotype and local effect on the phenotype
-        if (genomeSequence[k] == genomeSequence[k + 1u]) {
-
-            // Homozygote AA
-            if (genomeSequence[k]) {
-                traitLocus[i].alleleCount = 2u;
-                traitLocus[i].expression = 1.0;
-            }
-
-            // Homozygote aa
-            else {
-                traitLocus[i].alleleCount = 0u;
-                traitLocus[i].expression = -1.0;
-            }
+        // Homozygote AA
+        if (genomeSequence[nt]) {
+            traitLocus[i].alleleCount = 2u;
+            traitLocus[i].expression = 1.0;
         }
+
+        // Homozygote aa
+        else {
+            traitLocus[i].alleleCount = 0u;
+            traitLocus[i].expression = -1.0;
+        }
+    }
 
         // Heterozygote Aa
-        else {
-            traitLocus[i].alleleCount = 1u;
-            traitLocus[i].expression =
-                    parameters.scaleD[crctr] * geneticArchitecture.locusConstants[i].dominanceCoeff;
-        }
-
-        // Compute non-epistatic local genetic value
-        computeGeneNonEpistaticValue();
-
-        traitLocus[i].geneticValue = parameters.scaleA[crctr] *
-                geneticArchitecture.locusConstants[i].effectSize * traitLocus[i].expression;
+    else {
+        traitLocus[i].alleleCount = 1u;
+        traitLocus[i].expression = scaleD * dominanceCoeff;
     }
+}
 
-    // Epistatic component of each locus
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+void Individual::setAdditiveValue(const size_t &i, const double &scaleA, const double &effectSize)
+{
+    traitLocus[i].geneticValue = scaleA * effectSize * traitLocus[i].expression;
+}
 
-        size_t crctr = geneticArchitecture.locusConstants[i].character;
+void Individual::setEpistaticValue(const size_t &i, const double &scaleI, const std::list<std::pair<size_t, double> > &neighbors)
+{
+    // For each interaction
+    for (std::pair<size_t, double> edge : neighbors) {
 
-        computeGeneEpistaticValue();
+        size_t j = edge.first;
 
-        // For each interaction
-        for (std::pair<size_t, double> edge : geneticArchitecture.locusConstants[i].neighbors) {
-
-            size_t j = edge.first;
-            
-            // Compute interaction strength and distribute phenotypic effect over contributing loci
-            double epistaticEffect = 0.5 * parameters.scaleI[crctr] * edge.second *
-                traitLocus[i].expression * traitLocus[j].expression;
-            traitLocus[i].geneticValue += epistaticEffect;
-            traitLocus[j].geneticValue += epistaticEffect;
-        }
+        // Compute interaction strength and distribute phenotypic effect over contributing loci
+        double epistaticEffect = 0.5 * scaleI * edge.second * traitLocus[i].expression * traitLocus[j].expression;
+        traitLocus[i].geneticValue += epistaticEffect;
+        traitLocus[j].geneticValue += epistaticEffect;
     }
+}
 
-    // Accumulate phenotypic contributions and add environmental effect
-    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+void Individual::setLocusGeneticValue(const size_t &i,
+        const GeneticArchitecture &geneticArchitecture,
+        const ParameterSet &parameters)
+{
+    size_t nt = i << 1u;  // nucleotide position
+    size_t crctr = geneticArchitecture.locusConstants[i].character;
 
-        setGeneticValue();
+    // Express the gene
+    expressGene(nt, i, parameters.scaleD[crctr], geneticArchitecture.locusConstants[i].dominanceCoeff);
 
-        traitG[crctr] = 0.0;
+    // Compute local non-epistatic genetic value
+    setAdditiveValue(i, parameters.scaleA[crctr], geneticArchitecture.locusConstants[i].effectSize);
 
-        // Accumulate genetic contributions
-        for (size_t i : geneticArchitecture.networkVertices[crctr]) {
-            traitG[crctr] += traitLocus[i].geneticValue;
-        }
+    // Compute local epistatic value
+    setEpistaticValue(i, parameters.scaleI[crctr], geneticArchitecture.locusConstants[i].neighbors);
 
-        setEnvirValue();
+}
 
-        // Add environmental effect
-        traitE[crctr] = rnd::normal(0.0, parameters.scaleE[crctr]);
+void Individual::setGeneticValue(const size_t &trait, const GeneticArchitecture &geneticArchitecture)
+{
+    traitG[trait] = 0.0;
 
-        setPhenotypeValue();
-        traitP[crctr] = traitG[crctr] + traitE[crctr];
-        
+    // Accumulate genetic contributions
+    for (size_t i : geneticArchitecture.networkVertices[trait]) {
+        traitG[trait] += traitLocus[i].geneticValue;
     }
+}
 
-    // Compute viability
-    computeViability();
+void Individual::setEnvirValue(const size_t &trait, const double &scaleE)
+{
+    // Add environmental effect
+    traitE[trait] = rnd::normal(0.0, scaleE);
+}
 
-    if (parameters.costIncompat > 0.0) {
+void Individual::setPhenotype(const size_t &trait)
+{
+    traitP[trait] = traitG[trait] + traitE[trait];
+}
+
+void Individual::setViability(const double &costIncompat, const GeneticArchitecture &geneticArchitecture)
+{
+    if (costIncompat > 0.0) {
 
         // Initialize the number of incompatibilities
         size_t nIncompatibilities = 0;
@@ -274,18 +272,40 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
         }
 
         // Viability is related to the number of incompatibilities
-        viability = exp(- nIncompatibilities * parameters.costIncompat);
+        viability = exp(- nIncompatibilities * costIncompat);
 
     }
     else {
         viability = 1.0;
     }
-    
-    // Compute attack rate
-    setAttackRates();
+}
 
-    attackRate.first  = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] + 1.0));
-    attackRate.second = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] - 1.0));
+void Individual::setAttackRates(const double &ecoSelCoeff)
+{
+    attackRate.first  = exp(-ecoSelCoeff * sqr(traitP[0u] + 1.0));
+    attackRate.second = exp(-ecoSelCoeff * sqr(traitP[0u] - 1.0));
+}
+
+void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
+{
+
+    // Set genetic value of all loci
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+        setLocusGeneticValue(i, geneticArchitecture, parameters);
+    }
+
+    // Accumulate phenotypic contributions and add environmental effect
+    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+        setGeneticValue(crctr, geneticArchitecture);
+        setEnvirValue(crctr, parameters.scaleE[crctr]);
+        setPhenotype(crctr);
+    }
+
+    // Compute viability
+    setViability(parameters.costIncompat, geneticArchitecture);
+
+    // Compute attack rates
+    setAttackRates(parameters.ecoSelCoeff);
 
 }
 
