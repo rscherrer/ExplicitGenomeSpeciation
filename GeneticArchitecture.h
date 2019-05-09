@@ -40,6 +40,8 @@ public:
     void loadGeneticArchitecture(const ParameterSet&);
     std::vector<Edge> preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
     void createRecombinationMap(const ParameterSet&);
+    void sampleEffectSizes(const ParameterSet &parameters);
+    void sampleDominanceCoeff(const ParameterSet &parameters);
 
 };
 

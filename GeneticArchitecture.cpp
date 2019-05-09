@@ -60,6 +60,53 @@ void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
     std::clog << "..done\n";
 }
 
+void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
+{
+    // For each phenotypic character
+    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+        double sumsqAdditive = 0.0;
+
+        // For each vertex in the network
+        for (size_t i : networkVertices[crctr]) {
+
+            // Sample additive effect size
+            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.alphaAdditive, 1.0)(rnd::rng);
+            if (rnd::bernoulli(0.5)) {
+                locusConstants[i].effectSize *= -1.0;
+            }
+            sumsqAdditive += sqr(locusConstants[i].effectSize);
+        }
+
+        // Normalize
+        sumsqAdditive = sumsqAdditive > 0.0 ? sqrt(sumsqAdditive) : 1.0;
+        for (size_t i : networkVertices[crctr]) {
+            locusConstants[i].effectSize /= sumsqAdditive;
+        }
+    }
+}
+
+void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
+{
+    // For each phenotypic character
+    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+        double sumsqDominance = 0.0;
+
+        // For each vertex in the network
+        for (size_t i : networkVertices[crctr]) {
+
+            // Sample dominance coefficient
+            locusConstants[i].dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
+            sumsqDominance += sqr(locusConstants[i].dominanceCoeff);
+        }
+
+        // Normalize
+        sumsqDominance = sumsqDominance > 0.0 ? sqrt(sumsqDominance) : 1.0;
+        for (size_t i : networkVertices[crctr]) {
+            locusConstants[i].dominanceCoeff /= sumsqDominance;
+        }
+    }
+}
+
 void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parameters)
 {
     std::clog << "Generating a new genetic architecture\n";
@@ -70,22 +117,8 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
 
     // Assign additive and dominance effects
     std::clog << "  Sampling additive and dominance effects.";
-    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-        double sumaa = 0.0, sumhh = 0.0;
-        for (size_t i : networkVertices[crctr]) {
-            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.alphaAdditive, 1.0)(rnd::rng);
-            if(rnd::bernoulli(0.5)) locusConstants[i].effectSize *= -1.0;
-            sumaa += sqr(locusConstants[i].effectSize);
-            locusConstants[i].dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
-            sumhh += sqr(locusConstants[i].dominanceCoeff);
-        }
-        sumaa = sumaa > 0.0 ? sqrt(sumaa) : 1.0;
-        sumhh = sumhh > 0.0 ? sqrt(sumhh) : 1.0;
-        for (size_t i : networkVertices[crctr]) {
-            locusConstants[i].effectSize /= sumaa;
-            locusConstants[i].dominanceCoeff /=sumhh;
-        }
-    }
+    sampleEffectSizes(parameters);
+    sampleDominanceCoeff(parameters);
     std::clog << "..done\n";
 
     // Make a regulatory network
