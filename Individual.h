@@ -34,7 +34,7 @@ Instructions for compiling and running the program
 #include <vector>
 #include "ParameterSet.h"
 #include "Population.h"
-#include "Genome.h"
+#include "GeneticArchitecture.h"
 
 class Buffer;
 class Genome;
@@ -81,13 +81,19 @@ public:
 
     void expressGene(const size_t&, const size_t&, const double&, const double&);
     void setAdditiveValue(const size_t&, const double&, const double&);
-    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<double> >&)
+    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<size_t, double> >&)
+    void setAttackRates(const double&);
+    void setViability(const double&, const GeneticArchitecture&);
+    void setPhenotype(const size_t&);
+    void setEnvirValue(const size_t&, const double&);
+    void setGeneticValue(const size_t&, const GeneticArchitecture&);
+    void setLocusGeneticValue(const size_t&, const GeneticArchitecture&, const ParameterSet&);
 
 private:
 
     // Private setters
     void mutate(const ParameterSet&);
-    void develop(const ParameterSet&, const Genome&);
+    void develop(const ParameterSet&, const GeneticArchitecture&);
 
     // Fields
     bool isHeteroGamous;
