@@ -22,42 +22,41 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &parameters)
     }
 }
 
-void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
+void GeneticArchitecture::setChromosomeSizes(const ParameterSet &parameters)
 {
+
     // Chromosome all have the same size
-    // setChromosomeSizes();
     for (size_t i = 0u; i < parameters.nChromosomes - 1u; ++i) {
         chromosomeSizes[i] = (i + 1.0) / parameters.nChromosomes;
     }
 
-    // Genes are distributed uniformly across genome
+}
+
+void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
+{
+
+    // Genes are distributed uniformly across the genome
     std::vector<double> geneLocations;
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
         geneLocations[i] = rnd::uniform();
     }
     std::sort(geneLocations.begin(), geneLocations.end());
     for (size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
-        while(lg < parameters.nChromosomes - 1u && geneLocations[i] > chromosomeSizes[lg]) ++lg;
+        while (lg < parameters.nChromosomes - 1u && geneLocations[i] > chromosomeSizes[lg]) {
+            ++lg;
+        }
         locusConstants[i].linkageGroup = lg;
         locusConstants[i].location = geneLocations[i];
     }
-    std::clog << "..done\n";
 
-    // Randomize gene sequence and assign loci to characters
-    std::clog << "  Assigning loci to characters.";
-    std::vector<size_t> seq;
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        seq[i] = i;
-    }
-    std::shuffle(seq.begin(), seq.end(), rnd::rng);
-    std::vector<size_t> nVtx {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
-    for (size_t crctr = 0u, k = 0u; crctr < parameters.nCharacter; ++crctr) {
-        for (size_t j = 0u; j < nVtx[crctr]; ++j, ++k) {
-            networkVertices[crctr].insert(seq[k]);
-            locusConstants[seq[k]].character = crctr;
-        }
-    }
-    std::clog << "..done\n";
+}
+
+void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
+{
+
+    setChromosomeSizes(parameters);
+    sampleGeneLocations(parameters);
+
 }
 
 void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
@@ -107,38 +106,34 @@ void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
     }
 }
 
-void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parameters)
+void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
 {
-    std::clog << "Generating a new genetic architecture\n";
 
-    // Recombination map
-    std::clog << "  Placing loci across the genome.";
-    createRecombinationMap(parameters);
+    std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
+    std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
-    // Assign additive and dominance effects
-    std::clog << "  Sampling additive and dominance effects.";
-    sampleEffectSizes(parameters);
-    sampleDominanceCoeff(parameters);
-    std::clog << "..done\n";
-
-    // Make a regulatory network
-    std::clog << "  Creating gene interaction network.";
-    std::vector<size_t> nEdg {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
+    // Vector of locus indices
+    std::vector<size_t> loci;
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+        loci[i] = i;
+    }
+    std::shuffle(loci.begin(), loci.end(), rnd::rng);
 
     // For each phenotypic character
     for (size_t crctr = 0u, offset = 0u; crctr < parameters.nCharacter; ++crctr) {
 
-        std::vector<Edge> edges = preferentialAttachmentNetwork(nVtx[crctr], nEdg[crctr], parameters.networkSkewness);
+        // Generate edges with the preferential attachment algorithm
+        std::vector<Edge> edges = preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
 
         // Map network vertices to loci
         double sumww = 0.0;
         for (Edge &edge : edges) {
 
-            size_t i = seq[offset + edge.first];
-            size_t j = seq[offset + edge.second];
+            size_t i = loci[offset + edge.first];
+            size_t j = loci[offset + edge.second];
             if (!(locusConstants[i].character == crctr &&
-                    locusConstants[j].character == crctr)) {
-                throw std::logic_error("Invalid epistatic interaction in Individual::generateGeneticArchitecture()");
+                  locusConstants[j].character == crctr)) {
+                throw std::logic_error("Invalid epistatic interaction in GeneticArchitecture::generateGeneticArchitecture()");
             }
 
             // Assign interaction effect sizes
@@ -159,9 +154,58 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
         }
 
         // Update the offset
-        offset += nVtx[crctr];
+        offset += nVertices[crctr];
     }
 
+}
+
+void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
+{
+
+    std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
+
+    // Randomized vector of locus indices
+    std::vector<size_t> loci;
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+        loci[i] = i;
+    }
+    std::shuffle(loci.begin(), loci.end(), rnd::rng);
+
+    // For each phenotypic character
+    for (size_t crctr = 0u, k = 0u; crctr < parameters.nCharacter; ++crctr) {
+
+        // Assign loci to the character
+        for (size_t j = 0u; j < nVertices[crctr]; ++j, ++k) {
+            networkVertices[crctr].insert(loci[k]);
+            locusConstants[loci[k]].character = crctr;
+        }
+    }
+
+}
+
+void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parameters)
+{
+    std::clog << "Generating a new genetic architecture\n";
+
+    // Recombination map
+    std::clog << "  Placing loci across the genome.";
+    createRecombinationMap(parameters);
+    std::clog << "..done\n";
+
+    // Assign phenotypic characters
+    std::clog << "  Assigning loci to characters.";
+    assignPhenotypes(parameters);
+    std::clog << "..done\n";
+
+    // Assign additive and dominance effects
+    std::clog << "  Sampling additive and dominance effects.";
+    sampleEffectSizes(parameters);
+    sampleDominanceCoeff(parameters);
+    std::clog << "..done\n";
+
+    // Make a regulatory network
+    std::clog << "  Creating gene interaction network.";
+    makeRegulatoryNetworks(parameters);
     std::clog << ".done\n";
 
 }
