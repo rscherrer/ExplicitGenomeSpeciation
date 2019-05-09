@@ -34,15 +34,17 @@ public:
     std::vector<size_t> loci;
     std::vector<Edge> edges;
 
+    // Constructor
     explicit GeneticArchitecture(const ParameterSet&);
 
     // High-level functions
     void generateGeneticArchitecture(const ParameterSet&);
-    void storeGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);
+    void storeGeneticArchitecture(const ParameterSet&);
 
     // Low-level functions
-    void preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
+
+    // Setting
     void createRecombinationMap(const ParameterSet&);
     void setChromosomeSizes(const ParameterSet&);
     void sampleGeneLocations(const ParameterSet&);
@@ -50,14 +52,19 @@ public:
     void sampleEffectSizes(const ParameterSet&);
     void sampleDominanceCoeff(const ParameterSet&);
     void makeRegulatoryNetworks(const ParameterSet&);
-    void sampleInteractions(const ParameterSet&, const size_t&, const size_t&);  // Per phenotypic character
-    void growNetwork(const size_t&, size_t&, std::vector<size_t>&, const double&);
+    void preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
     void initializeNetwork(const size_t&, size_t&, std::vector<size_t>&);
+    void growNetwork(const size_t&, size_t&, std::vector<size_t>&, const double&);
     void sortNetwork(const size_t&, const std::vector<size_t>&);
+    void sampleInteractions(const ParameterSet&, const size_t&, const size_t&);  // Per phenotypic character
+
+    // Reading
     bool validateArchitecture(std::ifstream&, const ParameterSet&);
     void loadChromosomeSizes(std::ifstream&);
     void loadLocusConstants(std::ifstream&, const ParameterSet&);
     void loadEpistaticInteractions(std::ifstream&);
+
+    // Writing
     void writeChromosomeSizes(std::ofstream&);
     void writeLocusConstants(std::ofstream&, const ParameterSet&);
     void writeEpistaticInteractions(std::ofstream&, const ParameterSet&);
