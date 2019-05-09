@@ -103,6 +103,8 @@ public:
     void setGeneticValue(const size_t&, const GeneticArchitecture&);
     void setLocusGeneticValue(const size_t&, const GeneticArchitecture&, const ParameterSet&);
 
+    void setGenomeSequence(const size_t&, const double&);
+
 private:
 
     // Private setters

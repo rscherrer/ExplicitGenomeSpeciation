@@ -40,28 +40,32 @@ Instructions for compiling and running the program
                                          member functions
 ========================================================================================================*/
 
-Individual::Individual(const ParameterSet& parameters) :
-isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+void Individual::setGenomeSequence(const size_t &nBits, const double &freqSNP)
 {
-    // Generate a genotype
-    for (size_t i = 0u; i < parameters.nBits; i += 2u) {
+    for (size_t i = 0u; i < nBits; i += 2u) {
         genomeSequence[i] = genomeSequence[i + 1u] = (i % 4u == 0u);
-        if (rnd::uniform() < parameters.freqSNP) {
+        if (rnd::uniform() < freqSNP) {
             genomeSequence[i] = !genomeSequence[i];
         }
-        if (rnd::uniform() < parameters.freqSNP) {
+        if (rnd::uniform() < freqSNP) {
             genomeSequence[i + 1u] = !genomeSequence[i + 1u];
         }
     }
-    mutate(parameters);
-    develop(parameters, genome);
 }
 
-Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters) :
+Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
+isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+{
+    setGenomeSequence(parameters.nBits, parameters.freqSNP);
+    mutate(parameters);
+    develop(parameters, geneticArchitecture);
+}
+
+Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
 genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 {
     mutate(parameters);
-    develop(parameters, genome);
+    develop(parameters, geneticArchitecture);
 }
 
 Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
@@ -146,7 +150,7 @@ Individual::Individual(Individual const * const mother, Individual const * const
     }
 
     mutate(parameters);
-    develop(parameters, genome);
+    develop(parameters, geneticArchitecture);
 }
 
 void Individual::mutate(const ParameterSet& parameters)
