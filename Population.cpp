@@ -5,6 +5,7 @@
 #include "Population.h"
 #include "random.h"
 #include "queue"
+#include <cassert>
 
 Population::Population(const ParameterSet &parameters)
 {
@@ -71,7 +72,7 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
             // Record attack rates
             TradeOffPt pt = (*iti)->getAttackRate();
 
-            // Are we during burnin period?
+            // Are we in the burnin period?
             if (nAccessibleResource < 2u) {
                 pt.second = 0.0;
             }
@@ -82,11 +83,12 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
             // For the moment, assume that the individual utilises the first resource
             resourceConsumption[hab].first += pt.first;
 
-            // but sum the attack rates on the second resource anyway if type II resource utilisation
+            // But sum the attack rates on the second resource anyway if type II resource utilisation
             if (parameters.isTypeIIResourceUtilisation) {
                 resourceConsumption[hab].second += pt.second;
             }
 
+            // Classify gender
             if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
                 females.push(*iti);
             }
@@ -104,105 +106,148 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
     }
     individuals.erase(individuals.begin(), iti);
 
-    // determine equilibrium scaled resource densities and assign final ecotype
+    // Determine equilibrium scaled resource densities and assign final ecotype to the individual
 
+    // Sort individuals along the trade-off line
     pts.sort(tradeOffCompare);
     breakEvenPoint = pts.back();
     breakEvenPoint.first *= 0.5;
     breakEvenPoint.second = 0.0;
 
-    // security check
-    if(!parameters.isTypeIIResourceUtilisation) if(resourceConsumption[hab].second != 0.0) throw std::logic_error("consumption of the second resource should be zero");
+    // Make sure that the second resource has not been consumed in the case of type II resource utilization
+    if (!parameters.isTypeIIResourceUtilisation) {
+        std::assert(resourceConsumption[hab].second != 0.0);
+    }
 
-    // find resource equilibrium and break-even point (used only for ecotype classification in type II resource utilisation)
+    // Initialize resource dynamics
     resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
     resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
 
-    for(const TradeOffPt &pt : pts) {
-        if(!parameters.isTypeIIResourceUtilisation) {
+    // Find resource equilibrium and break-even point by looping along the trade-off line
+    // (used only for ecotype classification in type II resource utilisation)
+    for (const TradeOffPt &pt : pts) {
+        if (!parameters.isTypeIIResourceUtilisation) {
             resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
             resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
         }
-        if(pt.first * resourceEql[hab].first < pt.second * resourceEql[hab].second) {
-            if(!parameters.isTypeIIResourceUtilisation) {
-                // switching from resource 1 to 2 is beneficial
+        const bool isResource2MoreAdvantageous = pt.first * resourceEql[hab].first < pt.second * resourceEql[hab].second;
+        if (isResource2MoreAdvantageous) {
+            if (!parameters.isTypeIIResourceUtilisation) {
+
+                // Switch to resource 2
                 resourceConsumption[hab].first -= pt.first;
                 resourceConsumption[hab].second += pt.second;
             }
         }
         else {
-            // set break-even point to be used in later ecotype classification
+            // Set break-even point to be used in later ecotype classification
             breakEvenPoint = pt;
             break;
         }
     }
 
-    //std::cout << hab << " : " << resourceEql[hab].first << ' ' << resourceEql[hab].second << '\n';
+    // Mate choice and offspring production
+    const size_t nFemales = genderCounts[hab].first = females.size();
+    const size_t nMales = genderCounts[hab].second = males.size();
 
-    // mate choice and offspring production
-    const size_t nf = genderCounts[hab].first = females.size();
-    const size_t nm = genderCounts[hab].second = males.size();
+    // Terminate if there are no males or no females
+    if (nFemales == 0u || nMales == 0u) {
+        return;
+    }
 
-    // terminate if there are no males or no females
-    if(nf == 0u || nm == 0u) return;
+    // Compute reproductive success for males
+    std::vector<double> maleSuccess(nMales);
+    double sumMaleSuccess = 0.0;
 
-    // compute reproductive success for males
-    std::vector<double> maleSuccess(nm);
-    double sum = 0.0;
-    for(size_t i = 0u; i < nm; ++i) {
-        // pick the resource that yields the highest payoff (not if type II resource utilisation)
+    // Loop through males
+    for(size_t i = 0u; i < nMales; ++i) {
+
+        // Pick the resource that yields the highest payoff (not if type II resource utilisation)
         TradeOffPt pt = males[i]->getAttackRate();
-        if(nAccessibleResource < 2u) pt.second = 0.0;
+        if (nAccessibleResource < 2u) pt.second = 0.0;  // If burnin period
         maleSuccess[i] = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-        // add stabilising selection on mating trait during burn-in period
-        if(nAccessibleResource < 2u)
+
+        // Add stabilising selection on mating trait during burn-in period
+        if (nAccessibleResource < 2u) {
             maleSuccess[i] *= males[i]->getBurnInRpSc(parameters.ecoSelCoeff);
-        sum += maleSuccess[i];
+        }
+
+        // Accumulate mating successes
+        sumMaleSuccess += maleSuccess[i];
 
     }
-    if(sum < parameters.tiny) maleSuccess = std::vector<double>(nm, 1.0);
+
+    // In case of equal mating successes
+    if (sumMaleSuccess < parameters.tiny) {
+        maleSuccess = std::vector<double>(nMales, 1.0);
+    }
+
+    // Male market
     std::discrete_distribution<size_t> maleMarket(maleSuccess.begin(), maleSuccess.end());
 
-    // sample family sizes for females and implement mate choice
+    // Set the length of the mating season
     const size_t seasonEnd = rnd::geometric(parameters.mateEvaluationCost);
-    while(!females.empty())
-    {
+
+    // Mate choice and reproduction
+    while (!females.empty()) {
+
         PInd fem = females.front();
         females.pop();
 
-        // compute female reproductive success
+        // Compute female reproductive success
         TradeOffPt pt = fem->getAttackRate();
-        if(nAccessibleResource < 2u) pt.second = 0.0;
+        if (nAccessibleResource < 2u) {
+            pt.second = 0.0;
+        }
         double femaleSuccess = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-        if(nAccessibleResource < 2u)
+        if (nAccessibleResource < 2u) {
             femaleSuccess *= fem->getBurnInRpSc(parameters.ecoSelCoeff);
+        }
 
-        // sample family size for female
+        // Sample family size for female
         size_t nOffspring = rnd::poisson(parameters.beta * femaleSuccess);
-        fem->prepareChoice();
-        for(size_t t = 0u; nOffspring && t < seasonEnd; ++t) {
 
-            // sample a male
+        // Mate choice for each clutch
+        fem->prepareChoice();
+        for (size_t t = 0u; nOffspring && t < seasonEnd; ++t) {
+
+            // Sample a male
             const size_t j = maleMarket(rnd::rng);
 
-            if(fem->acceptMate(males[j], parameters)) {
-                // add offspring to the population only if it survives development
+            // If mating is successful
+            if (fem->acceptMate(males[j], parameters)) {
+
+                // Add offspring to the population
                 individuals.push_back(new Individual(fem, males[j], parameters, genome));
-                if(parameters.costIncompat > 0.0) {
-                    if(rnd::bernoulli(individuals.back()->getViability()))
+
+                // Check if the offspring survives development
+                if (parameters.costIncompat > 0.0) {
+                    if (rnd::bernoulli(individuals.back()->getViability())) {
                         individuals.pop_back();
+                    }
                 }
+
                 --nOffspring;
             }
         }
-        // female survival
-        if(rnd::bernoulli(parameters.survivalProb)) individuals.push_back(fem);
-        else delete fem;
+
+        // Female survival
+        if (rnd::bernoulli(parameters.survivalProb)) {
+            individuals.push_back(fem);
+        }
+        else {
+            delete fem;
+        }
     }
-    // male survival
-    for(size_t i = 0u; i < nm; ++i) {
-        if(rnd::bernoulli(parameters.survivalProb)) individuals.push_back(males[i]);
-        else delete males[i];
+
+    // Male survival
+    for (size_t i = 0u; i < nMales; ++i) {
+        if (rnd::bernoulli(parameters.survivalProb)) {
+            individuals.push_back(males[i]);
+        }
+        else {
+            delete males[i];
+        }
         males[i] = nullptr;
     }
 }

@@ -58,7 +58,7 @@ namespace rnd
 		return std::binomial_distribution<size_t>(n, p)(rng);
 	}
 
-	int poisson(const double lambda) 
+	size_t poisson(const double lambda)
 	{
 		return std::poisson_distribution<int>(lambda)(rng);
 	}
