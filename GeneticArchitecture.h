@@ -36,10 +36,12 @@ public:
 
     explicit GeneticArchitecture(const ParameterSet&);
 
-    // Setters
+    // High-level functions
     void generateGeneticArchitecture(const ParameterSet&);
     void storeGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);
+
+    // Low-level functions
     void preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
     void createRecombinationMap(const ParameterSet&);
     void setChromosomeSizes(const ParameterSet&);
