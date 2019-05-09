@@ -34,179 +34,256 @@ Instructions for compiling and running the program
 #include "random.h"
 #include "ParameterSet.h"
 #include "Population.h"
-#include "Genome.h"
-
-
+#include "GeneticArchitecture.h"
 
 /*=======================================================================================================
                                          member functions
 ========================================================================================================*/
 
-Individual::Individual(const ParameterSet& parameters, const Genome& genome) :
+Individual::Individual(const ParameterSet& parameters) :
 isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
-// default constructor; called on initialisation
 {
-    // initial genotype
-    for(size_t i = 0u; i < parameters.nBits; i += 2u) {
+    // Generate a genotype
+    for (size_t i = 0u; i < parameters.nBits; i += 2u) {
         genomeSequence[i] = genomeSequence[i + 1u] = (i % 4u == 0u);
-        if(rnd::uniform() < parameters.freqSNP) genomeSequence[i] = !genomeSequence[i];
-        if(rnd::uniform() < parameters.freqSNP) genomeSequence[i + 1u] = !genomeSequence[i + 1u];
+        if (rnd::uniform() < parameters.freqSNP) {
+            genomeSequence[i] = !genomeSequence[i];
+        }
+        if (rnd::uniform() < parameters.freqSNP) {
+            genomeSequence[i + 1u] = !genomeSequence[i + 1u];
+        }
     }
     mutate(parameters);
     develop(parameters, genome);
 }
 
-Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const Genome& genome) :
+Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters) :
 genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
-// default constructor; called on initialisation
 {
     mutate(parameters);
     develop(parameters, genome);
 }
 
-Individual::Individual(Individual const * const mother,
-        Individual const * const father,
-        const ParameterSet& parameters,
-        const Genome& genome) :
+Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
     isHeteroGamous(false), habitat(mother->habitat)
-// constructor implementing sexual reproduction
 {
-    // transmission of genes from mother
-    double freeRecombinationPoint = 0.0, crossOverPoint = 0.0;
-    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(genome.characterLocus[i].location > freeRecombinationPoint) {
-            // switch to random haplotype
-            hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
-            // set next free recombination point
-            if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = genome.chromosomeSize[lnkgr];
-                ++lnkgr;
+
+    // Inheritance from mom
+    double freeRecombinationPoint = 0.0;
+    double crossOverPoint = 0.0;
+
+    // Loop through loci
+    for (size_t i = 0u, lg = 0u, haplotype = 0u; i < parameters.nLoci; ++i) {
+
+        // Free interchromosomal recombination
+        if (geneticArchitecture.locusConstants[i].location > freeRecombinationPoint) {
+
+            // Recombinate by switching to random haplotype
+            haplotype = rnd::bernoulli(0.5) ? 0u : 1u;
+
+            // Set next free recombination point
+            if (lg < parameters.nChromosomes - 1u) {
+                freeRecombinationPoint = geneticArchitecture.chromosomeSizes[lg];
+                ++lg;
             }
-            else freeRecombinationPoint = 1.0;
+            else {
+                freeRecombinationPoint = 1.0;
+            }
         }
-        if(genome.characterLocus[i].location > crossOverPoint) {
-            // cross over to other haplotype
-            hpltp = (hpltp + 1u) % 2u;
-            // set next cross-over point
+
+        // Intrachromosomal recombination
+        if (geneticArchitecture.locusConstants[i].location > crossOverPoint) {
+
+            // Cross over to the opposite haplotype
+            haplotype = (haplotype + 1u) % 2u;
+
+            // Set next cross-over point
             crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
-        genomeSequence[i << 1] = mother->genomeSequence[(i << 1u) + hpltp];
-        if(i == 0u && hpltp == 0u && parameters.isFemaleHeteroGamety) isHeteroGamous = true;
+
+        // Inherit maternal haplotype
+        genomeSequence[i << 1] = mother->genomeSequence[(i << 1u) + haplotype];
+        if (i == 0u && haplotype == 0u && parameters.isFemaleHeteroGamety) {
+            isHeteroGamous = true;
+        }
     }
     
-    // transmission of genes from father
-    freeRecombinationPoint = crossOverPoint = 0.0;
-    for(size_t i = 0u, lnkgr = 0u, hpltp = 0u; i < parameters.nLoci; ++i) {
-        if(genome.characterLocus[i].location > freeRecombinationPoint) {
-            // switch to random haplotype
-            hpltp = (rnd::bernoulli(0.5) ? 0u : 1u);
-            // set next free recombination point
-            if(lnkgr < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = genome.chromosomeSize[lnkgr];
-                ++lnkgr;
+    // Inheritance from dad
+    freeRecombinationPoint = 0.0;
+    crossOverPoint = 0.0;
+
+    // Loop through loci
+    for (size_t i = 0u, lg = 0u, haplotype = 0u; i < parameters.nLoci; ++i) {
+
+        // Free interchromosomal recombination
+        if(geneticArchitecture.locusConstants[i].location > freeRecombinationPoint) {
+
+            // Recombinate by switching to random haplotype
+            haplotype = (rnd::bernoulli(0.5) ? 0u : 1u);
+
+            // Set next free recombination point
+            if(lg < parameters.nChromosomes - 1u) {
+                freeRecombinationPoint = geneticArchitecture.chromosomeSizes[lg];
+                ++lg;
             }
+
             else freeRecombinationPoint = 1.0;
         }
-        if(genome.characterLocus[i].location > crossOverPoint) {
-            // cross over to other haplotype
-            hpltp = (hpltp + 1u) % 2u;
-            // set next cross-over point
+
+        // Intrachromosomal recombination
+        if (geneticArchitecture.locusConstants[i].location > crossOverPoint) {
+
+            // Cross over to the opposite haplotype
+            haplotype = (haplotype + 1u) % 2u;
+
+            // Set next cross-over point
             crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
         }
-        genomeSequence[(i << 1) + 1u] = father->genomeSequence[(i << 1u) + hpltp];
-        if(i == 0u && hpltp == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
+
+        // Inherit paternal haplotype
+        genomeSequence[(i << 1) + 1u] = father->genomeSequence[(i << 1u) + haplotype];
+        if(i == 0u && haplotype == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
     }
+
     mutate(parameters);
     develop(parameters, genome);
 }
 
 void Individual::mutate(const ParameterSet& parameters)
-// implements mutation
 {
-    size_t k = rnd::poisson(parameters.nBits * parameters.mutationRate);
-    while(k) {
+
+    // Sample mutations
+    size_t nMutations = rnd::poisson(parameters.nBits * parameters.mutationRate);
+
+    // Distribute them across the genome
+    while (nMutations) {
         size_t i = rnd::random_int(parameters.nBits);
         genomeSequence[i] = !genomeSequence[i];
-        --k;
+        --nMutations;
     }
 }
 
-void Individual::develop(const ParameterSet& parameters, const Genome& genome)
-// implements genotype->phenotype map
+void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
 {
-    // additive component
-    for(size_t i = 0u; i < parameters.nLoci; ++i) {
+
+    // Non-epistatic component (additive and dominance) of each locus
+
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
         
         size_t k = i << 1u;
-        size_t crctr = genome.characterLocus[i].character;
-        
-        // determine genotype and locus phenotypic effect
-        if(genomeSequence[k] == genomeSequence[k + 1u]) {
-            if(genomeSequence[k]) {         // homozygote AA
+        size_t crctr = geneticArchitecture.locusConstants[i].character;
+
+        expressGene();
+
+        // Determine genotype and local effect on the phenotype
+        if (genomeSequence[k] == genomeSequence[k + 1u]) {
+
+            // Homozygote AA
+            if (genomeSequence[k]) {
                 traitLocus[i].alleleCount = 2u;
-                traitLocus[i].expression = +1.0;
+                traitLocus[i].expression = 1.0;
             }
-            else {                  // homozygote aa
+
+            // Homozygote aa
+            else {
                 traitLocus[i].alleleCount = 0u;
                 traitLocus[i].expression = -1.0;
             }
         }
-        else {                      // heterozygote Aa
+
+        // Heterozygote Aa
+        else {
             traitLocus[i].alleleCount = 1u;
             traitLocus[i].expression =
-                    parameters.scaleD[crctr] * genome.characterLocus[i].dominanceCoeff;
+                    parameters.scaleD[crctr] * geneticArchitecture.locusConstants[i].dominanceCoeff;
         }
+
+        // Compute non-epistatic local genetic value
+        computeGeneNonEpistaticValue();
+
         traitLocus[i].geneticValue = parameters.scaleA[crctr] *
-                genome.characterLocus[i].effectSize * traitLocus[i].expression;
-    }
-    // epistatic interactions
-    for(size_t i = 0u; i < parameters.nLoci; ++i) {
-        size_t crctr = genome.characterLocus[i].character;
-        for(std::pair<size_t, double> edge : genome.characterLocus[i].edges) {
-            size_t j = edge.first;
-            
-            // compute interaction strength and distribute phenotypic effect over contributing loci
-            double Iij = 0.5 * parameters.scaleI[crctr] * edge.second *
-                traitLocus[i].expression * traitLocus[j].expression;
-            traitLocus[i].geneticValue += Iij;
-            traitLocus[j].geneticValue += Iij;
-        }
-    }
-    // accumulate phenotypic contributions and add environmental effect
-    for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-        traitG[crctr] = 0.0;
-        for(size_t i : genome.vertices[crctr])
-            traitG[crctr] += traitLocus[i].geneticValue;
-        traitE[crctr] = rnd::normal(0.0, parameters.scaleE[crctr]);
-        traitP[crctr] = traitG[crctr] + traitE[crctr];
+                geneticArchitecture.locusConstants[i].effectSize * traitLocus[i].expression;
     }
 
-    // compute viability
-    if(parameters.costIncompat > 0.0) {
-        // initialize the number of incompatibilities
+    // Epistatic component of each locus
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+
+        size_t crctr = geneticArchitecture.locusConstants[i].character;
+
+        computeGeneEpistaticValue();
+
+        // For each interaction
+        for (std::pair<size_t, double> edge : geneticArchitecture.locusConstants[i].neighbors) {
+
+            size_t j = edge.first;
+            
+            // Compute interaction strength and distribute phenotypic effect over contributing loci
+            double epistaticEffect = 0.5 * parameters.scaleI[crctr] * edge.second *
+                traitLocus[i].expression * traitLocus[j].expression;
+            traitLocus[i].geneticValue += epistaticEffect;
+            traitLocus[j].geneticValue += epistaticEffect;
+        }
+    }
+
+    // Accumulate phenotypic contributions and add environmental effect
+    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+
+        setGeneticValue();
+
+        traitG[crctr] = 0.0;
+
+        // Accumulate genetic contributions
+        for (size_t i : geneticArchitecture.networkVertices[crctr]) {
+            traitG[crctr] += traitLocus[i].geneticValue;
+        }
+
+        setEnvirValue();
+
+        // Add environmental effect
+        traitE[crctr] = rnd::normal(0.0, parameters.scaleE[crctr]);
+
+        setPhenotypeValue();
+        traitP[crctr] = traitG[crctr] + traitE[crctr];
+        
+    }
+
+    // Compute viability
+    computeViability();
+
+    if (parameters.costIncompat > 0.0) {
+
+        // Initialize the number of incompatibilities
         size_t nIncompatibilities = 0;
-        // for each vertex underlying trait Z
-        for(size_t i : genome.vertices[2u]) {
-            // for each of its edges
-            for(std::pair<size_t, double> edge : genome.characterLocus[i].edges) {
-                // record expression level of i and j
+
+        // For each locus underlying trait the neutral trait
+        for (size_t i : geneticArchitecture.networkVertices[2u]) {
+
+            // For each interaction
+            for (std::pair<size_t, double> edge : geneticArchitecture.locusConstants[i].neighbors) {
+
+                // Record expression of both interacting genes
                 size_t j = edge.first;
                 double ei = traitLocus[i].expression;
                 double ej = traitLocus[j].expression;
-                // if both expression levels are negative, there is an incompatibility
-                if(ei < 0.0 && ej < 0.0) {
+
+                // If both expression levels are negative, there is an incompatibility
+                if (ei < 0.0 && ej < 0.0) {
                     ++nIncompatibilities;
                 }
             }
         }
-        // compute viability
+
+        // Viability is related to the number of incompatibilities
         viability = exp(- nIncompatibilities * parameters.costIncompat);
+
     }
     else {
         viability = 1.0;
     }
     
-    // compute attack rate
+    // Compute attack rate
+    setAttackRates();
+
     attackRate.first  = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] + 1.0));
     attackRate.second = exp(-parameters.ecoSelCoeff * sqr(traitP[0u] - 1.0));
 

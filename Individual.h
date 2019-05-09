@@ -56,9 +56,9 @@ public:
     };
 
     // Constructors
-    Individual(const ParameterSet&, const Genome&);
-    Individual(const std::vector<bool>&, const ParameterSet&, const Genome&);
-    Individual(Individual const * const, Individual const * const, const ParameterSet&, const Genome&);
+    Individual(const ParameterSet&);
+    Individual(const std::vector<bool>&, const ParameterSet&);
+    Individual(Individual const * const, Individual const * const, const ParameterSet&);
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}

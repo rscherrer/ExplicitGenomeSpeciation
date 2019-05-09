@@ -23,6 +23,7 @@ Population::Population(const ParameterSet &parameters)
 
 void Population::dispersal(const ParameterSet& parameters)
 {
+
     // Loop through the whole population if dispersal is high, all individuals have high chances to migrate
     if (parameters.dispersalRate > 0.5) {
         for (PInd pInd : individuals) {
