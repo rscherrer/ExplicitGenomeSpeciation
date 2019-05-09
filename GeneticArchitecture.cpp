@@ -374,7 +374,7 @@ void GeneticArchitecture::loadEpistaticInteractions(std::ifstream &ifs)
     }
 }
 
-void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet& parameters)
+void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet &parameters)
 {
     std::clog << "Loading genetic architecture from file " << parameters.architectureFilename << '\n';
 
@@ -410,6 +410,34 @@ void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet& parameters
     std::clog << "..done\n";
 }
 
+void GeneticArchitecture::writeChromosomeSizes(std::ofstream &ofs)
+{
+    for (double x : chromosomeSizes) {
+        ofs << x << '\t';
+    }
+    ofs << '\n';
+}
+
+void GeneticArchitecture::writeLocusConstants(std::ofstream &ofs, const ParameterSet &parameters)
+{
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+        ofs << i << '\t'
+            << locusConstants[i].character << '\t'
+            << locusConstants[i].location << '\t'
+            << locusConstants[i].effectSize << '\t'
+            << locusConstants[i].dominanceCoeff << '\n';
+    }
+}
+
+void GeneticArchitecture::writeEpistaticInteractions(std::ofstream &ofs, const ParameterSet &parameters)
+{
+    for (size_t i = 0u; i < parameters.nLoci; ++i) {
+        for (const std::pair<size_t, double> &edge : locusConstants[i].neighbors) {
+            ofs << i << '\t' << edge.first << '\t' << edge.second << '\n';
+        }
+    }
+}
+
 void GeneticArchitecture::storeGeneticArchitecture(const ParameterSet& parameters)
 {
     // Open genetic architecture file
@@ -426,25 +454,11 @@ void GeneticArchitecture::storeGeneticArchitecture(const ParameterSet& parameter
         << parameters.nChromosomes << '\n';
 
     // Chromosome sizes
-    for (double x : chromosomeSizes) {
-        ofs << x << '\t';
-    }
-    ofs << '\n';
+    writeChromosomeSizes(ofs);
 
     // Gene location, effect size and dominance coefficient
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        ofs << i << '\t'
-            << locusConstants[i].character << '\t'
-            << locusConstants[i].location << '\t'
-            << locusConstants[i].effectSize << '\t'
-            << locusConstants[i].dominanceCoeff << '\n';   
-    }
+    writeLocusConstants(ofs, parameters);
 
     // Epistatic interactions
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        for (const std::pair<size_t, double> &edge : locusConstants[i].edges) {
-            ofs << i << '\t' << edge.first << '\t' << edge.second << '\n';
-        }
-    }
-    
+    writeEpistaticInteractions(ofs, parameters);
 }

@@ -56,6 +56,9 @@ public:
     void loadChromosomeSizes(std::ifstream&);
     void loadLocusConstants(std::ifstream&, const ParameterSet&);
     void loadEpistaticInteractions(std::ifstream&);
+    void writeChromosomeSizes(std::ofstream&);
+    void writeLocusConstants(std::ofstream&, const ParameterSet&);
+    void writeEpistaticInteractions(std::ofstream&, const ParameterSet&);
 
 };
 
