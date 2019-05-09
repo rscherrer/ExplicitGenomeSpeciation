@@ -48,17 +48,31 @@ class Individual {
 
 public:
 
-    // A Trait object is locus- and individual-specific
-    struct Trait
+    struct Locus
     {
         size_t alleleCount;
-        double expression, geneticValue;
+        double expression;
+        double locusGeneticValue;
     };
 
     // Constructors
     Individual(const ParameterSet&);
     Individual(const std::vector<bool>&, const ParameterSet&);
     Individual(Individual const * const, Individual const * const, const ParameterSet&);
+
+    bool isHeteroGamous;
+    size_t habitat
+    size_t ecotype;
+    std::list<double> obs;
+    double xsum;
+    double xxsum;
+    std::vector<double> phenotypes;
+    std::vector<double> geneticValues;
+    std::vector<double> envirValues;
+    double viability;
+    TradeOffPt attackRates;
+    std::vector<bool> genomeSequence;
+    std::vector<Locus> genotypes;
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
@@ -95,16 +109,6 @@ private:
     void mutate(const ParameterSet&);
     void develop(const ParameterSet&, const GeneticArchitecture&);
 
-    // Fields
-    bool isHeteroGamous;
-    mutable size_t habitat, ecotype;
-    mutable std::list<double> obs;
-    mutable double xsum, xxsum;
-    std::vector<double> traitP, traitG, traitE; // size nCharacter
-    double viability;
-    TradeOffPt attackRate;
-    std::vector<bool> genomeSequence;
-    std::vector<Trait> traitLocus; // size nLoci
 
 };
 

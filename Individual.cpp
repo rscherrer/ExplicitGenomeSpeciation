@@ -166,31 +166,32 @@ void Individual::mutate(const ParameterSet& parameters)
 void Individual::expressGene(const size_t &nt, const size_t &i, const double &scaleD, const double &dominanceCoeff)
 {
     // Determine genotype and local effect on the phenotype
-    if (genomeSequence[nt] == genomeSequence[nt + 1u]) {
+    bool isHomozygous = genomeSequence[nt] == genomeSequence[nt + 1u];
+    if (isHomozygous) {
 
         // Homozygote AA
         if (genomeSequence[nt]) {
-            traitLocus[i].alleleCount = 2u;
-            traitLocus[i].expression = 1.0;
+            genotypes[i].alleleCount = 2u;
+            genotypes[i].expression = 1.0;
         }
 
         // Homozygote aa
         else {
-            traitLocus[i].alleleCount = 0u;
-            traitLocus[i].expression = -1.0;
+            genotypes[i].alleleCount = 0u;
+            genotypes[i].expression = -1.0;
         }
     }
 
         // Heterozygote Aa
     else {
-        traitLocus[i].alleleCount = 1u;
-        traitLocus[i].expression = scaleD * dominanceCoeff;
+        genotypes[i].alleleCount = 1u;
+        genotypes[i].expression = scaleD * dominanceCoeff;
     }
 }
 
 void Individual::setAdditiveValue(const size_t &i, const double &scaleA, const double &effectSize)
 {
-    traitLocus[i].geneticValue = scaleA * effectSize * traitLocus[i].expression;
+    genotypes[i].locusGeneticValue = scaleA * effectSize * genotypes[i].expression;
 }
 
 void Individual::setEpistaticValue(const size_t &i, const double &scaleI, const std::list<std::pair<size_t, double> > &neighbors)
@@ -201,9 +202,9 @@ void Individual::setEpistaticValue(const size_t &i, const double &scaleI, const 
         size_t j = edge.first;
 
         // Compute interaction strength and distribute phenotypic effect over contributing loci
-        double epistaticEffect = 0.5 * scaleI * edge.second * traitLocus[i].expression * traitLocus[j].expression;
-        traitLocus[i].geneticValue += epistaticEffect;
-        traitLocus[j].geneticValue += epistaticEffect;
+        double epistaticEffect = 0.5 * scaleI * edge.second * genotypes[i].expression * genotypes[j].expression;
+        genotypes[i].locusGeneticValue += epistaticEffect;
+        genotypes[j].locusGeneticValue += epistaticEffect;
     }
 }
 
@@ -212,38 +213,38 @@ void Individual::setLocusGeneticValue(const size_t &i,
         const ParameterSet &parameters)
 {
     size_t nt = i << 1u;  // nucleotide position
-    size_t crctr = geneticArchitecture.locusConstants[i].character;
+    size_t trait = geneticArchitecture.locusConstants[i].character;
 
     // Express the gene
-    expressGene(nt, i, parameters.scaleD[crctr], geneticArchitecture.locusConstants[i].dominanceCoeff);
+    expressGene(nt, i, parameters.scaleD[trait], geneticArchitecture.locusConstants[i].dominanceCoeff);
 
     // Compute local non-epistatic genetic value
-    setAdditiveValue(i, parameters.scaleA[crctr], geneticArchitecture.locusConstants[i].effectSize);
+    setAdditiveValue(i, parameters.scaleA[trait], geneticArchitecture.locusConstants[i].effectSize);
 
     // Compute local epistatic value
-    setEpistaticValue(i, parameters.scaleI[crctr], geneticArchitecture.locusConstants[i].neighbors);
+    setEpistaticValue(i, parameters.scaleI[trait], geneticArchitecture.locusConstants[i].neighbors);
 
 }
 
 void Individual::setGeneticValue(const size_t &trait, const GeneticArchitecture &geneticArchitecture)
 {
-    traitG[trait] = 0.0;
+    geneticValues[trait] = 0.0;
 
     // Accumulate genetic contributions
     for (size_t i : geneticArchitecture.networkVertices[trait]) {
-        traitG[trait] += traitLocus[i].geneticValue;
+        geneticValues[trait] += genotypes[i].locusGeneticValue;
     }
 }
 
 void Individual::setEnvirValue(const size_t &trait, const double &scaleE)
 {
     // Add environmental effect
-    traitE[trait] = rnd::normal(0.0, scaleE);
+    envirValues[trait] = rnd::normal(0.0, scaleE);
 }
 
 void Individual::setPhenotype(const size_t &trait)
 {
-    traitP[trait] = traitG[trait] + traitE[trait];
+    phenotypes[trait] = geneticValues[trait] + envirValues[trait];
 }
 
 void Individual::setViability(const double &costIncompat, const GeneticArchitecture &geneticArchitecture)
@@ -261,8 +262,8 @@ void Individual::setViability(const double &costIncompat, const GeneticArchitect
 
                 // Record expression of both interacting genes
                 size_t j = edge.first;
-                double ei = traitLocus[i].expression;
-                double ej = traitLocus[j].expression;
+                double ei = genotypes[i].expression;
+                double ej = genotypes[j].expression;
 
                 // If both expression levels are negative, there is an incompatibility
                 if (ei < 0.0 && ej < 0.0) {
@@ -282,8 +283,8 @@ void Individual::setViability(const double &costIncompat, const GeneticArchitect
 
 void Individual::setAttackRates(const double &ecoSelCoeff)
 {
-    attackRate.first  = exp(-ecoSelCoeff * sqr(traitP[0u] + 1.0));
-    attackRate.second = exp(-ecoSelCoeff * sqr(traitP[0u] - 1.0));
+    attackRates.first  = exp(-ecoSelCoeff * sqr(phenotypes[0u] + 1.0));
+    attackRates.second = exp(-ecoSelCoeff * sqr(phenotypes[0u] - 1.0));
 }
 
 void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
@@ -295,10 +296,10 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
     }
 
     // Accumulate phenotypic contributions and add environmental effect
-    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-        setGeneticValue(crctr, geneticArchitecture);
-        setEnvirValue(crctr, parameters.scaleE[crctr]);
-        setPhenotype(crctr);
+    for (size_t trait = 0u; trait < parameters.nCharacter; ++trait) {
+        setGeneticValue(trait, geneticArchitecture);
+        setEnvirValue(trait, parameters.scaleE[trait]);
+        setPhenotype(trait);
     }
 
     // Compute viability
@@ -311,7 +312,7 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
 
 void Individual::prepareChoice() const
 {
-    double xi = traitP[0u];
+    double xi = phenotypes[0u];
     if(!obs.empty()) obs.clear();
     obs.push_back(0.0);
     xsum = xi;
