@@ -36,11 +36,8 @@ Instructions for compiling and running the program
 #include "Population.h"
 #include "Genome.h"
 
-size_t divide_rounding_up( std::size_t dividend, std::size_t divisor );
-
-std::string to_string( std::vector< bool > const & bitvector );
-
 class Buffer;
+class Genome;
 typedef std::pair<double, double> TradeOffPt;
 
 inline double sqr(double x) { return x * x;}
@@ -61,10 +58,7 @@ public:
     // Constructors
     Individual(const ParameterSet&, const Genome&);
     Individual(const std::vector<bool>&, const ParameterSet&, const Genome&);
-    Individual(Individual const * const,
-            Individual const * const,
-            const ParameterSet&,
-            const Genome&);
+    Individual(Individual const * const, Individual const * const, const ParameterSet&, const Genome&);
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
