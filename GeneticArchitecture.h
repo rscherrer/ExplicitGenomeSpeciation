@@ -23,7 +23,7 @@ public:
         double location;
         double effectSize;
         double dominanceCoeff;
-        std::list<std::pair<size_t, double> > edges;
+        std::list<std::pair<size_t, double> > neighbors;
 
     };
 
@@ -31,6 +31,8 @@ public:
     std::vector<double> chromosomeSizes;
     std::vector<LocusConstants> locusConstants;
     std::vector<std::set<size_t> > networkVertices;
+    std::vector<size_t> loci;
+    std::vector<Edge> edges;
 
     explicit GeneticArchitecture(const ParameterSet&);
 
@@ -38,7 +40,7 @@ public:
     void generateGeneticArchitecture(const ParameterSet&);
     void storeGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);
-    std::vector<Edge> preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
+    void preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
     void createRecombinationMap(const ParameterSet&);
     void setChromosomeSizes(const ParameterSet&);
     void sampleGeneLocations(const ParameterSet&);
@@ -46,6 +48,7 @@ public:
     void sampleEffectSizes(const ParameterSet&);
     void sampleDominanceCoeff(const ParameterSet&);
     void makeRegulatoryNetworks(const ParameterSet&);
+    void sampleInteractions(const ParameterSet&, const size_t&, const size_t&);  // Per phenotypic character
 
 };
 

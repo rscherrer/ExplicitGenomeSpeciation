@@ -106,52 +106,61 @@ void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
     }
 }
 
+void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, const size_t &crctre, const size_t &offset)
+{
+
+    double sumsqWeights = 0.0;  // For later normalization
+
+    // For each edge in the network
+    for (Edge &edge : edges) {
+
+        // Select interacting partners
+        size_t i = loci[offset + edge.first];
+        size_t j = loci[offset + edge.second];
+
+        // Make sure that both partner genes underlie the current phenotypic character
+        bool isSameCharacter = locusConstants[i].character == crctr && locusConstants[j].character == crctr;
+        if (!isSameCharacter) {
+            throw std::logic_error("Invalid epistatic interaction in GeneticArchitecture::generateGeneticArchitecture()");
+        }
+
+        // Sample interaction weight
+        double interactionWeight = std::gamma_distribution<double>(parameters.alphaInteraction, 1.0)(rnd::rng);
+        if (rnd::bernoulli(0.5)) {
+            interactionWeight *= -1.0;
+        }
+
+        // Record locus j as a partner of locus i
+        locusConstants[i].neighbors.emplace_back(std::make_pair(j, interactionWeight));
+
+        // Update sum of squares
+        sumsqWeights += sqr(interactionWeight);
+    }
+
+    // Normalize interaction weights
+    sumsqWeights = sumsqWeights > 0.0 ? sqrt(sumsqWeights) : 1.0;
+    for (size_t i : networkVertices[crctr]) {
+        for (std::pair<size_t, double> &edge : locusConstants[i].neighbors) {
+            edge.second /= sumsqWeights;
+        }
+    }
+
+}
+
 void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
 {
 
     std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
     std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
-    // Vector of locus indices
-    std::vector<size_t> loci;
-    for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        loci[i] = i;
-    }
-    std::shuffle(loci.begin(), loci.end(), rnd::rng);
-
     // For each phenotypic character
     for (size_t crctr = 0u, offset = 0u; crctr < parameters.nCharacter; ++crctr) {
 
         // Generate edges with the preferential attachment algorithm
-        std::vector<Edge> edges = preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
+        preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
 
-        // Map network vertices to loci
-        double sumww = 0.0;
-        for (Edge &edge : edges) {
-
-            size_t i = loci[offset + edge.first];
-            size_t j = loci[offset + edge.second];
-            if (!(locusConstants[i].character == crctr &&
-                  locusConstants[j].character == crctr)) {
-                throw std::logic_error("Invalid epistatic interaction in GeneticArchitecture::generateGeneticArchitecture()");
-            }
-
-            // Assign interaction effect sizes
-            double wij = std::gamma_distribution<double>(parameters.alphaInteraction, 1.0)(rnd::rng);
-            if (rnd::bernoulli(0.5)) {
-                wij *= -1.0;
-            }
-            locusConstants[i].edges.emplace_back(std::make_pair(j, wij));
-            sumww += wij * wij;
-        }
-
-        // Normalise interaction weights
-        sumww = sumww > 0.0 ? sqrt(sumww) : 1.0;
-        for (size_t i : networkVertices[crctr]) {
-            for (std::pair<size_t, double> &edge : locusConstants[i].edges) {
-                edge.second /= sumww;
-            }
-        }
+        // Sample interaction partners and weights for the current character
+        sampleInteractions(parameters, crctr, offset);
 
         // Update the offset
         offset += nVertices[crctr];
@@ -165,7 +174,6 @@ void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
     std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
     // Randomized vector of locus indices
-    std::vector<size_t> loci;
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
         loci[i] = i;
     }
@@ -210,20 +218,18 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
 
 }
 
-std::vector<Edge> GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges, const double &exponent)
+void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges, const double &exponent)
 {
 
     if (!(nVertices > 1u && exponent > 0.0)) {
         throw std::runtime_error("Invalid parameters in preferentialAttachmentNetwork()");
     }
 
-    std::vector<Edge> edges;
-
     if (!edges.empty()) {
         edges.clear();
     }
     if (nEdges == 0u) {
-        return edges;
+        return;
     }
 
     // Create initial network
@@ -284,8 +290,6 @@ std::vector<Edge> GeneticArchitecture::preferentialAttachmentNetwork(const size_
     }
     std::sort(edges.begin(), edges.end(), edgeCompare);
     std::clog << ':';
-
-    return edges;
 }
 
 void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet& parameters)
