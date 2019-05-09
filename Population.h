@@ -9,7 +9,6 @@
 #include <set>
 #include "Individual.h"
 #include "ParameterSet.h"
-#include "Genome.h"
 
 // Forward declaration
 class Individual;
@@ -19,6 +18,8 @@ typedef std::pair<double, double> TradeOffPt;
 class Population {
 
 public:
+
+    Population(const ParameterSet&);
 
     // The population
     std::list<PInd> individuals;
@@ -30,7 +31,7 @@ public:
     TradeOffPt breakEvenPoint;
     size_t nAccessibleResource;
 
-    // Genome-wide genetics
+    // Genome-wide genetic variables
     std::vector<std::vector<double> > avgG;
     std::vector<std::vector<double> > varP;
     std::vector<std::vector<double> > varG;
@@ -43,7 +44,7 @@ public:
     std::vector<double> Q_st;
     std::vector<double> C_st;
 
-    // Locus-specific genetics
+    // Locus-specific genetic variables
     struct LocusVariables {
 
         double avgEffectOfSubstitution;
@@ -64,11 +65,11 @@ public:
 
     };
 
-    std::vector<LocusVariables> variablesPerLocus;
+    std::vector<LocusVariables> locusVariables;
 
     // Member functions
     void dispersal(const ParameterSet&);
-    void competitionAndReproduction(const size_t, const ParameterSet&, const Genome&);
+    void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 
 private:
 

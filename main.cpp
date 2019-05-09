@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
         // Set default parameters
         if (argc == 1) {
             parameters.seed = rnd::set_seed();
-            parameters.generateArchitecture = true;
+            parameters.isGenerateArchitecture = true;
         }
 
         // Or read parameters from a file
@@ -83,15 +83,17 @@ int main(int argc, char * argv[])
             throw std::runtime_error("invalid number of program arguments in main()");
         }
 
+        // Set the name of the architecture file if needed
         if (parameters.isGenerateArchitecture) {
             std::ostringstream oss;
             oss << "architecture_" << parameters.seed << ".txt";
             parameters.architectureFilename = oss.str();
         }
 
+        // Initalize genetic architecture
         GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters);
 
-        // Open files
+        // Open output files
         std::clog << "Opening files and data buffers.";
         std::ostringstream oss;
         oss << "simulation_" << parameters.seed;
@@ -102,7 +104,7 @@ int main(int argc, char * argv[])
             throw std::runtime_error("Unable to open output files in main()");
         }
 
-        // Open a buffer box
+        // Open a buffer box (work on this later)
         BufferBox bufferPointers = BufferBox(parameters, population, genome);
 
         std::clog << "..done\n";
@@ -162,24 +164,14 @@ int main(int argc, char * argv[])
 
         std::clog << "..done\n";
 
-        // Record start of simulation
-        auto tStart = std::chrono::system_clock::now();
 
         // *** Simulation ***
 
+        // Record start of simulation
+        auto tStart = std::chrono::system_clock::now();
+
         std::clog << "Creating initial population.";
-
-        if (parameters.sequence.size() == parameters.nBits) {
-            for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
-                population.individuals.push_back(new Individual(parameters.sequence, parameters, genome));
-            }
-        }
-        else {
-            for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
-                population.individuals.push_back(new Individual(parameters, genome));
-            }
-        }
-
+        Population population = Population(parameters);
         std::clog << "..done\n";
 
         // Enter simulation loop

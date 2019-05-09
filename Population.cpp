@@ -6,24 +6,45 @@
 #include "random.h"
 #include "queue"
 
-void Population::dispersal(const ParameterSet& parameters)
+Population::Population(const ParameterSet &parameters)
 {
-    if(parameters.dispersalRate > 0.5) {
-        for(PInd pInd : individuals)
-            if(rnd::bernoulli(parameters.dispersalRate)) pInd -> disperse(parameters.nHabitat);
+    if (parameters.sequence.size() == parameters.nBits) {
+        for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
+            individuals.push_back(new Individual(parameters.sequence, parameters, genome));
+        }
     }
     else {
-        const size_t n = individuals.size();
-        size_t k = rnd::binomial(n, parameters.dispersalRate);
-        if(k == 0u) return;
+        for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
+            individuals.push_back(new Individual(parameters, genome));
+        }
+    }
+}
 
+void Population::dispersal(const ParameterSet& parameters)
+{
+    // Loop through the whole population if dispersal is high, all individuals have high chances to migrate
+    if (parameters.dispersalRate > 0.5) {
+        for (PInd pInd : individuals) {
+            if (rnd::bernoulli(parameters.dispersalRate)) {
+                pInd -> disperse(parameters.nHabitat);
+            }
+        }
+    }
+
+    // Otherwise sample first the number of migrants
+    else {
+        const size_t populationSize = individuals.size();
+        size_t nMigrants = rnd::binomial(populationSize, parameters.dispersalRate);
+        if (nMigrants == 0u) {
+            return;
+        }
         std::set<size_t> migrants;
-        while(migrants.size() < k)
-            migrants.insert(rnd::random_int(n));
-
-        std::list<PInd>::const_iterator it = individuals.cbegin();
+        while (migrants.size() < nMigrants) {
+            migrants.insert(rnd::random_int(populationSize));
+        }
+        auto it = individuals.cbegin();
         size_t j = 0u;
-        for(size_t i : migrants) {
+        for (size_t i : migrants) {
             std::advance(it, i - j);
             (*it) -> disperse(parameters.nHabitat);
             j = i;
@@ -32,34 +53,51 @@ void Population::dispersal(const ParameterSet& parameters)
 }
 
 
-void Population::competitionAndReproduction(const size_t hab,
-                                const ParameterSet& parameters,
-                                const Genome& genome)
+void Population::competitionAndReproduction(const size_t hab, const ParameterSet& parameters)
 {
-    // accumulate attack rates and sort out females and males
+
+    // Initialize the state of affairs of the population
     std::queue<PInd> females;
     std::vector<PInd> males;
     std::list<TradeOffPt> pts;
-    std::list<PInd>::iterator iti = individuals.begin();
+    auto iti = individuals.begin();
     resourceConsumption[hab].first = resourceConsumption[hab].second = 0.0;
 
-    for(std::list<PInd>::iterator itj = individuals.end(); iti != itj;) {
-        if((*iti)->getHabitat() == hab) {
+    // Accumulate attack rates across individuals and sort out females and males
+    for (auto itj = individuals.end(); iti != itj;) {
+
+        if ((*iti)->getHabitat() == hab) {
+
+            // Record attack rates
             TradeOffPt pt = (*iti)->getAttackRate();
-            if(nAccessibleResource < 2u) pt.second = 0.0;
+
+            // Are we during burnin period?
+            if (nAccessibleResource < 2u) {
+                pt.second = 0.0;
+            }
+
+            // Accumulate
             pts.push_back(pt);
 
-            // for the moment, assume that the individual utilises the first resource
+            // For the moment, assume that the individual utilises the first resource
             resourceConsumption[hab].first += pt.first;
 
             // but sum the attack rates on the second resource anyway if type II resource utilisation
-            if(parameters.isTypeIIResourceUtilisation) resourceConsumption[hab].second += pt.second;
+            if (parameters.isTypeIIResourceUtilisation) {
+                resourceConsumption[hab].second += pt.second;
+            }
 
-            if((*iti)->isFemale(parameters.isFemaleHeteroGamety)) females.push(*iti);
-            else males.push_back(*iti);
+            if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
+                females.push(*iti);
+            }
+            else {
+                males.push_back(*iti);
+            }
             ++iti;
         }
-        else { // move individuals in the other habitat towards the end
+
+        // Move individuals in the other habitat towards the end
+        else {
             --itj;
             std::swap(*iti, *itj);
         }
