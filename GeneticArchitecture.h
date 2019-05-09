@@ -49,6 +49,13 @@ public:
     void sampleDominanceCoeff(const ParameterSet&);
     void makeRegulatoryNetworks(const ParameterSet&);
     void sampleInteractions(const ParameterSet&, const size_t&, const size_t&);  // Per phenotypic character
+    void growNetwork(const size_t&, size_t&, std::vector<size_t>&, const double&);
+    void initializeNetwork(const size_t&, size_t&, std::vector<size_t>&);
+    void sortNetwork(const size_t&, const std::vector<size_t>&);
+    bool validateArchitecture(std::ifstream&, const ParameterSet&);
+    void loadChromosomeSizes(std::ifstream&);
+    void loadLocusConstants(std::ifstream&, const ParameterSet&);
+    void loadEpistaticInteractions(std::ifstream&);
 
 };
 
