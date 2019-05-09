@@ -30,17 +30,6 @@ shift = 0;
 return ret;
 }
 
-bool tradeOffCompare (const TradeOffPt &x, const TradeOffPt &y) {
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
-    }
-}
 
 
 #endif //EXPLICITGENOMESPECIATION_ACCESSORY_H

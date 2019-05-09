@@ -101,5 +101,20 @@ private:
 
 typedef Individual const * PInd;
 
+// This functions compares two individuals on a trade-off line
+// Should it be a member of class Individual then?
+bool tradeOffCompare (const TradeOffPt &x, const TradeOffPt &y) {
+    bool yOnLeft = y.first < y.second;
+    if(x.first < x.second) {
+        if(yOnLeft) return (x.first < y.first);
+        else return true;
+    }
+    else {
+        if(yOnLeft) return false;
+        else return (x.second < y.second);
+    }
+}
+
+
 
 #endif

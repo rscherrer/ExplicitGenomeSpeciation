@@ -275,32 +275,32 @@ BufferBox.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.s
 .PHONY : BufferBox.cpp.s
 
-Genome.o: Genome.cpp.o
+GeneticArchitecture.o: GeneticArchitecture.cpp.o
 
-.PHONY : Genome.o
+.PHONY : GeneticArchitecture.o
 
 # target to build an object file
-Genome.cpp.o:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o
-.PHONY : Genome.cpp.o
+GeneticArchitecture.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o
+.PHONY : GeneticArchitecture.cpp.o
 
-Genome.i: Genome.cpp.i
+GeneticArchitecture.i: GeneticArchitecture.cpp.i
 
-.PHONY : Genome.i
+.PHONY : GeneticArchitecture.i
 
 # target to preprocess a source file
-Genome.cpp.i:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.i
-.PHONY : Genome.cpp.i
+GeneticArchitecture.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.i
+.PHONY : GeneticArchitecture.cpp.i
 
-Genome.s: Genome.cpp.s
+GeneticArchitecture.s: GeneticArchitecture.cpp.s
 
-.PHONY : Genome.s
+.PHONY : GeneticArchitecture.s
 
 # target to generate assembly for a file
-Genome.cpp.s:
-	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.s
-.PHONY : Genome.cpp.s
+GeneticArchitecture.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.s
+.PHONY : GeneticArchitecture.cpp.s
 
 Individual.o: Individual.cpp.o
 
@@ -437,6 +437,33 @@ analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.s
 .PHONY : analysis.cpp.s
 
+ioroutines.o: ioroutines.cpp.o
+
+.PHONY : ioroutines.o
+
+# target to build an object file
+ioroutines.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o
+.PHONY : ioroutines.cpp.o
+
+ioroutines.i: ioroutines.cpp.i
+
+.PHONY : ioroutines.i
+
+# target to preprocess a source file
+ioroutines.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.i
+.PHONY : ioroutines.cpp.i
+
+ioroutines.s: ioroutines.cpp.s
+
+.PHONY : ioroutines.s
+
+# target to generate assembly for a file
+ioroutines.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.s
+.PHONY : ioroutines.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -514,9 +541,9 @@ help:
 	@echo "... BufferBox.o"
 	@echo "... BufferBox.i"
 	@echo "... BufferBox.s"
-	@echo "... Genome.o"
-	@echo "... Genome.i"
-	@echo "... Genome.s"
+	@echo "... GeneticArchitecture.o"
+	@echo "... GeneticArchitecture.i"
+	@echo "... GeneticArchitecture.s"
 	@echo "... Individual.o"
 	@echo "... Individual.i"
 	@echo "... Individual.s"
@@ -532,6 +559,9 @@ help:
 	@echo "... analysis.o"
 	@echo "... analysis.i"
 	@echo "... analysis.s"
+	@echo "... ioroutines.o"
+	@echo "... ioroutines.i"
+	@echo "... ioroutines.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

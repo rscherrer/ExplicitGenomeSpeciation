@@ -426,7 +426,7 @@ void decomposeVariance(int t,
         
         // Pst, Gst, Qst and Cst
         genome.characterLocus[i].P_st =
-        Xst(genome.characterLocus[i].varP[0u],
+            Xst(genome.characterLocus[i].varP[0u],
             genome.characterLocus[i].varP[1u],
             genome.characterLocus[i].varP[2u], n, parameters.tiny);
         genome.characterLocus[i].G_st =

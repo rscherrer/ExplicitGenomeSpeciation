@@ -330,10 +330,10 @@
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.cpp">
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h">
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp">
@@ -366,6 +366,9 @@
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
@@ -388,6 +391,9 @@
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h">
+			<Option target="ExplicitGenomeSpeciation"/>
+		</Unit>
+		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/CMakeLists.txt">

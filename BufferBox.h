@@ -6,10 +6,13 @@
 #define EXPLICITGENOMESPECIATION_BUFFERBOX_H
 
 #include "Individual.h"
+#include "Buffer.h"
 
 class BufferBox {
 
 public:
+
+    BufferBox(const ParameterSet&, const Population&, const Genome&);
 
     Buffer *bufferFreq;
     Buffer *bufferF_it;
@@ -24,6 +27,8 @@ public:
     Buffer *bufferVarA;
     Buffer *bufferVarD;
     Buffer *bufferVarI;
+
+
 
 };
 
