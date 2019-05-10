@@ -7,16 +7,16 @@
 #include "queue"
 #include <cassert>
 
-Population::Population(const ParameterSet &parameters)
+Population::Population(const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
     if (parameters.sequence.size() == parameters.nBits) {
         for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
-            individuals.push_back(new Individual(parameters.sequence, parameters, genome));
+            individuals.push_back(new Individual(parameters.sequence, parameters, geneticArchitecture));
         }
     }
     else {
         for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
-            individuals.push_back(new Individual(parameters, genome));
+            individuals.push_back(new Individual(parameters, geneticArchitecture));
         }
     }
 }

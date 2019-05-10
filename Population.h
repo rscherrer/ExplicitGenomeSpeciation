@@ -19,7 +19,7 @@ class Population {
 
 public:
 
-    Population(const ParameterSet&);
+    Population(const ParameterSet&, const GeneticArchitecture&);
 
     // The population
     std::list<PInd> individuals;
