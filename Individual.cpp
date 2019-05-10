@@ -140,6 +140,8 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
         // Sex determination locus
         const bool isSexDeterminationLocus = i == 0u;
         if (isSexDeterminationLocus) {
+            determineSex(isMother, parameters.isFemaleHeteroGamety, haplotype);
+        }
     }
 }
 

@@ -66,7 +66,7 @@ public:
     void determineSex(const bool&, const bool&, const size_t&);
     void inheritGamete(Individual const * const, const ParameterSet&, const GeneticArchitecture&);
 
-   
+
 
 
     bool isHeteroGamous;
