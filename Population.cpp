@@ -54,6 +54,15 @@ void Population::dispersal(const ParameterSet& parameters)
     }
 }
 
+// This function needs massive refactoring
+// In the new version of the model we use type II resource utilization and type II mate choice
+// Which are much simpler than type I
+// Of course we keep the scripts for implementing the type I in another branch of this project
+// So they are not lost!!
+// One difference though:
+// If we remove T2 RU then we remove ecotypes, but ecotypes are needed for calculating ecological differentiation
+// Do we keep ecotype classification anyway?
+// Or do we do like Ripa et al? but what did they do?
 
 void Population::competitionAndReproduction(const size_t hab, const ParameterSet& parameters)
 {
