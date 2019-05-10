@@ -60,9 +60,11 @@ void Population::dispersal(const ParameterSet& parameters)
 // Of course we keep the scripts for implementing the type I in another branch of this project
 // So they are not lost!!
 // One difference though:
-// If we remove T2 RU then we remove ecotypes, but ecotypes are needed for calculating ecological differentiation
-// Do we keep ecotype classification anyway?
-// Or do we do like Ripa et al? but what did they do?
+// If we remove T2 RU then we remove ecotypes, but ecotypes are needed for calculating ecological differentiation stats
+// So we have to keep them
+// So we have to sort individuals along the trade off line
+
+// Maybe start by removing all instances of type I RU
 
 void Population::competitionAndReproduction(const size_t hab, const ParameterSet& parameters)
 {
@@ -94,9 +96,7 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
             resourceConsumption[hab].first += pt.first;
 
             // But sum the attack rates on the second resource anyway if type II resource utilisation
-            if (parameters.isTypeIIResourceUtilisation) {
-                resourceConsumption[hab].second += pt.second;
-            }
+            resourceConsumption[hab].second += pt.second;
 
             // Classify gender
             if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
@@ -124,11 +124,6 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
     breakEvenPoint.first *= 0.5;
     breakEvenPoint.second = 0.0;
 
-    // Make sure that the second resource has not been consumed in the case of type II resource utilization
-    if (!parameters.isTypeIIResourceUtilisation) {
-        std::assert(resourceConsumption[hab].second != 0.0);
-    }
-
     // Initialize resource dynamics
     resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
     resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
@@ -136,20 +131,8 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
     // Find resource equilibrium and break-even point by looping along the trade-off line
     // (used only for ecotype classification in type II resource utilisation)
     for (const TradeOffPt &pt : pts) {
-        if (!parameters.isTypeIIResourceUtilisation) {
-            resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
-            resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
-        }
-        const bool isResource2MoreAdvantageous = pt.first * resourceEql[hab].first < pt.second * resourceEql[hab].second;
-        if (isResource2MoreAdvantageous) {
-            if (!parameters.isTypeIIResourceUtilisation) {
-
-                // Switch to resource 2
-                resourceConsumption[hab].first -= pt.first;
-                resourceConsumption[hab].second += pt.second;
-            }
-        }
-        else {
+        const bool isResource1MoreAdvantageous = pt.first * resourceEql[hab].first > pt.second * resourceEql[hab].second;
+        if (isResource1MoreAdvantageous) {
             // Set break-even point to be used in later ecotype classification
             breakEvenPoint = pt;
             break;
