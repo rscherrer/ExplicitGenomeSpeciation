@@ -80,6 +80,9 @@ void Population::sortByHabitat()
             --itj;
             std::swap(*iti, *itj);
         }
+        else {
+            ++iti;
+        }
     }
 }
 
