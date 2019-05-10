@@ -181,11 +181,16 @@ int main(int argc, char * argv[])
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if (t > 0) {
                 population.dispersal(parameters);
-                population.competitionAndReproduction(0u, parameters, genome);
-                population.competitionAndReproduction(1u, parameters, genome);
+                population.resourceDynamics(0u);
+                population.reproduction(0u);
+                population.resourceDynamics(1u);
+                population.reproduction(1u);
             }
             else {
-                population.competitionAndReproduction(0u, parameters, genome); // burn-in period
+
+                // Burnin period
+                population.resourceDynamics(0u);
+                population.reproduction(0u);
             }
 
             // Check for extinction

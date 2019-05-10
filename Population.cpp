@@ -66,15 +66,18 @@ void Population::dispersal(const ParameterSet& parameters)
 
 // Maybe start by removing all instances of type I RU
 
+
+
 void Population::competitionAndReproduction(const size_t hab, const ParameterSet& parameters)
 {
 
-    // Initialize the state of affairs of the population
-    std::queue<PInd> females;
-    std::vector<PInd> males;
-    std::list<TradeOffPt> pts;
-    auto iti = individuals.begin();
+
+
     resourceConsumption[hab].first = resourceConsumption[hab].second = 0.0;
+
+
+    auto iti = individuals.begin();
+    std::list<TradeOffPt> pts;
 
     // Accumulate attack rates across individuals and sort out females and males
     for (auto itj = individuals.end(); iti != itj;) {
@@ -98,7 +101,7 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
             // But sum the attack rates on the second resource anyway if type II resource utilisation
             resourceConsumption[hab].second += pt.second;
 
-            // Classify gender
+            // Classify gender (this could move to another part)
             if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
                 females.push(*iti);
             }
@@ -138,6 +141,11 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
             break;
         }
     }
+
+
+    // Initialize the state of affairs of the population
+    std::queue<PInd> females;
+    std::vector<PInd> males;
 
     // Mate choice and offspring production
     const size_t nFemales = genderCounts[hab].first = females.size();
