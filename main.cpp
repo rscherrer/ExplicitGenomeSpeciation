@@ -181,6 +181,7 @@ int main(int argc, char * argv[])
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if (t > 0) {
                 population.dispersal(parameters);
+                population.sortByHabitat();
                 population.resourceDynamics(0u);
                 population.reproduction(0u);
                 population.resourceDynamics(1u);

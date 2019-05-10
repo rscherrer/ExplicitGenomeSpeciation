@@ -69,6 +69,7 @@ public:
 
     // Member functions
     void dispersal(const ParameterSet&);
+    void sortByHabitat();
     void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 
 private:
