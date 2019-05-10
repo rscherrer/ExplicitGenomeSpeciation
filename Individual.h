@@ -56,9 +56,18 @@ public:
     };
 
     // Constructors
-    Individual(const ParameterSet&);
-    Individual(const std::vector<bool>&, const ParameterSet&);
-    Individual(Individual const * const, Individual const * const, const ParameterSet&);
+    Individual(const ParameterSet&, const GeneticArchitecture&);
+    Individual(const std::vector<bool>&, const ParameterSet&, const GeneticArchitecture&);
+    Individual(Individual const * const, Individual const * const, const ParameterSet&, const GeneticArchitecture&);
+
+    void recombineFreely(size_t&, size_t&, const size_t&, const double&, double&);
+    void crossOver(size_t&, const double&, const double&, double&);
+    void inheritLocus(Individual const * const, const bool&, const size_t&, const size_t&);
+    void determineSex(const bool&, const bool&, const size_t&);
+    void inheritGamete(Individual const * const, const ParameterSet&, const GeneticArchitecture&);
+
+   
+
 
     bool isHeteroGamous;
     size_t habitat

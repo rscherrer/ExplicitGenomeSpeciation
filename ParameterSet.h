@@ -40,6 +40,7 @@ public:
     double  mutationRate            = 1.0e-5;
     double  mapLength               = 300.0;
     bool    isFemaleHeteroGamety    = false;
+    double  recombinationRate       = 0.01;
 
     // Genotype-phenotype map
     bool isGenerateArchitecture;

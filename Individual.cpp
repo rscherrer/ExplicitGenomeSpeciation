@@ -68,87 +68,90 @@ genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecot
     develop(parameters, geneticArchitecture);
 }
 
-Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
-    isHeteroGamous(false), habitat(mother->habitat)
+void Individual::recombineFreely(size_t &haplotype,
+        size_t &lg,
+        const size_t &nChromosomes,
+        const double &chromosomeSize,
+        double &freeRecombinationPoint)
+{
+    // Recombine by switching to random haplotype
+    haplotype = rnd::bernoulli(0.5) ? 0u : 1u;
+
+    // Set next free recombination point
+    if (lg < nChromosomes - 1u) {
+        freeRecombinationPoint = chromosomeSize;
+        ++lg;
+    }
+    else {
+        freeRecombinationPoint = 1.0;
+    }
+}
+
+void Individual::crossOver(size_t &haplotype, const double &recombinationRate, const double &mapLength, double &crossOverPoint)
+{
+    // Cross over to the opposite haplotype
+    haplotype = (haplotype + 1u) % 2u;
+
+    // Set next cross-over point
+    crossOverPoint += rnd::exponential(recombinationRate * mapLength);
+}
+
+void Individual::inheritLocus(Individual const * const parent, const bool &isMother, const size_t &locus, const size_t &haplotype)
+{
+    size_t genomePosition = isMother ? locus << 1 : (locus << 1) + 1u;
+    genomeSequence[genomePosition] = parent->genomeSequence[(locus << 1u) + haplotype];
+}
+
+void Individual::determineSex(const bool &isMother, const bool &isFemaleHeteroGamety, const size_t &haplotype)
+{
+    if (isMother) {
+        isHeteroGamous = haplotype == 0u && isFemaleHeteroGamety ? true : false;
+    }
+    else {
+        isHeteroGamous = haplotype == 1u && !isFemaleHeteroGamety ? true : false;
+    }
+}
+
+void Individual::inheritGamete(Individual const * const parent, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
 
-    // Inheritance from mom
     double freeRecombinationPoint = 0.0;
     double crossOverPoint = 0.0;
 
     // Loop through loci
     for (size_t i = 0u, lg = 0u, haplotype = 0u; i < parameters.nLoci; ++i) {
 
-        // Free interchromosomal recombination
-        if (geneticArchitecture.locusConstants[i].location > freeRecombinationPoint) {
-
-            // Recombinate by switching to random haplotype
-            haplotype = rnd::bernoulli(0.5) ? 0u : 1u;
-
-            // Set next free recombination point
-            if (lg < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = geneticArchitecture.chromosomeSizes[lg];
-                ++lg;
-            }
-            else {
-                freeRecombinationPoint = 1.0;
-            }
+        // Interchromosomal recombination
+        bool isFreeRecombination = geneticArchitecture.locusConstants[i].location > freeRecombinationPoint;
+        if (isFreeRecombination) {
+            recombineFreely(haplotype, lg, parameters.nChromosomes, geneticArchitecture.chromosomeSizes[lg], freeRecombinationPoint)
         }
 
         // Intrachromosomal recombination
-        if (geneticArchitecture.locusConstants[i].location > crossOverPoint) {
-
-            // Cross over to the opposite haplotype
-            haplotype = (haplotype + 1u) % 2u;
-
-            // Set next cross-over point
-            crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
+        bool isCrossOver = geneticArchitecture.locusConstants[i].location > crossOverPoint;
+        if (isCrossOver) {
+            crossOver(haplotype, parameters.recombinationRate, parameters.mapLength, crossOverPoint);
         }
 
-        // Inherit maternal haplotype
-        genomeSequence[i << 1] = mother->genomeSequence[(i << 1u) + haplotype];
-        if (i == 0u && haplotype == 0u && parameters.isFemaleHeteroGamety) {
-            isHeteroGamous = true;
-        }
+        // Inherit parental haplotype
+        bool isMother = parent->isFemale(parameters.isFemaleHeteroGamety);
+        inheritLocus(parent, isMother, i, haplotype);
+
+        // Sex determination locus
+        const bool isSexDeterminationLocus = i == 0u;
+        if (isSexDeterminationLocus) {
     }
-    
-    // Inheritance from dad
-    freeRecombinationPoint = 0.0;
-    crossOverPoint = 0.0;
+}
 
-    // Loop through loci
-    for (size_t i = 0u, lg = 0u, haplotype = 0u; i < parameters.nLoci; ++i) {
+Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
+    isHeteroGamous(false), habitat(mother->habitat)
+{
 
-        // Free interchromosomal recombination
-        if(geneticArchitecture.locusConstants[i].location > freeRecombinationPoint) {
+    // Recombination and transmission of genes
+    inheritGamete(mother, parameters, geneticArchitecture);
+    inheritGamete(father, parameters, geneticArchitecture);
 
-            // Recombinate by switching to random haplotype
-            haplotype = (rnd::bernoulli(0.5) ? 0u : 1u);
-
-            // Set next free recombination point
-            if(lg < parameters.nChromosomes - 1u) {
-                freeRecombinationPoint = geneticArchitecture.chromosomeSizes[lg];
-                ++lg;
-            }
-
-            else freeRecombinationPoint = 1.0;
-        }
-
-        // Intrachromosomal recombination
-        if (geneticArchitecture.locusConstants[i].location > crossOverPoint) {
-
-            // Cross over to the opposite haplotype
-            haplotype = (haplotype + 1u) % 2u;
-
-            // Set next cross-over point
-            crossOverPoint += rnd::exponential(0.01 * parameters.mapLength);
-        }
-
-        // Inherit paternal haplotype
-        genomeSequence[(i << 1) + 1u] = father->genomeSequence[(i << 1u) + haplotype];
-        if(i == 0u && haplotype == 1u && !parameters.isFemaleHeteroGamety) isHeteroGamous = true;
-    }
-
+    // Mutation and development
     mutate(parameters);
     develop(parameters, geneticArchitecture);
 }
