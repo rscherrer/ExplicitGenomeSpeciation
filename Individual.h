@@ -85,7 +85,7 @@ public:
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
-    TradeOffPt getAttackRate() const { return attackRate; }
+    TradeOffPt getAttackRates() const { return attackRates; }
     double getBurnInRpSc(double) const;
     double getViability() const {return viability; }
     size_t getHabitat() const { return habitat; }

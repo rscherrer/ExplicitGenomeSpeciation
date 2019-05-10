@@ -67,51 +67,42 @@ void Population::dispersal(const ParameterSet& parameters)
 // Maybe start by removing all instances of type I RU
 
 
-
-void Population::competitionAndReproduction(const size_t hab, const ParameterSet& parameters)
+void Population::resourceDynamics(const size_t habitat, const ParameterSet &parameters)
 {
 
-
-
-    resourceConsumption[hab].first = resourceConsumption[hab].second = 0.0;
-
+    // Initialize consumption
+    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
 
     auto iti = individuals.begin();
-    std::list<TradeOffPt> pts;
+    std::list<TradeOffPt> vecAttackRates;
 
-    // Accumulate attack rates across individuals and sort out females and males
+    // Loop through individuals from the end
     for (auto itj = individuals.end(); iti != itj;) {
 
-        if ((*iti)->getHabitat() == hab) {
+        // If the individual lives in the current habitat
+        if ((*iti)->getHabitat() == habitat) {
 
             // Record attack rates
-            TradeOffPt pt = (*iti)->getAttackRate();
+            TradeOffPt attackRates = (*iti)->getAttackRates();
 
             // Are we in the burnin period?
             if (nAccessibleResource < 2u) {
-                pt.second = 0.0;
+                attackRates.second = 0.0;
             }
 
             // Accumulate
-            pts.push_back(pt);
+            vecAttackRates.push_back(attackRates);
 
             // For the moment, assume that the individual utilises the first resource
-            resourceConsumption[hab].first += pt.first;
+            resourceConsumption[habitat].first += attackRates.first;
 
             // But sum the attack rates on the second resource anyway if type II resource utilisation
-            resourceConsumption[hab].second += pt.second;
+            resourceConsumption[habitat].second += attackRates.second;
 
-            // Classify gender (this could move to another part)
-            if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
-                females.push(*iti);
-            }
-            else {
-                males.push_back(*iti);
-            }
-            ++iti;
+
         }
 
-        // Move individuals in the other habitat towards the end
+        // Move individuals from the wrong habitat to the end
         else {
             --itj;
             std::swap(*iti, *itj);
@@ -128,13 +119,13 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
     breakEvenPoint.second = 0.0;
 
     // Initialize resource dynamics
-    resourceEql[hab].first = (hab == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
-    resourceEql[hab].second = (hab == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
+    resourceEql[habitat].first = (habitat == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
+    resourceEql[habitat].second = (habitat == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
 
     // Find resource equilibrium and break-even point by looping along the trade-off line
     // (used only for ecotype classification in type II resource utilisation)
     for (const TradeOffPt &pt : pts) {
-        const bool isResource1MoreAdvantageous = pt.first * resourceEql[hab].first > pt.second * resourceEql[hab].second;
+        const bool isResource1MoreAdvantageous = pt.first * resourceEql[habitat].first > pt.second * resourceEql[habitat].second;
         if (isResource1MoreAdvantageous) {
             // Set break-even point to be used in later ecotype classification
             breakEvenPoint = pt;
@@ -143,9 +134,24 @@ void Population::competitionAndReproduction(const size_t hab, const ParameterSet
     }
 
 
+}
+
+void Population::reproduction(const size_t hab, const ParameterSet &parameters)
+{
     // Initialize the state of affairs of the population
     std::queue<PInd> females;
     std::vector<PInd> males;
+
+    /*
+     * // Classify gender (this could move to another part)
+            if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
+                females.push(*iti);
+            }
+            else {
+                males.push_back(*iti);
+            }
+            ++iti;
+     * */
 
     // Mate choice and offspring production
     const size_t nFemales = genderCounts[hab].first = females.size();
