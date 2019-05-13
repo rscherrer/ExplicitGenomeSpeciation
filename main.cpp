@@ -181,7 +181,7 @@ int main(int argc, char * argv[])
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if (t > 0) {
                 population.dispersal(parameters);
-                auto firstIdSecondHabitat = population.sortByHabitat();
+                population.sortByHabitat();
 
                 // First habitat
                 population.resourceDynamics(0u);

@@ -82,6 +82,7 @@ public:
     TradeOffPt attackRates;
     std::vector<bool> genomeSequence;
     std::vector<Locus> genotypes;
+    double fitness;
 
     // Getters
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
@@ -97,6 +98,7 @@ public:
     std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
 
     // Setters
+    void setFitness (const std::pair<double, double>&) const;
     void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
     size_t setEcotype(const TradeOffPt &threshold) const;
     void prepareChoice() const;

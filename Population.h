@@ -30,8 +30,8 @@ public:
     std::vector<std::pair<size_t, size_t> > genderCounts;
     TradeOffPt breakEvenPoint;
     size_t nAccessibleResource;
-    std::vector<std::pair<double> > resourceCapacities;
-    std::vector<std::pair<double> > replenishRates;
+    std::vector<std::pair<double, double> > resourceCapacities;
+    std::vector<std::pair<double, double> > replenishRates;
 
     // Genome-wide genetic variables
     std::vector<std::vector<double> > avgG;
@@ -69,7 +69,7 @@ public:
 
     std::vector<LocusVariables> locusVariables;
 
-    std::vector<std::pair<size_t> > idFirstAndLast;  // Awful name
+    std::vector<std::pair<size_t, size_t> > idFirstAndLast;  // Awful name
 
     // Member functions
     void dispersal(const ParameterSet&);
@@ -78,6 +78,8 @@ public:
     void setResourceCapacities(const double&, const double&);
     void setReplenishRates(const double&);
     void setResourceEquilibrium(const size_t&);
+    void assignFitnesses(const size_t&);
+    void resourceDynamics(const size_t&);
 
     void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 

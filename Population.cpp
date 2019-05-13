@@ -127,8 +127,6 @@ void Population::setResourceConsumption(const size_t &habitat)
 {
     // Initialize consumption
     resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
-    auto iti = individuals.begin();
-    std::list<TradeOffPt> vecAttackRates;
 
     // Loop through individuals
     for (auto ind = idFirstAndLast[habitat].first;; ++ind) {
@@ -148,7 +146,7 @@ void Population::setResourceConsumption(const size_t &habitat)
         resourceConsumption[habitat].first += attackRates.first;
         resourceConsumption[habitat].second += attackRates.second;
 
-        if (ind == idFirstAndLast[habitat].last)
+        if (ind == idFirstAndLast[habitat].second)
         {
             break;
         }
@@ -169,7 +167,21 @@ void Population::setResourceEquilibrium(const size_t &habitat)
             replenishRates[habitat].second, resourceConsumption[habitat].second);
 }
 
-void Population::resourceDynamics(const size_t habitat, const ParameterSet &parameters)
+void Population::assignFitnesses(const size_t &habitat)
+{
+    for (auto iti : individuals) {
+        iti->setFitness(resourceEql[habitat]);
+    }
+}
+
+// Function to classify ecotypes
+// Loop through the population and record attack rates
+// Within local habitat
+// Sort the attack rates along trade-off line with the function trade-off compare
+// Loop through attack rates until the alternative resource becomes more advantageous
+// That is the break-even point that delimits ecotypes
+
+void Population::resourceDynamics(const size_t &habitat)
 {
 
     // Calculate total resource consumption in the current habitat
@@ -179,90 +191,7 @@ void Population::resourceDynamics(const size_t habitat, const ParameterSet &para
     setResourceEquilibrium(habitat);
 
     // Assign individual fitnesses
-
-
-    // Resource dynamics/feeding:
-    // Assign fitness to individuals
-    // Fitness is attack rates weighted by equilibrium resource concentration
-    // Equilibrium concentration results from logistic growth minus consumption
-    // Consumption is the sum of all attack rates
-
-
-    // Why do we want to sort individuals along the trade-off line?
-    // For ecotype classification
-    // Can we not do that later? in the analysis? perhaps
-
-    // Initialize consumption
-    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
-
-    auto iti = individuals.begin();
-    std::list<TradeOffPt> vecAttackRates;
-
-    // Loop through individuals from the end
-    for (auto itj = individuals.end(); iti != itj;) {
-
-        // If the individual lives in the current habitat
-        if ((*iti)->getHabitat() == habitat) {
-
-            // Record attack rates
-            TradeOffPt attackRates = (*iti)->getAttackRates();
-
-            // Are we in the burnin period?
-            if (nAccessibleResource < 2u) {
-                attackRates.second = 0.0;
-            }
-
-            // Accumulate
-            vecAttackRates.push_back(attackRates);
-
-            // For the moment, assume that the individual utilises the first resource
-            resourceConsumption[habitat].first += attackRates.first;
-
-            // But sum the attack rates on the second resource anyway if type II resource utilisation
-            resourceConsumption[habitat].second += attackRates.second;
-
-
-        }
-
-        // Move individuals from the wrong habitat to the end
-        else {
-            --itj;
-            std::swap(*iti, *itj);
-        }
-    }
-
-    // Now we have all attack rates and the individuals sorted by habitat
-
-    // Normally individuals would be stored in males and females
-    // Then erased from the population...
-    individuals.erase(individuals.begin(), iti);
-
-    // Determine equilibrium scaled resource densities and assign final ecotype to the individual
-
-    // Sort individual attack rates along the trade-off line
-    // This is about finding a threshold for ecotype classification
-    pts.sort(tradeOffCompare);
-    breakEvenPoint = pts.back();
-    breakEvenPoint.first *= 0.5;
-    breakEvenPoint.second = 0.0;
-
-    // Initialize resource concentrations without consumption
-    resourceEql[habitat].first = (habitat == 0u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].first);
-    resourceEql[habitat].second = (habitat == 1u ? 1.0 : 1.0 - parameters.habitatAsymmetry) / (1.0 + parameters.alpha * resourceConsumption[hab].second);
-    replenishResource();
-
-    // Loop along attack rates until resource equilibrium is found
-    // This simulates consumption, resource use
-    consumeResource();
-    for (const TradeOffPt &pt : pts) {
-        const bool isResource1MoreAdvantageous = pt.first * resourceEql[habitat].first > pt.second * resourceEql[habitat].second;
-        if (isResource1MoreAdvantageous) {
-            // Set break-even point to be used in later ecotype classification
-            breakEvenPoint = pt;
-            break;
-        }
-    }
-
+    assignFitnesses(habitat);
 
 }
 

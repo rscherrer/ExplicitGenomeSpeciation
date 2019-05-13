@@ -30,6 +30,7 @@ Instructions for compiling and running the program
 #include <string>
 #include <algorithm>
 #include <set>
+#include <list>
 #include "Individual.h"
 #include "random.h"
 #include "ParameterSet.h"
@@ -422,14 +423,21 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
 
 }
 
-size_t Individual::setEcotype(const TradeOffPt &threshold) const
+void Individual::setEcotype(const TradeOffPt &threshold) const
 {
-    return ecotype = tradeOffCompare(attackRate, threshold) ? 2u : 1u;
+    ecotype = tradeOffCompare(attackRates, threshold) ? 2u : 1u;
 }
 
 double Individual::getBurnInRpSc(double selCoeff) const
 {
     return exp(-selCoeff * sqr(traitP[1u]));
 }
+
+void Individual::setFitness (const std::pair<double, double> &resources) const
+{
+    fitness = attackRates.first * resources.first + attackRates.second * resources.second;
+}
+
+
 
 
