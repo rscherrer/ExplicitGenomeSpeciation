@@ -167,10 +167,19 @@ void Population::setResourceEquilibrium(const size_t &habitat)
             replenishRates[habitat].second, resourceConsumption[habitat].second);
 }
 
-void Population::assignFitnesses(const size_t &habitat)
+void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
 {
     for (auto iti : individuals) {
-        iti->setFitness(resourceEql[habitat]);
+
+        // Reinforce stabilizing selection during burn-in period
+        if (nAccessibleResource < 2u) {
+            iti->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
+        }
+
+        // Or apply regular fitness function
+        else {
+            iti->setFitness(resourceEql[habitat]);
+        }
     }
 }
 
@@ -181,7 +190,7 @@ void Population::assignFitnesses(const size_t &habitat)
 // Loop through attack rates until the alternative resource becomes more advantageous
 // That is the break-even point that delimits ecotypes
 
-void Population::resourceDynamics(const size_t &habitat)
+void Population::resourceDynamics(const size_t &habitat, const double &ecoSelCoeff)
 {
 
     // Calculate total resource consumption in the current habitat
@@ -191,28 +200,31 @@ void Population::resourceDynamics(const size_t &habitat)
     setResourceEquilibrium(habitat);
 
     // Assign individual fitnesses
-    assignFitnesses(habitat);
+    assignFitnesses(habitat, ecoSelCoeff);
 
 }
 
-void Population::reproduction(const size_t hab, const ParameterSet &parameters)
+void Population::classifyGenders(const bool &isFemaleHeteroGamety)
 {
-    // Initialize the state of affairs of the population
-    std::queue<PInd> females;
-    std::vector<PInd> males;
+    for (iti : individuals)
+    {
+        if ((*iti)->isFemale(isFemaleHeteroGamety))
+        {
+            females.push(*iti);
+        }
+        else {
+            males.push_back(*iti);
+        }
+    }
+}
 
-    /*
-     * // Classify gender (this could move to another part)
-            if ((*iti)->isFemale(parameters.isFemaleHeteroGamety)) {
-                females.push(*iti);
-            }
-            else {
-                males.push_back(*iti);
-            }
-            ++iti;
-     * */
+void Population::reproduction(const size_t habitat, const ParameterSet &parameters)
+{
 
-    // Mate choice and offspring production
+    // Gender classification
+    classifyGenders(parameters.isFemaleHeteroGamety);
+
+    // Gender counts
     const size_t nFemales = genderCounts[hab].first = females.size();
     const size_t nMales = genderCounts[hab].second = males.size();
 
@@ -224,6 +236,11 @@ void Population::reproduction(const size_t hab, const ParameterSet &parameters)
     // Compute reproductive success for males
     std::vector<double> maleSuccess(nMales);
     double sumMaleSuccess = 0.0;
+
+    // here I need a vector of male fitnesses
+    maleFitnesses
+
+
 
     // Loop through males
     for(size_t i = 0u; i < nMales; ++i) {

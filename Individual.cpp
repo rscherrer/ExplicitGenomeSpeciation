@@ -428,16 +428,16 @@ void Individual::setEcotype(const TradeOffPt &threshold) const
     ecotype = tradeOffCompare(attackRates, threshold) ? 2u : 1u;
 }
 
-double Individual::getBurnInRpSc(double selCoeff) const
-{
-    return exp(-selCoeff * sqr(traitP[1u]));
-}
-
-void Individual::setFitness (const std::pair<double, double> &resources) const
+void Individual::setFitness (const std::pair<double, double> &resources)
 {
     fitness = attackRates.first * resources.first + attackRates.second * resources.second;
 }
 
+void Individual::setBurninFitness(const std::pair<double, double> &resources, const double &ecoSelCoeff)
+{
+    setFitness(resources);
+    fitness *= exp(-ecoSelCoeff * sqr(phenotypes[1u]));
+}
 
 
 

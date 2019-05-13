@@ -184,11 +184,11 @@ int main(int argc, char * argv[])
                 population.sortByHabitat();
 
                 // First habitat
-                population.resourceDynamics(0u);
+                population.resourceDynamics(0u, parameters.ecoSelCoeff);
                 population.reproduction(0u);
 
                 // Second habitat
-                population.resourceDynamics(1u);
+                population.resourceDynamics(1u, parameters.ecoSelCoeff);
                 population.reproduction(1u);
             }
             else {

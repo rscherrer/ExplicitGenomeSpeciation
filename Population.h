@@ -23,6 +23,8 @@ public:
 
     // The population
     std::list<PInd> individuals;
+    std::queue<PInd> females;
+    std::vector<PInd> males;
 
     // Ecological state
     std::vector<std::pair<double, double> > resourceConsumption;
@@ -78,8 +80,8 @@ public:
     void setResourceCapacities(const double&, const double&);
     void setReplenishRates(const double&);
     void setResourceEquilibrium(const size_t&);
-    void assignFitnesses(const size_t&);
-    void resourceDynamics(const size_t&);
+    void assignFitnesses(const size_t&, const double&);
+    void resourceDynamics(const size_t&, const double&);
 
     void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 

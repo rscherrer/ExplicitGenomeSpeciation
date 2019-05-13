@@ -98,7 +98,8 @@ public:
     std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
 
     // Setters
-    void setFitness (const std::pair<double, double>&) const;
+    void setFitness(const std::pair<double, double>&);
+    void setBurninFitness(const std::pair<double, double>&, const double&);
     void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
     size_t setEcotype(const TradeOffPt &threshold) const;
     void prepareChoice() const;
