@@ -66,7 +66,8 @@ void Population::dispersal(const ParameterSet& parameters)
 
 // Maybe start by removing all instances of type I RU
 
-void Population::sortByHabitat()
+
+std::_List_iterator<const Individual *> Population::sortByHabitat()
 {
     const size_t habitat = 0u;
     auto iti = individuals.begin();
@@ -84,6 +85,13 @@ void Population::sortByHabitat()
             ++iti;
         }
     }
+
+    // Get the index of the first individual from the second habitat
+    const size_t lastSortedHabitat = (*iti)->getHabitat();
+    if (lastSortedHabitat == 0u) {
+        ++iti;
+    }
+    return iti;
 }
 
 void Population::setResourceConsumption()
