@@ -94,9 +94,37 @@ std::_List_iterator<const Individual *> Population::sortByHabitat()
     return iti;
 }
 
-void Population::setResourceConsumption()
+void Population::setResourceConsumption(const size_t &habitat, const std::_List_iterator<const Individual *> &firstIndividual,
+        const std::_List_iterator<const Individual *> &lastIndividual)
 {
+    // Initialize consumption
+    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
+    auto iti = individuals.begin();
+    std::list<TradeOffPt> vecAttackRates;
 
+    // Loop through individuals
+    for (auto iti = firstIndividual;; ++iti) {
+
+        // The individual should be of the right habitat
+        assert((*iti)->getHabitat() == habitat);
+
+        // Record attack rates
+        TradeOffPt attackRates = (*iti)->getAttackRates();
+
+        // Are we in the burn-in period?
+        if (nAccessibleResource < 2u) {
+            attackRates.second = 0.0;
+        }
+
+        // Accumulate consumption
+        resourceConsumption[habitat].first += attackRates.first;
+        resourceConsumption[habitat].second += attackRates.second;
+
+        if (iti == lastIndividual)
+        {
+            break;
+        }
+    }
 }
 
 void Population::resourceDynamics(const size_t habitat, const ParameterSet &parameters)

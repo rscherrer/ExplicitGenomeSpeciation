@@ -70,6 +70,8 @@ public:
     // Member functions
     void dispersal(const ParameterSet&);
     std::_List_iterator<const Individual *> sortByHabitat();  // This function returns the iterator of the first individual of the second habitat
+    void setResourceConsumption(const size_t&, const std::_List_iterator<const Individual *>&, const std::_List_iterator<const Individual *>&);
+
     void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 
 private:
