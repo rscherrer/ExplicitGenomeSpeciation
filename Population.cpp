@@ -7,18 +7,42 @@
 #include "queue"
 #include <cassert>
 
+void Population::setResourceCapacities(const double &maxResourceCapacity, const double &habitatAsymmetry)
+{
+    resourceCapacities[0u].first = maxResourceCapacity;
+    resourceCapacities[0u].second = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = maxResourceCapacity;
+}
+
+void Population::setReplenishRates(const double &maxResourceGrowth)
+{
+    replenishRates[0u].first = maxResourceGrowth;
+    replenishRates[0u].second = maxResourceGrowth;
+    replenishRates[1u].first = maxResourceGrowth;
+    replenishRates[1u].second = maxResourceGrowth;
+}
+
 Population::Population(const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
+
+    // With genetic sequence provided
     if (parameters.sequence.size() == parameters.nBits) {
         for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
             individuals.push_back(new Individual(parameters.sequence, parameters, geneticArchitecture));
         }
     }
+
+    // Or not
     else {
         for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
             individuals.push_back(new Individual(parameters, geneticArchitecture));
         }
     }
+
+    // Initialize resource growth parameters
+    setResourceCapacities(parameters.maxResourceCapacity, parameters.habitatAsymmetry);
+    setReplenishRates(parameters.maxResourceGrowth);
 }
 
 void Population::dispersal(const ParameterSet& parameters)
@@ -131,6 +155,20 @@ void Population::setResourceConsumption(const size_t &habitat)
     }
 }
 
+double logisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
+{
+    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
+    return resource;
+}
+
+void Population::setResourceEquilibrium(const size_t &habitat)
+{
+    resourceEql[habitat].first = logisticResourceEq(resourceCapacities[habitat].first,
+            replenishRates[habitat].first, resourceConsumption[habitat].first);
+    resourceEql[habitat].second = logisticResourceEq(resourceCapacities[habitat].second,
+            replenishRates[habitat].second, resourceConsumption[habitat].second);
+}
+
 void Population::resourceDynamics(const size_t habitat, const ParameterSet &parameters)
 {
 
@@ -138,7 +176,7 @@ void Population::resourceDynamics(const size_t habitat, const ParameterSet &para
     setResourceConsumption(habitat);
 
     // Calculate equilibrium resource concentrations
-    setResourceEquilibrium();
+    setResourceEquilibrium(habitat);
 
     // Assign individual fitnesses
 

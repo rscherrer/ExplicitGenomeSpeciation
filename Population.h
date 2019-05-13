@@ -30,6 +30,8 @@ public:
     std::vector<std::pair<size_t, size_t> > genderCounts;
     TradeOffPt breakEvenPoint;
     size_t nAccessibleResource;
+    std::vector<std::pair<double> > resourceCapacities;
+    std::vector<std::pair<double> > replenishRates;
 
     // Genome-wide genetic variables
     std::vector<std::vector<double> > avgG;
@@ -71,8 +73,11 @@ public:
 
     // Member functions
     void dispersal(const ParameterSet&);
-    std::_List_iterator<const Individual *> sortByHabitat();  // This function returns the iterator of the first individual of the second habitat
+    void sortByHabitat();  // This function returns the iterator of the first individual of the second habitat
     void setResourceConsumption(const size_t&);
+    void setResourceCapacities(const double&, const double&);
+    void setReplenishRates(const double&);
+    void setResourceEquilibrium(const size_t&);
 
     void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
 

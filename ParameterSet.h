@@ -19,6 +19,9 @@ public:
     double  matePreferenceStrength  = 10.0;
     double  mateEvaluationCost      = 0.01;
     size_t  nHabitat                = 2u;
+    double  maxResourceCapacity     = 5000.0;
+    double  maxResourceGrowth       = 1.0;
+
 
     bool isTypeIIResourceUtilisation = true;
     bool isTypeIIMateChoice = true;
