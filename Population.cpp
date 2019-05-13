@@ -67,7 +67,7 @@ void Population::dispersal(const ParameterSet& parameters)
 // Maybe start by removing all instances of type I RU
 
 
-std::_List_iterator<const Individual *> Population::sortByHabitat()
+void Population::sortByHabitat()
 {
     const size_t habitat = 0u;
     auto iti = individuals.begin();
@@ -91,11 +91,15 @@ std::_List_iterator<const Individual *> Population::sortByHabitat()
     if (lastSortedHabitat == 0u) {
         ++iti;
     }
-    return iti;
+
+    // Get the limit inhabitants of each habitat
+    idFirstAndLast[0u].first = individuals.begin();
+    idFirstAndLast[0u].second = iti.operator--();
+    idFirstAndLast[1u].first = iti;
+    idFirstAndLast[1u].second = individuals.end();
 }
 
-void Population::setResourceConsumption(const size_t &habitat, const std::_List_iterator<const Individual *> &firstIndividual,
-        const std::_List_iterator<const Individual *> &lastIndividual)
+void Population::setResourceConsumption(const size_t &habitat)
 {
     // Initialize consumption
     resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
@@ -103,13 +107,13 @@ void Population::setResourceConsumption(const size_t &habitat, const std::_List_
     std::list<TradeOffPt> vecAttackRates;
 
     // Loop through individuals
-    for (auto iti = firstIndividual;; ++iti) {
+    for (auto ind = idFirstAndLast[habitat].first;; ++ind) {
 
         // The individual should be of the right habitat
-        assert((*iti)->getHabitat() == habitat);
+        assert((*ind)->getHabitat() == habitat);
 
         // Record attack rates
-        TradeOffPt attackRates = (*iti)->getAttackRates();
+        TradeOffPt attackRates = (*ind)->getAttackRates();
 
         // Are we in the burn-in period?
         if (nAccessibleResource < 2u) {
@@ -120,7 +124,7 @@ void Population::setResourceConsumption(const size_t &habitat, const std::_List_
         resourceConsumption[habitat].first += attackRates.first;
         resourceConsumption[habitat].second += attackRates.second;
 
-        if (iti == lastIndividual)
+        if (ind == idFirstAndLast[habitat].last)
         {
             break;
         }
@@ -131,7 +135,7 @@ void Population::resourceDynamics(const size_t habitat, const ParameterSet &para
 {
 
     // Calculate total resource consumption in the current habitat
-    setResourceConsumption();
+    setResourceConsumption(habitat);
 
     // Calculate equilibrium resource concentrations
     setResourceEquilibrium();
