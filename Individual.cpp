@@ -29,7 +29,6 @@ Instructions for compiling and running the program
 #include <chrono>
 #include <string>
 #include <algorithm>
-#include <set>
 #include <list>
 #include <cassert>
 #include "Individual.h"
@@ -109,7 +108,7 @@ bool Individual::isFemale(const bool &isFemaleHeterogamety) const
 
 // Setters
 
-void Individual::disperse(const size_t &nHabitat)
+void Individual::disperse(const size_t &nHabitat) const
 {
     habitat = (habitat + 1u) % nHabitat;
 }

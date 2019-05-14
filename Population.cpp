@@ -56,11 +56,11 @@ void Population::dispersal(const ParameterSet& parameters)
         while (migrants.size() < nMigrants) {
             migrants.insert(rnd::random_int(populationSize));
         }
-        auto it = individuals.cbegin();
+        auto itInd = individuals.cbegin();  // An iterator pointing to an individual pointer (this is a pointerCeption)
         size_t j = 0u;
         for (size_t i : migrants) {
-            std::advance(it, i - j);
-            (*it)->disperse(parameters.nHabitat);
+            std::advance(itInd, i - j);
+            (*itInd)->disperse(parameters.nHabitat);
             j = i;
         }
     }

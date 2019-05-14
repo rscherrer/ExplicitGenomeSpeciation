@@ -27,9 +27,6 @@ Instructions for compiling and running the program
 #ifndef __genomic_signatures_of_speciation__individual__
 #define __genomic_signatures_of_speciation__individual__
 
-#include <bitset>
-#include <array>
-#include <set>
 #include <list>
 #include <vector>
 #include "ParameterSet.h"
@@ -77,7 +74,7 @@ public:
 private:
 
     // Ecological attributes
-    size_t habitat;
+    mutable size_t habitat;
     size_t ecotype;
     double fitness;
     double nOffspring;
@@ -94,7 +91,7 @@ private:
     std::vector<double> envirValues;
 
     // Ecology
-    void disperse(const size_t& nHabitat);
+    void disperse(const size_t& nHabitat) const;
     void setFitness(const std::pair<double, double>&);
     void setBurninFitness(const std::pair<double, double>&, const double&);
     void setAttackRates(const double&);
