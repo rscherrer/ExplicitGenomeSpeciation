@@ -35,18 +35,19 @@ Instructions for compiling and running the program
 #include "ParameterSet.h"
 #include "Population.h"
 #include "GeneticArchitecture.h"
+#include "square.h"
 
 class Buffer;
 class Genome;
-typedef std::pair<double, double> TradeOffPt;
-
-inline double sqr(double x) { return x * x;}
 
 class Individual {
 
     friend class Buffer;
+    friend class Population;
 
 public:
+
+    typedef Individual const * PInd;
 
     struct Locus
     {
@@ -60,97 +61,70 @@ public:
     Individual(const std::vector<bool>&, const ParameterSet&, const GeneticArchitecture&);
     Individual(Individual const * const, Individual const * const, const ParameterSet&, const GeneticArchitecture&);
 
+    // Getters
+    bool isFemale(const bool&) const;
+    double getFitness() const { return fitness;}
+    size_t getHabitat() const { return habitat; }
+    size_t getEcotype() const { return ecotype; }
+    std::pair<double, double> getAttackRates() const { return attackRates; }
+    std::vector<size_t> getMates() const { return mates; }
+    std::vector<bool> getGenomeSequence() const { return genomeSequence; }
+    std::vector<double> getPhenotypes() const { return phenotypes; }
+    std::vector<double> getGeneticValues() const { return geneticValues; }
+    std::vector<double> getEnvirValues() const { return envirValues; }
+    std::vector<Locus> getLoci() const { return genotypes; }
+
+private:
+
+    // Ecological attributes
+    size_t habitat
+    size_t ecotype;
+    double fitness;
+    double nOffspring;
+    std::vector<size_t> mates;
+    double matePreference;
+    std::pair<double, double> attackRates;
+
+    // Genetic attributes
+    std::vector<bool> genomeSequence;
+    std::vector<Locus> genotypes;
+    bool isHeteroGamous;
+    std::vector<double> phenotypes;
+    std::vector<double> geneticValues;
+    std::vector<double> envirValues;
+
+    // Ecology
+    void disperse(const size_t& nHabitat);
+    void setFitness(const std::pair<double, double>&);
+    void setBurninFitness(const std::pair<double, double>&, const double&);
+    void setAttackRates(const double&);
+    void setMatePreference(const double&);
+    void chooseMates(const double&, std::discrete_distribution<size_t>&, std::vector<PInd>&, const ParameterSet&);
+    double assessMatingProb(const double&, const double&);
+    bool acceptMate(Individual const * const, const ParameterSet&);
+    size_t sampleClutchSize(const double&);
+    bool survive(const double&);
+
+    // Genetics
+    void mutate(const ParameterSet&);
+    void develop(const ParameterSet&, const GeneticArchitecture&);
+    void expressGene(const size_t&, const size_t&, const double&, const double&);
+    void setAdditiveValue(const size_t&, const double&, const double&);
+    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<size_t, double> >&)
+    void setPhenotype(const size_t&);
+    void setEnvirValue(const size_t&, const double&);
+    void setGeneticValue(const size_t&, const GeneticArchitecture&);
+    void setLocusGeneticValue(const size_t&, const GeneticArchitecture&, const ParameterSet&);
+    void setGenomeSequence(const size_t&, const double&);
     void recombineFreely(size_t&, size_t&, const size_t&, const double&, double&);
     void crossOver(size_t&, const double&, const double&, double&);
     void inheritLocus(Individual const * const, const bool&, const size_t&, const size_t&);
     void determineSex(const bool&, const bool&, const size_t&);
     void inheritGamete(Individual const * const, const ParameterSet&, const GeneticArchitecture&);
 
-
-
-
-    bool isHeteroGamous;
-    size_t habitat
-    size_t ecotype;
-    std::list<double> obs;
-    double xsum;
-    double xxsum;
-    std::vector<double> phenotypes;
-    std::vector<double> geneticValues;
-    std::vector<double> envirValues;
-    double viability;
-    TradeOffPt attackRates;
-    std::vector<bool> genomeSequence;
-    std::vector<Locus> genotypes;
-    double fitness;
-    double nOffspring;
-    std::vector<size_t> mates;
-    double matePreference;
-
-    // Getters
-    std::vector<size_t> getMates() const { return mates; };
-    bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
-    TradeOffPt getAttackRates() const { return attackRates; }
-    double getFitness() const { return fitness;}
-    double getViability() const {return viability; }
-    size_t getHabitat() const { return habitat; }
-    size_t getEcotype() const { return ecotype; }
-    std::vector<bool> getGenome() const { return genomeSequence; }
-    std::vector<double> getTraitP() const { return traitP; } // size nCharacter
-    std::vector<double> getTraitG() const { return traitG; } // size nCharacter
-    std::vector<double> getTraitE() const { return traitE; } // size nCharacter
-    std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
-
-    // Setters
-    void setMatePreference(const double&);
-    void setFitness(const std::pair<double, double>&);
-    void setBurninFitness(const std::pair<double, double>&, const double&);
-    void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
-    size_t setEcotype(const TradeOffPt &threshold) const;
-    void prepareChoice() const;
-    void chooseMates(const double&, std::discrete_distribution<size_t>&, std::vector<PInd>, const ParameterSet&);
-    size_t sampleClutchSize(const double&);
-    bool acceptMate(Individual const * const, const ParameterSet&) const;
-    double assessMatingProb(const double&, const double&);
-    bool survive(const double&);
-
-    void expressGene(const size_t&, const size_t&, const double&, const double&);
-    void setAdditiveValue(const size_t&, const double&, const double&);
-    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<size_t, double> >&)
-    void setAttackRates(const double&);
-    void setViability(const double&, const GeneticArchitecture&);
-    void setPhenotype(const size_t&);
-    void setEnvirValue(const size_t&, const double&);
-    void setGeneticValue(const size_t&, const GeneticArchitecture&);
-    void setLocusGeneticValue(const size_t&, const GeneticArchitecture&, const ParameterSet&);
-
-    void setGenomeSequence(const size_t&, const double&);
-
-private:
-
-    // Private setters
-    void mutate(const ParameterSet&);
-    void develop(const ParameterSet&, const GeneticArchitecture&);
-
+    // To be taken care of
+    size_t setEcotype(const std::pair<double, double> &threshold);
 
 };
-
-typedef Individual const * PInd;
-
-// This functions compares two individuals on a trade-off line
-// Should it be a member of class Individual then?
-bool tradeOffCompare (const TradeOffPt &x, const TradeOffPt &y) {
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
-    }
-}
-
-
 
 #endif

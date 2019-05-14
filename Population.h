@@ -27,17 +27,6 @@ public:
     void reproduction(const size_t&, const ParameterSet&, const GeneticArchitecture&);
     void survival(const double&);
 
-    // Low-level member functions
-    void setResourceCapacities(const double&, const double&);
-    void setReplenishRates(const double&);
-    void setResourceConsumption(const size_t&);
-    void setResourceEquilibrium(const size_t&);
-    void assignFitnesses(const size_t&, const double&);
-    void classifyGenders(const bool&);
-    void setMaleFitnesses(const size_t&, const double&);
-    void birth(const PInd&, const ParameterSet&, const GeneticArchitecture&);
-    void emptyPopulation();
-
 private:
 
     // The population
@@ -46,7 +35,7 @@ private:
     std::vector<PInd> males;
     std::vector<PInd> offspring;
     std::vector<std::pair<size_t, size_t> > genderCounts;
-    std::vector<std::pair<size_t, size_t> > idHabitatBoundaries;
+    std::vector<std::pair<std::list<PInd>::iterator, std::list<PInd>::iterator> > idHabitatBoundaries;
 
     // Mating features
     std::vector<double> maleSuccesses;
@@ -94,6 +83,17 @@ private:
     };
 
     std::vector<LocusVariables> locusVariables;
+
+    // Low-level member functions
+    void setResourceCapacities(const double&, const double&);
+    void setReplenishRates(const double&);
+    void setResourceConsumption(const size_t&);
+    void setResourceEquilibrium(const size_t&);
+    void assignFitnesses(const size_t&, const double&);
+    void classifyGenders(const bool&);
+    void setMaleFitnesses(const size_t&, const double&);
+    void birth(const PInd&, const ParameterSet&, const GeneticArchitecture&);
+    void emptyPopulation();
 
 };
 

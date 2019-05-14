@@ -92,10 +92,10 @@ void Population::sortByHabitat()
     }
 
     // Get the limit inhabitants of each habitat
-    idFirstAndLast[0u].first = individuals.begin();
-    idFirstAndLast[0u].second = iti.operator--();
-    idFirstAndLast[1u].first = iti;
-    idFirstAndLast[1u].second = individuals.end();
+    idHabitatBoundaries[0u].first = individuals.begin();
+    idHabitatBoundaries[0u].second = iti.operator--();
+    idHabitatBoundaries[1u].first = iti;
+    idHabitatBoundaries[1u].second = individuals.end();
 }
 
 void Population::resourceDynamics(const size_t &habitat, const double &ecoSelCoeff)
@@ -153,19 +153,28 @@ void Population::reproduction(const size_t &habitat, const ParameterSet &paramet
 void Population::survival(const double &survivalProb)
 {
     emptyPopulation();
-    for (PInd ind : males) {
-        if (ind->survive(survivalProb)) {
-            individuals.push_back(ind);
+    for (PInd pInd : males) {
+        if (pInd->survive(survivalProb)) {
+            individuals.push_back(pInd);
         }
     }
-    for (PInd ind : females) {
-        if (ind->survive(survivalProb)) {
-            individuals.push_back(ind);
+    for (PInd pInd : females) {
+        if (pInd->survive(survivalProb)) {
+            individuals.push_back(pInd);
         }
     }
-    for (PInd ind : offspring) {
-        individuals.push_back(ind);
+    for (PInd pInd : offspring) {
+        individuals.push_back(pInd);
     }
+}
+
+
+// Accessory functions
+
+double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
+{
+    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
+    return resource;
 }
 
 
@@ -193,16 +202,16 @@ void Population::setResourceConsumption(const size_t &habitat)
     resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
 
     // Loop through individuals
-    for (auto ind = idFirstAndLast[habitat].first;; ++ind) {
+    for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
 
         // The individual should be of the right habitat
         assert((*ind)->getHabitat() == habitat);
 
         // Record attack rates
-        TradeOffPt attackRates = (*ind)->getAttackRates();
+        std::pair<double, double> attackRates = (*itInd)->getAttackRates();
 
         // Are we in the burn-in period?
-        if (nAccessibleResource < 2u) {
+        if (nAccessibleResources < 2u) {
             attackRates.second = 0.0;
         }
 
@@ -210,7 +219,7 @@ void Population::setResourceConsumption(const size_t &habitat)
         resourceConsumption[habitat].first += attackRates.first;
         resourceConsumption[habitat].second += attackRates.second;
 
-        if (ind == idFirstAndLast[habitat].second)
+        if (itInd == idHabitatBoundaries[habitat].second)
         {
             break;
         }
@@ -219,38 +228,40 @@ void Population::setResourceConsumption(const size_t &habitat)
 
 void Population::setResourceEquilibrium(const size_t &habitat)
 {
-    resourceEql[habitat].first = logisticResourceEq(resourceCapacities[habitat].first,
-                                                    replenishRates[habitat].first, resourceConsumption[habitat].first);
-    resourceEql[habitat].second = logisticResourceEq(resourceCapacities[habitat].second,
-                                                     replenishRates[habitat].second, resourceConsumption[habitat].second);
+    resourceEql[habitat].first = calcLogisticResourceEq(resourceCapacities[habitat].first,
+                                                    replenishRates[habitat].first,
+                                                    resourceConsumption[habitat].first);
+    resourceEql[habitat].second = calcLogisticResourceEq(resourceCapacities[habitat].second,
+                                                     replenishRates[habitat].second,
+                                                     resourceConsumption[habitat].second);
 }
 
 void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
 {
-    for (auto iti : individuals) {
+    for (PInd pInd : individuals) {
 
         // Reinforce stabilizing selection during burn-in period
-        if (nAccessibleResource < 2u) {
-            iti->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
+        if (nAccessibleResources < 2u) {
+            pInd->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
         }
 
-            // Or apply regular fitness function
+        // Or apply regular fitness function
         else {
-            iti->setFitness(resourceEql[habitat]);
+            pInd->setFitness(resourceEql[habitat]);
         }
     }
 }
 
 void Population::classifyGenders(const bool &isFemaleHeteroGamety)
 {
-    for (iti : individuals)
+    for (PInd pInd : individuals)
     {
-        if ((*iti)->isFemale(isFemaleHeteroGamety))
+        if (pInd->isFemale(isFemaleHeteroGamety))
         {
-            females.push(*iti);
+            females.push_back(pInd);
         }
         else {
-            males.push_back(*iti);
+            males.push_back(pInd);
         }
     }
 }
@@ -285,14 +296,6 @@ void Population::emptyPopulation()
     individuals.erase(individuals.begin(), individuals.end());
 }
 
-
-// Accessory functions
-
-double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
-{
-    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
-    return resource;
-}
 
 
 // Function to classify ecotypes
