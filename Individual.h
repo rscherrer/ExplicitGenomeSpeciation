@@ -110,14 +110,14 @@ private:
     void develop(const ParameterSet&, const GeneticArchitecture&);
     void expressGene(const size_t&, const size_t&, const double&, const double&);
     void setAdditiveValue(const size_t&, const double&, const double&);
-    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<size_t, double> >&)
+    void setEpistaticValue(const size_t&, const double&, const std::list<std::pair<size_t, double> >&);
     void setPhenotype(const size_t&);
     void setEnvirValue(const size_t&, const double&);
     void setGeneticValue(const size_t&, const GeneticArchitecture&);
     void setLocusGeneticValue(const size_t&, const GeneticArchitecture&, const ParameterSet&);
     void setGenomeSequence(const size_t&, const double&);
-    void recombineFreely(size_t&, size_t&, const size_t&, const double&, double&);
-    void crossOver(size_t&, const double&, const double&, double&);
+    void recombineFreely(size_t&, size_t&, const size_t&, const double&, double&) const;
+    void crossOver(size_t&, const double&, const double&, double&) const;
     void inheritLocus(Individual const * const, const bool&, const size_t&, const size_t&);
     void determineSex(const bool&, const bool&, const size_t&);
     void inheritGamete(Individual const * const, const ParameterSet&, const GeneticArchitecture&);

@@ -247,29 +247,32 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
 
 }
 
-void Individual::expressGene(const size_t &nt, const size_t &i, const double &scaleD, const double &dominanceCoeff)
+void Individual::expressGene(const size_t &nucleotide, 
+        const size_t &locus, 
+        const double &scaleD, 
+        const double &dominanceCoeff)
 {
     // Determine genotype and local effect on the phenotype
-    bool isHomozygous = genomeSequence[nt] == genomeSequence[nt + 1u];
+    bool isHomozygous = genomeSequence[nucleotide] == genomeSequence[nucleotide + 1u];
     if (isHomozygous) {
 
         // Homozygote AA
-        if (genomeSequence[nt]) {
-            genotypes[i].alleleCount = 2u;
-            genotypes[i].expression = 1.0;
+        if (genomeSequence[nucleotide]) {
+            genotypes[locus].alleleCount = 2u;
+            genotypes[locus].expression = 1.0;
         }
 
             // Homozygote aa
         else {
-            genotypes[i].alleleCount = 0u;
-            genotypes[i].expression = -1.0;
+            genotypes[locus].alleleCount = 0u;
+            genotypes[locus].expression = -1.0;
         }
     }
 
         // Heterozygote Aa
     else {
-        genotypes[i].alleleCount = 1u;
-        genotypes[i].expression = scaleD * dominanceCoeff;
+        genotypes[locus].alleleCount = 1u;
+        genotypes[locus].expression = scaleD * dominanceCoeff;
     }
 }
 
@@ -313,57 +316,57 @@ void Individual::setGeneticValue(const size_t &trait, const GeneticArchitecture 
     }
 }
 
-void Individual::setLocusGeneticValue(const size_t &i,
+void Individual::setLocusGeneticValue(const size_t &locus,
                                       const GeneticArchitecture &geneticArchitecture,
                                       const ParameterSet &parameters)
 {
-    size_t nt = i << 1u;  // nucleotide position
-    size_t trait = geneticArchitecture.locusConstants[i].character;
+    size_t nucleotidePos = locus << 1u;  // Nucleotide position
+    size_t trait = geneticArchitecture.locusConstants[locus].character;
 
     // Express the gene
-    expressGene(nt, i, parameters.scaleD[trait], geneticArchitecture.locusConstants[i].dominanceCoeff);
+    expressGene(nucleotidePos, locus, parameters.scaleD[trait], geneticArchitecture.locusConstants[locus].dominanceCoeff);
 
     // Compute local non-epistatic genetic value
-    setAdditiveValue(i, parameters.scaleA[trait], geneticArchitecture.locusConstants[i].effectSize);
+    setAdditiveValue(locus, parameters.scaleA[trait], geneticArchitecture.locusConstants[locus].effectSize);
 
     // Compute local epistatic value
-    setEpistaticValue(i, parameters.scaleI[trait], geneticArchitecture.locusConstants[i].neighbors);
+    setEpistaticValue(locus, parameters.scaleI[trait], geneticArchitecture.locusConstants[locus].neighbors);
 
 }
 
 void Individual::setGenomeSequence(const size_t &nBits, const double &freqSNP)
 {
-    for (size_t i = 0u; i < nBits; i += 2u) {
-        genomeSequence[i] = genomeSequence[i + 1u] = (i % 4u == 0u);
+    for (size_t nucleotide = 0u; nucleotide < nBits; nucleotide += 2u) {
+        genomeSequence[nucleotide] = genomeSequence[nucleotide + 1u] = (nucleotide % 4u == 0u);
         if (rnd::uniform() < freqSNP) {
-            genomeSequence[i] = !genomeSequence[i];
+            genomeSequence[nucleotide] = !genomeSequence[nucleotide];
         }
         if (rnd::uniform() < freqSNP) {
-            genomeSequence[i + 1u] = !genomeSequence[i + 1u];
+            genomeSequence[nucleotide + 1u] = !genomeSequence[nucleotide + 1u];
         }
     }
 }
 
 void Individual::recombineFreely(size_t &haplotype,
-        size_t &lg,
+        size_t &chromosome,
         const size_t &nChromosomes,
         const double &chromosomeSize,
-        double &freeRecombinationPoint)
+        double &freeRecombinationPoint) const 
 {
     // Recombine by switching to random haplotype
     haplotype = rnd::bernoulli(0.5) ? 0u : 1u;
 
     // Set next free recombination point
-    if (lg < nChromosomes - 1u) {
+    if (chromosome < nChromosomes - 1u) {
         freeRecombinationPoint = chromosomeSize;
-        ++lg;
+        ++chromosome;
     }
     else {
         freeRecombinationPoint = 1.0;
     }
 }
 
-void Individual::crossOver(size_t &haplotype, const double &recombinationRate, const double &mapLength, double &crossOverPoint)
+void Individual::crossOver(size_t &haplotype, const double &recombinationRate, const double &mapLength, double &crossOverPoint) const
 {
     // Cross over to the opposite haplotype
     haplotype = (haplotype + 1u) % 2u;
@@ -378,13 +381,13 @@ void Individual::inheritLocus(Individual const * const parent, const bool &isMot
     genomeSequence[genomePosition] = parent->genomeSequence[(locus << 1u) + haplotype];
 }
 
-void Individual::determineSex(const bool &isMother, const bool &isFemaleHeteroGamety, const size_t &haplotype)
+void Individual::determineSex(const bool &isMother, const bool &isFemaleHeterogamety, const size_t &haplotype)
 {
     if (isMother) {
-        isHeteroGamous = haplotype == 0u && isFemaleHeteroGamety ? true : false;
+        isHeterogamous = haplotype == 0u && isFemaleHeterogamety;
     }
     else {
-        isHeteroGamous = haplotype == 1u && !isFemaleHeteroGamety ? true : false;
+        isHeterogamous = haplotype == 1u && !isFemaleHeterogamety;
     }
 }
 
@@ -395,28 +398,31 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
     double crossOverPoint = 0.0;
 
     // Loop through loci
-    for (size_t i = 0u, lg = 0u, haplotype = 0u; i < parameters.nLoci; ++i) {
+    for (size_t locus = 0u, chromosome = 0u, haplotype = 0u; locus < parameters.nLoci; ++locus) {
 
         // Interchromosomal recombination
-        bool isFreeRecombination = geneticArchitecture.locusConstants[i].location > freeRecombinationPoint;
+        bool isFreeRecombination = geneticArchitecture.locusConstants[locus].location > freeRecombinationPoint;
         if (isFreeRecombination) {
-            recombineFreely(haplotype, lg, parameters.nChromosomes, geneticArchitecture.chromosomeSizes[lg], freeRecombinationPoint)
+            recombineFreely(haplotype, chromosome, 
+                    parameters.nChromosomes, 
+                    geneticArchitecture.chromosomeSizes[chromosome], 
+                    freeRecombinationPoint);
         }
 
         // Intrachromosomal recombination
-        bool isCrossOver = geneticArchitecture.locusConstants[i].location > crossOverPoint;
+        bool isCrossOver = geneticArchitecture.locusConstants[locus].location > crossOverPoint;
         if (isCrossOver) {
             crossOver(haplotype, parameters.recombinationRate, parameters.mapLength, crossOverPoint);
         }
 
         // Inherit parental haplotype
-        bool isMother = parent->isFemale(parameters.isFemaleHeteroGamety);
-        inheritLocus(parent, isMother, i, haplotype);
+        bool isMother = parent->isFemale(parameters.isFemaleHeterogamety);
+        inheritLocus(parent, isMother, locus, haplotype);
 
         // Sex determination locus
-        const bool isSexDeterminationLocus = i == 0u;
+        const bool isSexDeterminationLocus = locus == 0u;
         if (isSexDeterminationLocus) {
-            determineSex(isMother, parameters.isFemaleHeteroGamety, haplotype);
+            determineSex(isMother, parameters.isFemaleHeterogamety, haplotype);
         }
     }
 }
