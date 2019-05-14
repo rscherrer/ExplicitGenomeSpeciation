@@ -180,6 +180,7 @@ int main(int argc, char * argv[])
         // Loop through time
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
             if (t > 0) {
+
                 population.dispersal(parameters);
                 population.sortByHabitat();
 
@@ -190,11 +191,14 @@ int main(int argc, char * argv[])
                 // Second habitat
                 population.resourceDynamics(1u, parameters.ecoSelCoeff);
                 population.reproduction(1u);
+
+                population.survival(parameters.survivalProb);
+
             }
             else {
 
                 // Burnin period
-                population.resourceDynamics(0u);
+                population.resourceDynamics(0u, parameters.ecoSelCoeff);
                 population.reproduction(0u);
             }
 

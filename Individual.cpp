@@ -31,6 +31,7 @@ Instructions for compiling and running the program
 #include <algorithm>
 #include <set>
 #include <list>
+#include <cassert>
 #include "Individual.h"
 #include "random.h"
 #include "ParameterSet.h"
@@ -318,108 +319,96 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
     // Compute attack rates
     setAttackRates(parameters.ecoSelCoeff);
 
+    // Compute mate preference (useful for females only)
+    setMatePreference(parameters.matePreferenceStrength);
+
 }
 
-void Individual::prepareChoice() const
+void Individual::setMatePreference(const double &matePreferenceStrength)
 {
-    double xi = phenotypes[0u];
-    if(!obs.empty()) obs.clear();
-    obs.push_back(0.0);
-    xsum = xi;
-    xxsum = xi * xi;
+    matePreference = matePreferenceStrength * phenotypes[1u];
+}
+
+size_t Individual::sampleClutchSize(const double &birthRate)
+{
+    return rnd::poisson(birthRate * fitness);
+}
+
+
+void Individual::giveBirth(const PInd &dad, std::vector<PInd> &offspring, ParameterSet &parameters, GeneticArchitecture &geneticArchitecture)
+{
+    // Add offspring to the population
+    offspring.push_back(new Individual(self, dad, parameters, geneticArchitecture));
+}
+
+void Individual::chooseMates(const double &matingSeasonEnd, std::discrete_distribution<size_t> &maleMarket, std::vector<PInd> &males, const ParameterSet &parameters)
+{
+    // Loop through offspring and through the mating season
+    for (size_t t = 0u; nOffspring && t < matingSeasonEnd; ++t) {
+
+        // Sample a male
+        const size_t idFoundMale = maleMarket(rnd::rng);
+
+        // Mate choice
+        bool isMating = acceptMate(males[idFoundMale], parameters);
+
+        // Birth
+        if (isMating) {
+
+            mates.push_back(idFoundMale);
+            --nOffspring;
+
+        }
+    }
+}
+
+bool Individual::survive(const double &survivalProb)
+{
+    return rnd::bernoulli(survivalProb);
+}
+
+double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+{
+    return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
+}
+
+double calcDisassortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+{
+    return 1.0 - sqr(sqr(matingTrait)) * exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
+}
+
+double Individual::assessMatingProb(const double &ecoTraitDistance, const double &tiny)
+{
+    double matingProb;
+
+    // Assortative or disassortative mating
+    if (matePreference >= 0) {
+        matingProb = calcAssortProb(matePreference, phenotypes[1u], ecoTraitDistance);
+    }
+    else {
+        matingProb = calcDisassortProb(matePreference, phenotypes[1u], ecoTraitDistance);
+    }
+
+    // Normalize
+    matingProb = matingProb < tiny ? 0.0 : matingProb;
+    matingProb = matingProb > 1.0 - tiny ? 1.0 : matingProb;
+    assert(matingProb >= 0.0 || matingProb <= 1.0);
 }
 
 bool Individual::acceptMate(Individual const * const male, const ParameterSet& parameters) const
 {
 
-    double scale = parameters.matePreferenceStrength * traitP[1u];
-    if(scale == 0.0) return true;
+    if(matePreference == 0.0) return true;
 
-    // observed male
-    const double xj = male->traitP[0u];
-    const double dij = sqr(traitP[0u] - xj);
+    // Observed male
+    const double maleEcoTrait = male->phenotypes[0u];
+    const double ecoTraitDistance = sqr(phenotypes[0u] - maleEcoTrait);
 
-    if(parameters.isTypeIIMateChoice) {
+    // Mating probability
+    double matingProb = assessMatingProb(ecoTraitDistance, parameters.tiny);
 
-        double matingProb = scale >= 0 ? exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u])) * exp(- parameters.matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0);
-        matingProb = matingProb < parameters.tiny ? 0.0 : matingProb;
-        matingProb = matingProb > 1.0 - parameters.tiny ? 1.0 : matingProb;
-        if(matingProb < 0.0 || matingProb > 1.0) throw std::logic_error("mating probability out of bounds");
-
-        return(rnd::bernoulli(matingProb));
-
-    } else {
-
-        // insert observation in sorted list
-        std::list<double>::iterator it = std::upper_bound (obs.begin(), obs.end(), dij);
-        obs.insert(it, dij);
-        const size_t n = obs.size();
-
-        // update statistics
-        xsum += xj;
-        xxsum += xj * xj;
-        const double mu = xsum / n;
-        const double var = (xxsum - n * mu * mu) / (n - 1u);
-
-        if(scale < 0.0) {
-            // preference towards higher ecotype distance (disassortative mating)
-
-            // reject male if there is no variation in the sample
-            if(var < parameters.tiny) return false;
-            scale /= var;
-
-            // determine threshold for mate acceptance
-            double delta, sum = 0.0, dxy0 = obs.back(), dxy1;
-            size_t k = 0u;
-            for (std::list<double>::reverse_iterator rit = obs.rbegin();;) {
-                ++rit; ++k;  // the first term can be skipped because it has zero weight in the integral
-                if(rit != obs.rend()) {
-                    dxy1 = *rit;
-                    delta = scale * k * (dxy1 - dxy0);
-                    if(sum + delta < n) {
-                        sum += delta;
-                        dxy0 = dxy1;
-                    }
-                    else break;
-                }
-                else return true;
-            }
-            double aux = (n - sum) / delta;
-            const double threshold = (1.0 - aux) * dxy0 + aux * dxy1;
-
-            return (dij > threshold);
-        }
-        else {
-            // preference towards lower ecotype distance (assortative mating)
-
-            // accept male if there is no variation in the sample
-            if(var < parameters.tiny) return true;
-            scale /= var;
-
-            // determine threshold for mate acceptance
-            double delta, sum = 0.0, dxy0 = obs.front(), dxy1;
-            size_t k = 0u;
-            for (std::list<double>::iterator it = obs.begin();;) {
-                ++it; ++k;  // the first term can be skipped because it has zero weight in the integral
-                if(it != obs.end()) {
-                    dxy1 = *it;
-                    delta = scale * k * (dxy1 - dxy0);
-                    if(sum + delta < n) {
-                        sum += delta;
-                        dxy0 = dxy1;
-                    }
-                    else break;
-                }
-                else return true;
-            }
-            double aux = (n - sum) / delta;
-            const double threshold = (1.0 - aux) * dxy0 + aux * dxy1;
-
-            return (dij < threshold);
-        }
-
-    }
-
+    bool isAccepted = rnd::bernoulli(matingProb);
+    return isAccepted;
 
 }
 

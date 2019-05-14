@@ -12,7 +12,7 @@ public:
     size_t  nIndividualInit         = 100u;
     double  dispersalRate           = 1.0e-3;
     double  alpha                   = 5.0e-3;
-    double  beta                    = 4.0;
+    double  birthRate               = 4.0;
     double  habitatAsymmetry        = 0.5;
     double  survivalProb            = 0.8;
     double  ecoSelCoeff             = 1.0;

@@ -13,7 +13,6 @@
 // Forward declaration
 class Individual;
 typedef Individual const * PInd;
-typedef std::pair<double, double> TradeOffPt;
 
 class Population {
 
@@ -21,19 +20,41 @@ public:
 
     Population(const ParameterSet&, const GeneticArchitecture&);
 
+    // High-level member functions
+    void dispersal(const ParameterSet&);
+    void sortByHabitat();
+    void resourceDynamics(const size_t&, const double&);
+    void reproduction(const size_t&, const ParameterSet&, const GeneticArchitecture&);
+    void survival(const double&);
+
+    // Low-level member functions
+    void setResourceCapacities(const double&, const double&);
+    void setReplenishRates(const double&);
+    void setResourceConsumption(const size_t&);
+    void setResourceEquilibrium(const size_t&);
+    void assignFitnesses(const size_t&, const double&);
+    void birth(const PInd&, const ParameterSet&, const GeneticArchitecture&);
+
+private:
+
     // The population
     std::list<PInd> individuals;
-    std::queue<PInd> females;
+    std::vector<PInd> females;
     std::vector<PInd> males;
+    std::vector<PInd> offspring;
+    std::vector<std::pair<size_t, size_t> > genderCounts;
+    std::vector<std::pair<size_t, size_t> > idHabitatBoundaries;
+
+    // Mating features
+    std::vector<double> maleSuccesses;
 
     // Ecological state
-    std::vector<std::pair<double, double> > resourceConsumption;
-    std::vector<std::pair<double, double> > resourceEql;
-    std::vector<std::pair<size_t, size_t> > genderCounts;
-    TradeOffPt breakEvenPoint;
-    size_t nAccessibleResource;
+    size_t nAccessibleResources;
     std::vector<std::pair<double, double> > resourceCapacities;
     std::vector<std::pair<double, double> > replenishRates;
+    std::vector<std::pair<double, double> > resourceConsumption;
+    std::vector<std::pair<double, double> > resourceEql;
+    std::pair<double, double> breakEvenPoint;
 
     // Genome-wide genetic variables
     std::vector<std::vector<double> > avgG;
@@ -42,50 +63,34 @@ public:
     std::vector<std::vector<double> > varA;
     std::vector<std::vector<double> > varI;
     std::vector<double> varD;
-    std::vector<double> F_st;
-    std::vector<double> P_st;
-    std::vector<double> G_st;
-    std::vector<double> Q_st;
-    std::vector<double> C_st;
+    std::vector<double> Fst;
+    std::vector<double> Pst;
+    std::vector<double> Gst;
+    std::vector<double> Qst;
+    std::vector<double> Cst;
 
     // Locus-specific genetic variables
     struct LocusVariables {
 
         double avgEffectOfSubstitution;
-        double varD;
-        double F_it;
-        double F_is;
-        double F_st;
-        double P_st;
-        double G_st;
-        double Q_st;
-        double C_st;
+        double locusvarD;
+        double locusFit;
+        double locusFis;
+        double locusFst;
+        double locusPst;
+        double locusGst;
+        double locusQst;
+        double locusCst;
         std::array<double, 3u> alleleFrequency;
         std::array<double, 3u> meanEffect;
-        std::array<double, 3u> varP;
-        std::array<double, 3u> varG;
-        std::array<double, 3u> varA;
-        std::array<double, 3u> varI;
+        std::array<double, 3u> locusvarP;
+        std::array<double, 3u> locusvarG;
+        std::array<double, 3u> locusvarA;
+        std::array<double, 3u> locusvarI;
 
     };
 
     std::vector<LocusVariables> locusVariables;
-
-    std::vector<std::pair<size_t, size_t> > idFirstAndLast;  // Awful name
-
-    // Member functions
-    void dispersal(const ParameterSet&);
-    void sortByHabitat();  // This function returns the iterator of the first individual of the second habitat
-    void setResourceConsumption(const size_t&);
-    void setResourceCapacities(const double&, const double&);
-    void setReplenishRates(const double&);
-    void setResourceEquilibrium(const size_t&);
-    void assignFitnesses(const size_t&, const double&);
-    void resourceDynamics(const size_t&, const double&);
-
-    void competitionAndReproduction(const size_t, const ParameterSet&, const GeneticArchitecture&);
-
-private:
 
 };
 

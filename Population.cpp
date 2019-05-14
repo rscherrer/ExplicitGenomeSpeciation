@@ -218,119 +218,91 @@ void Population::classifyGenders(const bool &isFemaleHeteroGamety)
     }
 }
 
-void Population::reproduction(const size_t habitat, const ParameterSet &parameters)
+void Population::emptyPopulation()
+{
+    individuals.erase(individuals.begin(), individuals.end());
+}
+
+
+
+void Population::setMaleFitnesses(const size_t &nMales, const double &tiny)
+{
+    double sumMaleSuccesses = 0.0;
+    for (size_t i = 0u; i < nMales; ++i) {
+
+        maleSuccesses[i] = males[i]->getFitness();
+
+        // Accumulate mating successes
+        sumMaleSuccesses += maleSuccesses[i];
+
+    }
+
+    // All males have equal success if successes are too small
+    if (sumMaleSuccesses < tiny) {
+        maleSuccesses = std::vector<double>(nMales, 1.0);
+    }
+}
+
+void Population::reproduction(const size_t &habitat, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
 
     // Gender classification
     classifyGenders(parameters.isFemaleHeteroGamety);
 
     // Gender counts
-    const size_t nFemales = genderCounts[hab].first = females.size();
-    const size_t nMales = genderCounts[hab].second = males.size();
+    const size_t nFemales = genderCounts[habitat].first = females.size();
+    const size_t nMales = genderCounts[habitat].second = males.size();
 
     // Terminate if there are no males or no females
     if (nFemales == 0u || nMales == 0u) {
         return;
     }
 
-    // Compute reproductive success for males
-    std::vector<double> maleSuccess(nMales);
-    double sumMaleSuccess = 0.0;
-
-    // here I need a vector of male fitnesses
-    maleFitnesses
-
-
-
-    // Loop through males
-    for(size_t i = 0u; i < nMales; ++i) {
-
-        // Pick the resource that yields the highest payoff (not if type II resource utilisation)
-        TradeOffPt pt = males[i]->getAttackRate();
-        if (nAccessibleResource < 2u) pt.second = 0.0;  // If burnin period
-        maleSuccess[i] = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-
-        // Add stabilising selection on mating trait during burn-in period
-        if (nAccessibleResource < 2u) {
-            maleSuccess[i] *= males[i]->getBurnInRpSc(parameters.ecoSelCoeff);
-        }
-
-        // Accumulate mating successes
-        sumMaleSuccess += maleSuccess[i];
-
-    }
-
-    // In case of equal mating successes
-    if (sumMaleSuccess < parameters.tiny) {
-        maleSuccess = std::vector<double>(nMales, 1.0);
-    }
+    // Male fitnesses
+    setMaleFitnesses(nMales, parameters.tiny);
 
     // Male market
-    std::discrete_distribution<size_t> maleMarket(maleSuccess.begin(), maleSuccess.end());
+    std::discrete_distribution<size_t> maleMarket(maleSuccesses.begin(), maleSuccesses.end());
 
     // Set the length of the mating season
-    const size_t seasonEnd = rnd::geometric(parameters.mateEvaluationCost);
+    const size_t matingSeasonEnd = rnd::geometric(parameters.mateEvaluationCost);
 
     // Mate choice and reproduction
-    while (!females.empty()) {
-
-        PInd fem = females.front();
-        females.pop();
-
-        // Compute female reproductive success
-        TradeOffPt pt = fem->getAttackRate();
-        if (nAccessibleResource < 2u) {
-            pt.second = 0.0;
-        }
-        double femaleSuccess = parameters.isTypeIIResourceUtilisation ? pt.first * resourceEql[hab].first + pt.second * resourceEql[hab].second : std::max(pt.first * resourceEql[hab].first, pt.second * resourceEql[hab].second);
-        if (nAccessibleResource < 2u) {
-            femaleSuccess *= fem->getBurnInRpSc(parameters.ecoSelCoeff);
-        }
+    for (PInd female : females) {
 
         // Sample family size for female
-        size_t nOffspring = rnd::poisson(parameters.beta * femaleSuccess);
+        female->sampleClutchSize(parameters.birthRate);
 
-        // Mate choice for each clutch
-        fem->prepareChoice();
-        for (size_t t = 0u; nOffspring && t < seasonEnd; ++t) {
+        // Find fathers for her babies
+        female->chooseMates(matingSeasonEnd, maleMarket, males);
 
-            // Sample a male
-            const size_t j = maleMarket(rnd::rng);
+        // Babies are born
+        birth(female, parameters, geneticArchitecture);
+    }
+}
 
-            // If mating is successful
-            if (fem->acceptMate(males[j], parameters)) {
+void Population::birth(const PInd &female, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
+{
+    for (size_t idFather : female->getMates()) {
+        offspring.push_back(new Individual(female, males[idFather], parameters, geneticArchitecture));
+    }
+}
 
-                // Add offspring to the population
-                individuals.push_back(new Individual(fem, males[j], parameters, genome));
 
-                // Check if the offspring survives development
-                if (parameters.costIncompat > 0.0) {
-                    if (rnd::bernoulli(individuals.back()->getViability())) {
-                        individuals.pop_back();
-                    }
-                }
-
-                --nOffspring;
-            }
-        }
-
-        // Female survival
-        if (rnd::bernoulli(parameters.survivalProb)) {
-            individuals.push_back(fem);
-        }
-        else {
-            delete fem;
+void Population::survival(const double &survivalProb)
+{
+    emptyPopulation();
+    for (PInd ind : males) {
+        if (ind->survive(survivalProb)) {
+            individuals.push_back(ind);
         }
     }
-
-    // Male survival
-    for (size_t i = 0u; i < nMales; ++i) {
-        if (rnd::bernoulli(parameters.survivalProb)) {
-            individuals.push_back(males[i]);
+    for (PInd ind : females) {
+        if (ind->survive(survivalProb)) {
+            individuals.push_back(ind);
         }
-        else {
-            delete males[i];
-        }
-        males[i] = nullptr;
+    }
+    for (PInd ind : offspring) {
+        individuals.push_back(ind);
     }
 }

@@ -83,11 +83,15 @@ public:
     std::vector<bool> genomeSequence;
     std::vector<Locus> genotypes;
     double fitness;
+    double nOffspring;
+    std::vector<size_t> mates;
+    double matePreference;
 
     // Getters
+    std::vector<size_t> getMates() const { return mates; };
     bool isFemale(const bool& isFemaleHeteroGamety) const {return isHeteroGamous == isFemaleHeteroGamety;}
     TradeOffPt getAttackRates() const { return attackRates; }
-    double getBurnInRpSc(double) const;
+    double getFitness() const { return fitness;}
     double getViability() const {return viability; }
     size_t getHabitat() const { return habitat; }
     size_t getEcotype() const { return ecotype; }
@@ -98,12 +102,17 @@ public:
     std::vector<Trait> getTraitLocus() const { return traitLocus; } // size nLoci
 
     // Setters
+    void setMatePreference(const double&);
     void setFitness(const std::pair<double, double>&);
     void setBurninFitness(const std::pair<double, double>&, const double&);
     void disperse(const size_t& nHabitat) const { habitat = (habitat + 1u) % nHabitat; }
     size_t setEcotype(const TradeOffPt &threshold) const;
     void prepareChoice() const;
+    void chooseMates(const double&, std::discrete_distribution<size_t>&, std::vector<PInd>, const ParameterSet&);
+    size_t sampleClutchSize(const double&);
     bool acceptMate(Individual const * const, const ParameterSet&) const;
+    double assessMatingProb(const double&, const double&);
+    bool survive(const double&);
 
     void expressGene(const size_t&, const size_t&, const double&, const double&);
     void setAdditiveValue(const size_t&, const double&, const double&);
