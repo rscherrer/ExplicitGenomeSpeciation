@@ -33,7 +33,10 @@ public:
     void setResourceConsumption(const size_t&);
     void setResourceEquilibrium(const size_t&);
     void assignFitnesses(const size_t&, const double&);
+    void classifyGenders(const bool&);
+    void setMaleFitnesses(const size_t&, const double&);
     void birth(const PInd&, const ParameterSet&, const GeneticArchitecture&);
+    void emptyPopulation();
 
 private:
 

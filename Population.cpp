@@ -4,24 +4,9 @@
 
 #include "Population.h"
 #include "random.h"
-#include "queue"
 #include <cassert>
 
-void Population::setResourceCapacities(const double &maxResourceCapacity, const double &habitatAsymmetry)
-{
-    resourceCapacities[0u].first = maxResourceCapacity;
-    resourceCapacities[0u].second = (1.0 - habitatAsymmetry) * maxResourceCapacity;
-    resourceCapacities[1u].first = (1.0 - habitatAsymmetry) * maxResourceCapacity;
-    resourceCapacities[1u].first = maxResourceCapacity;
-}
-
-void Population::setReplenishRates(const double &maxResourceGrowth)
-{
-    replenishRates[0u].first = maxResourceGrowth;
-    replenishRates[0u].second = maxResourceGrowth;
-    replenishRates[1u].first = maxResourceGrowth;
-    replenishRates[1u].second = maxResourceGrowth;
-}
+// Constructor
 
 Population::Population(const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
@@ -45,6 +30,9 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
     setReplenishRates(parameters.maxResourceGrowth);
 }
 
+
+// High-level functions
+
 void Population::dispersal(const ParameterSet& parameters)
 {
 
@@ -52,7 +40,7 @@ void Population::dispersal(const ParameterSet& parameters)
     if (parameters.dispersalRate > 0.5) {
         for (PInd pInd : individuals) {
             if (rnd::bernoulli(parameters.dispersalRate)) {
-                pInd -> disperse(parameters.nHabitat);
+                pInd->disperse(parameters.nHabitat);
             }
         }
     }
@@ -72,24 +60,11 @@ void Population::dispersal(const ParameterSet& parameters)
         size_t j = 0u;
         for (size_t i : migrants) {
             std::advance(it, i - j);
-            (*it) -> disperse(parameters.nHabitat);
+            (*it)->disperse(parameters.nHabitat);
             j = i;
         }
     }
 }
-
-// This function needs massive refactoring
-// In the new version of the model we use type II resource utilization and type II mate choice
-// Which are much simpler than type I
-// Of course we keep the scripts for implementing the type I in another branch of this project
-// So they are not lost!!
-// One difference though:
-// If we remove T2 RU then we remove ecotypes, but ecotypes are needed for calculating ecological differentiation stats
-// So we have to keep them
-// So we have to sort individuals along the trade off line
-
-// Maybe start by removing all instances of type I RU
-
 
 void Population::sortByHabitat()
 {
@@ -123,73 +98,6 @@ void Population::sortByHabitat()
     idFirstAndLast[1u].second = individuals.end();
 }
 
-void Population::setResourceConsumption(const size_t &habitat)
-{
-    // Initialize consumption
-    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
-
-    // Loop through individuals
-    for (auto ind = idFirstAndLast[habitat].first;; ++ind) {
-
-        // The individual should be of the right habitat
-        assert((*ind)->getHabitat() == habitat);
-
-        // Record attack rates
-        TradeOffPt attackRates = (*ind)->getAttackRates();
-
-        // Are we in the burn-in period?
-        if (nAccessibleResource < 2u) {
-            attackRates.second = 0.0;
-        }
-
-        // Accumulate consumption
-        resourceConsumption[habitat].first += attackRates.first;
-        resourceConsumption[habitat].second += attackRates.second;
-
-        if (ind == idFirstAndLast[habitat].second)
-        {
-            break;
-        }
-    }
-}
-
-double logisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
-{
-    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
-    return resource;
-}
-
-void Population::setResourceEquilibrium(const size_t &habitat)
-{
-    resourceEql[habitat].first = logisticResourceEq(resourceCapacities[habitat].first,
-            replenishRates[habitat].first, resourceConsumption[habitat].first);
-    resourceEql[habitat].second = logisticResourceEq(resourceCapacities[habitat].second,
-            replenishRates[habitat].second, resourceConsumption[habitat].second);
-}
-
-void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
-{
-    for (auto iti : individuals) {
-
-        // Reinforce stabilizing selection during burn-in period
-        if (nAccessibleResource < 2u) {
-            iti->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
-        }
-
-        // Or apply regular fitness function
-        else {
-            iti->setFitness(resourceEql[habitat]);
-        }
-    }
-}
-
-// Function to classify ecotypes
-// Loop through the population and record attack rates
-// Within local habitat
-// Sort the attack rates along trade-off line with the function trade-off compare
-// Loop through attack rates until the alternative resource becomes more advantageous
-// That is the break-even point that delimits ecotypes
-
 void Population::resourceDynamics(const size_t &habitat, const double &ecoSelCoeff)
 {
 
@@ -202,45 +110,6 @@ void Population::resourceDynamics(const size_t &habitat, const double &ecoSelCoe
     // Assign individual fitnesses
     assignFitnesses(habitat, ecoSelCoeff);
 
-}
-
-void Population::classifyGenders(const bool &isFemaleHeteroGamety)
-{
-    for (iti : individuals)
-    {
-        if ((*iti)->isFemale(isFemaleHeteroGamety))
-        {
-            females.push(*iti);
-        }
-        else {
-            males.push_back(*iti);
-        }
-    }
-}
-
-void Population::emptyPopulation()
-{
-    individuals.erase(individuals.begin(), individuals.end());
-}
-
-
-
-void Population::setMaleFitnesses(const size_t &nMales, const double &tiny)
-{
-    double sumMaleSuccesses = 0.0;
-    for (size_t i = 0u; i < nMales; ++i) {
-
-        maleSuccesses[i] = males[i]->getFitness();
-
-        // Accumulate mating successes
-        sumMaleSuccesses += maleSuccesses[i];
-
-    }
-
-    // All males have equal success if successes are too small
-    if (sumMaleSuccesses < tiny) {
-        maleSuccesses = std::vector<double>(nMales, 1.0);
-    }
 }
 
 void Population::reproduction(const size_t &habitat, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
@@ -281,14 +150,6 @@ void Population::reproduction(const size_t &habitat, const ParameterSet &paramet
     }
 }
 
-void Population::birth(const PInd &female, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
-{
-    for (size_t idFather : female->getMates()) {
-        offspring.push_back(new Individual(female, males[idFather], parameters, geneticArchitecture));
-    }
-}
-
-
 void Population::survival(const double &survivalProb)
 {
     emptyPopulation();
@@ -306,3 +167,137 @@ void Population::survival(const double &survivalProb)
         individuals.push_back(ind);
     }
 }
+
+
+// Low-level functions
+
+void Population::setResourceCapacities(const double &maxResourceCapacity, const double &habitatAsymmetry)
+{
+    resourceCapacities[0u].first = maxResourceCapacity;
+    resourceCapacities[0u].second = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = maxResourceCapacity;
+}
+
+void Population::setReplenishRates(const double &maxResourceGrowth)
+{
+    replenishRates[0u].first = maxResourceGrowth;
+    replenishRates[0u].second = maxResourceGrowth;
+    replenishRates[1u].first = maxResourceGrowth;
+    replenishRates[1u].second = maxResourceGrowth;
+}
+
+void Population::setResourceConsumption(const size_t &habitat)
+{
+    // Initialize consumption
+    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
+
+    // Loop through individuals
+    for (auto ind = idFirstAndLast[habitat].first;; ++ind) {
+
+        // The individual should be of the right habitat
+        assert((*ind)->getHabitat() == habitat);
+
+        // Record attack rates
+        TradeOffPt attackRates = (*ind)->getAttackRates();
+
+        // Are we in the burn-in period?
+        if (nAccessibleResource < 2u) {
+            attackRates.second = 0.0;
+        }
+
+        // Accumulate consumption
+        resourceConsumption[habitat].first += attackRates.first;
+        resourceConsumption[habitat].second += attackRates.second;
+
+        if (ind == idFirstAndLast[habitat].second)
+        {
+            break;
+        }
+    }
+}
+
+void Population::setResourceEquilibrium(const size_t &habitat)
+{
+    resourceEql[habitat].first = logisticResourceEq(resourceCapacities[habitat].first,
+                                                    replenishRates[habitat].first, resourceConsumption[habitat].first);
+    resourceEql[habitat].second = logisticResourceEq(resourceCapacities[habitat].second,
+                                                     replenishRates[habitat].second, resourceConsumption[habitat].second);
+}
+
+void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
+{
+    for (auto iti : individuals) {
+
+        // Reinforce stabilizing selection during burn-in period
+        if (nAccessibleResource < 2u) {
+            iti->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
+        }
+
+            // Or apply regular fitness function
+        else {
+            iti->setFitness(resourceEql[habitat]);
+        }
+    }
+}
+
+void Population::classifyGenders(const bool &isFemaleHeteroGamety)
+{
+    for (iti : individuals)
+    {
+        if ((*iti)->isFemale(isFemaleHeteroGamety))
+        {
+            females.push(*iti);
+        }
+        else {
+            males.push_back(*iti);
+        }
+    }
+}
+
+void Population::setMaleFitnesses(const size_t &nMales, const double &tiny)
+{
+    double sumMaleSuccesses = 0.0;
+    for (size_t i = 0u; i < nMales; ++i) {
+
+        maleSuccesses[i] = males[i]->getFitness();
+
+        // Accumulate mating successes
+        sumMaleSuccesses += maleSuccesses[i];
+
+    }
+
+    // All males have equal success if successes are too small
+    if (sumMaleSuccesses < tiny) {
+        maleSuccesses = std::vector<double>(nMales, 1.0);
+    }
+}
+
+void Population::birth(const PInd &female, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
+{
+    for (size_t idFather : female->getMates()) {
+        offspring.push_back(new Individual(female, males[idFather], parameters, geneticArchitecture));
+    }
+}
+
+void Population::emptyPopulation()
+{
+    individuals.erase(individuals.begin(), individuals.end());
+}
+
+
+// Accessory functions
+
+double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
+{
+    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
+    return resource;
+}
+
+
+// Function to classify ecotypes
+// Loop through the population and record attack rates
+// Within local habitat
+// Sort the attack rates along trade-off line with the function trade-off compare
+// Loop through attack rates until the alternative resource becomes more advantageous
+// That is the break-even point that delimits ecotypes
