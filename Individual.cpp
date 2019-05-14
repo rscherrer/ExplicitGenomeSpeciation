@@ -71,7 +71,7 @@ double calcDisassortProb(const double &matePreference, const double &matingTrait
 // Constructors
 
 Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
-isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+isHeterogamous(rnd::bernoulli(0.5)), ecotype(0u), habitat(0u)
 {
     setGenomeSequence(parameters.nBits, parameters.freqSNP);
     mutate(parameters);
@@ -79,14 +79,14 @@ isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 }
 
 Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
-genomeSequence(sequence), isHeteroGamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+genomeSequence(sequence), isHeterogamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 {
     mutate(parameters);
     develop(parameters, geneticArchitecture);
 }
 
 Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
-        isHeteroGamous(false), habitat(mother->habitat)
+        isHeterogamous(false), habitat(mother->habitat)
 {
 
     // Recombination and transmission of genes
@@ -103,7 +103,7 @@ Individual::Individual(Individual const * const mother, Individual const * const
 
 bool Individual::isFemale(const bool &isFemaleHeterogamety) const
 {
-    return isHeteroGamous == isFemaleHeterogamety;
+    return isHeterogamous == isFemaleHeterogamety;
 }
 
 
@@ -136,10 +136,13 @@ void Individual::setMatePreference(const double &matePreferenceStrength)
     matePreference = matePreferenceStrength * phenotypes[1u];
 }
 
-void Individual::chooseMates(const double &matingSeasonEnd, const std::discrete_distribution<size_t> &maleMarket, const std::vector<PInd> &males, const ParameterSet &parameters)
+void Individual::chooseMates(const double &matingSeasonEnd,
+        std::discrete_distribution<size_t> &maleMarket,
+        const std::vector<PInd> &males,
+        const ParameterSet &parameters)
 {
     // Loop through offspring and through the mating season
-    for (size_t t = 0u; nOffspring && t < matingSeasonEnd; ++t) {
+    for (size_t t = 0u; nOffspring > 0u && t < matingSeasonEnd; ++t) {
 
         // Sample a male
         const size_t idFoundMale = maleMarket(rnd::rng);
@@ -157,7 +160,7 @@ void Individual::chooseMates(const double &matingSeasonEnd, const std::discrete_
     }
 }
 
-double Individual::assessMatingProb(const double &ecoTraitDistance, const double &tiny)
+double Individual::assessMatingProb(const double &ecoTraitDistance, const double &tiny) const
 {
     double matingProb;
 
@@ -173,11 +176,15 @@ double Individual::assessMatingProb(const double &ecoTraitDistance, const double
     matingProb = matingProb < tiny ? 0.0 : matingProb;
     matingProb = matingProb > 1.0 - tiny ? 1.0 : matingProb;
     assert(matingProb >= 0.0 || matingProb <= 1.0);
+
+    return matingProb;
+
 }
 
-bool Individual::acceptMate(Individual const * const male, const ParameterSet& parameters)
+bool Individual::acceptMate(Individual const * const male, const ParameterSet& parameters) const
 {
 
+    // In case of random mating, mate
     if(matePreference == 0.0) return true;
 
     // Observed male
@@ -192,12 +199,12 @@ bool Individual::acceptMate(Individual const * const male, const ParameterSet& p
 
 }
 
-size_t Individual::sampleClutchSize(const double &birthRate)
+size_t Individual::sampleClutchSize(const double &birthRate) const
 {
     return rnd::poisson(birthRate * fitness);
 }
 
-bool Individual::survive(const double &survivalProb)
+bool Individual::survive(const double &survivalProb) const
 {
     return rnd::bernoulli(survivalProb);
 }

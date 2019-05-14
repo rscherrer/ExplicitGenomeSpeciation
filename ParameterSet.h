@@ -22,7 +22,6 @@ public:
     double  maxResourceCapacity     = 5000.0;
     double  maxResourceGrowth       = 1.0;
 
-
     bool isTypeIIResourceUtilisation = true;
     bool isTypeIIMateChoice = true;
 

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <set>
+#include <random>
 #include "Individual.h"
 #include "ParameterSet.h"
 
@@ -39,6 +40,7 @@ private:
 
     // Mating features
     std::vector<double> maleSuccesses;
+    std::discrete_distribution<size_t> maleMarket;
 
     // Ecological state
     size_t nAccessibleResources;

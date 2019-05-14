@@ -77,7 +77,7 @@ public:
 private:
 
     // Ecological attributes
-    size_t habitat
+    size_t habitat;
     size_t ecotype;
     double fitness;
     double nOffspring;
@@ -86,9 +86,9 @@ private:
     std::pair<double, double> attackRates;
 
     // Genetic attributes
+    bool isHeterogamous;
     std::vector<bool> genomeSequence;
     std::vector<Locus> genotypes;
-    bool isHeteroGamous;
     std::vector<double> phenotypes;
     std::vector<double> geneticValues;
     std::vector<double> envirValues;
@@ -99,11 +99,11 @@ private:
     void setBurninFitness(const std::pair<double, double>&, const double&);
     void setAttackRates(const double&);
     void setMatePreference(const double&);
-    void chooseMates(const double&, const std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&);
-    double assessMatingProb(const double&, const double&);
-    bool acceptMate(Individual const * const, const ParameterSet&);
-    size_t sampleClutchSize(const double&);
-    bool survive(const double&);
+    void chooseMates(const double&, std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&);
+    double assessMatingProb(const double&, const double&) const;
+    bool acceptMate(Individual const * const, const ParameterSet&) const;
+    size_t sampleClutchSize(const double&) const;
+    bool survive(const double&) const;
 
     // Genetics
     void mutate(const ParameterSet&);
