@@ -42,6 +42,32 @@ Instructions for compiling and running the program
                                          member functions
 ========================================================================================================*/
 
+// Accessory functions
+
+bool tradeOffCompare (const std::pair<double, double> &x, const std::pair<double, double> &y)
+{
+    bool yOnLeft = y.first < y.second;
+    if(x.first < x.second) {
+        if(yOnLeft) return (x.first < y.first);
+        else return true;
+    }
+    else {
+        if(yOnLeft) return false;
+        else return (x.second < y.second);
+    }
+}
+
+double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+{
+    return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
+}
+
+double calcDisassortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+{
+    return 1.0 - sqr(sqr(matingTrait)) * exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
+}
+
+
 // Constructors
 
 Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
@@ -110,8 +136,7 @@ void Individual::setMatePreference(const double &matePreferenceStrength)
     matePreference = matePreferenceStrength * phenotypes[1u];
 }
 
-
-void Individual::chooseMates(const double &matingSeasonEnd, std::discrete_distribution<size_t> &maleMarket, std::vector<PInd> &males, const ParameterSet &parameters)
+void Individual::chooseMates(const double &matingSeasonEnd, const std::discrete_distribution<size_t> &maleMarket, const std::vector<PInd> &males, const ParameterSet &parameters)
 {
     // Loop through offspring and through the mating season
     for (size_t t = 0u; nOffspring && t < matingSeasonEnd; ++t) {
@@ -204,11 +229,8 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
     for (size_t trait = 0u; trait < parameters.nCharacter; ++trait) {
         setGeneticValue(trait, geneticArchitecture);
         setEnvirValue(trait, parameters.scaleE[trait]);
-        setPhenotypes(trait);
+        setPhenotype(trait);
     }
-
-    // Compute viability
-    setViability(parameters.costIncompat, geneticArchitecture);
 
     // Compute attack rates
     setAttackRates(parameters.ecoSelCoeff);
@@ -390,32 +412,6 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
             determineSex(isMother, parameters.isFemaleHeteroGamety, haplotype);
         }
     }
-}
-
-
-// Accessory functions
-
-bool tradeOffCompare (const std::pair<double, double> &x, const std::pair<double, double> &y)
-{
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
-    }
-}
-
-double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
-{
-    return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
-}
-
-double calcDisassortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
-{
-    return 1.0 - sqr(sqr(matingTrait)) * exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
 }
 
 

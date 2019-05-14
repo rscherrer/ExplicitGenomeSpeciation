@@ -99,7 +99,7 @@ private:
     void setBurninFitness(const std::pair<double, double>&, const double&);
     void setAttackRates(const double&);
     void setMatePreference(const double&);
-    void chooseMates(const double&, std::discrete_distribution<size_t>&, std::vector<PInd>&, const ParameterSet&);
+    void chooseMates(const double&, const std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&);
     double assessMatingProb(const double&, const double&);
     bool acceptMate(Individual const * const, const ParameterSet&);
     size_t sampleClutchSize(const double&);
