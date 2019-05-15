@@ -170,8 +170,7 @@ int main(int argc, char * argv[])
         auto tStart = std::chrono::system_clock::now();
 
         std::clog << "Creating initial population.";
-        Population population;
-        population = new Population(parameters, geneticArchitecture);
+        auto population = new Population(parameters, geneticArchitecture);
         std::clog << "..done\n";
 
         // Enter simulation loop
@@ -184,35 +183,36 @@ int main(int argc, char * argv[])
             if (isBurnin) {
 
                 // Burnin period
-                if (population.getNResources() > 1u) {
-                    population.setBurnin();
+                if (population->getNResources() > 1u) {
+                    population->setBurnin();
                 }
-                population.resourceDynamics(0u, parameters.ecoSelCoeff);
-                population.reproduction(0u, parameters, geneticArchitecture);
+                population->resourceDynamics(0u, parameters.ecoSelCoeff);
+                population->reproduction(0u, parameters, geneticArchitecture);
 
             }
             else {
 
-                if (population.getNResources() < 2u) {
-                    population.endBurnin();
+                if (population->getNResources() < 2u) {
+                    population->endBurnin();
                 }
-                population.dispersal(parameters);
-                population.sortByHabitat();
+
+                population->dispersal(parameters);
+                population->sortByHabitat();
 
                 // First habitat
-                population.resourceDynamics(0u, parameters.ecoSelCoeff);
-                population.reproduction(0u, parameters, geneticArchitecture);
+                population->resourceDynamics(0u, parameters.ecoSelCoeff);
+                population->reproduction(0u, parameters, geneticArchitecture);
 
                 // Second habitat
-                population.resourceDynamics(1u, parameters.ecoSelCoeff);
-                population.reproduction(1u, parameters, geneticArchitecture);
+                population->resourceDynamics(1u, parameters.ecoSelCoeff);
+                population->reproduction(1u, parameters, geneticArchitecture);
 
             }
 
-            population.survival(parameters.survivalProb);
+            population->survival(parameters.survivalProb);
 
             // Check for extinction
-            bool isExtinct = population.getPopSize() < 2u;
+            bool isExtinct = population->getPopSize() < 2u;
             if (isExtinct) {
                 std::clog << "Population size underflow at t = " << t << '\n';
                 break;

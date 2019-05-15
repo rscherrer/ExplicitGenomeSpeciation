@@ -10,6 +10,7 @@
 #include <random>
 #include "Individual.h"
 #include "ParameterSet.h"
+#include "GeneticArchitecture.h"
 
 // Forward declaration
 class Individual;
