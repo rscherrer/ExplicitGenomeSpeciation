@@ -124,7 +124,6 @@ int main(int argc, char * argv[])
         datFile.writeHeader();
         std::clog << "..done\n";
 
-
         // *** Simulation ***
 
         // Record start of simulation

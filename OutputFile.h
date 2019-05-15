@@ -24,6 +24,7 @@ public:
 
     // For datFile
     void writeHeader();
+    void addColumn(std::string &name);
 
 };
 

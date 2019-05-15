@@ -1,6 +1,8 @@
 #include "OutputFile.h"
 #include "ParameterSet.h"
 #include <sstream>
+#include <string>
+#include <vector>
 
 void OutputFile::open(const size_t &seed, const std::string &extension)
 {
@@ -8,8 +10,6 @@ void OutputFile::open(const size_t &seed, const std::string &extension)
     oss << "simulation_" << seed;
     file.open(oss.str() + extension);
 }
-
-
 
 template <class T>
 void OutputFile::writeLine(std::string &name, T &value)
@@ -73,108 +73,108 @@ void OutputFile::writeParameters(const ParameterSet &parameters)
     writeLine("tiny", parameters.tiny);
 }
 
-void addColumn(std::ofstream &file, std::string &name)
+void OutputFile::addColumn(std::string &name)
 {
     file << '\t' << name;
 }
 
 void OutputFile::writeHeader()
 {
-    addColumn(file, "popSize");
-    addColumn(file, "nFemales");
-    addColumn(file, "nMales");
-    addColumn(file, "popSizeE0H0");
-    addColumn(file, "popSizeE1H0");
-    addColumn(file, "popSizeE0H1");
-    addColumn(file, "popSizeE1H1");
-    addColumn(file, "meanAttackRateE1H0");
-    addColumn(file, "meanAttackRateE2H0");
-    addColumn(file, "meanAttackRateE1H1");
-    addColumn(file, "meanAttackRateE2H1");
-    addColumn(file, "resource0H0");
-    addColumn(file, "resource1H0");
-    addColumn(file, "resource0H1");
-    addColumn(file, "resource1H1");
-    addColumn(file, "resource1H0");
+    addColumn("popSize");
+    addColumn("nFemales");
+    addColumn("nMales");
+    addColumn("popSizeE0H0");
+    addColumn("popSizeE1H0");
+    addColumn("popSizeE0H1");
+    addColumn("popSizeE1H1");
+    addColumn("meanAttackRateE1H0");
+    addColumn("meanAttackRateE2H0");
+    addColumn("meanAttackRateE1H1");
+    addColumn("meanAttackRateE2H1");
+    addColumn("resource0H0");
+    addColumn("resource1H0");
+    addColumn("resource0H1");
+    addColumn("resource1H1");
+    addColumn("resource1H0");
 
-    addColumn(file, "meanEcoTraitE0H0");
-    addColumn(file, "meanEcoTraitE1H0");
-    addColumn(file, "meanEcoTraitE0H1");
-    addColumn(file, "meanEcoTraitE1H1");
-    addColumn(file, "varPEcoTraitE0H0");
-    addColumn(file, "varPEcoTraitE1H0");
-    addColumn(file, "varPEcoTraitE0H1");
-    addColumn(file, "varPEcoTraitE1H1");
-    addColumn(file, "varGEcoTraitE0H0");
-    addColumn(file, "varGEcoTraitE1H0");
-    addColumn(file, "varGEcoTraitE0H1");
-    addColumn(file, "varGEcoTraitE1H1");
-    addColumn(file, "varDEcoTraitE0H0");
-    addColumn(file, "varDEcoTraitE1H0");
-    addColumn(file, "varDEcoTraitE0H1");
-    addColumn(file, "varDEcoTraitE1H1");
-    addColumn(file, "varIEcoTraitE0H0");
-    addColumn(file, "varIEcoTraitE1H0");
-    addColumn(file, "varIEcoTraitE0H1");
-    addColumn(file, "varIEcoTraitE1H1");
-    addColumn(file, "FstEcoTraitE1H1");
-    addColumn(file, "GstEcoTraitE1H1");
-    addColumn(file, "QstEcoTraitE1H1");
-    addColumn(file, "CstEcoTraitE1H1");
+    addColumn("meanEcoTraitE0H0");
+    addColumn("meanEcoTraitE1H0");
+    addColumn("meanEcoTraitE0H1");
+    addColumn("meanEcoTraitE1H1");
+    addColumn("varPEcoTraitE0H0");
+    addColumn("varPEcoTraitE1H0");
+    addColumn("varPEcoTraitE0H1");
+    addColumn("varPEcoTraitE1H1");
+    addColumn("varGEcoTraitE0H0");
+    addColumn("varGEcoTraitE1H0");
+    addColumn("varGEcoTraitE0H1");
+    addColumn("varGEcoTraitE1H1");
+    addColumn("varDEcoTraitE0H0");
+    addColumn("varDEcoTraitE1H0");
+    addColumn("varDEcoTraitE0H1");
+    addColumn("varDEcoTraitE1H1");
+    addColumn("varIEcoTraitE0H0");
+    addColumn("varIEcoTraitE1H0");
+    addColumn("varIEcoTraitE0H1");
+    addColumn("varIEcoTraitE1H1");
+    addColumn("FstEcoTraitE1H1");
+    addColumn("GstEcoTraitE1H1");
+    addColumn("QstEcoTraitE1H1");
+    addColumn("CstEcoTraitE1H1");
 
-    addColumn(file, "meanMatTraitE0H0");
-    addColumn(file, "meanMatTraitE1H0");
-    addColumn(file, "meanMatTraitE0H1");
-    addColumn(file, "meanMatTraitE1H1");
-    addColumn(file, "varPMatTraitE0H0");
-    addColumn(file, "varPMatTraitE1H0");
-    addColumn(file, "varPMatTraitE0H1");
-    addColumn(file, "varPMatTraitE1H1");
-    addColumn(file, "varGMatTraitE0H0");
-    addColumn(file, "varGMatTraitE1H0");
-    addColumn(file, "varGMatTraitE0H1");
-    addColumn(file, "varGMatTraitE1H1");
-    addColumn(file, "varDMatTraitE0H0");
-    addColumn(file, "varDMatTraitE1H0");
-    addColumn(file, "varDMatTraitE0H1");
-    addColumn(file, "varDMatTraitE1H1");
-    addColumn(file, "varIMatTraitE0H0");
-    addColumn(file, "varIMatTraitE1H0");
-    addColumn(file, "varIMatTraitE0H1");
-    addColumn(file, "varIMatTraitE1H1");
-    addColumn(file, "FstMatTraitE1H1");
-    addColumn(file, "GstMatTraitE1H1");
-    addColumn(file, "QstMatTraitE1H1");
-    addColumn(file, "CstMatTraitE1H1");
+    addColumn("meanMatTraitE0H0");
+    addColumn("meanMatTraitE1H0");
+    addColumn("meanMatTraitE0H1");
+    addColumn("meanMatTraitE1H1");
+    addColumn("varPMatTraitE0H0");
+    addColumn("varPMatTraitE1H0");
+    addColumn("varPMatTraitE0H1");
+    addColumn("varPMatTraitE1H1");
+    addColumn("varGMatTraitE0H0");
+    addColumn("varGMatTraitE1H0");
+    addColumn("varGMatTraitE0H1");
+    addColumn("varGMatTraitE1H1");
+    addColumn("varDMatTraitE0H0");
+    addColumn("varDMatTraitE1H0");
+    addColumn("varDMatTraitE0H1");
+    addColumn("varDMatTraitE1H1");
+    addColumn("varIMatTraitE0H0");
+    addColumn("varIMatTraitE1H0");
+    addColumn("varIMatTraitE0H1");
+    addColumn("varIMatTraitE1H1");
+    addColumn("FstMatTraitE1H1");
+    addColumn("GstMatTraitE1H1");
+    addColumn("QstMatTraitE1H1");
+    addColumn("CstMatTraitE1H1");
 
-    addColumn(file, "meanNtrTraitE0H0");
-    addColumn(file, "meanNtrTraitE1H0");
-    addColumn(file, "meanNtrTraitE0H1");
-    addColumn(file, "meanNtrTraitE1H1");
-    addColumn(file, "varPNtrTraitE0H0");
-    addColumn(file, "varPNtrTraitE1H0");
-    addColumn(file, "varPNtrTraitE0H1");
-    addColumn(file, "varPNtrTraitE1H1");
-    addColumn(file, "varGNtrTraitE0H0");
-    addColumn(file, "varGNtrTraitE1H0");
-    addColumn(file, "varGNtrTraitE0H1");
-    addColumn(file, "varGNtrTraitE1H1");
-    addColumn(file, "varDNtrTraitE0H0");
-    addColumn(file, "varDNtrTraitE1H0");
-    addColumn(file, "varDNtrTraitE0H1");
-    addColumn(file, "varDNtrTraitE1H1");
-    addColumn(file, "varINtrTraitE0H0");
-    addColumn(file, "varINtrTraitE1H0");
-    addColumn(file, "varINtrTraitE0H1");
-    addColumn(file, "varINtrTraitE1H1");
-    addColumn(file, "FstNtrTraitE1H1");
-    addColumn(file, "GstNtrTraitE1H1");
-    addColumn(file, "QstNtrTraitE1H1");
-    addColumn(file, "CstNtrTraitE1H1");
+    addColumn("meanNtrTraitE0H0");
+    addColumn("meanNtrTraitE1H0");
+    addColumn("meanNtrTraitE0H1");
+    addColumn("meanNtrTraitE1H1");
+    addColumn("varPNtrTraitE0H0");
+    addColumn("varPNtrTraitE1H0");
+    addColumn("varPNtrTraitE0H1");
+    addColumn("varPNtrTraitE1H1");
+    addColumn("varGNtrTraitE0H0");
+    addColumn("varGNtrTraitE1H0");
+    addColumn("varGNtrTraitE0H1");
+    addColumn("varGNtrTraitE1H1");
+    addColumn("varDNtrTraitE0H0");
+    addColumn("varDNtrTraitE1H0");
+    addColumn("varDNtrTraitE0H1");
+    addColumn("varDNtrTraitE1H1");
+    addColumn("varINtrTraitE0H0");
+    addColumn("varINtrTraitE1H0");
+    addColumn("varINtrTraitE0H1");
+    addColumn("varINtrTraitE1H1");
+    addColumn("FstNtrTraitE1H1");
+    addColumn("GstNtrTraitE1H1");
+    addColumn("QstNtrTraitE1H1");
+    addColumn("CstNtrTraitE1H1");
 
-    addColumn(file, "spatialIsolation");
-    addColumn(file, "ecologicalIsolation");
-    addColumn(file, "matingIsolation");
+    addColumn("spatialIsolation");
+    addColumn("ecologicalIsolation");
+    addColumn("matingIsolation");
 
     file << '\n';
 }
