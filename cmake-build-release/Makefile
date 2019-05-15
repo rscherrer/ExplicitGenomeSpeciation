@@ -329,6 +329,33 @@ Individual.cpp.s:
 	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s
 .PHONY : Individual.cpp.s
 
+OutputFile.o: OutputFile.cpp.o
+
+.PHONY : OutputFile.o
+
+# target to build an object file
+OutputFile.cpp.o:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o
+.PHONY : OutputFile.cpp.o
+
+OutputFile.i: OutputFile.cpp.i
+
+.PHONY : OutputFile.i
+
+# target to preprocess a source file
+OutputFile.cpp.i:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.i
+.PHONY : OutputFile.cpp.i
+
+OutputFile.s: OutputFile.cpp.s
+
+.PHONY : OutputFile.s
+
+# target to generate assembly for a file
+OutputFile.cpp.s:
+	$(MAKE) -f CMakeFiles/ExplicitGenomeSpeciation.dir/build.make CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.s
+.PHONY : OutputFile.cpp.s
+
 OutputFiles.o: OutputFiles.cpp.o
 
 .PHONY : OutputFiles.o
@@ -574,6 +601,9 @@ help:
 	@echo "... Individual.o"
 	@echo "... Individual.i"
 	@echo "... Individual.s"
+	@echo "... OutputFile.o"
+	@echo "... OutputFile.i"
+	@echo "... OutputFile.s"
 	@echo "... OutputFiles.o"
 	@echo "... OutputFiles.i"
 	@echo "... OutputFiles.s"

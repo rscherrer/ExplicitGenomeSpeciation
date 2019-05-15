@@ -40,7 +40,7 @@ Instructions for compiling and running the program
 #include "GeneticArchitecture.h"
 #include "Buffer.h"
 #include "Population.h"
-#include "OutputFiles.h"
+#include "OutputFile.h"
 
 /*=======================================================================================================
                                             main()
@@ -58,7 +58,9 @@ int main(int argc, char * argv[])
 
     #else
 
-    OutputFiles outputFiles;
+    OutputFile logFile;
+    OutputFile datFile;
+    OutputFile arcFile;
 
     try {
 
@@ -93,7 +95,12 @@ int main(int argc, char * argv[])
 
         // Output files
         std::clog << "Opening output files.";
-        outputFiles.openAll(parameters.seed);
+        logFile.open(parameters.seed, ".log");
+        datFile.open(parameters.seed, ".dat");
+        arcFile.open(parameters.seed, "_fossil_record.txt");
+        if (!(logFile.file.is_open() && datFile.file.is_open() && arcFile.file.is_open())) {
+            throw std::runtime_error("Unable to open output files in main()");
+        }
         std::clog << "..done\n";
 
         // Buffers
@@ -104,55 +111,17 @@ int main(int argc, char * argv[])
         // Store parameter values
         std::clog << "Storing parameter values..";
         if (argc == 1) {
-            outputFiles.logFile << "Default parameters values\n";
+            logFile.file << "Default parameters values\n";
         }
         else {
-            outputFiles.logFile << "Parameters imported from file " << argv[1] << '\n';
+            logFile.file << "Parameters imported from file " << argv[1] << '\n';
         }
-        outputFiles.writeParameters(parameters);
+        logFile.writeParameters(parameters);
         std::clog << "..done\n";
 
         // Write data file header
         std::clog << "Writing data file header.";
-        datFile << '\t' << "pop.size"
-                << '\t' << "females"
-                << '\t' << "males";
-
-        for (size_t hab = 0u; hab < parameters.nHabitat; ++hab) {
-            datFile << '\t' << "pop.size." << hab;
-        }
-
-        for (size_t hab = 0u; hab < parameters.nHabitat; ++hab) {
-            datFile << '\t' << "attack.rate." << hab << ".1" << '\t' << "attack.rate." << hab << ".2";
-        }
-
-        for (size_t hab = 0u; hab < parameters.nHabitat; ++hab) {
-            datFile << '\t' << "resource." << hab << ".1" << '\t' << "resource." << hab << ".2";
-        }
-
-        for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
-            datFile << '\t' << "pop.1.size" << crctr
-                    << '\t' << "pop.2.size" << crctr
-                    << '\t' << "mean.all." << crctr
-                    << '\t' << "mean.1." << crctr
-                    << '\t' << "mean.2." << crctr
-                    << '\t' << "varP." << crctr
-                    << '\t' << "varG." << crctr
-                    << '\t' << "varA." << crctr
-                    << '\t' << "varD." << crctr
-                    << '\t' << "varI." << crctr
-                    << '\t' << "Fst."  << crctr
-                    << '\t' << "Pst."  << crctr
-                    << '\t' << "Gst."  << crctr
-                    << '\t' << "Qst."  << crctr
-                    << '\t' << "Cst."  << crctr;
-        }
-
-        datFile << '\t' << "speciation.cube.spatial.isolation"
-                << '\t' << "speciation.cube.ecological.isolation"
-                << '\t' << "speciation.cube.mating.isolation"
-                << '\t' << "post.zygotic.isolation"<< '\n';
-
+        datFile.writeHeader();
         std::clog << "..done\n";
 
 
