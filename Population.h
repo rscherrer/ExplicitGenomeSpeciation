@@ -21,12 +21,18 @@ public:
 
     Population(const ParameterSet&, const GeneticArchitecture&);
 
+    // Getters
+    size_t getPopSize() const;
+    size_t getNResources() const;
+
     // High-level member functions
     void dispersal(const ParameterSet&);
     void sortByHabitat();
     void resourceDynamics(const size_t&, const double&);
     void reproduction(const size_t&, const ParameterSet&, const GeneticArchitecture&);
     void survival(const double&);
+    void setBurnin();
+    void endBurnin();
 
 private:
 

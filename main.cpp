@@ -40,7 +40,6 @@ Instructions for compiling and running the program
 #include "GeneticArchitecture.h"
 #include "Buffer.h"
 #include "Population.h"
-#include "ioroutines.h"
 
 
 /*=======================================================================================================
@@ -171,7 +170,8 @@ int main(int argc, char * argv[])
         auto tStart = std::chrono::system_clock::now();
 
         std::clog << "Creating initial population.";
-        Population population = Population(parameters);
+        Population population;
+        population = new Population(parameters, geneticArchitecture);
         std::clog << "..done\n";
 
         // Enter simulation loop
@@ -179,32 +179,42 @@ int main(int argc, char * argv[])
 
         // Loop through time
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
-            if (t > 0) {
 
+            bool isBurnin = t < 0;
+            if (isBurnin) {
+
+                // Burnin period
+                if (population.getNResources() > 1u) {
+                    population.setBurnin();
+                }
+                population.resourceDynamics(0u, parameters.ecoSelCoeff);
+                population.reproduction(0u, parameters, geneticArchitecture);
+
+            }
+            else {
+
+                if (population.getNResources() < 2u) {
+                    population.endBurnin();
+                }
                 population.dispersal(parameters);
                 population.sortByHabitat();
 
                 // First habitat
                 population.resourceDynamics(0u, parameters.ecoSelCoeff);
-                population.reproduction(0u);
+                population.reproduction(0u, parameters, geneticArchitecture);
 
                 // Second habitat
                 population.resourceDynamics(1u, parameters.ecoSelCoeff);
-                population.reproduction(1u);
-
-                population.survival(parameters.survivalProb);
+                population.reproduction(1u, parameters, geneticArchitecture);
 
             }
-            else {
 
-                // Burnin period
-                population.resourceDynamics(0u, parameters.ecoSelCoeff);
-                population.reproduction(0u);
-            }
+            population.survival(parameters.survivalProb);
 
             // Check for extinction
-            if (population.individuals.size() < 2u) {
-                std::clog << "population size underflow at t = " << t << '\n';
+            bool isExtinct = population.getPopSize() < 2u;
+            if (isExtinct) {
+                std::clog << "Population size underflow at t = " << t << '\n';
                 break;
             }
 
@@ -213,7 +223,7 @@ int main(int argc, char * argv[])
             if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 
-        // *** Finalisation ***
+        // *** Finalization ***
 
         // Record end and duration of simulation
         auto tEnd = std::chrono::system_clock::now();

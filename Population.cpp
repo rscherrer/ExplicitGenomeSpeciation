@@ -31,6 +31,18 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
 }
 
 
+// Getters
+
+size_t Population::getPopSize() const
+{
+    size_t popSize = individuals.size();
+    return popSize;
+}
+
+size_t Population::getNResources() const {
+    return nAccessibleResources;
+}
+
 // High-level functions
 
 void Population::dispersal(const ParameterSet& parameters)
@@ -116,7 +128,7 @@ void Population::reproduction(const size_t &habitat, const ParameterSet &paramet
 {
 
     // Gender classification
-    classifyGenders(parameters.isFemaleHeteroGamety);
+    classifyGenders(parameters.isFemaleHeterogamy);
 
     // Gender counts
     const size_t nFemales = genderCounts[habitat].first = females.size();
@@ -168,6 +180,15 @@ void Population::survival(const double &survivalProb)
     }
 }
 
+void Population::setBurnin()
+{
+    nAccessibleResources = 1u;
+}
+
+void Population::endBurnin()
+{
+    nAccessibleResources = 2u;
+}
 
 // Accessory functions
 
@@ -252,11 +273,11 @@ void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoef
     }
 }
 
-void Population::classifyGenders(const bool &isFemaleHeteroGamety)
+void Population::classifyGenders(const bool &isFemaleHeterogamy)
 {
     for (PInd pInd : individuals)
     {
-        if (pInd->isFemale(isFemaleHeteroGamety))
+        if (pInd->isFemale(isFemaleHeterogamy))
         {
             females.push_back(pInd);
         }

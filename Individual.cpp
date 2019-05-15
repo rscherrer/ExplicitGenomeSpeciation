@@ -100,9 +100,9 @@ Individual::Individual(Individual const * const mother, Individual const * const
 
 // Getter
 
-bool Individual::isFemale(const bool &isFemaleHeterogamety) const
+bool Individual::isFemale(const bool &isFemaleHeterogamy) const
 {
-    return isHeterogamous == isFemaleHeterogamety;
+    return isHeterogamous == isFemaleHeterogamy;
 }
 
 
@@ -380,13 +380,13 @@ void Individual::inheritLocus(Individual const * const parent, const bool &isMot
     genomeSequence[genomePosition] = parent->genomeSequence[(locus << 1u) + haplotype];
 }
 
-void Individual::determineSex(const bool &isMother, const bool &isFemaleHeterogamety, const size_t &haplotype)
+void Individual::determineSex(const bool &isMother, const bool &isFemaleHeterogamy, const size_t &haplotype)
 {
     if (isMother) {
-        isHeterogamous = haplotype == 0u && isFemaleHeterogamety;
+        isHeterogamous = haplotype == 0u && isFemaleHeterogamy;
     }
     else {
-        isHeterogamous = haplotype == 1u && !isFemaleHeterogamety;
+        isHeterogamous = haplotype == 1u && !isFemaleHeterogamy;
     }
 }
 
@@ -415,13 +415,13 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
         }
 
         // Inherit parental haplotype
-        bool isMother = parent->isFemale(parameters.isFemaleHeterogamety);
+        bool isMother = parent->isFemale(parameters.isFemaleHeterogamy);
         inheritLocus(parent, isMother, locus, haplotype);
 
         // Sex determination locus
         const bool isSexDeterminationLocus = locus == 0u;
         if (isSexDeterminationLocus) {
-            determineSex(isMother, parameters.isFemaleHeterogamety, haplotype);
+            determineSex(isMother, parameters.isFemaleHeterogamy, haplotype);
         }
     }
 }
