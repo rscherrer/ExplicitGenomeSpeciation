@@ -12,6 +12,8 @@ public:
     void setDefaultSeed();
     void readSeed(std::ifstream&, std::string&);
     void readIsArchitecture(std::ifstream&, std::string&);
+    void setScale(std::vector<double>&, std::ifstream&);
+    void readInput(const std::string&, std::ifstream&);
     void readParameters(const std::string&);
     void newArchitectureFileName();
     void setArchitectureFileName(const std::string&);
@@ -28,7 +30,6 @@ public:
     double  ecoSelCoeff             = 1.0;
     double  matePreferenceStrength  = 10.0;
     double  mateEvaluationCost      = 0.01;
-    size_t  nHabitats               = 2u;
     double  maxResourceCapacity     = 5000.0;
     double  maxResourceGrowth       = 1.0;
 
@@ -40,7 +41,6 @@ public:
     size_t nMatInteractions = 500u;
     size_t nNtrInteractions = 0u;
     size_t nChromosomes     = 3u;
-    size_t nTraits          = 3u;
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     size_t nBits = 2u * nLoci;
     std::string strInitialSequence;
@@ -71,6 +71,10 @@ public:
     int  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed;
+
+    // Unsettables
+    size_t  nHabitats               = 2u;
+    size_t  nTraits                 = 3u;
 
 private:
 

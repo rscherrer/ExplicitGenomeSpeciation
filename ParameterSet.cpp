@@ -14,17 +14,10 @@
 
 
 template <class T>
-bool read(const std::string &str, const std::string &name, T &par, std::ifstream &ifs)
+void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)
 {
-    if(str == name) {
-        ifs >> par;
-        std::clog << "parameter " << str << " set to " << par << '\n';
-        return true;
-    }
-    else return false;
+    inputFile >> parameter;
 }
-
-
 
 // Setters
 
@@ -62,6 +55,141 @@ void ParameterSet::readIsArchitecture(std::ifstream &inputFile, std::string &inp
     }
 }
 
+std::vector<bool> string2bits(const std::string &stringSequence)
+{
+    std::vector<bool> bitSequence;
+    for (auto a : stringSequence) {
+        bitSequence.push_back(a == '1');
+    }
+    return bitSequence;
+}
+
+void ParameterSet::setScale(std::vector<double> &scaleVector, std::ifstream &inputFile)
+{
+    for (size_t trait = 0u; trait < nTraits; ++trait) {
+        inputFile >> scaleVector[trait];
+    }
+}
+
+void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
+{
+    if (input == "initialPopSize") {
+        inputFile >> initialPopSize;
+    }
+    else if (input == "dispersalRate") {
+        inputFile >> dispersalRate;
+    }
+    else if (input == "birthRate") {
+        inputFile >> birthRate;
+    }
+    else if (input == "habitatAsymmetry") {
+        inputFile >> habitatAsymmetry;
+    }
+    else if (input == "survivalProb") {
+        inputFile >> survivalProb;
+    }
+    else if (input == "ecoSelCoeff") {
+        inputFile >> ecoSelCoeff;
+    }
+    else if (input == "matePreferenceStrength") {
+        inputFile >> matePreferenceStrength;
+    }
+    else if (input == "mateEvaluationCost") {
+        inputFile >> mateEvaluationCost;
+    }
+    else if (input == "maxResourceCapacity") {
+        inputFile >> maxResourceCapacity;
+    }
+    else if (input == "maxResourceGrowth") {
+        inputFile >> maxResourceGrowth;
+    }
+    else if (input == "nEcoLoci") {
+        inputFile >> nEcoLoci;
+    }
+    else if (input == "nMatLoci") {
+        inputFile >> nMatLoci;
+    }
+    else if (input == "nNtrLoci") {
+        inputFile >> nNtrLoci;
+    }
+    else if (input == "nEcoInteractions") {
+        inputFile >> nEcoInteractions;
+    }
+    else if (input == "nMatInteractions") {
+        inputFile >> nMatInteractions;
+    }
+    else if (input == "nNtrInteractions") {
+        inputFile >> nNtrInteractions;
+    }
+    else if (input == "nChromosomes") {
+        inputFile >> nChromosomes;
+    }
+    else if (input == "initialSequence") {
+        inputFile >> strInitialSequence;
+        initialSequence = string2bits(strInitialSequence);
+    }
+    else if (input == "freqSNP") {
+        inputFile >> freqSNP;
+    }
+    else if (input == "mutationRate") {
+        inputFile >> mutationRate;
+    }
+    else if (input == "genomeLength") {
+        inputFile >> genomeLength;
+    }
+    else if (input == "isFemaleHeterogamy") {
+        inputFile >> isFemaleHeterogamy;
+    }
+    else if (input == "recombinationRate") {
+        inputFile >> recombinationRate;
+    }
+    else if (input == "networkSkewness") {
+        inputFile >> networkSkewness;
+    }
+    else if (input == "scaleA") {
+        setScale(scaleA, inputFile);
+    }
+    else if (input == "scaleD") {
+        setScale(scaleD, inputFile);
+    }
+    else if (input == "scaleI") {
+        setScale(scaleI, inputFile);
+    }
+    else if (input == "scaleE") {
+        setScale(scaleE, inputFile);
+    }
+    else if (input == "shapeEffectSizes") {
+        inputFile >> shapeEffectSizes;
+    }
+    else if (input == "scaleEffectSizes") {
+        inputFile >> scaleEffectSizes;
+    }
+    else if (input == "shapeInteractionWeights") {
+        inputFile >> shapeInteractionWeights;
+    }
+    else if (input == "scaleInteractionWeights") {
+        inputFile >> scaleInteractionWeights;
+    }
+    else if (input == "tBurnIn") {
+        inputFile >> tBurnIn;
+    }
+    else if (input == "tEndSim") {
+        inputFile >> tEndSim;
+    }
+    else if (input == "tGetDat") {
+        inputFile >> tGetDat;
+    }
+    else if (input == "tSavDat") {
+        inputFile >> tSavDat;
+    }
+    else if (input == "tiny") {
+        inputFile >> tiny;
+    }
+    else {
+        throw std::runtime_error("Unknown parameter " + input);
+    }
+}
+
 void ParameterSet::readParameters(const std::string& filename)
 {
     std::clog << "Reading parameters from file " << filename << '\n';
@@ -79,64 +207,9 @@ void ParameterSet::readParameters(const std::string& filename)
     readIsArchitecture(inputFile, input);
 
     while (inputFile >> input) {
-        if (read(input, "initial_sequence", strInitialSequence, inputFile)) {
-            for (auto a : strInitialSequence) {
-                initialSequence.push_back(a == '1');
-            }
-        }
-        else if (input == "scale_A") {
-            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
-                inputFile >> scaleA[crctr];
-                std::clog   << "parameter " << "scale_A[" << crctr
-                << "] set to " << scaleA[crctr] << '\n';
-            }
-        }
-        else if (input == "scale_D") {
-            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
-                inputFile >> scaleD[crctr];
-                std::clog   << "parameter " << "scale_D[" << crctr
-                << "] set to " << scaleD[crctr] << '\n';
-            }
-        }
-        else if (input == "scale_I") {
-            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
-                inputFile >> scaleI[crctr];
-                std::clog   << "parameter " << "scale_I[" << crctr
-                << "] set to " << scaleI[crctr] << '\n';
-            }
-        }
-        else if (input == "scale_E") {
-            for(size_t crctr = 0u; crctr < nTraits; ++crctr) {
-                inputFile >> scaleE[crctr];
-                std::clog   << "parameter " << "scale_E[" << crctr
-                << "] set to " << scaleE[crctr] << '\n';
-            }
-        }
-        else if (read(input, "mutation_rate", mutationRate, inputFile));
-        else if (read(input, "genome_size_cm", genomeLength, inputFile));
-        else if (read(input, "female_heterogamety", isFemaleHeterogamy, inputFile));
-        else if (read(input, "dispersal_rate", dispersalRate, inputFile));
-        else if (read(input, "beta", birthRate, inputFile));
-        else if (read(input, "prob_survival", survivalProb, inputFile));
-        else if (read(input, "habitat_asymmetry", habitatAsymmetry, inputFile));
-        else if (read(input, "sel_coeff_ecol", ecoSelCoeff, inputFile));
-        else if (read(input, "preference_strength", matePreferenceStrength, inputFile));
-        else if (read(input, "preference_cost", mateEvaluationCost, inputFile));
-        else if (read(input, "network_skewness", networkSkewness, inputFile));
-        else if (input == "t_end") {
-            inputFile >> tBurnIn >> tEndSim;
-            std::clog   << "Burn-in period  " << tBurnIn << " generations \n";
-            std::clog   << "Simulation time " << tEndSim << " generations \n";
-        }
-        else if (input == "t_dat") {
-            inputFile >> tGetDat >> tSavDat;
-            std::clog   << "Data collected every " << tGetDat << " generations \n";
-            std::clog   << "Data stored every " << tSavDat << " generations \n";
-        }
-        else {
-            throw std::runtime_error("Unknown parameter " + input);
-        }
+        readInput(input, inputFile);
     }
+
     std::clog << "Parameters were read in successfully\n";
 }
 
