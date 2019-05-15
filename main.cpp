@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
 
         // Set default parameters
         if (argc == 1) {
-            parameters.seed = rnd::set_seed();
+            parameters.setDefaultSeed();
             parameters.isGenerateArchitecture = true;
         }
 

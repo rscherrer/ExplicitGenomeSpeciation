@@ -8,6 +8,13 @@ class ParameterSet {
 
 public:
 
+    // Setter
+    void setDefaultSeed();
+    void readParameters(const std::string&);
+
+    // IO
+    void writeParameters(std::ofstream&, const char = ' ');
+
 private:
 
     // Ecological parameters
@@ -62,12 +69,6 @@ private:
     int  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed;
-
-    // Setter
-    void readParameters(const std::string&);
-
-    // IO
-    void writeParameters(std::ofstream&, const char = ' ');
 
 };
 

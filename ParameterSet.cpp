@@ -18,6 +18,10 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
     else return false;
 }
 
+void ParameterSet::setDefaultSeed() {
+    seed = rnd::set_seed();
+}
+
 void ParameterSet::readParameters(const std::string& filename)
 {
     std::clog << "reading parameters from file " << filename << '\n';
