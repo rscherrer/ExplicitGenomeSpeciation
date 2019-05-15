@@ -7,6 +7,18 @@
 #include <fstream>
 #include "random.h"
 
+ParameterSet::ParameterSet()
+{
+
+}
+
+ParameterSet::ParameterSet(const std::string &parameterFileName)
+{
+
+}
+
+
+
 template <class T>
 bool read(const std::string &str, const std::string &name, T &par, std::ifstream &ifs)
 {
@@ -18,8 +30,33 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
     else return false;
 }
 
-void ParameterSet::setDefaultSeed() {
+// Getters
+
+bool ParameterSet::getIsGenerateArchitecture() const
+{
+    return isGenerateArchitecture;
+}
+
+size_t ParameterSet::getSeed() const
+{
+    return seed;
+}
+
+std::string ParameterSet::getArchitectureFilename() const
+{
+    return architectureFilename;
+}
+
+// Setters
+
+void ParameterSet::setDefaultSeed()
+{
     seed = rnd::set_seed();
+}
+
+void ParameterSet::setIsGenerateArchitecture(const bool &yesOrNo)
+{
+    isGenerateArchitecture = yesOrNo;
 }
 
 void ParameterSet::readParameters(const std::string& filename)
@@ -109,6 +146,11 @@ void ParameterSet::readParameters(const std::string& filename)
         else throw std::runtime_error("unknown parameter " + str);
     }
     std::clog << "parameters were read in successfully\n";
+}
+
+void ParameterSet::setArchitectureFilename(const std::string &filename)
+{
+    architectureFilename = filename;
 }
 
 void ParameterSet::writeParameters(std::ofstream &ofs, const char sep = ' ')

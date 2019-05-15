@@ -8,9 +8,18 @@ class ParameterSet {
 
 public:
 
-    // Setter
+    ParameterSet();
+    ParameterSet(const std::string&);
+
+    // Getters
+    bool getIsGenerateArchitecture() const;
+    size_t getSeed() const;
+
+    // Setters
     void setDefaultSeed();
+    void setIsGenerateArchitecture(const bool&);
     void readParameters(const std::string&);
+    void setArchitectureFilename(const std::string&);
 
     // IO
     void writeParameters(std::ofstream&, const char = ' ');

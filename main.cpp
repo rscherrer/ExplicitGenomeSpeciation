@@ -66,27 +66,37 @@ int main(int argc, char * argv[])
 
         // *** Preliminaries ***
 
-        ParameterSet parameters;
+        // Default parameters
+        if (argc == 1) {
+            auto parameters = new ParameterSet();
+        }
+
+        // Provided parameters
+        else if (argc == 2) {
+            std::string parameterFileName = argv[1];
+            auto parameters = new ParameterSet(parameterFileName);
+        }
 
         // Set default parameters
         if (argc == 1) {
             parameters.setDefaultSeed();
-            parameters.isGenerateArchitecture = true;
+            parameters.setIsGenerateArchitecture(true);
         }
 
         // Or read parameters from a file
         else if (argc == 2) {
-            parameters.readParameters(argv[1]);
+            std::string parameterFilename = argv[1];
+            parameters.readParameters(parameterFilename);
         }
         else {
-            throw std::runtime_error("invalid number of program arguments in main()");
+            throw std::runtime_error("Invalid number of program arguments in main()");
         }
 
         // Set the name of the architecture file if needed
-        if (parameters.isGenerateArchitecture) {
+        if (parameters.getIsGenerateArchitecture()) {
             std::ostringstream oss;
-            oss << "architecture_" << parameters.seed << ".txt";
-            parameters.architectureFilename = oss.str();
+            oss << "architecture_" << parameters.getSeed() << ".txt";
+            parameters.setArchitectureFilename(oss.str());
         }
 
         // Initalize genetic architecture
@@ -95,7 +105,7 @@ int main(int argc, char * argv[])
         // Open output files
         std::clog << "Opening files and data buffers.";
         std::ostringstream oss;
-        oss << "simulation_" << parameters.seed;
+        oss << "simulation_" << parameters.getSeed();
         logFile.open(oss.str() + ".log");
         datFile.open(oss.str() + ".dat");
         arcFile.open(oss.str() + "_fossil_record.txt");
