@@ -66,38 +66,26 @@ int main(int argc, char * argv[])
 
         // *** Preliminaries ***
 
-        // Default parameters
-        if (argc == 1) {
-            auto parameters = new ParameterSet();
-        }
-
-        // Provided parameters
-        else if (argc == 2) {
-            std::string parameterFileName = argv[1];
-            auto parameters = new ParameterSet(parameterFileName);
-        }
-
         // Set default parameters
-        if (argc == 1) {
-            parameters.setDefaultSeed();
-            parameters.setIsGenerateArchitecture(true);
+        ParameterSet parameters;
+        parameters.setDefaultSeed();
+
+        // Update parameters if a parameter file is provided
+        if (argc == 2) {
+            std::string parameterFileName = argv[1];
+            parameters.readParameters(parameterFileName);
         }
 
-        // Or read parameters from a file
-        else if (argc == 2) {
-            std::string parameterFilename = argv[1];
-            parameters.readParameters(parameterFilename);
-        }
-        else {
+        // Exception handling
+        if (argc < 1 || argc > 2) {
             throw std::runtime_error("Invalid number of program arguments in main()");
         }
 
-        // Set the name of the architecture file if needed
-        if (parameters.getIsGenerateArchitecture()) {
-            std::ostringstream oss;
-            oss << "architecture_" << parameters.getSeed() << ".txt";
-            parameters.setArchitectureFilename(oss.str());
+        // Make an architecture file if architecture is to be generated
+        if (parameters.isGenerateArchitecture) {
+            parameters.newArchitectureFileName();
         }
+        assert(parameters.architectureFileName.size() > 1u);
 
         // Initalize genetic architecture
         GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters);

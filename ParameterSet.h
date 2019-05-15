@@ -8,23 +8,14 @@ class ParameterSet {
 
 public:
 
-    ParameterSet();
-    ParameterSet(const std::string&);
-
-    // Getters
-    bool getIsGenerateArchitecture() const;
-    size_t getSeed() const;
-
     // Setters
     void setDefaultSeed();
-    void setIsGenerateArchitecture(const bool&);
     void readParameters(const std::string&);
-    void setArchitectureFilename(const std::string&);
+    void newArchitectureFileName();
+    void setArchitectureFileName(const std::string&);
 
     // IO
     void writeParameters(std::ofstream&, const char = ' ');
-
-private:
 
     // Ecological parameters
     size_t  initialPopSize          = 100u;
@@ -59,8 +50,8 @@ private:
     double  recombinationRate       = 0.01;
 
     // Genotype-phenotype map
-    bool isGenerateArchitecture;
-    std::string architectureFilename;
+    bool isGenerateArchitecture = true;
+    std::string architectureFileName;
     double  networkSkewness = 1.0;
     std::vector<double> scaleA {1.0, 1.0, 1.0};
     std::vector<double> scaleD {0.0, 0.0, 0.0};
@@ -78,6 +69,8 @@ private:
     int  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed;
+
+private:
 
 };
 

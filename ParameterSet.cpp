@@ -5,17 +5,10 @@
 #include "ParameterSet.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "random.h"
 
-ParameterSet::ParameterSet()
-{
 
-}
-
-ParameterSet::ParameterSet(const std::string &parameterFileName)
-{
-
-}
 
 
 
@@ -30,22 +23,7 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
     else return false;
 }
 
-// Getters
 
-bool ParameterSet::getIsGenerateArchitecture() const
-{
-    return isGenerateArchitecture;
-}
-
-size_t ParameterSet::getSeed() const
-{
-    return seed;
-}
-
-std::string ParameterSet::getArchitectureFilename() const
-{
-    return architectureFilename;
-}
 
 // Setters
 
@@ -54,103 +32,115 @@ void ParameterSet::setDefaultSeed()
     seed = rnd::set_seed();
 }
 
-void ParameterSet::setIsGenerateArchitecture(const bool &yesOrNo)
-{
-    isGenerateArchitecture = yesOrNo;
-}
-
 void ParameterSet::readParameters(const std::string& filename)
 {
-    std::clog << "reading parameters from file " << filename << '\n';
+    std::clog << "Reading parameters from file " << filename << '\n';
 
-    //open parameter file
-    std::ifstream ifs(filename);
-    if(!ifs.is_open())
-        throw std::runtime_error("unable to open parameter file in readParameters()");
+    // Open parameter file
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        throw std::runtime_error("Unable to open parameter file in readParameters()");
+    }
 
-    std::string str;
+    std::string input;
 
-    ifs >> str;
-    if(str == "rng_seed_clock") seed = rnd::set_seed();
-    else if(str == "rng_seed_user") {
-        ifs >> seed;
+    inputFile >> input;
+    if (input == "rng_seed_clock") {
+        seed = rnd::set_seed();
+    }
+    else if (input == "rng_seed_user") {
+        inputFile >> seed;
         rnd::set_seed(seed);
     }
-    else throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
-
-    ifs >> str;
-    if(str == "architecture_generate") generateArchitecture = true;
-    else if(str == "architecture_load") {
-        generateArchitecture = false;
-        ifs >> architecture;
+    else {
+        throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
     }
-    else throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
 
-    while(ifs >> str) {
-        if(read(str, "initial_sequence", sequenceString, ifs))
-        {
-            for(auto a : sequenceString)
-            {
-                sequence.push_back(a == '1');
+    inputFile >> input;
+    if (input == "architecture_generate") {
+        isGenerateArchitecture = true;
+    }
+    else if (input == "architecture_load") {
+        isGenerateArchitecture = false;
+        inputFile >> architectureFileName;
+    }
+    else {
+        throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
+    }
+
+    while (inputFile >> input) {
+        if (read(input, "initial_sequence", strProvidedSequence, inputFile)) {
+            for (auto a : strProvidedSequence) {
+                providedSequence.push_back(a == '1');
             }
         }
-        else if(str == "scale_A")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleA[crctr];
+        else if (input == "scale_A") {
+            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
+                inputFile >> scaleA[crctr];
                 std::clog   << "parameter " << "scale_A[" << crctr
-                            << "] set to " << scaleA[crctr] << '\n';
+                << "] set to " << scaleA[crctr] << '\n';
             }
-        else if(str == "scale_D")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleD[crctr];
+        }
+        else if (input == "scale_D") {
+            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
+                inputFile >> scaleD[crctr];
                 std::clog   << "parameter " << "scale_D[" << crctr
-                            << "] set to " << scaleD[crctr] << '\n';
+                << "] set to " << scaleD[crctr] << '\n';
             }
-        else if(str == "scale_I")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleI[crctr];
+        }
+        else if (input == "scale_I") {
+            for (size_t crctr = 0u; crctr < nTraits; ++crctr) {
+                inputFile >> scaleI[crctr];
                 std::clog   << "parameter " << "scale_I[" << crctr
-                            << "] set to " << scaleI[crctr] << '\n';
+                << "] set to " << scaleI[crctr] << '\n';
             }
-        else if(str == "scale_E")
-            for(size_t crctr = 0u; crctr < nCharacter; ++crctr) {
-                ifs >> scaleE[crctr];
+        }
+        else if (input == "scale_E") {
+            for(size_t crctr = 0u; crctr < nTraits; ++crctr) {
+                inputFile >> scaleE[crctr];
                 std::clog   << "parameter " << "scale_E[" << crctr
-                            << "] set to " << scaleE[crctr] << '\n';
+                << "] set to " << scaleE[crctr] << '\n';
             }
-        else if(read(str, "mutation_rate", mutationRate, ifs));
-        else if(read(str, "genome_size_cm", mapLength, ifs));
-        else if(read(str, "female_heterogamety", isFemaleHeteroGamety, ifs));
-        else if(read(str, "dispersal_rate", dispersalRate, ifs));
-        else if(read(str, "alpha", alpha, ifs));
-        else if(read(str, "beta", beta, ifs));
-        else if(read(str, "prob_survival", survivalProb, ifs));
-        else if(read(str, "habitat_asymmetry", habitatAsymmetry, ifs));
-        else if(read(str, "sel_coeff_ecol", ecoSelCoeff, ifs));
-        else if(read(str, "preference_strength", matePreferenceStrength, ifs));
-        else if(read(str, "preference_cost", mateEvaluationCost, ifs));
-        else if(read(str, "incompatibility_cost", costIncompat, ifs));
-        else if(read(str, "typeII_resource_utilisation", isTypeIIResourceUtilisation, ifs));
-        else if(read(str, "typeII_mate_choice", isTypeIIMateChoice, ifs));
-        else if(read(str, "network_skewness", networkSkewness, ifs));
-        else if(str == "t_end") {
-            ifs >> tBurnIn >> tEndSim;
-            std::clog   << "burn-in period  " << tBurnIn << " generations \n";
-            std::clog   << "simulation time " << tEndSim << " generations \n";
         }
-        else if(str == "t_dat") {
-            ifs >> tGetDat >> tSavDat;
-            std::clog   << "data collected every " << tGetDat << " generations \n";
-            std::clog   << "data stored    every " << tSavDat << " generations \n";
+        else if (read(input, "mutation_rate", mutationRate, inputFile));
+        else if (read(input, "genome_size_cm", genomeLength, inputFile));
+        else if (read(input, "female_heterogamety", isFemaleHeterogamy, inputFile));
+        else if (read(input, "dispersal_rate", dispersalRate, inputFile));
+        else if (read(input, "beta", birthRate, inputFile));
+        else if (read(input, "prob_survival", survivalProb, inputFile));
+        else if (read(input, "habitat_asymmetry", habitatAsymmetry, inputFile));
+        else if (read(input, "sel_coeff_ecol", ecoSelCoeff, inputFile));
+        else if (read(input, "preference_strength", matePreferenceStrength, inputFile));
+        else if (read(input, "preference_cost", mateEvaluationCost, inputFile));
+        else if (read(input, "network_skewness", networkSkewness, inputFile));
+        else if (input == "t_end") {
+            inputFile >> tBurnIn >> tEndSim;
+            std::clog   << "Burn-in period  " << tBurnIn << " generations \n";
+            std::clog   << "Simulation time " << tEndSim << " generations \n";
         }
-        else throw std::runtime_error("unknown parameter " + str);
+        else if (input == "t_dat") {
+            inputFile >> tGetDat >> tSavDat;
+            std::clog   << "Data collected every " << tGetDat << " generations \n";
+            std::clog   << "Data stored every " << tSavDat << " generations \n";
+        }
+        else {
+            throw std::runtime_error("Unknown parameter " + input);
+        }
     }
-    std::clog << "parameters were read in successfully\n";
+    std::clog << "Parameters were read in successfully\n";
 }
 
-void ParameterSet::setArchitectureFilename(const std::string &filename)
+void ParameterSet::newArchitectureFileName()
 {
-    architectureFilename = filename;
+    std::ostringstream oss;
+    oss << "architecture_" << seed << ".txt";
+    setArchitectureFileName(oss.str());
+}
+
+
+void ParameterSet::setArchitectureFileName(const std::string &filename)
+{
+    architectureFileName = filename;
 }
 
 void ParameterSet::writeParameters(std::ofstream &ofs, const char sep = ' ')
