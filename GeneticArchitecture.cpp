@@ -123,8 +123,8 @@ void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
         // For each vertex in the network
         for (size_t i : networkVertices[crctr]) {
 
-            // Sample additive effect size
-            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.alphaAdditive, 1.0)(rnd::rng);
+            // Sample additive effect size from a bilateral Gamma distribution
+            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.shapeEffectSizes, parameters.scaleEffectSizes)(rnd::rng);
             if (rnd::bernoulli(0.5)) {
                 locusConstants[i].effectSize *= -1.0;
             }
@@ -299,7 +299,7 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
         }
 
         // Sample interaction weight
-        double interactionWeight = std::gamma_distribution<double>(parameters.alphaInteraction, 1.0)(rnd::rng);
+        double interactionWeight = std::gamma_distribution<double>(parameters.shapeInteractionWeights, parameters.scaleInteractionWeights)(rnd::rng);
         if (rnd::bernoulli(0.5)) {
             interactionWeight *= -1.0;
         }
