@@ -18,9 +18,6 @@ public:
     void newArchitectureFileName();
     void setArchitectureFileName(const std::string&);
 
-    // IO
-    void writeParameters(std::ofstream&, const char = ' ');
-
     // Ecological parameters
     size_t  initialPopSize          = 100u;
     double  dispersalRate           = 1.0e-3;

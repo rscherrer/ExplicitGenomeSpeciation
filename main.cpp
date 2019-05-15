@@ -40,7 +40,7 @@ Instructions for compiling and running the program
 #include "GeneticArchitecture.h"
 #include "Buffer.h"
 #include "Population.h"
-
+#include "OutputFiles.h"
 
 /*=======================================================================================================
                                             main()
@@ -58,9 +58,7 @@ int main(int argc, char * argv[])
 
     #else
 
-    std::ofstream logFile; // must be accessible from catch
-    std::ofstream datFile;
-    std::ofstream arcFile;
+    OutputFiles outputFiles;
 
     try {
 
@@ -93,32 +91,25 @@ int main(int argc, char * argv[])
         // Initalize genetic architecture
         GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters);
 
-        // Open output files
-        std::clog << "Opening files and data buffers.";
-        std::ostringstream oss;
-        oss << "simulation_" << parameters.getSeed();
-        logFile.open(oss.str() + ".log");
-        datFile.open(oss.str() + ".dat");
-        arcFile.open(oss.str() + "_fossil_record.txt");
-        if (!(logFile.is_open() && datFile.is_open() && arcFile.is_open())) {
-            throw std::runtime_error("Unable to open output files in main()");
-        }
+        // Output files
+        std::clog << "Opening output files.";
+        outputFiles.openAll(parameters.seed);
+        std::clog << "..done\n";
 
-        // Open a buffer box (work on this later)
+        // Buffers
+        std::clog << "Opening data buffers.";
         BufferBox bufferPointers = BufferBox(parameters, population, genome);
-
         std::clog << "..done\n";
 
         // Store parameter values
         std::clog << "Storing parameter values..";
-        logFile << "Parameters: ";
         if (argc == 1) {
-            logFile << "Default values\n";
+            outputFiles.logFile << "Default parameters values\n";
         }
         else {
-            logFile << "Imported from file " << argv[1] << '\n';
+            outputFiles.logFile << "Parameters imported from file " << argv[1] << '\n';
         }
-        parameters.writeParameters(logFile);
+        outputFiles.writeParameters(parameters);
         std::clog << "..done\n";
 
         // Write data file header
