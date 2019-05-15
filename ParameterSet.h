@@ -10,6 +10,8 @@ public:
 
     // Setters
     void setDefaultSeed();
+    void readSeed(std::ifstream&, std::string&);
+    void readIsArchitecture(std::ifstream&, std::string&);
     void readParameters(const std::string&);
     void newArchitectureFileName();
     void setArchitectureFileName(const std::string&);
@@ -41,8 +43,8 @@ public:
     size_t nTraits          = 3u;
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     size_t nBits = 2u * nLoci;
-    std::string strProvidedSequence;
-    std::vector<bool> providedSequence;
+    std::string strInitialSequence;
+    std::vector<bool> initialSequence;
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
     double  genomeLength            = 300.0;

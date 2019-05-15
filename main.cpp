@@ -81,6 +81,9 @@ int main(int argc, char * argv[])
             throw std::runtime_error("Invalid number of program arguments in main()");
         }
 
+        // Seed the random number generator
+        rnd::rng.seed(parameters.seed);
+
         // Make an architecture file if architecture is to be generated
         if (parameters.isGenerateArchitecture) {
             parameters.newArchitectureFileName();

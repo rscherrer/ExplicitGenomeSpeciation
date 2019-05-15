@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include "random.h"
 
 
@@ -29,7 +30,36 @@ bool read(const std::string &str, const std::string &name, T &par, std::ifstream
 
 void ParameterSet::setDefaultSeed()
 {
-    seed = rnd::set_seed();
+    seed = static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+}
+
+void ParameterSet::readSeed(std::ifstream &inputFile, std::string &input)
+{
+    inputFile >> input;
+    if (input == "rng_seed_clock") {
+        setDefaultSeed();
+    }
+    else if (input == "rng_seed_user") {
+        inputFile >> seed;
+    }
+    else {
+        throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
+    }
+}
+
+void ParameterSet::readIsArchitecture(std::ifstream &inputFile, std::string &input)
+{
+    inputFile >> input;
+    if (input == "architecture_generate") {
+        isGenerateArchitecture = true;
+    }
+    else if (input == "architecture_load") {
+        isGenerateArchitecture = false;
+        inputFile >> architectureFileName;
+    }
+    else {
+        throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
+    }
 }
 
 void ParameterSet::readParameters(const std::string& filename)
@@ -42,36 +72,16 @@ void ParameterSet::readParameters(const std::string& filename)
         throw std::runtime_error("Unable to open parameter file in readParameters()");
     }
 
+    // Read input
     std::string input;
 
-    inputFile >> input;
-    if (input == "rng_seed_clock") {
-        seed = rnd::set_seed();
-    }
-    else if (input == "rng_seed_user") {
-        inputFile >> seed;
-        rnd::set_seed(seed);
-    }
-    else {
-        throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
-    }
-
-    inputFile >> input;
-    if (input == "architecture_generate") {
-        isGenerateArchitecture = true;
-    }
-    else if (input == "architecture_load") {
-        isGenerateArchitecture = false;
-        inputFile >> architectureFileName;
-    }
-    else {
-        throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
-    }
+    readSeed(inputFile, input);
+    readIsArchitecture(inputFile, input);
 
     while (inputFile >> input) {
-        if (read(input, "initial_sequence", strProvidedSequence, inputFile)) {
-            for (auto a : strProvidedSequence) {
-                providedSequence.push_back(a == '1');
+        if (read(input, "initial_sequence", strInitialSequence, inputFile)) {
+            for (auto a : strInitialSequence) {
+                initialSequence.push_back(a == '1');
             }
         }
         else if (input == "scale_A") {
