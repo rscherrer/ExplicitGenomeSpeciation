@@ -39,8 +39,7 @@ class Genome;
 
 class Individual {
 
-    friend class Buffer;
-    friend class Population;
+    friend Buffer;
 
 public:
 
@@ -72,6 +71,8 @@ public:
     std::vector<Locus> getLoci() const { return genotypes; }
 
 private:
+
+    friend class Population;
 
     // Ecological attributes
     mutable size_t habitat;
