@@ -35,7 +35,6 @@ Instructions for compiling and running the program
 #include "square.h"
 
 class Buffer;
-class Genome;
 
 class Individual {
 
@@ -76,7 +75,7 @@ private:
 
     // Ecological attributes
     mutable size_t habitat;
-    size_t ecotype;
+    mutable size_t ecotype;
     double fitness;
     double nOffspring;
     std::vector<size_t> mates;
@@ -102,6 +101,7 @@ private:
     bool acceptMate(Individual const * const, const ParameterSet&) const;
     size_t sampleClutchSize(const double&) const;
     bool survive(const double&) const;
+    void setEcotype(const std::pair<double, double>&) const;
 
     // Genetics
     void mutate(const ParameterSet&);
@@ -119,9 +119,6 @@ private:
     void inheritLocus(Individual const * const, const bool&, const size_t&, const size_t&);
     void determineSex(const bool&, const bool&, const size_t&);
     void inheritGamete(Individual const * const, const ParameterSet&, const GeneticArchitecture&);
-
-    // To be taken care of
-    size_t setEcotype(const std::pair<double, double> &threshold);
 
 };
 

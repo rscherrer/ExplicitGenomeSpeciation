@@ -18,8 +18,8 @@ public:
 
     struct LocusConstants {
 
-        size_t character;
-        size_t linkageGroup;
+        size_t trait;
+        size_t chromosome;
         double location;
         double effectSize;
         double dominanceCoeff;

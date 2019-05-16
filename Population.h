@@ -35,6 +35,9 @@ public:
     void setBurnin();
     void endBurnin();
 
+    void assignEcotypes();
+    void findEcotypeBoundaries();
+
 private:
 
     // The population
@@ -55,7 +58,7 @@ private:
     std::vector<std::pair<double, double> > replenishRates;
     std::vector<std::pair<double, double> > resourceConsumption;
     std::vector<std::pair<double, double> > resourceEql;
-    std::pair<double, double> breakEvenPoint;
+    std::pair<double, double> ecotypeBoundary;
 
     // Genome-wide genetic variables
     std::vector<std::vector<double> > avgG;
@@ -106,5 +109,6 @@ private:
 
 };
 
+bool compareAlongTradeOff(const std::pair<double, double>&, const std::pair<double, double>&);
 
 #endif //EXPLICITGENOMESPECIATION_POPULATION_H

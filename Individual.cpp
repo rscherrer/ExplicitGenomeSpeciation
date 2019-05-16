@@ -43,19 +43,6 @@ Instructions for compiling and running the program
 
 // Accessory functions
 
-bool tradeOffCompare (const std::pair<double, double> &x, const std::pair<double, double> &y)
-{
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
-    }
-}
-
 double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
 {
     return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
@@ -206,6 +193,11 @@ size_t Individual::sampleClutchSize(const double &birthRate) const
 bool Individual::survive(const double &survivalProb) const
 {
     return rnd::bernoulli(survivalProb);
+}
+
+void Individual::setEcotype(const std::pair<double, double> &ecotypeBoundary) const
+{
+    ecotype = compareAlongTradeOff(attackRates, ecotypeBoundary) ? 1u : 0u;
 }
 
 void Individual::mutate(const ParameterSet& parameters)
@@ -427,12 +419,6 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
 }
 
 
-// To be taken care of
-
-void Individual::setEcotype(const std::pair<double, double> &threshold) const
-{
-    ecotype = tradeOffCompare(attackRates, threshold) ? 2u : 1u;
-}
 
 
 

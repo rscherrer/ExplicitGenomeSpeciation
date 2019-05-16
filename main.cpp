@@ -179,6 +179,15 @@ int main(int argc, char * argv[])
             }
 
             // Time to analyze?
+
+            if (t % parameters.tGetDat == 0u) {
+                population->sortByHabitat();
+                population.assignEcotypes();
+                population.calcAvgG();
+                population.calcVarG();
+                population.calcVarP();
+            }
+
             if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
             if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }

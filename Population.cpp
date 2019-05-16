@@ -5,6 +5,7 @@
 #include "Population.h"
 #include "random.h"
 #include <cassert>
+#include <vector>
 
 // Constructor
 
@@ -190,6 +191,64 @@ void Population::endBurnin()
     nAccessibleResources = 2u;
 }
 
+bool compareAlongTradeOff (const std::pair<double, double> &x, const std::pair<double, double> &y)
+{
+    bool yOnLeft = y.first < y.second;
+    if(x.first < x.second) {
+        if(yOnLeft) return (x.first < y.first);
+        else return true;
+    }
+    else {
+        if(yOnLeft) return false;
+        else return (x.second < y.second);
+    }
+}
+
+void Population::findEcotypeBoundary(const size_t &habitat)
+{
+
+    // Get attack rates
+    std::list<std::pair<double, double> > listAttackRates;
+    for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
+        listAttackRates.push_back((*itInd)->getAttackRates());
+        if (itInd == idHabitatBoundaries[habitat].second)
+        {
+            break;
+        }
+    }
+
+    // Sort attack rates
+    listAttackRates.sort(compareAlongTradeOff);
+
+
+
+    // Get habitats
+    std::vector<size_t> habitats;
+    for (PInd pInd : individuals) {
+        habitats.push_back(pInd->getHabitat());
+    }
+
+    for (auto attackRates : vecAttackRates) {
+        attackRates.first * resourceEql[habitats]
+    }
+// Loop through the population and record attack rates
+// Within local habitat
+// Sort the attack rates along trade-off line with the function trade-off compare
+// Loop through attack rates until the alternative resource becomes more advantageous
+// That is the break-even point that delimits ecotypes
+
+}
+
+void Population::assignEcotypes()
+{
+
+    findEcotypeBoundaries();
+
+    for (PInd ind : individuals) {
+        ind->setEcotype(ecotypeBoundary);
+    }
+}
+
 // Accessory functions
 
 double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
@@ -226,7 +285,7 @@ void Population::setResourceConsumption(const size_t &habitat)
     for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
 
         // The individual should be of the right habitat
-        assert((*ind)->getHabitat() == habitat);
+        assert((*itInd)->getHabitat() == habitat);
 
         // Record attack rates
         std::pair<double, double> attackRates = (*itInd)->getAttackRates();
@@ -316,12 +375,3 @@ void Population::emptyPopulation()
 {
     individuals.erase(individuals.begin(), individuals.end());
 }
-
-
-
-// Function to classify ecotypes
-// Loop through the population and record attack rates
-// Within local habitat
-// Sort the attack rates along trade-off line with the function trade-off compare
-// Loop through attack rates until the alternative resource becomes more advantageous
-// That is the break-even point that delimits ecotypes
