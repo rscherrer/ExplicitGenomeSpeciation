@@ -25,6 +25,7 @@ public:
     // Getters
     size_t getPopSize() const;
     size_t getNResources() const;
+    size_t getEcotypeSize(const size_t&) const;
 
     // High-level member functions
     void dispersal(const ParameterSet&);
@@ -36,9 +37,22 @@ public:
     void endBurnin();
 
     void assignEcotypes();
-    void findEcotypeBoundaries();
+    void getLocalAttackRates(std::list<std::pair<double, double> >&, const size_t&);
+    void setEcotypeBoundary(const std::list<std::pair<double, double> >&, const size_t&);
+    void findEcotypeBoundary(const size_t&);
 
-private:
+    // Variance decomposition
+    void decomposeVariance(const double&);
+    void initializeVarianceComponents();
+    void accumulateMoments(const size_t&);
+    void completeMoments(const size_t&);
+    void accumulateSingleLocusContributions();
+    void calcEcotypeDifferentations(const size_t&, const double&);
+    
+    void decomposeVarianceAlongGenome();
+
+
+protected:
 
     // The population
     std::list<PInd> individuals;
@@ -47,6 +61,8 @@ private:
     std::vector<PInd> offspring;
     std::vector<std::pair<size_t, size_t> > genderCounts;
     std::vector<std::pair<std::list<PInd>::iterator, std::list<PInd>::iterator> > idHabitatBoundaries;
+    std::vector<size_t> ecotypeSizes;
+    size_t popSize;
 
     // Mating features
     std::vector<double> maleSuccesses;
@@ -58,43 +74,7 @@ private:
     std::vector<std::pair<double, double> > replenishRates;
     std::vector<std::pair<double, double> > resourceConsumption;
     std::vector<std::pair<double, double> > resourceEql;
-    std::pair<double, double> ecotypeBoundary;
-
-    // Genome-wide genetic variables
-    std::vector<std::vector<double> > avgG;
-    std::vector<std::vector<double> > varP;
-    std::vector<std::vector<double> > varG;
-    std::vector<std::vector<double> > varA;
-    std::vector<std::vector<double> > varI;
-    std::vector<double> varD;
-    std::vector<double> Fst;
-    std::vector<double> Pst;
-    std::vector<double> Gst;
-    std::vector<double> Qst;
-    std::vector<double> Cst;
-
-    // Locus-specific genetic variables
-    struct LocusVariables {
-
-        double avgEffectOfSubstitution;
-        double locusvarD;
-        double locusFit;
-        double locusFis;
-        double locusFst;
-        double locusPst;
-        double locusGst;
-        double locusQst;
-        double locusCst;
-        std::array<double, 3u> alleleFrequency;
-        std::array<double, 3u> meanEffect;
-        std::array<double, 3u> locusvarP;
-        std::array<double, 3u> locusvarG;
-        std::array<double, 3u> locusvarA;
-        std::array<double, 3u> locusvarI;
-
-    };
-
-    std::vector<LocusVariables> locusVariables;
+    std::vector<std::pair<double, double> > ecotypeBoundaries;
 
     // Low-level member functions
     void setResourceCapacities(const double&, const double&);
@@ -106,6 +86,95 @@ private:
     void setMaleFitnesses(const size_t&, const double&);
     void birth(const PInd&, const ParameterSet&, const GeneticArchitecture&);
     void emptyPopulation();
+
+    // Variance components
+    std::vector<double> meanPhenotypes;
+    std::vector<double> meanGeneticValues;
+    std::vector<double> phenotypicVariances;
+    std::vector<double> geneticVariances;
+    std::vector<double> additiveVariances;
+    std::vector<double> dominanceVariances;
+    std::vector<double> interactionVariances;
+    std::vector<double> nonAdditiveVariances;
+
+    std::vector<std::vector<double> > ecotypeMeanGeneticValues;
+    std::vector<std::vector<double> > ecotypePhenotypicVariances;
+    std::vector<std::vector<double> > ecotypeGeneticVariances;
+    std::vector<std::vector<double> > ecotypeAdditiveVariances;
+    std::vector<std::vector<double> > ecotypeNonAdditiveVariances;
+
+    std::vector<double> Pst;
+    std::vector<double> Gst;
+    std::vector<double> Qst;
+    std::vector<double> Cst;
+
+    std::vector<LocusVariables> locusVariables;
+
+};
+
+// Locus-specific genetic variables
+class LocusVariables: public Population {
+
+public:
+
+    // Single-locus variance decomposition
+    void decomposeLocusVariance();
+
+    void initializeLocusVariables();
+    void accumulateLocusGeneticMoments();
+    void completeLocusGeneticMoments();
+    void calcLocusPhenotypicVariances();
+    void regressLocusPhenotypeAgainstGenotype();
+    void calcLocusAdditiveVariance();
+    void calcLocusDominanceVariance();
+    void calcLocusEcotypeAdditiveVariances();
+    void completeLocusInteractionVariance();
+    void completeLocusNonAdditiveVariances();
+    void calcLocusHeterozygosities();
+    void calcLocusEcotypeDifferentiations();
+
+    size_t locus;
+    size_t trait;
+
+    double locusMeanGeneticValue;
+    double locusMeanAlleleCount;
+    double locusVarAlleleCount;
+    double locusCovGeneticValueAlleleCount;
+    double locusAvgSubstitutionEffect;
+
+    std::vector<size_t> locusGenotypeSizes;
+    std::vector<double> locusGenotypeBreedingValues;
+    std::vector<double> locusGenotypeAdditiveExpectations;
+    std::vector<double> locusGenotypeMeanGeneticValues;
+    std::vector<double> locusGenotypeDominanceDeviations;
+
+    std::vector<std::vector<size_t> > locusGenotypeEcotypeSizes;
+
+    double locusGeneticVariance;
+    double locusPhenotypicVariance;
+    double locusAdditiveVariance;
+    double locusDominanceVariance;
+    double locusInteractionVariance;
+    double locusNonAdditiveVariance;
+    double locusEnvirVariance;
+
+    std::vector<double> locusEcotypeMeanGeneticValues;
+    std::vector<double> locusEcotypeMeanBreedingValues;
+    std::vector<double> locusEcotypeMeanNonAdditiveDeviations;
+    std::vector<double> locusEcotypePhenotypicVariances;
+    std::vector<double> locusEcotypeGeneticVariances;
+    std::vector<double> locusEcotypeAdditiveVariances;
+    std::vector<double> locusEcotypeNonAdditiveVariances;
+    std::vector<double> locusEcotypeAlleleFrequencies;
+
+    double locusExpectedHeterozygosity;
+    double locusObservedHeterozygosity;
+
+    double locusFst;
+    double locusPst;
+    double locusGst;
+    double locusQst;
+    double locusCst;
 
 };
 

@@ -39,6 +39,7 @@ public:
     size_t nNtrInteractions = 0u;
     size_t nChromosomes     = 3u;
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
+    std::vector<size_t> nLociPerTrait = {nEcoLoci, nMatLoci, nNtrLoci};
     size_t nBits = 2u * nLoci;
     std::string strInitialSequence;
     std::vector<bool> initialSequence;
@@ -56,10 +57,13 @@ public:
     std::vector<double> scaleD {0.0, 0.0, 0.0};
     std::vector<double> scaleI {0.0, 0.0, 0.0};
     std::vector<double> scaleE {0.0, 0.0, 0.0};
+    std::vector<double> locusVarE;
     double shapeEffectSizes = 2.0;
     double scaleEffectSizes = 1.0;
     double shapeInteractionWeights = 5.0;
     double scaleInteractionWeights = 1.0;
+
+    void setLocusEnvirVariance();
 
     // Simulation parameters
     int  tBurnIn                 = 1;

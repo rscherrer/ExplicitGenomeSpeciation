@@ -4,41 +4,51 @@
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.cpp
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.cpp
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.cpp
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o
  ../lib/googletest-master/googletest/include/gtest/gtest-death-test.h
  ../lib/googletest-master/googletest/include/gtest/gtest-matchers.h
@@ -60,20 +70,27 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o
  ../lib/googletest-master/googletest/include/gtest/internal/gtest-port.h
  ../lib/googletest-master/googletest/include/gtest/internal/gtest-string.h
  ../lib/googletest-master/googletest/include/gtest/internal/gtest-type-util.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/accessories.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o
  ../lib/googletest-master/googletest/include/gtest/gtest-death-test.h
@@ -98,13 +115,15 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o
  ../lib/googletest-master/googletest/include/gtest/internal/gtest-type-util.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h
- /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Genome.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/main.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h
+ /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/square.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp
  /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.h

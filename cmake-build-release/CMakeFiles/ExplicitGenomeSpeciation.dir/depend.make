@@ -3,41 +3,51 @@
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Buffer.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Buffer.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Population.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../square.h
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../BufferBox.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../BufferBox.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../Population.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../square.h
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../Genome.cpp
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../Genome.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../Individual.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../ParameterSet.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../Population.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Genome.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../GeneticArchitecture.cpp
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../GeneticArchitecture.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../ParameterSet.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../square.h
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Individual.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Population.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../square.h
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o: ../OutputFile.cpp
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o: ../OutputFile.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o: ../ParameterSet.h
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o: ../OutputFiles.cpp
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o: ../ParameterSet.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o: ../ParameterSet.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o: ../random.h
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Population.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Population.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../square.h
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-master/googletest/include/gtest/gtest-death-test.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-master/googletest/include/gtest/gtest-matchers.h
@@ -59,21 +69,28 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-mast
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-master/googletest/include/gtest/internal/gtest-port.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-master/googletest/include/gtest/internal/gtest-string.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../lib/googletest-master/googletest/include/gtest/internal/gtest-type-util.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../Population.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../Tests/test.cpp
+CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../square.h
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../Buffer.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../BufferBox.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../Individual.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../Population.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../analysis.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../analysis.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../square.h
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: ../ParameterSet.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: ../accessories.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: ../ioroutines.cpp
+CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: ../random.h
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../lib/googletest-master/googletest/include/gtest/gtest-death-test.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../lib/googletest-master/googletest/include/gtest/gtest-matchers.h
@@ -97,13 +114,15 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../lib/googletest-master/goo
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../lib/googletest-master/googletest/include/gtest/internal/gtest-type-util.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../Buffer.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../BufferBox.h
-CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../Genome.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../GeneticArchitecture.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../Individual.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../OutputFile.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../ParameterSet.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../Population.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../analysis.h
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../main.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../random.h
+CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o: ../square.h
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: ../random.cpp
 CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: ../random.h

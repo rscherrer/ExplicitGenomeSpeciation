@@ -181,11 +181,16 @@ int main(int argc, char * argv[])
             // Time to analyze?
 
             if (t % parameters.tGetDat == 0u) {
+
                 population->sortByHabitat();
-                population.assignEcotypes();
-                population.calcAvgG();
-                population.calcVarG();
-                population.calcVarP();
+                population->assignEcotypes();
+
+                // Genome-wide variance decomposition
+                population->decomposeVarianceAlongGenome();
+
+                // Overall variance decomposition
+                population->decomposeVariance();
+
             }
 
             if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);

@@ -4,8 +4,31 @@
 
 #include "Population.h"
 #include "random.h"
+#include "square.h"
 #include <cassert>
 #include <vector>
+
+double Xst(const double &popVar, const std::vector<double> &groupVars, const size_t &popSize, const std::vector<size_t> &groupSizes, const double& tiny)
+{
+    if (popVar < tiny) {
+        return 0.0;
+    }
+    else {
+
+        // Compare observed and expected variance between groups
+        double groupVar = (groupSizes[0u] * groupVars[0u] + groupSizes[1u] * groupVars[1u]) / popSize;
+        double Xst = 1.0 - groupVar / popVar;
+
+        // Population structure statistic is bounded between zero and one
+        if (Xst < tiny) {
+            Xst = 0.0;
+        }
+        if (Xst > 1.0 - tiny) {
+            Xst = 1.0;
+        }
+        return Xst;
+    }
+}
 
 // Constructor
 
@@ -40,8 +63,14 @@ size_t Population::getPopSize() const
     return popSize;
 }
 
-size_t Population::getNResources() const {
+size_t Population::getNResources() const
+{
     return nAccessibleResources;
+}
+
+size_t Population::getEcotypeSize(const size_t &ecotype) const
+{
+    return ecotypeSizes[ecotype];
 }
 
 // High-level functions
@@ -204,11 +233,8 @@ bool compareAlongTradeOff (const std::pair<double, double> &x, const std::pair<d
     }
 }
 
-void Population::findEcotypeBoundary(const size_t &habitat)
+void Population::getLocalAttackRates(std::list<std::pair<double, double> > &listAttackRates, const size_t &habitat)
 {
-
-    // Get attack rates
-    std::list<std::pair<double, double> > listAttackRates;
     for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
         listAttackRates.push_back((*itInd)->getAttackRates());
         if (itInd == idHabitatBoundaries[habitat].second)
@@ -216,38 +242,191 @@ void Population::findEcotypeBoundary(const size_t &habitat)
             break;
         }
     }
+}
+
+void Population::setEcotypeBoundary(const std::list<std::pair<double, double> > &listAttackRates,
+        const size_t &habitat)
+{
+    ecotypeBoundaries[habitat] = listAttackRates.back();
+    std::pair<double, double> payoff;
+    for (auto attackRates : listAttackRates) {
+
+        // Record payoffs from feeding on the two resources
+        payoff.first = attackRates.first * resourceEql[habitat].first;
+        payoff.second = attackRates.second * resourceEql[habitat].second;
+
+        // When the first resource becomes more advantageous, the boundary has been reached
+        if (payoff.second < payoff.first) {
+            ecotypeBoundaries[habitat] = attackRates;
+            break;
+        }
+    }
+}
+
+void Population::findEcotypeBoundary(const size_t &habitat)
+{
+
+    // Get attack rates
+    std::list<std::pair<double, double> > listAttackRates;
+    getLocalAttackRates(listAttackRates, habitat);
 
     // Sort attack rates
     listAttackRates.sort(compareAlongTradeOff);
 
-
-
-    // Get habitats
-    std::vector<size_t> habitats;
-    for (PInd pInd : individuals) {
-        habitats.push_back(pInd->getHabitat());
-    }
-
-    for (auto attackRates : vecAttackRates) {
-        attackRates.first * resourceEql[habitats]
-    }
-// Loop through the population and record attack rates
-// Within local habitat
-// Sort the attack rates along trade-off line with the function trade-off compare
-// Loop through attack rates until the alternative resource becomes more advantageous
-// That is the break-even point that delimits ecotypes
+    // Loop through individuals to find the ecotype boundary
+    setEcotypeBoundary(listAttackRates, habitat);
 
 }
 
 void Population::assignEcotypes()
 {
 
-    findEcotypeBoundaries();
+    // Find ecotype boundaries within each habitat
+    findEcotypeBoundary(0u);
+    findEcotypeBoundary(1u);
 
-    for (PInd ind : individuals) {
-        ind->setEcotype(ecotypeBoundary);
+    // Set ecotypes
+    for (PInd pInd : individuals) {
+        pInd->setEcotype(ecotypeBoundaries[pInd->getHabitat()]);
+
+        // Update census within each ecotype
+        ++ecotypeSizes[pInd->getEcotype()];
     }
 }
+
+void sum2mean(double &mean, const size_t &nobs)
+{
+    mean /= nobs;
+}
+
+void sumsq2var(double &variance, const size_t &nobs, const double &mean)
+{
+    variance -= nobs * sqr(mean);
+    variance /= nobs;
+}
+
+void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean, const double &secondmean)
+{
+    covariance -= nobs * firstmean * secondmean;
+    covariance /= nobs;
+}
+
+void clipDown(double &value, const double &tiny, const double &lowerbound = 0.0)
+{
+    value = value > tiny ? value : lowerbound;
+}
+
+void Population::decomposeVarianceAlongGenome()
+{
+    for (LocusVariables * locus : locusVariables) {
+        locus->decomposeLocusVariance();
+    }
+}
+
+void Population::initializeVarianceComponents()
+{
+    additiveVariances = {0.0, 0.0, 0.0};
+    dominanceVariances = {0.0, 0.0, 0.0};
+    interactionVariances = {0.0, 0.0, 0.0};
+    nonAdditiveVariances = {0.0, 0.0, 0.0};
+    ecotypeAdditiveVariances = {{0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    ecotypeNonAdditiveVariances = {{0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+
+    // meanPhenotypes = {0.0, 0.0, 0.0};
+    meanGeneticValues = {0.0, 0.0, 0.0};
+    phenotypicVariances = {0.0, 0.0, 0.0};
+    geneticVariances = {0.0, 0.0, 0.0};
+    ecotypeMeanGeneticValues = {{0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    ecotypePhenotypicVariances = {{0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    ecotypeGeneticVariances = {{0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+}
+
+void Population::accumulateSingleLocusContributions()
+{
+    // Accumulate other variance components from single locus contributions
+    size_t trait;
+    for (LocusVariables * locus :  locusVariables) {
+        trait = locus->trait;
+        additiveVariances[trait] += locus->locusAdditiveVariance;
+        dominanceVariances[trait] += locus->locusDominanceVariance;
+        interactionVariances[trait] += locus->locusInteractionVariance;
+        nonAdditiveVariances[trait] += locus->locusNonAdditiveVariance;
+
+        for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+            ecotypeAdditiveVariances[trait][ecotype] += locus->locusEcotypeAdditiveVariances[ecotype];
+            ecotypeNonAdditiveVariances[trait][ecotype] += locus->locusEcotypeNonAdditiveVariances[ecotype];
+        }
+    }
+}
+
+void Population::accumulateMoments(const size_t &trait)
+{
+    double phenotype;
+    double geneticValue;
+    size_t ecotype;
+
+    // Compute genetic and phenotypic variance
+    for (PInd pInd : individuals) {
+        ecotype = pInd->getEcotype();
+        phenotype = pInd->getPhenotypes()[trait];
+        geneticValue = pInd->getGeneticValues()[trait];
+
+        // meanPhenotypes[trait] += phenotype;  // Approximately equal to meanGeneticValues because E(environmental effects) = 0
+        meanGeneticValues[trait] += geneticValue;
+        phenotypicVariances[trait] += sqr(phenotype);
+        geneticVariances[trait] += sqr(geneticValue);
+
+        ecotypeMeanGeneticValues[trait][ecotype] += geneticValue;
+        ecotypePhenotypicVariances[trait][ecotype] += sqr(phenotype);
+        ecotypeGeneticVariances[trait][ecotype] += sqr(geneticValue);
+    }
+}
+
+void Population::completeMoments(const size_t &trait)
+{
+    // Complete moments
+    // sum2mean(meanPhenotypes[trait], popSize);
+    sum2mean(meanGeneticValues[trait], popSize);
+    sumsq2var(phenotypicVariances[trait], popSize, meanGeneticValues[trait]);
+    sumsq2var(geneticVariances[trait], popSize, meanGeneticValues[trait]);
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        sum2mean(ecotypeMeanGeneticValues[trait][ecotype], ecotypeSizes[ecotype]);
+        sumsq2var(ecotypePhenotypicVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype]);
+        sumsq2var(ecotypeGeneticVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype]);
+    }
+}
+
+
+
+void Population::calcEcotypeDifferentations(const size_t &trait, const double &tiny)
+{
+    Pst[trait] = Xst(phenotypicVariances, ecotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
+    Gst[trait] = Xst(geneticVariances, ecotypeGeneticVariances, popSize, ecotypeSizes, tiny);
+    Qst[trait] = Xst(additiveVariances, ecotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
+    Cst[trait] = Xst(nonAdditiveVariances, ecotypeNonAdditiveVariances, popSize, ecotypeSizes, tiny);
+}
+
+void Population::decomposeVariance(const double &tiny)
+{
+
+    initializeVarianceComponents();
+
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        accumulateMoments(trait);
+        completeMoments(trait);
+    }
+
+    accumulateSingleLocusContributions();
+
+    // Calculate differentiation
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        calcEcotypeDifferentations(trait, tiny);
+    }
+
+}
+
+
+
 
 // Accessory functions
 
@@ -256,6 +435,236 @@ double calcLogisticResourceEq(const double &resourceCapacity, const double &repl
     double resource = resourceCapacity * (1.0 - consumption / replenishRate);
     return resource;
 }
+
+
+// Single-locus variance decomposition
+
+void LocusVariables::decomposeLocusVariance()
+{
+
+    initializeLocusVariables();
+    accumulateLocusGeneticMoments();
+    completeLocusGeneticMoments();
+    calcLocusPhenotypicVariances();
+    regressLocusPhenotypeAgainstGenotype();
+    calcLocusAdditiveVariance();
+    calcLocusDominanceVariance();
+    calcLocusEcotypeAdditiveVariances();
+    completeLocusInteractionVariance();
+    completeLocusNonAdditiveVariances();
+    calcLocusHeterozygosities();
+    calcLocusEcotypeDifferentiations();
+
+}
+
+void LocusVariables::initializeLocusVariables()
+{
+    // Initialize components
+    locusGenotypeSizes = {0u, 0u, 0u};
+    locusGenotypeEcotypeSizes = {{0u, 0u}, {0u, 0u}, {0u, 0u}};
+    locusMeanGeneticValue = 0.0;
+    locusGeneticVariance = 0.0;
+    locusMeanAlleleCount = 0.0;
+    locusVarAlleleCount = 0.0;
+    locusCovGeneticValueAlleleCount = 0.0;
+    locusGenotypeMeanGeneticValues = {0.0, 0.0, 0.0};
+    locusEcotypeMeanGeneticValues = {0.0, 0.0};
+    locusEcotypeGeneticVariances = {0.0, 0.0};
+    locusEcotypeAlleleFrequencies = {0.0, 0.0};
+    locusDominanceVariance = 0.0;
+    locusEcotypeAdditiveVariances = {0.0, 0.0};
+    locusEcotypeMeanBreedingValues = {0.0, 0.0};
+    locusInteractionVariance = 0.0;
+    locusNonAdditiveVariance = 0.0;
+    locusEcotypeNonAdditiveVariances = {0.0, 0.0};
+    locusEcotypeMeanNonAdditiveDeviations = {0.0, 0.0};
+    locusObservedHeterozygosity = 0.0;
+}
+
+void LocusVariables::accumulateLocusCensus(const size_t &genotype, const size_t &ecotype)
+{
+    // Accumulate genotype group sizes
+    ++locusGenotypeSizes[genotype];
+    ++locusGenotypeEcotypeSizes[genotype][ecotype];
+}
+
+void LocusVariables::accumulateLocusAlleleCounts(const size_t &genotype, const size_t &ecotype)
+{
+    // Accumulate allele frequencies
+    locusMeanAlleleCount += genotype;
+    locusEcotypeAlleleFrequencies[ecotype] += genotype;
+    locusVarAlleleCount += sqr(genotype);
+}
+
+void LocusVariables::accumulateLocusGeneticValues(const size_t &genotype, const size_t &ecotype, const double &geneticValue)
+{
+    // Accumulate genetic values and their squares for mean and variances
+    locusMeanGeneticValue += geneticValue;
+    locusEcotypeMeanGeneticValues[ecotype] += geneticValue;
+    locusGenotypeMeanGeneticValues[genotype] += geneticValue;
+    locusGeneticVariance += sqr(geneticValue);
+    locusEcotypeGeneticVariances[ecotype] += sqr(geneticValue);
+}
+
+void LocusVariables::accumulateLocusGeneticValuesByAlleleCounts(const size_t &genotype, const double &geneticValue)
+{
+    // Accumulate product for covariance
+    locusCovGeneticValueAlleleCount += genotype * geneticValue;
+}
+
+void LocusVariables::calcLocusHeterozygosities()
+{
+    for(size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        locusObservedHeterozygosity += ecotypeSizes[ecotype] * 2.0 * locusEcotypeAlleleFrequencies[ecotype] * (1.0 - locusEcotypeAlleleFrequencies[ecotype]);
+    }
+    locusObservedHeterozygosity /= popSize;
+    locusExpectedHeterozygosity = locusMeanAlleleCount * (1.0 - 0.5 * locusMeanAlleleCount);
+}
+
+void LocusVariables::completeLocusGeneticMoments()
+{
+    // Complete population moments
+    sum2mean(locusMeanGeneticValue, popSize);
+    sum2mean(locusMeanAlleleCount, popSize);
+    sumsq2var(locusGeneticVariance, popSize, locusMeanGeneticValue);
+    sumsq2var(locusVarAlleleCount, popSize, locusMeanAlleleCount);
+    sumprod2cov(locusCovGeneticValueAlleleCount, popSize, locusMeanGeneticValue, locusMeanAlleleCount);
+
+    // Complete ecotype moments
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        sum2mean(locusEcotypeMeanGeneticValues[ecotype], ecotypeSizes[ecotype]);
+        sum2mean(locusEcotypeAlleleFrequencies[ecotype], static_cast<size_t>(2.0 * ecotypeSizes[ecotype]));
+        sumsq2var(locusEcotypeGeneticVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanGeneticValues[ecotype]);
+    }
+
+    // Complete genotype moments
+    for (size_t genotype = 0u; genotype < 3u; ++genotype) {
+        sum2mean(locusGenotypeMeanGeneticValues[genotype], locusGenotypeSizes[genotype]);
+    }
+}
+
+void LocusVariables::calcLocusPhenotypicVariances()
+{
+    locusPhenotypicVariance = locusGeneticVariance + locusEnvirVariance;
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        locusEcotypePhenotypicVariances[ecotype] = locusEcotypeGeneticVariances[ecotype] + locusEnvirVariance;
+    }
+}
+
+void LocusVariables::regressLocusPhenotypeAgainstGenotype()
+{
+    // Regression analysis at the whole population level
+    locusAvgSubstitutionEffect = locusCovGeneticValueAlleleCount / locusVarAlleleCount;
+    for (size_t genotype = 0u; genotype < 3u; ++genotype) {
+        locusGenotypeBreedingValues[genotype] = locusAvgSubstitutionEffect * (genotype - locusMeanAlleleCount);
+        locusGenotypeAdditiveExpectations[genotype] = locusGenotypeMeanGeneticValues[genotype] + locusGenotypeBreedingValues[genotype];
+        locusGenotypeDominanceDeviations[genotype] = locusGenotypeMeanGeneticValues[genotype] - locusGenotypeAdditiveExpectations[genotype];
+    }
+}
+
+void LocusVariables::calcLocusAdditiveVariance()
+{
+    locusAdditiveVariance = locusAvgSubstitutionEffect * locusVarAlleleCount;
+}
+
+void LocusVariables::calcLocusDominanceVariance()
+{
+    for (size_t genotype = 0u; genotype < 3u; ++genotype) {
+        locusDominanceVariance += locusGenotypeSizes[genotype] * sqr(locusGenotypeDominanceDeviations[genotype]);
+    }
+    locusDominanceVariance /= popSize;
+}
+
+void LocusVariables::calcLocusEcotypeAdditiveVariances()
+{
+    // Calculate within-ecotype additive variance
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        for (size_t genotype = 0u; genotype < 3u; ++genotype) {
+            locusEcotypeMeanBreedingValues[ecotype] += locusGenotypeEcotypeSizes[genotype][ecotype] * locusGenotypeBreedingValues[genotype];
+            locusEcotypeAdditiveVariances[ecotype] += locusGenotypeEcotypeSizes[genotype][ecotype] * sqr(locusGenotypeBreedingValues[genotype]);
+        }
+        locusEcotypeMeanBreedingValues[ecotype] /= ecotypeSizes[ecotype];
+        sumsq2var(locusEcotypeAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanBreedingValues[ecotype]);
+    }
+}
+
+void LocusVariables::completeLocusInteractionVariance()
+{
+    sumsq2var(locusInteractionVariance, popSize, 0.0);
+}
+
+void LocusVariables::completeLocusNonAdditiveVariances()
+{
+    sumsq2var(locusNonAdditiveVariance, popSize, 0.0);
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        locusEcotypeMeanNonAdditiveDeviations[ecotype] /= ecotypeSizes[ecotype];
+        sumsq2var(locusEcotypeNonAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanNonAdditiveDeviations[ecotype]);
+    }
+}
+
+void LocusVariables::calcLocusEcotypeDifferentiations()
+{
+    // Calculate heterogeneity statistics
+    locusFst = 1.0 - locusObservedHeterozygosity / locusExpectedHeterozygosity;
+    locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes);
+    locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes);
+    locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes);
+    locusCst = Xst(locusNonAdditiveVariance, locusEcotypeNonAdditiveVariances, popSize, ecotypeSizes);
+}
+
+void LocusVariables::accumulateLocusGeneticMoments()
+{
+    size_t genotype;
+    size_t ecotype;
+    double geneticValue;
+
+    // Loop through individuals
+    for (PInd pInd : individuals) {
+
+        // Get individual information
+        ecotype = pInd->getEcotype();
+        genotype = pInd->getLocus(locus).alleleCount;
+        geneticValue = pInd->getLocus(locus).locusGeneticValue;
+
+        accumulateCensus(genotype, ecotype);
+        accumulateAlleleCounts(genotype, ecotype);
+        accumulateGeneticValues(genotype, ecotype, geneticValue);
+        accumulateGeneticValuesByAlleleCounts(genotype, geneticValue);
+
+    }
+}
+
+void LocusVariables::accumulateLocusIndividualResiduals()
+{
+    size_t ecotype;
+    size_t genotype;
+    double geneticValue;
+
+    // Deviation due to epistasis, we need to loop again now that the regression is done
+    for (PInd pInd : individuals) {
+
+        // Get individual information
+        ecotype = pInd->getEcotype();
+        genotype = pInd->getLocus(locus).alleleCount;
+        geneticValue = pInd->getLocus(locus).locusGeneticValue;
+
+        // Measure squared deviations
+        locusInteractionVariance += sqr(geneticValue - locusGenotypeMeanGeneticValues[genotype]);
+        locusNonAdditiveVariance += sqr(geneticValue - locusGenotypeAdditiveExpectations[genotype]);
+        locusEcotypeNonAdditiveVariances[ecotype] += sqr(geneticValue - locusGenotypeAdditiveExpectations[genotype]);
+        locusEcotypeMeanNonAdditiveDeviations[ecotype] += geneticValue - locusGenotypeAdditiveExpectations[genotype];
+
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 // Low-level functions

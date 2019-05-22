@@ -49,6 +49,7 @@ public:
         size_t alleleCount;
         double expression;
         double locusGeneticValue;
+        double nonAdditiveDeviation;
     };
 
     // Constructors
@@ -67,7 +68,7 @@ public:
     std::vector<double> getPhenotypes() const { return phenotypes; }
     std::vector<double> getGeneticValues() const { return geneticValues; }
     std::vector<double> getEnvirValues() const { return envirValues; }
-    std::vector<Locus> getLoci() const { return genotypes; }
+    Locus getLocus(const size_t&);
 
 private:
 

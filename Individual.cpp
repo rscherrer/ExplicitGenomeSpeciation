@@ -41,6 +41,8 @@ Instructions for compiling and running the program
                                          member functions
 ========================================================================================================*/
 
+struct Locus;
+
 // Accessory functions
 
 double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
@@ -85,11 +87,16 @@ Individual::Individual(Individual const * const mother, Individual const * const
 }
 
 
-// Getter
+// Getters
 
 bool Individual::isFemale(const bool &isFemaleHeterogamy) const
 {
     return isHeterogamous == isFemaleHeterogamy;
+}
+
+Locus Individual::getLocus(const size_t &locus)
+{
+    return genotypes[locus];
 }
 
 

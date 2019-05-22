@@ -262,17 +262,23 @@ void decomposeVariance(int t,
     for(size_t cl = 0u; cl < 3u; ++cl)
         for(size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
             if(n[cl] > 1u) {
+
                 double mu = population.avgG[crctr][cl] /= n[cl];
                 double aux = (population.varG[crctr][cl] - n[cl] * sqr(mu)) / (n[cl] - 1u);
                 population.varG[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
+
+                // Phenotypic variance is using mu, the mean genetic value... why?
                 aux = (population.varP[crctr][cl] / n[cl] - sqr(mu));
                 population.varP[crctr][cl] = aux > parameters.tiny ? aux : 0.0;
             }
             else {
+                // If an ecotype is extinct the average genetic value is that of the population and the variance is zero
                 population.avgG[crctr][cl] = population.avgG[crctr][0u];
                 population.varP[crctr][cl] = population.varG[crctr][cl] = 0.0;
             }
         }
+
+    // At this point avgG still contains the sum of genetic values, not the actual mean...
     
     // *** single locus decomposition of genetic variance ***
     // loop over all loci
