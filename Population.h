@@ -25,9 +25,8 @@ public:
     // Getters
     size_t getPopSize() const;
     size_t getNResources() const;
-    size_t getEcotypeSize(const size_t&) const;
 
-    // High-level member functions
+    // High-level setters
     void dispersal(const ParameterSet&);
     void sortByHabitat();
     void resourceDynamics(const size_t&, const double&);
@@ -35,7 +34,6 @@ public:
     void survival(const double&);
     void setBurnin();
     void endBurnin();
-
     void assignEcotypes();
     void getLocalAttackRates(std::list<std::pair<double, double> >&, const size_t&);
     void setEcotypeBoundary(const std::list<std::pair<double, double> >&, const size_t&);
@@ -48,7 +46,8 @@ public:
     void completeMoments(const size_t&);
     void accumulateSingleLocusContributions();
     void calcEcotypeDifferentations(const size_t&, const double&);
-    
+
+    // Genome-wide variance decomposition
     void decomposeVarianceAlongGenome();
 
 
@@ -76,7 +75,7 @@ protected:
     std::vector<std::pair<double, double> > resourceEql;
     std::vector<std::pair<double, double> > ecotypeBoundaries;
 
-    // Low-level member functions
+    // Low-level setters
     void setResourceCapacities(const double&, const double&);
     void setReplenishRates(const double&);
     void setResourceConsumption(const size_t&);
@@ -123,15 +122,20 @@ public:
     void initializeLocusVariables();
     void accumulateLocusGeneticMoments();
     void completeLocusGeneticMoments();
+    void accumulateLocusCensus(const size_t&, const size_t&);
+    void accumulateLocusAlleleCounts(const size_t&, const size_t&);
+    void accumulateLocusGeneticValues(const size_t&, const size_t&, const double&);
+    void accumulateLocusGeneticValuesByAlleleCounts(const size_t&, const double&);
     void calcLocusPhenotypicVariances();
     void regressLocusPhenotypeAgainstGenotype();
     void calcLocusAdditiveVariance();
     void calcLocusDominanceVariance();
     void calcLocusEcotypeAdditiveVariances();
+    void accumulateLocusIndividualResiduals();
     void completeLocusInteractionVariance();
     void completeLocusNonAdditiveVariances();
     void calcLocusHeterozygosities();
-    void calcLocusEcotypeDifferentiations();
+    void calcLocusEcotypeDifferentiations(const double&);
 
     size_t locus;
     size_t trait;
@@ -178,6 +182,13 @@ public:
 
 };
 
+// Accessory functions
 bool compareAlongTradeOff(const std::pair<double, double>&, const std::pair<double, double>&);
+double calcLogisticResourceEq(const double&, const double&, const double&);
+double Xst(const double&, const std::vector<double>&, const size_t&, const std::vector<size_t>&, const double&);
+void sum2mean(double&, const size_t&);
+void sumsq2var(double&, const size_t&, const double&);
+void sumprod2cov(double&, const size_t&, const double&, const double&);
+void clipDown(double&, const double&, const double& = 0.0);
 
 #endif //EXPLICITGENOMESPECIATION_POPULATION_H

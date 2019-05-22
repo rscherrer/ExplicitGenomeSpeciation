@@ -8,6 +8,28 @@
 #include <cassert>
 #include <vector>
 
+
+// Accessory functions
+
+double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
+{
+    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
+    return resource;
+}
+
+bool compareAlongTradeOff (const std::pair<double, double> &x, const std::pair<double, double> &y)
+{
+    bool yOnLeft = y.first < y.second;
+    if(x.first < x.second) {
+        if(yOnLeft) return (x.first < y.first);
+        else return true;
+    }
+    else {
+        if(yOnLeft) return false;
+        else return (x.second < y.second);
+    }
+}
+
 double Xst(const double &popVar, const std::vector<double> &groupVars, const size_t &popSize, const std::vector<size_t> &groupSizes, const double& tiny)
 {
     if (popVar < tiny) {
@@ -29,6 +51,29 @@ double Xst(const double &popVar, const std::vector<double> &groupVars, const siz
         return Xst;
     }
 }
+
+void sum2mean(double &mean, const size_t &nobs)
+{
+    mean /= nobs;
+}
+
+void sumsq2var(double &variance, const size_t &nobs, const double &mean)
+{
+    variance -= nobs * sqr(mean);
+    variance /= nobs;
+}
+
+void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean, const double &secondmean)
+{
+    covariance -= nobs * firstmean * secondmean;
+    covariance /= nobs;
+}
+
+void clipDown(double &value, const double &tiny, const double &lowerbound = 0.0)
+{
+    value = value > tiny ? value : lowerbound;
+}
+
 
 // Constructor
 
@@ -68,12 +113,8 @@ size_t Population::getNResources() const
     return nAccessibleResources;
 }
 
-size_t Population::getEcotypeSize(const size_t &ecotype) const
-{
-    return ecotypeSizes[ecotype];
-}
 
-// High-level functions
+// High-level setters
 
 void Population::dispersal(const ParameterSet& parameters)
 {
@@ -220,16 +261,19 @@ void Population::endBurnin()
     nAccessibleResources = 2u;
 }
 
-bool compareAlongTradeOff (const std::pair<double, double> &x, const std::pair<double, double> &y)
+void Population::assignEcotypes()
 {
-    bool yOnLeft = y.first < y.second;
-    if(x.first < x.second) {
-        if(yOnLeft) return (x.first < y.first);
-        else return true;
-    }
-    else {
-        if(yOnLeft) return false;
-        else return (x.second < y.second);
+
+    // Find ecotype boundaries within each habitat
+    findEcotypeBoundary(0u);
+    findEcotypeBoundary(1u);
+
+    // Set ecotypes
+    for (PInd pInd : individuals) {
+        pInd->setEcotype(ecotypeBoundaries[pInd->getHabitat()]);
+
+        // Update census within each ecotype
+        ++ecotypeSizes[pInd->getEcotype()];
     }
 }
 
@@ -278,49 +322,145 @@ void Population::findEcotypeBoundary(const size_t &habitat)
 
 }
 
-void Population::assignEcotypes()
+
+// Low-level setters
+
+void Population::setResourceCapacities(const double &maxResourceCapacity, const double &habitatAsymmetry)
 {
+    resourceCapacities[0u].first = maxResourceCapacity;
+    resourceCapacities[0u].second = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = (1.0 - habitatAsymmetry) * maxResourceCapacity;
+    resourceCapacities[1u].first = maxResourceCapacity;
+}
 
-    // Find ecotype boundaries within each habitat
-    findEcotypeBoundary(0u);
-    findEcotypeBoundary(1u);
+void Population::setReplenishRates(const double &maxResourceGrowth)
+{
+    replenishRates[0u].first = maxResourceGrowth;
+    replenishRates[0u].second = maxResourceGrowth;
+    replenishRates[1u].first = maxResourceGrowth;
+    replenishRates[1u].second = maxResourceGrowth;
+}
 
-    // Set ecotypes
+void Population::setResourceConsumption(const size_t &habitat)
+{
+    // Initialize consumption
+    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
+
+    // Loop through individuals
+    for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
+
+        // The individual should be of the right habitat
+        assert((*itInd)->getHabitat() == habitat);
+
+        // Record attack rates
+        std::pair<double, double> attackRates = (*itInd)->getAttackRates();
+
+        // Are we in the burn-in period?
+        if (nAccessibleResources < 2u) {
+            attackRates.second = 0.0;
+        }
+
+        // Accumulate consumption
+        resourceConsumption[habitat].first += attackRates.first;
+        resourceConsumption[habitat].second += attackRates.second;
+
+        if (itInd == idHabitatBoundaries[habitat].second)
+        {
+            break;
+        }
+    }
+}
+
+void Population::setResourceEquilibrium(const size_t &habitat)
+{
+    resourceEql[habitat].first = calcLogisticResourceEq(resourceCapacities[habitat].first,
+                                                        replenishRates[habitat].first,
+                                                        resourceConsumption[habitat].first);
+    resourceEql[habitat].second = calcLogisticResourceEq(resourceCapacities[habitat].second,
+                                                         replenishRates[habitat].second,
+                                                         resourceConsumption[habitat].second);
+}
+
+void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
+{
     for (PInd pInd : individuals) {
-        pInd->setEcotype(ecotypeBoundaries[pInd->getHabitat()]);
 
-        // Update census within each ecotype
-        ++ecotypeSizes[pInd->getEcotype()];
+        // Reinforce stabilizing selection during burn-in period
+        if (nAccessibleResources < 2u) {
+            pInd->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
+        }
+
+            // Or apply regular fitness function
+        else {
+            pInd->setFitness(resourceEql[habitat]);
+        }
     }
 }
 
-void sum2mean(double &mean, const size_t &nobs)
+void Population::classifyGenders(const bool &isFemaleHeterogamy)
 {
-    mean /= nobs;
-}
-
-void sumsq2var(double &variance, const size_t &nobs, const double &mean)
-{
-    variance -= nobs * sqr(mean);
-    variance /= nobs;
-}
-
-void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean, const double &secondmean)
-{
-    covariance -= nobs * firstmean * secondmean;
-    covariance /= nobs;
-}
-
-void clipDown(double &value, const double &tiny, const double &lowerbound = 0.0)
-{
-    value = value > tiny ? value : lowerbound;
-}
-
-void Population::decomposeVarianceAlongGenome()
-{
-    for (LocusVariables * locus : locusVariables) {
-        locus->decomposeLocusVariance();
+    for (PInd pInd : individuals)
+    {
+        if (pInd->isFemale(isFemaleHeterogamy))
+        {
+            females.push_back(pInd);
+        }
+        else {
+            males.push_back(pInd);
+        }
     }
+}
+
+void Population::setMaleFitnesses(const size_t &nMales, const double &tiny)
+{
+    double sumMaleSuccesses = 0.0;
+    for (size_t i = 0u; i < nMales; ++i) {
+
+        maleSuccesses[i] = males[i]->getFitness();
+
+        // Accumulate mating successes
+        sumMaleSuccesses += maleSuccesses[i];
+
+    }
+
+    // All males have equal success if successes are too small
+    if (sumMaleSuccesses < tiny) {
+        maleSuccesses = std::vector<double>(nMales, 1.0);
+    }
+}
+
+void Population::birth(const PInd &female, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
+{
+    for (size_t idFather : female->getMates()) {
+        offspring.push_back(new Individual(female, males[idFather], parameters, geneticArchitecture));
+    }
+}
+
+void Population::emptyPopulation()
+{
+    individuals.erase(individuals.begin(), individuals.end());
+}
+
+
+// Variance decomposition
+
+void Population::decomposeVariance(const double &tiny)
+{
+
+    initializeVarianceComponents();
+
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        accumulateMoments(trait);
+        completeMoments(trait);
+    }
+
+    accumulateSingleLocusContributions();
+
+    // Calculate differentiation
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        calcEcotypeDifferentations(trait, tiny);
+    }
+
 }
 
 void Population::initializeVarianceComponents()
@@ -396,44 +536,19 @@ void Population::completeMoments(const size_t &trait)
     }
 }
 
-
-
 void Population::calcEcotypeDifferentations(const size_t &trait, const double &tiny)
 {
-    Pst[trait] = Xst(phenotypicVariances, ecotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
-    Gst[trait] = Xst(geneticVariances, ecotypeGeneticVariances, popSize, ecotypeSizes, tiny);
-    Qst[trait] = Xst(additiveVariances, ecotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
-    Cst[trait] = Xst(nonAdditiveVariances, ecotypeNonAdditiveVariances, popSize, ecotypeSizes, tiny);
+    Pst[trait] = Xst(phenotypicVariances[trait], ecotypePhenotypicVariances[trait], popSize, ecotypeSizes, tiny);
+    Gst[trait] = Xst(geneticVariances[trait], ecotypeGeneticVariances[trait], popSize, ecotypeSizes, tiny);
+    Qst[trait] = Xst(additiveVariances[trait], ecotypeAdditiveVariances[trait], popSize, ecotypeSizes, tiny);
+    Cst[trait] = Xst(nonAdditiveVariances[trait], ecotypeNonAdditiveVariances[trait], popSize, ecotypeSizes, tiny);
 }
 
-void Population::decomposeVariance(const double &tiny)
+void Population::decomposeVarianceAlongGenome()
 {
-
-    initializeVarianceComponents();
-
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        accumulateMoments(trait);
-        completeMoments(trait);
+    for (LocusVariables * locus : locusVariables) {
+        locus->decomposeLocusVariance();
     }
-
-    accumulateSingleLocusContributions();
-
-    // Calculate differentiation
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        calcEcotypeDifferentations(trait, tiny);
-    }
-
-}
-
-
-
-
-// Accessory functions
-
-double calcLogisticResourceEq(const double &resourceCapacity, const double &replenishRate, const double &consumption)
-{
-    double resource = resourceCapacity * (1.0 - consumption / replenishRate);
-    return resource;
 }
 
 
@@ -450,6 +565,7 @@ void LocusVariables::decomposeLocusVariance()
     calcLocusAdditiveVariance();
     calcLocusDominanceVariance();
     calcLocusEcotypeAdditiveVariances();
+    accumulateLocusIndividualResiduals();
     completeLocusInteractionVariance();
     completeLocusNonAdditiveVariances();
     calcLocusHeterozygosities();
@@ -479,6 +595,28 @@ void LocusVariables::initializeLocusVariables()
     locusEcotypeNonAdditiveVariances = {0.0, 0.0};
     locusEcotypeMeanNonAdditiveDeviations = {0.0, 0.0};
     locusObservedHeterozygosity = 0.0;
+}
+
+void LocusVariables::accumulateLocusGeneticMoments()
+{
+    size_t genotype;
+    size_t ecotype;
+    double geneticValue;
+
+    // Loop through individuals
+    for (PInd pInd : individuals) {
+
+        // Get individual information
+        ecotype = pInd->getEcotype();
+        genotype = pInd->getLocus(locus).alleleCount;
+        geneticValue = pInd->getLocus(locus).locusGeneticValue;
+
+        accumulateLocusCensus(genotype, ecotype);
+        accumulateLocusAlleleCounts(genotype, ecotype);
+        accumulateLocusGeneticValues(genotype, ecotype, geneticValue);
+        accumulateLocusGeneticValuesByAlleleCounts(genotype, geneticValue);
+
+    }
 }
 
 void LocusVariables::accumulateLocusCensus(const size_t &genotype, const size_t &ecotype)
@@ -602,36 +740,14 @@ void LocusVariables::completeLocusNonAdditiveVariances()
     }
 }
 
-void LocusVariables::calcLocusEcotypeDifferentiations()
+void LocusVariables::calcLocusEcotypeDifferentiations(const double &tiny)
 {
     // Calculate heterogeneity statistics
     locusFst = 1.0 - locusObservedHeterozygosity / locusExpectedHeterozygosity;
-    locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes);
-    locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes);
-    locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes);
-    locusCst = Xst(locusNonAdditiveVariance, locusEcotypeNonAdditiveVariances, popSize, ecotypeSizes);
-}
-
-void LocusVariables::accumulateLocusGeneticMoments()
-{
-    size_t genotype;
-    size_t ecotype;
-    double geneticValue;
-
-    // Loop through individuals
-    for (PInd pInd : individuals) {
-
-        // Get individual information
-        ecotype = pInd->getEcotype();
-        genotype = pInd->getLocus(locus).alleleCount;
-        geneticValue = pInd->getLocus(locus).locusGeneticValue;
-
-        accumulateCensus(genotype, ecotype);
-        accumulateAlleleCounts(genotype, ecotype);
-        accumulateGeneticValues(genotype, ecotype, geneticValue);
-        accumulateGeneticValuesByAlleleCounts(genotype, geneticValue);
-
-    }
+    locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
+    locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes, tiny);
+    locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
+    locusCst = Xst(locusNonAdditiveVariance, locusEcotypeNonAdditiveVariances, popSize, ecotypeSizes, tiny);
 }
 
 void LocusVariables::accumulateLocusIndividualResiduals()
@@ -657,130 +773,3 @@ void LocusVariables::accumulateLocusIndividualResiduals()
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-// Low-level functions
-
-void Population::setResourceCapacities(const double &maxResourceCapacity, const double &habitatAsymmetry)
-{
-    resourceCapacities[0u].first = maxResourceCapacity;
-    resourceCapacities[0u].second = (1.0 - habitatAsymmetry) * maxResourceCapacity;
-    resourceCapacities[1u].first = (1.0 - habitatAsymmetry) * maxResourceCapacity;
-    resourceCapacities[1u].first = maxResourceCapacity;
-}
-
-void Population::setReplenishRates(const double &maxResourceGrowth)
-{
-    replenishRates[0u].first = maxResourceGrowth;
-    replenishRates[0u].second = maxResourceGrowth;
-    replenishRates[1u].first = maxResourceGrowth;
-    replenishRates[1u].second = maxResourceGrowth;
-}
-
-void Population::setResourceConsumption(const size_t &habitat)
-{
-    // Initialize consumption
-    resourceConsumption[habitat].first = resourceConsumption[habitat].second = 0.0;
-
-    // Loop through individuals
-    for (auto itInd = idHabitatBoundaries[habitat].first;; ++itInd) {
-
-        // The individual should be of the right habitat
-        assert((*itInd)->getHabitat() == habitat);
-
-        // Record attack rates
-        std::pair<double, double> attackRates = (*itInd)->getAttackRates();
-
-        // Are we in the burn-in period?
-        if (nAccessibleResources < 2u) {
-            attackRates.second = 0.0;
-        }
-
-        // Accumulate consumption
-        resourceConsumption[habitat].first += attackRates.first;
-        resourceConsumption[habitat].second += attackRates.second;
-
-        if (itInd == idHabitatBoundaries[habitat].second)
-        {
-            break;
-        }
-    }
-}
-
-void Population::setResourceEquilibrium(const size_t &habitat)
-{
-    resourceEql[habitat].first = calcLogisticResourceEq(resourceCapacities[habitat].first,
-                                                    replenishRates[habitat].first,
-                                                    resourceConsumption[habitat].first);
-    resourceEql[habitat].second = calcLogisticResourceEq(resourceCapacities[habitat].second,
-                                                     replenishRates[habitat].second,
-                                                     resourceConsumption[habitat].second);
-}
-
-void Population::assignFitnesses(const size_t &habitat, const double &ecoSelCoeff)
-{
-    for (PInd pInd : individuals) {
-
-        // Reinforce stabilizing selection during burn-in period
-        if (nAccessibleResources < 2u) {
-            pInd->setBurninFitness(resourceEql[habitat], ecoSelCoeff);
-        }
-
-        // Or apply regular fitness function
-        else {
-            pInd->setFitness(resourceEql[habitat]);
-        }
-    }
-}
-
-void Population::classifyGenders(const bool &isFemaleHeterogamy)
-{
-    for (PInd pInd : individuals)
-    {
-        if (pInd->isFemale(isFemaleHeterogamy))
-        {
-            females.push_back(pInd);
-        }
-        else {
-            males.push_back(pInd);
-        }
-    }
-}
-
-void Population::setMaleFitnesses(const size_t &nMales, const double &tiny)
-{
-    double sumMaleSuccesses = 0.0;
-    for (size_t i = 0u; i < nMales; ++i) {
-
-        maleSuccesses[i] = males[i]->getFitness();
-
-        // Accumulate mating successes
-        sumMaleSuccesses += maleSuccesses[i];
-
-    }
-
-    // All males have equal success if successes are too small
-    if (sumMaleSuccesses < tiny) {
-        maleSuccesses = std::vector<double>(nMales, 1.0);
-    }
-}
-
-void Population::birth(const PInd &female, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
-{
-    for (size_t idFather : female->getMates()) {
-        offspring.push_back(new Individual(female, males[idFather], parameters, geneticArchitecture));
-    }
-}
-
-void Population::emptyPopulation()
-{
-    individuals.erase(individuals.begin(), individuals.end());
-}

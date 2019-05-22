@@ -68,7 +68,7 @@ public:
     std::vector<double> getPhenotypes() const { return phenotypes; }
     std::vector<double> getGeneticValues() const { return geneticValues; }
     std::vector<double> getEnvirValues() const { return envirValues; }
-    Locus getLocus(const size_t&);
+    Locus getLocus(const size_t&) const;
 
 private:
 
