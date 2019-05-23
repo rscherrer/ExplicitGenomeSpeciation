@@ -43,12 +43,12 @@ public:
     void decomposeVariance(const double&);
     void initializeVarianceComponents();
     void accumulateMoments(const size_t&);
-    void completeMoments(const size_t&);
+    void completeMoments(const size_t&, const double&);
     void accumulateSingleLocusContributions();
     void calcEcotypeDifferentations(const size_t&, const double&);
 
     // Genome-wide variance decomposition
-    void decomposeVarianceAlongGenome();
+    void decomposeVarianceAlongGenome(const double&);
 
 
 protected:
@@ -117,11 +117,11 @@ class LocusVariables: public Population {
 public:
 
     // Single-locus variance decomposition
-    void decomposeLocusVariance();
+    void decomposeLocusVariance(const double&);
 
     void initializeLocusVariables();
     void accumulateLocusGeneticMoments();
-    void completeLocusGeneticMoments();
+    void completeLocusGeneticMoments(const double&);
     void accumulateLocusCensus(const size_t&, const size_t&);
     void accumulateLocusAlleleCounts(const size_t&, const size_t&);
     void accumulateLocusGeneticValues(const size_t&, const size_t&, const double&);
@@ -130,10 +130,10 @@ public:
     void regressLocusPhenotypeAgainstGenotype();
     void calcLocusAdditiveVariance();
     void calcLocusDominanceVariance();
-    void calcLocusEcotypeAdditiveVariances();
+    void calcLocusEcotypeAdditiveVariances(const double&);
     void accumulateLocusIndividualResiduals();
-    void completeLocusInteractionVariance();
-    void completeLocusNonAdditiveVariances();
+    void completeLocusInteractionVariance(const double&);
+    void completeLocusNonAdditiveVariances(const double&);
     void calcLocusHeterozygosities();
     void calcLocusEcotypeDifferentiations(const double&);
 

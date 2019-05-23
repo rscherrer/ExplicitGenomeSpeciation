@@ -57,16 +57,18 @@ void sum2mean(double &mean, const size_t &nobs)
     mean /= nobs;
 }
 
-void sumsq2var(double &variance, const size_t &nobs, const double &mean)
+void sumsq2var(double &variance, const size_t &nobs, const double &mean, const double &tiny)
 {
     variance -= nobs * sqr(mean);
     variance /= nobs;
+    clipDown(variance, tiny);
 }
 
-void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean, const double &secondmean)
+void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean, const double &secondmean, const double &tiny)
 {
     covariance -= nobs * firstmean * secondmean;
     covariance /= nobs;
+    clipDown(covariance, tiny);
 }
 
 void clipDown(double &value, const double &tiny, const double &lowerbound = 0.0)
@@ -451,7 +453,7 @@ void Population::decomposeVariance(const double &tiny)
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
         accumulateMoments(trait);
-        completeMoments(trait);
+        completeMoments(trait, tiny);
     }
 
     accumulateSingleLocusContributions();
@@ -522,17 +524,17 @@ void Population::accumulateMoments(const size_t &trait)
     }
 }
 
-void Population::completeMoments(const size_t &trait)
+void Population::completeMoments(const size_t &trait, const double &tiny)
 {
     // Complete moments
     // sum2mean(meanPhenotypes[trait], popSize);
     sum2mean(meanGeneticValues[trait], popSize);
-    sumsq2var(phenotypicVariances[trait], popSize, meanGeneticValues[trait]);
-    sumsq2var(geneticVariances[trait], popSize, meanGeneticValues[trait]);
+    sumsq2var(phenotypicVariances[trait], popSize, meanGeneticValues[trait], tiny);  // could tiny be my only global? or a default??
+    sumsq2var(geneticVariances[trait], popSize, meanGeneticValues[trait], tiny);
     for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
         sum2mean(ecotypeMeanGeneticValues[trait][ecotype], ecotypeSizes[ecotype]);
-        sumsq2var(ecotypePhenotypicVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype]);
-        sumsq2var(ecotypeGeneticVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype]);
+        sumsq2var(ecotypePhenotypicVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype], tiny);
+        sumsq2var(ecotypeGeneticVariances[trait][ecotype], ecotypeSizes[ecotype], ecotypeMeanGeneticValues[trait][ecotype], tiny);
     }
 }
 
@@ -544,32 +546,32 @@ void Population::calcEcotypeDifferentations(const size_t &trait, const double &t
     Cst[trait] = Xst(nonAdditiveVariances[trait], ecotypeNonAdditiveVariances[trait], popSize, ecotypeSizes, tiny);
 }
 
-void Population::decomposeVarianceAlongGenome()
+void Population::decomposeVarianceAlongGenome(const double &tiny)
 {
     for (LocusVariables * locus : locusVariables) {
-        locus->decomposeLocusVariance();
+        locus->decomposeLocusVariance(tiny);
     }
 }
 
 
 // Single-locus variance decomposition
 
-void LocusVariables::decomposeLocusVariance()
+void LocusVariables::decomposeLocusVariance(const double &tiny)
 {
 
     initializeLocusVariables();
     accumulateLocusGeneticMoments();
-    completeLocusGeneticMoments();
+    completeLocusGeneticMoments(tiny);
     calcLocusPhenotypicVariances();
     regressLocusPhenotypeAgainstGenotype();
     calcLocusAdditiveVariance();
     calcLocusDominanceVariance();
-    calcLocusEcotypeAdditiveVariances();
+    calcLocusEcotypeAdditiveVariances(tiny);
     accumulateLocusIndividualResiduals();
-    completeLocusInteractionVariance();
-    completeLocusNonAdditiveVariances();
+    completeLocusInteractionVariance(tiny);
+    completeLocusNonAdditiveVariances(tiny);
     calcLocusHeterozygosities();
-    calcLocusEcotypeDifferentiations();
+    calcLocusEcotypeDifferentiations(tiny);
 
 }
 
@@ -659,20 +661,20 @@ void LocusVariables::calcLocusHeterozygosities()
     locusExpectedHeterozygosity = locusMeanAlleleCount * (1.0 - 0.5 * locusMeanAlleleCount);
 }
 
-void LocusVariables::completeLocusGeneticMoments()
+void LocusVariables::completeLocusGeneticMoments(const double &tiny)
 {
     // Complete population moments
     sum2mean(locusMeanGeneticValue, popSize);
     sum2mean(locusMeanAlleleCount, popSize);
-    sumsq2var(locusGeneticVariance, popSize, locusMeanGeneticValue);
-    sumsq2var(locusVarAlleleCount, popSize, locusMeanAlleleCount);
-    sumprod2cov(locusCovGeneticValueAlleleCount, popSize, locusMeanGeneticValue, locusMeanAlleleCount);
+    sumsq2var(locusGeneticVariance, popSize, locusMeanGeneticValue, tiny);
+    sumsq2var(locusVarAlleleCount, popSize, locusMeanAlleleCount, tiny);
+    sumprod2cov(locusCovGeneticValueAlleleCount, popSize, locusMeanGeneticValue, locusMeanAlleleCount, tiny);
 
     // Complete ecotype moments
     for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
         sum2mean(locusEcotypeMeanGeneticValues[ecotype], ecotypeSizes[ecotype]);
         sum2mean(locusEcotypeAlleleFrequencies[ecotype], static_cast<size_t>(2.0 * ecotypeSizes[ecotype]));
-        sumsq2var(locusEcotypeGeneticVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanGeneticValues[ecotype]);
+        sumsq2var(locusEcotypeGeneticVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanGeneticValues[ecotype], tiny);
     }
 
     // Complete genotype moments
@@ -713,7 +715,7 @@ void LocusVariables::calcLocusDominanceVariance()
     locusDominanceVariance /= popSize;
 }
 
-void LocusVariables::calcLocusEcotypeAdditiveVariances()
+void LocusVariables::calcLocusEcotypeAdditiveVariances(const double &tiny)
 {
     // Calculate within-ecotype additive variance
     for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
@@ -722,32 +724,8 @@ void LocusVariables::calcLocusEcotypeAdditiveVariances()
             locusEcotypeAdditiveVariances[ecotype] += locusGenotypeEcotypeSizes[genotype][ecotype] * sqr(locusGenotypeBreedingValues[genotype]);
         }
         locusEcotypeMeanBreedingValues[ecotype] /= ecotypeSizes[ecotype];
-        sumsq2var(locusEcotypeAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanBreedingValues[ecotype]);
+        sumsq2var(locusEcotypeAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanBreedingValues[ecotype], tiny);
     }
-}
-
-void LocusVariables::completeLocusInteractionVariance()
-{
-    sumsq2var(locusInteractionVariance, popSize, 0.0);
-}
-
-void LocusVariables::completeLocusNonAdditiveVariances()
-{
-    sumsq2var(locusNonAdditiveVariance, popSize, 0.0);
-    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
-        locusEcotypeMeanNonAdditiveDeviations[ecotype] /= ecotypeSizes[ecotype];
-        sumsq2var(locusEcotypeNonAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanNonAdditiveDeviations[ecotype]);
-    }
-}
-
-void LocusVariables::calcLocusEcotypeDifferentiations(const double &tiny)
-{
-    // Calculate heterogeneity statistics
-    locusFst = 1.0 - locusObservedHeterozygosity / locusExpectedHeterozygosity;
-    locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
-    locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes, tiny);
-    locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
-    locusCst = Xst(locusNonAdditiveVariance, locusEcotypeNonAdditiveVariances, popSize, ecotypeSizes, tiny);
 }
 
 void LocusVariables::accumulateLocusIndividualResiduals()
@@ -771,5 +749,29 @@ void LocusVariables::accumulateLocusIndividualResiduals()
         locusEcotypeMeanNonAdditiveDeviations[ecotype] += geneticValue - locusGenotypeAdditiveExpectations[genotype];
 
     }
+}
+
+void LocusVariables::completeLocusInteractionVariance(const double &tiny)
+{
+    sumsq2var(locusInteractionVariance, popSize, 0.0, tiny);
+}
+
+void LocusVariables::completeLocusNonAdditiveVariances(const double &tiny)
+{
+    sumsq2var(locusNonAdditiveVariance, popSize, 0.0, tiny);
+    for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
+        locusEcotypeMeanNonAdditiveDeviations[ecotype] /= ecotypeSizes[ecotype];
+        sumsq2var(locusEcotypeNonAdditiveVariances[ecotype], ecotypeSizes[ecotype], locusEcotypeMeanNonAdditiveDeviations[ecotype], tiny);
+    }
+}
+
+void LocusVariables::calcLocusEcotypeDifferentiations(const double &tiny)
+{
+    // Calculate heterogeneity statistics
+    locusFst = locusExpectedHeterozygosity > tiny ? 1.0 - locusObservedHeterozygosity / locusExpectedHeterozygosity : 0.0;
+    locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
+    locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes, tiny);
+    locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
+    locusCst = Xst(locusNonAdditiveVariance, locusEcotypeNonAdditiveVariances, popSize, ecotypeSizes, tiny);
 }
 
