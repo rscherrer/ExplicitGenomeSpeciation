@@ -23,6 +23,12 @@ Instructions for compiling and running the program
 
 =================================================================================================================================*/
 
+#include "ParameterSet.h"
+#include "GeneticArchitecture.h"
+#include "Individual.h"
+#include "Population.h"
+#include "OutputFile.h"
+#include "random.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,16 +37,9 @@ Instructions for compiling and running the program
 #include <string>
 #include <vector>
 #include <list>
-#include <queue>
 #include <cassert>
 #include <gtest/gtest.h>
-#include "random.h"
-#include "Individual.h"
-#include "analysis.h"
-#include "GeneticArchitecture.h"
-#include "Buffer.h"
-#include "Population.h"
-#include "OutputFile.h"
+
 
 /*=======================================================================================================
                                             main()
@@ -190,6 +189,12 @@ int main(int argc, char * argv[])
 
                 // Overall variance decomposition
                 population->decomposeVariance(parameters.tiny);
+
+                // Record data
+                population->writePopulationData(datFile);
+                population->screenshotIndividuals();
+                population->screenshotLoci();
+                population->screenshotNetworkEdges();
 
             }
 

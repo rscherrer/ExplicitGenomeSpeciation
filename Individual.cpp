@@ -23,6 +23,11 @@ Instructions for compiling and running the program
 
 =================================================================================================================================*/
 
+#include "Individual.h"
+#include "ParameterSet.h"
+#include "Population.h"
+#include "GeneticArchitecture.h"
+#include "random.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,11 +36,7 @@ Instructions for compiling and running the program
 #include <algorithm>
 #include <list>
 #include <cassert>
-#include "Individual.h"
-#include "random.h"
-#include "ParameterSet.h"
-#include "Population.h"
-#include "GeneticArchitecture.h"
+
 
 /*=======================================================================================================
                                          member functions
@@ -132,7 +133,7 @@ void Individual::setMatePreference(const double &matePreferenceStrength)
 void Individual::chooseMates(const double &matingSeasonEnd,
         std::discrete_distribution<size_t> &maleMarket,
         const std::vector<PInd> &males,
-        const ParameterSet &parameters)
+        const ParameterSet &parameters) const
 {
     // Loop through offspring and through the mating season
     for (size_t t = 0u; nOffspring > 0u && t < matingSeasonEnd; ++t) {

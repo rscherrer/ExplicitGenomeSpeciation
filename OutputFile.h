@@ -5,8 +5,8 @@
 #ifndef EXPLICITGENOMESPECIATION_OUTPUTFILE_H
 #define EXPLICITGENOMESPECIATION_OUTPUTFILE_H
 
-#include <fstream>
 #include "ParameterSet.h"
+#include <fstream>
 
 class OutputFile {
 

@@ -5,12 +5,11 @@
 #ifndef EXPLICITGENOMESPECIATION_POPULATION_H
 #define EXPLICITGENOMESPECIATION_POPULATION_H
 
-#include <vector>
-#include <set>
-#include <random>
 #include "Individual.h"
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
+#include <vector>
+#include <random> //?
 
 // Forward declaration
 class Individual;
@@ -195,8 +194,8 @@ bool compareAlongTradeOff(const std::pair<double, double>&, const std::pair<doub
 double calcLogisticResourceEq(const double&, const double&, const double&);
 double Xst(const double&, const std::vector<double>&, const size_t&, const std::vector<size_t>&, const double&);
 void sum2mean(double&, const size_t&);
-void sumsq2var(double&, const size_t&, const double&);
-void sumprod2cov(double&, const size_t&, const double&, const double&);
+void sumsq2var(double&, const size_t&, const double&, const double&);
+void sumprod2cov(double&, const size_t&, const double&, const double&, const double&);
 void clipDown(double&, const double&, const double& = 0.0);
 
 #endif //EXPLICITGENOMESPECIATION_POPULATION_H

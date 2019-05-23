@@ -70,48 +70,9 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/main.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.s
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: ../random.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Individual.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o: ../analysis.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.s
-
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o: ../Tests/test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o"
 	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.i: cmake_force
@@ -124,7 +85,7 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.s: cmake_force
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o: ../ParameterSet.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o"
 	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.cpp
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.i: cmake_force
@@ -135,61 +96,9 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.s
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o: ../BufferBox.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.s
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Population.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o: ../Buffer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.s
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o: ../ioroutines.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.i
-
-CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.s
-
 CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
 CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o: ../GeneticArchitecture.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o"
 	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.cpp
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.i: cmake_force
@@ -200,22 +109,35 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.s
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
-CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o: ../OutputFiles.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.cpp
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o: ../Individual.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.i
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.i
 
-CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.s
+CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Individual.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.s
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o: ../Population.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.i
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Population.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.s
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
 CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o: ../OutputFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o"
 	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.cpp
 
 CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.i: cmake_force
@@ -226,44 +148,47 @@ CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.s"
 	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.s
 
+CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: CMakeFiles/ExplicitGenomeSpeciation.dir/flags.make
+CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o: ../random.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o -c /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp > CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.i
+
+CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/random.cpp -o CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.s
+
 # Object files for target ExplicitGenomeSpeciation
 ExplicitGenomeSpeciation_OBJECTS = \
 "CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o" \
 "CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o" \
 "CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o" \
 "CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o" \
-"CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o"
+"CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o" \
+"CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o" \
+"CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o" \
+"CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o"
 
 # External object files for target ExplicitGenomeSpeciation
 ExplicitGenomeSpeciation_EXTERNAL_OBJECTS =
 
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/main.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/analysis.cpp.o
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Tests/test.cpp.o
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/ParameterSet.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/BufferBox.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Buffer.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/ioroutines.cpp.o
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/GeneticArchitecture.cpp.o
-ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFiles.cpp.o
+ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Individual.cpp.o
+ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/Population.cpp.o
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/OutputFile.cpp.o
+ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/random.cpp.o
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/build.make
 ExplicitGenomeSpeciation.exe: lib/libgtestd.a
 ExplicitGenomeSpeciation.exe: lib/libgtest_maind.a
 ExplicitGenomeSpeciation.exe: lib/libgtestd.a
 ExplicitGenomeSpeciation.exe: CMakeFiles/ExplicitGenomeSpeciation.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable ExplicitGenomeSpeciation.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ExplicitGenomeSpeciation.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ExplicitGenomeSpeciation.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -318,18 +318,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Buffer.h">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/BufferBox.h">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/GeneticArchitecture.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
@@ -348,12 +336,6 @@
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFile.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/OutputFiles.h">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ParameterSet.cpp">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
@@ -367,21 +349,6 @@
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/Tests/test.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/accessories.h">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/analysis.h">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.cpp">
-			<Option target="ExplicitGenomeSpeciation"/>
-		</Unit>
-		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/ioroutines.h">
 			<Option target="ExplicitGenomeSpeciation"/>
 		</Unit>
 		<Unit filename="/cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/lib/googletest-master/googlemock/src/gmock-all.cc">

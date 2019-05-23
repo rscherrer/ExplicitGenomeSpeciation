@@ -27,12 +27,12 @@ Instructions for compiling and running the program
 #ifndef __genomic_signatures_of_speciation__individual__
 #define __genomic_signatures_of_speciation__individual__
 
-#include <list>
-#include <vector>
 #include "ParameterSet.h"
 #include "Population.h"
 #include "GeneticArchitecture.h"
 #include "square.h"
+#include <list>
+#include <vector>
 
 class Buffer;
 
@@ -78,8 +78,8 @@ private:
     mutable size_t habitat;
     mutable size_t ecotype;
     double fitness;
-    double nOffspring;
-    std::vector<size_t> mates;
+    mutable double nOffspring;
+    mutable std::vector<size_t> mates;
     double matePreference;
     std::pair<double, double> attackRates;
 
@@ -97,7 +97,7 @@ private:
     void setBurninFitness(const std::pair<double, double>&, const double&);
     void setAttackRates(const double&);
     void setMatePreference(const double&);
-    void chooseMates(const double&, std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&);
+    void chooseMates(const double&, std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&) const;
     double assessMatingProb(const double&, const double&) const;
     bool acceptMate(Individual const * const, const ParameterSet&) const;
     size_t sampleClutchSize(const double&) const;

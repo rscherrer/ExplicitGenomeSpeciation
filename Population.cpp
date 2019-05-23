@@ -83,15 +83,15 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
 {
 
     // With genetic sequence provided
-    if (parameters.sequence.size() == parameters.nBits) {
-        for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
-            individuals.push_back(new Individual(parameters.sequence, parameters, geneticArchitecture));
+    if (parameters.initialSequence.size() == parameters.nBits) {
+        for (size_t i = 0u; i < parameters.initialPopSize; ++i) {
+            individuals.push_back(new Individual(parameters.initialSequence, parameters, geneticArchitecture));
         }
     }
 
-    // Or not
+    // Or not generate an initial genome sequence
     else {
-        for (size_t i = 0u; i < parameters.nIndividualInit; ++i) {
+        for (size_t i = 0u; i < parameters.initialPopSize; ++i) {
             individuals.push_back(new Individual(parameters, geneticArchitecture));
         }
     }
@@ -133,7 +133,7 @@ void Population::dispersal(const ParameterSet& parameters)
     if (parameters.dispersalRate > 0.5) {
         for (PInd pInd : individuals) {
             if (rnd::bernoulli(parameters.dispersalRate)) {
-                pInd->disperse(parameters.nHabitat);
+                pInd->disperse(parameters.nHabitats);
             }
         }
     }
@@ -153,7 +153,7 @@ void Population::dispersal(const ParameterSet& parameters)
         size_t j = 0u;
         for (size_t i : migrants) {
             std::advance(itInd, i - j);
-            (*itInd)->disperse(parameters.nHabitat);
+            (*itInd)->disperse(parameters.nHabitats);
             j = i;
         }
     }

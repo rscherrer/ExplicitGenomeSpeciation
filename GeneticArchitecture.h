@@ -5,10 +5,9 @@
 #ifndef EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
 #define EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
 
+#include "ParameterSet.h"
 #include <list>
 #include <vector>
-#include <set>
-#include "ParameterSet.h"
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
