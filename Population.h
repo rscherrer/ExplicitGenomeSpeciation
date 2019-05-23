@@ -96,12 +96,16 @@ protected:
     std::vector<double> interactionVariances;
     std::vector<double> nonAdditiveVariances;
 
+    std::vector<double> varianceAlleleFrequencies;
+    std::vector<double> populationExpectedHeterozygosity;
+
     std::vector<std::vector<double> > ecotypeMeanGeneticValues;
     std::vector<std::vector<double> > ecotypePhenotypicVariances;
     std::vector<std::vector<double> > ecotypeGeneticVariances;
     std::vector<std::vector<double> > ecotypeAdditiveVariances;
     std::vector<std::vector<double> > ecotypeNonAdditiveVariances;
 
+    std::vector<double> Fst;
     std::vector<double> Pst;
     std::vector<double> Gst;
     std::vector<double> Qst;
@@ -134,7 +138,7 @@ public:
     void accumulateLocusIndividualResiduals();
     void completeLocusInteractionVariance(const double&);
     void completeLocusNonAdditiveVariances(const double&);
-    void calcLocusHeterozygosities();
+    void calcLocusHeterozygosities(const double&);
     void calcLocusEcotypeDifferentiations(const double&);
 
     size_t locus;
@@ -142,6 +146,7 @@ public:
 
     double locusMeanGeneticValue;
     double locusMeanAlleleCount;
+    double locusAlleleFrequency;
     double locusVarAlleleCount;
     double locusCovGeneticValueAlleleCount;
     double locusAvgSubstitutionEffect;
@@ -171,8 +176,9 @@ public:
     std::vector<double> locusEcotypeNonAdditiveVariances;
     std::vector<double> locusEcotypeAlleleFrequencies;
 
-    double locusExpectedHeterozygosity;
-    double locusObservedHeterozygosity;
+    double locusPopulationExpectedHeterozygosity;
+    double locusEcotypeExpectedHeterozygosity;
+    double locusVarianceAlleleFrequencies;
 
     double locusFst;
     double locusPst;

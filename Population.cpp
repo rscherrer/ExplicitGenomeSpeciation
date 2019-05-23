@@ -493,6 +493,8 @@ void Population::accumulateSingleLocusContributions()
         dominanceVariances[trait] += locus->locusDominanceVariance;
         interactionVariances[trait] += locus->locusInteractionVariance;
         nonAdditiveVariances[trait] += locus->locusNonAdditiveVariance;
+        varianceAlleleFrequencies[trait] += locus->locusVarianceAlleleFrequencies;
+        populationExpectedHeterozygosity[trait] += locus->locusPopulationExpectedHeterozygosity;
 
         for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
             ecotypeAdditiveVariances[trait][ecotype] += locus->locusEcotypeAdditiveVariances[ecotype];
@@ -540,6 +542,7 @@ void Population::completeMoments(const size_t &trait, const double &tiny)
 
 void Population::calcEcotypeDifferentations(const size_t &trait, const double &tiny)
 {
+    Fst[trait] = populationExpectedHeterozygosity[trait] > tiny ? varianceAlleleFrequencies[trait] / populationExpectedHeterozygosity[trait] : 0.0;
     Pst[trait] = Xst(phenotypicVariances[trait], ecotypePhenotypicVariances[trait], popSize, ecotypeSizes, tiny);
     Gst[trait] = Xst(geneticVariances[trait], ecotypeGeneticVariances[trait], popSize, ecotypeSizes, tiny);
     Qst[trait] = Xst(additiveVariances[trait], ecotypeAdditiveVariances[trait], popSize, ecotypeSizes, tiny);
@@ -570,7 +573,7 @@ void LocusVariables::decomposeLocusVariance(const double &tiny)
     accumulateLocusIndividualResiduals();
     completeLocusInteractionVariance(tiny);
     completeLocusNonAdditiveVariances(tiny);
-    calcLocusHeterozygosities();
+    calcLocusHeterozygosities(tiny);
     calcLocusEcotypeDifferentiations(tiny);
 
 }
@@ -596,7 +599,8 @@ void LocusVariables::initializeLocusVariables()
     locusNonAdditiveVariance = 0.0;
     locusEcotypeNonAdditiveVariances = {0.0, 0.0};
     locusEcotypeMeanNonAdditiveDeviations = {0.0, 0.0};
-    locusObservedHeterozygosity = 0.0;
+    locusEcotypeExpectedHeterozygosity = 0.0;
+    locusVarianceAlleleFrequencies = 0.0;
 }
 
 void LocusVariables::accumulateLocusGeneticMoments()
@@ -652,13 +656,18 @@ void LocusVariables::accumulateLocusGeneticValuesByAlleleCounts(const size_t &ge
     locusCovGeneticValueAlleleCount += genotype * geneticValue;
 }
 
-void LocusVariables::calcLocusHeterozygosities()
+void LocusVariables::calcLocusHeterozygosities(const double &tiny)
 {
     for(size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
-        locusObservedHeterozygosity += ecotypeSizes[ecotype] * 2.0 * locusEcotypeAlleleFrequencies[ecotype] * (1.0 - locusEcotypeAlleleFrequencies[ecotype]);
+        locusEcotypeExpectedHeterozygosity += ecotypeSizes[ecotype] * 2.0 * locusEcotypeAlleleFrequencies[ecotype] * (1.0 - locusEcotypeAlleleFrequencies[ecotype]);
+        locusVarianceAlleleFrequencies += ecotypeSizes[ecotype] * sqr(locusEcotypeAlleleFrequencies[ecotype]);
     }
-    locusObservedHeterozygosity /= popSize;
-    locusExpectedHeterozygosity = locusMeanAlleleCount * (1.0 - 0.5 * locusMeanAlleleCount);
+    locusEcotypeExpectedHeterozygosity /= popSize;
+    locusVarianceAlleleFrequencies /= popSize;
+    locusVarianceAlleleFrequencies -= sqr(locusAlleleFrequency);
+    clipDown(locusVarianceAlleleFrequencies, tiny);
+
+    locusPopulationExpectedHeterozygosity = locusMeanAlleleCount * (1.0 - locusAlleleFrequency);
 }
 
 void LocusVariables::completeLocusGeneticMoments(const double &tiny)
@@ -669,6 +678,8 @@ void LocusVariables::completeLocusGeneticMoments(const double &tiny)
     sumsq2var(locusGeneticVariance, popSize, locusMeanGeneticValue, tiny);
     sumsq2var(locusVarAlleleCount, popSize, locusMeanAlleleCount, tiny);
     sumprod2cov(locusCovGeneticValueAlleleCount, popSize, locusMeanGeneticValue, locusMeanAlleleCount, tiny);
+
+    locusAlleleFrequency = 0.5 * locusMeanAlleleCount;
 
     // Complete ecotype moments
     for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
@@ -768,7 +779,7 @@ void LocusVariables::completeLocusNonAdditiveVariances(const double &tiny)
 void LocusVariables::calcLocusEcotypeDifferentiations(const double &tiny)
 {
     // Calculate heterogeneity statistics
-    locusFst = locusExpectedHeterozygosity > tiny ? 1.0 - locusObservedHeterozygosity / locusExpectedHeterozygosity : 0.0;
+    locusFst = locusPopulationExpectedHeterozygosity > tiny ? 1.0 - locusEcotypeExpectedHeterozygosity / locusPopulationExpectedHeterozygosity : 0.0;
     locusPst = Xst(locusPhenotypicVariance, locusEcotypePhenotypicVariances, popSize, ecotypeSizes, tiny);
     locusGst = Xst(locusGeneticVariance, locusEcotypeGeneticVariances, popSize, ecotypeSizes, tiny);
     locusQst = Xst(locusAdditiveVariance, locusEcotypeAdditiveVariances, popSize, ecotypeSizes, tiny);
