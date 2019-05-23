@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
         }
         assert(parameters.architectureFileName.size() > 1u);
 
-        // Initalize genetic architecture
+        // Initialize genetic architecture
         GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters);
 
         // Output files
@@ -104,9 +104,9 @@ int main(int argc, char * argv[])
         std::clog << "..done\n";
 
         // Buffers
-        std::clog << "Opening data buffers.";
-        BufferBox bufferPointers = BufferBox(parameters, population, genome);
-        std::clog << "..done\n";
+        // std::clog << "Opening data buffers.";
+        // BufferBox bufferPointers = BufferBox(parameters, population, genome);
+        // std::clog << "..done\n";
 
         // Store parameter values
         std::clog << "Storing parameter values..";
@@ -186,15 +186,15 @@ int main(int argc, char * argv[])
                 population->assignEcotypes();
 
                 // Genome-wide variance decomposition
-                population->decomposeVarianceAlongGenome();
+                population->decomposeVarianceAlongGenome(parameters.tiny);
 
                 // Overall variance decomposition
-                population->decomposeVariance();
+                population->decomposeVariance(parameters.tiny);
 
             }
 
-            if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
-            if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
+            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
+            // if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 
         // *** Finalization ***
@@ -202,24 +202,20 @@ int main(int argc, char * argv[])
         // Record end and duration of simulation
         auto tEnd = std::chrono::system_clock::now();
         std::chrono::duration<double> diff = tEnd-tStart;
-        logFile << "Time to complete simulation: " << diff.count() << " s\n";
+        logFile.file << "Time to complete simulation: " << diff.count() << " s\n";
 
         // Close output files
-        logFile.close();
-        datFile.close();
-        arcFile.close();
+        logFile.file.close();
+        datFile.file.close();
+        arcFile.file.close();
 
         // Free allocated memory (what needs to be deleted?)
-        while(!population.individuals.empty()) {
-            delete population.individuals.back();
-            population.individuals.pop_back();
-        }
-
+        population->massExtinction();
 
     }
     catch(const std::exception &err) {
         std::cerr << "Exception: " << err.what() << '\n';
-        logFile << "Exception: " << err.what() << '\n';
+        logFile.file << "Exception: " << err.what() << '\n';
         exit(EXIT_FAILURE);
     }
 

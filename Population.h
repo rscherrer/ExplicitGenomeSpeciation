@@ -22,6 +22,8 @@ public:
 
     Population(const ParameterSet&, const GeneticArchitecture&);
 
+    void massExtinction();
+
     // Getters
     size_t getPopSize() const;
     size_t getNResources() const;

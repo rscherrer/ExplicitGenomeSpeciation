@@ -101,6 +101,14 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
     setReplenishRates(parameters.maxResourceGrowth);
 }
 
+void Population::massExtinction()
+{
+    while(!individuals.empty()) {
+        delete individuals.back();
+        individuals.pop_back();
+    }
+}
+
 
 // Getters
 
