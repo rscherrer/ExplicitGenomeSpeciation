@@ -95,7 +95,7 @@ bool Individual::isFemale(const bool &isFemaleHeterogamy) const
     return isHeterogamous == isFemaleHeterogamy;
 }
 
-Locus Individual::getLocus(const size_t &locus)
+Individual::Locus Individual::getLocus(const size_t &locus) const
 {
     return genotypes[locus];
 }
@@ -108,12 +108,12 @@ void Individual::disperse(const size_t &nHabitat) const
     habitat = (habitat + 1u) % nHabitat;
 }
 
-void Individual::setFitness (const std::pair<double, double> &resources)
+void Individual::setFitness (const std::pair<double, double> &resources) const
 {
     fitness = attackRates.first * resources.first + attackRates.second * resources.second;
 }
 
-void Individual::setBurninFitness(const std::pair<double, double> &resources, const double &ecoSelCoeff)
+void Individual::setBurninFitness(const std::pair<double, double> &resources, const double &ecoSelCoeff) const
 {
     setFitness(resources);
     fitness *= exp(-ecoSelCoeff * sqr(phenotypes[1u]));
@@ -232,7 +232,7 @@ void Individual::develop(const ParameterSet& parameters, const GeneticArchitectu
     }
 
     // Accumulate phenotypic contributions and add environmental effect
-    for (size_t trait = 0u; trait < parameters.nCharacter; ++trait) {
+    for (size_t trait = 0u; trait < parameters.nTraits; ++trait) {
         setGeneticValue(trait, geneticArchitecture);
         setEnvirValue(trait, parameters.scaleE[trait]);
         setPhenotype(trait);
@@ -320,7 +320,7 @@ void Individual::setLocusGeneticValue(const size_t &locus,
                                       const ParameterSet &parameters)
 {
     size_t nucleotidePos = locus << 1u;  // Nucleotide position
-    size_t trait = geneticArchitecture.locusConstants[locus].character;
+    size_t trait = geneticArchitecture.locusConstants[locus].trait;
 
     // Express the gene
     expressGene(nucleotidePos, locus, parameters.scaleD[trait], geneticArchitecture.locusConstants[locus].dominanceCoeff);
@@ -411,7 +411,7 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
         // Intrachromosomal recombination
         bool isCrossOver = geneticArchitecture.locusConstants[locus].location > crossOverPoint;
         if (isCrossOver) {
-            crossOver(haplotype, parameters.recombinationRate, parameters.mapLength, crossOverPoint);
+            crossOver(haplotype, parameters.recombinationRate, parameters.genomeLength, crossOverPoint);
         }
 
         // Inherit parental haplotype

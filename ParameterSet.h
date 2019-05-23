@@ -9,6 +9,8 @@ class ParameterSet {
 public:
 
     // Setters
+    template <class T>
+    void setParameter(T&, std::ifstream&);
     void setDefaultSeed();
     void readSeed(std::ifstream&, std::string&);
     void readIsArchitecture(std::ifstream&, std::string&);

@@ -12,12 +12,12 @@ void OutputFile::open(const size_t &seed, const std::string &extension)
 }
 
 template <class T>
-void OutputFile::writeLine(std::string &name, T &value)
+void OutputFile::writeLine(const std::string &name, T &value)
 {
     file << name << ' ' << value << '\n';
 }
 
-void OutputFile::writeLineVector(std::string &name, std::vector<double> &values)
+void OutputFile::writeLineVector(const std::string &name, const std::vector<double> &values)
 {
     file << name << ' ';
     for (double element : values) {
@@ -50,7 +50,7 @@ void OutputFile::writeParameters(const ParameterSet &parameters)
     writeLine("nEcoInteractions", parameters.nEcoInteractions);
     writeLine("nMatInteractions", parameters.nMatInteractions);
     writeLine("nNtrInteractions", parameters.nNtrInteractions);
-    writeLine("nChromosomes", , parameters.nChromosomes);
+    writeLine("nChromosomes", parameters.nChromosomes);
     writeLine("initialSequence", parameters.strInitialSequence);
     writeLine("freqSNP", parameters.freqSNP);
     writeLine("mutationRate", parameters.mutationRate);
@@ -73,7 +73,7 @@ void OutputFile::writeParameters(const ParameterSet &parameters)
     writeLine("tiny", parameters.tiny);
 }
 
-void OutputFile::addColumn(std::string &name)
+void OutputFile::addColumn(const std::string &name)
 {
     file << '\t' << name;
 }

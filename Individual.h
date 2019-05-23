@@ -33,12 +33,10 @@ Instructions for compiling and running the program
 #include "square.h"
 #include <list>
 #include <vector>
+#include <random>
 
-class Buffer;
 
 class Individual {
-
-    friend Buffer;
 
 public:
 
@@ -49,7 +47,6 @@ public:
         size_t alleleCount;
         double expression;
         double locusGeneticValue;
-        double nonAdditiveDeviation;
     };
 
     // Constructors
@@ -77,7 +74,7 @@ private:
     // Ecological attributes
     mutable size_t habitat;
     mutable size_t ecotype;
-    double fitness;
+    mutable double fitness;
     mutable double nOffspring;
     mutable std::vector<size_t> mates;
     double matePreference;
@@ -93,8 +90,8 @@ private:
 
     // Ecology
     void disperse(const size_t& nHabitat) const;
-    void setFitness(const std::pair<double, double>&);
-    void setBurninFitness(const std::pair<double, double>&, const double&);
+    void setFitness(const std::pair<double, double>&) const;
+    void setBurninFitness(const std::pair<double, double>&, const double&) const;
     void setAttackRates(const double&);
     void setMatePreference(const double&);
     void chooseMates(const double&, std::discrete_distribution<size_t>&, const std::vector<PInd>&, const ParameterSet&) const;

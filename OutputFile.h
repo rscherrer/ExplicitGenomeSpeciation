@@ -17,14 +17,14 @@ public:
     void open(const size_t &seed, const std::string &extension);
 
     // For logFile
-    void writeParameters(const ParameterSet &parameters);
     template <class T>
-    void writeLine(std::string&, T&);
-    void writeLineVector(std::string&, std::vector<double>&);
+    void writeLine(const std::string&, T&);
+    void writeLineVector(const std::string&, const std::vector<double>&);
+    void writeParameters(const ParameterSet &parameters);
 
     // For datFile
     void writeHeader();
-    void addColumn(std::string &name);
+    void addColumn(const std::string &name);
 
 };
 

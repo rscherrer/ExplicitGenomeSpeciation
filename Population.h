@@ -13,6 +13,7 @@
 
 // Forward declaration
 class Individual;
+class LocusVariables;
 typedef Individual const * PInd;
 
 class Population {

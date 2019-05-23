@@ -191,10 +191,10 @@ int main(int argc, char * argv[])
                 population->decomposeVariance(parameters.tiny);
 
                 // Record data
-                population->writePopulationData(datFile);
-                population->screenshotIndividuals();
-                population->screenshotLoci();
-                population->screenshotNetworkEdges();
+                // population->writePopulationData(datFile);
+                // population->screenshotIndividuals();
+                // population->screenshotLoci();
+                // population->screenshotNetworkEdges();
 
             }
 

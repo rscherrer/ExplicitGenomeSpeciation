@@ -29,7 +29,7 @@ public:
     // Fields
     std::vector<double> chromosomeSizes;
     std::vector<LocusConstants> locusConstants;
-    std::vector<std::set<size_t> > networkVertices;
+    std::vector<std::vector<size_t> > networkVertices;
     std::vector<size_t> loci;
     std::vector<Edge> edges;
 
@@ -70,16 +70,8 @@ public:
 
 };
 
-// Function used to sort edges in a network (should it be here or in the cpp file?)
-bool edgeCompare (const Edge &x, const Edge &y)
-{
-    if (x.first == y.first) {
-        return (x.second < y.second);
-    }
-    else {
-        return (x.first < y.first);
-    }
-}
+// Accessory functions
+bool edgeCompare (const Edge&, const Edge&);
 
 
 #endif //EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H

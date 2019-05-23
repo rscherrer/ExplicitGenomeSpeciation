@@ -71,7 +71,7 @@ void sumprod2cov(double &covariance, const size_t &nobs, const double &firstmean
     clipDown(covariance, tiny);
 }
 
-void clipDown(double &value, const double &tiny, const double &lowerbound = 0.0)
+void clipDown(double &value, const double &tiny, const double &lowerbound)
 {
     value = value > tiny ? value : lowerbound;
 }
@@ -145,9 +145,9 @@ void Population::dispersal(const ParameterSet& parameters)
         if (nMigrants == 0u) {
             return;
         }
-        std::set<size_t> migrants;
+        std::vector<size_t> migrants;
         while (migrants.size() < nMigrants) {
-            migrants.insert(rnd::random_int(populationSize));
+            migrants.push_back(rnd::random_int(populationSize));
         }
         auto itInd = individuals.cbegin();  // An iterator pointing to an individual pointer (this is a pointerCeption)
         size_t j = 0u;
@@ -236,7 +236,7 @@ void Population::reproduction(const size_t &habitat, const ParameterSet &paramet
         female->sampleClutchSize(parameters.birthRate);
 
         // Find fathers for her babies
-        female->chooseMates(matingSeasonEnd, maleMarket, males);
+        female->chooseMates(matingSeasonEnd, maleMarket, males, parameters);
 
         // Babies are born
         birth(female, parameters, geneticArchitecture);
@@ -495,18 +495,18 @@ void Population::accumulateSingleLocusContributions()
 {
     // Accumulate other variance components from single locus contributions
     size_t trait;
-    for (LocusVariables * locus :  locusVariables) {
-        trait = locus->trait;
-        additiveVariances[trait] += locus->locusAdditiveVariance;
-        dominanceVariances[trait] += locus->locusDominanceVariance;
-        interactionVariances[trait] += locus->locusInteractionVariance;
-        nonAdditiveVariances[trait] += locus->locusNonAdditiveVariance;
-        varianceAlleleFrequencies[trait] += locus->locusVarianceAlleleFrequencies;
-        populationExpectedHeterozygosity[trait] += locus->locusPopulationExpectedHeterozygosity;
+    for (LocusVariables locus :  locusVariables) {
+        trait = locus.trait;
+        additiveVariances[trait] += locus.locusAdditiveVariance;
+        dominanceVariances[trait] += locus.locusDominanceVariance;
+        interactionVariances[trait] += locus.locusInteractionVariance;
+        nonAdditiveVariances[trait] += locus.locusNonAdditiveVariance;
+        varianceAlleleFrequencies[trait] += locus.locusVarianceAlleleFrequencies;
+        populationExpectedHeterozygosity[trait] += locus.locusPopulationExpectedHeterozygosity;
 
         for (size_t ecotype = 0u; ecotype < 2u; ++ecotype) {
-            ecotypeAdditiveVariances[trait][ecotype] += locus->locusEcotypeAdditiveVariances[ecotype];
-            ecotypeNonAdditiveVariances[trait][ecotype] += locus->locusEcotypeNonAdditiveVariances[ecotype];
+            ecotypeAdditiveVariances[trait][ecotype] += locus.locusEcotypeAdditiveVariances[ecotype];
+            ecotypeNonAdditiveVariances[trait][ecotype] += locus.locusEcotypeNonAdditiveVariances[ecotype];
         }
     }
 }
@@ -559,8 +559,8 @@ void Population::calcEcotypeDifferentations(const size_t &trait, const double &t
 
 void Population::decomposeVarianceAlongGenome(const double &tiny)
 {
-    for (LocusVariables * locus : locusVariables) {
-        locus->decomposeLocusVariance(tiny);
+    for (LocusVariables locus : locusVariables) {
+        locus.decomposeLocusVariance(tiny);
     }
 }
 

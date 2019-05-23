@@ -11,6 +11,18 @@
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
+// Accessory function
+
+bool edgeCompare (const Edge &x, const Edge &y)
+{
+    if (x.first == y.first) {
+        return (x.second < y.second);
+    }
+    else {
+        return (x.first < y.first);
+    }
+}
+
 // Constructor
 GeneticArchitecture::GeneticArchitecture(const ParameterSet &parameters)
 {
@@ -35,8 +47,8 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
     createRecombinationMap(parameters);
     std::clog << "..done\n";
 
-    // Assign phenotypic characters
-    std::clog << "  Assigning loci to characters.";
+    // Assign phenotypic traits
+    std::clog << "  Assigning loci to traits.";
     assignPhenotypes(parameters);
     std::clog << "..done\n";
 
@@ -85,7 +97,7 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
         while (lg < parameters.nChromosomes - 1u && geneLocations[i] > chromosomeSizes[lg]) {
             ++lg;
         }
-        locusConstants[i].linkageGroup = lg;
+        locusConstants[i].chromosome = lg;
         locusConstants[i].location = geneLocations[i];
     }
 
@@ -102,13 +114,13 @@ void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
     }
     std::shuffle(loci.begin(), loci.end(), rnd::rng);
 
-    // For each phenotypic character
-    for (size_t crctr = 0u, k = 0u; crctr < parameters.nCharacter; ++crctr) {
+    // For each phenotypic trait
+    for (size_t crctr = 0u, k = 0u; crctr < parameters.nTraits; ++crctr) {
 
-        // Assign loci to the character
+        // Assign loci to the trait
         for (size_t j = 0u; j < nVertices[crctr]; ++j, ++k) {
-            networkVertices[crctr].insert(loci[k]);
-            locusConstants[loci[k]].character = crctr;
+            networkVertices[crctr].push_back(loci[k]);
+            locusConstants[loci[k]].trait = crctr;
         }
     }
 
@@ -116,8 +128,8 @@ void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
 
 void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
 {
-    // For each phenotypic character
-    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+    // For each phenotypic trait
+    for (size_t crctr = 0u; crctr < parameters.nTraits; ++crctr) {
         double sumsqAdditive = 0.0;
 
         // For each vertex in the network
@@ -141,8 +153,8 @@ void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
 
 void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
 {
-    // For each phenotypic character
-    for (size_t crctr = 0u; crctr < parameters.nCharacter; ++crctr) {
+    // For each phenotypic trait
+    for (size_t crctr = 0u; crctr < parameters.nTraits; ++crctr) {
         double sumsqDominance = 0.0;
 
         // For each vertex in the network
@@ -167,13 +179,13 @@ void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
     std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
     std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
-    // For each phenotypic character
-    for (size_t crctr = 0u, offset = 0u; crctr < parameters.nCharacter; ++crctr) {
+    // For each phenotypic trait
+    for (size_t crctr = 0u, offset = 0u; crctr < parameters.nTraits; ++crctr) {
 
         // Generate edges with the preferential attachment algorithm
         preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
 
-        // Sample interaction partners and weights for the current character
+        // Sample interaction partners and weights for the current trait
         sampleInteractions(parameters, crctr, offset);
 
         // Update the offset
@@ -292,9 +304,9 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
         size_t i = loci[offset + edge.first];
         size_t j = loci[offset + edge.second];
 
-        // Make sure that both partner genes underlie the current phenotypic character
-        bool isSameCharacter = locusConstants[i].character == crctr && locusConstants[j].character == crctr;
-        if (!isSameCharacter) {
+        // Make sure that both partner genes underlie the current phenotypic trait
+        bool isSametrait = locusConstants[i].trait == crctr && locusConstants[j].trait == crctr;
+        if (!isSametrait) {
             throw std::logic_error("Invalid epistatic interaction in GeneticArchitecture::generateGeneticArchitecture()");
         }
 
@@ -326,10 +338,10 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
 // High-level function
 void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet &parameters)
 {
-    std::clog << "Loading genetic architecture from file " << parameters.architectureFilename << '\n';
+    std::clog << "Loading genetic architecture from file " << parameters.architectureFileName << '\n';
 
     // Open genetic architecture file
-    std::ifstream ifs(parameters.architectureFilename);
+    std::ifstream ifs(parameters.architectureFileName);
     if (!ifs.is_open()) {
         throw std::runtime_error("Unable to open file in GeneticArchitecture::loadGeneticArchitecture()");
     }
@@ -397,16 +409,16 @@ void GeneticArchitecture::loadLocusConstants(std::ifstream &ifs, const Parameter
     for (size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
         size_t j;
         ifs >> j;
-        ifs >> locusConstants[j].character
+        ifs >> locusConstants[j].trait
             >> locusConstants[j].location
             >> locusConstants[j].effectSize
             >> locusConstants[j].dominanceCoeff;
-        networkVertices[locusConstants[j].character].insert(j);
+        networkVertices[locusConstants[j].trait].push_back(j);
 
         while (lg < parameters.nChromosomes - 1u && locusConstants[j].location > chromosomeSizes[lg]) {
             ++lg;
         }
-        locusConstants[i].linkageGroup = lg;
+        locusConstants[i].chromosome = lg;
     }
 }
 
@@ -425,7 +437,7 @@ void GeneticArchitecture::loadEpistaticInteractions(std::ifstream &ifs)
 void GeneticArchitecture::storeGeneticArchitecture(const ParameterSet& parameters)
 {
     // Open genetic architecture file
-    std::ofstream ofs(parameters.architectureFilename);
+    std::ofstream ofs(parameters.architectureFileName);
     if (!ofs.is_open()) {
         throw std::runtime_error("unable to open file in storeGeneticArchitecture()");
     }
@@ -460,7 +472,7 @@ void GeneticArchitecture::writeLocusConstants(std::ofstream &ofs, const Paramete
 {
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
         ofs << i << '\t'
-            << locusConstants[i].character << '\t'
+            << locusConstants[i].trait << '\t'
             << locusConstants[i].location << '\t'
             << locusConstants[i].effectSize << '\t'
             << locusConstants[i].dominanceCoeff << '\n';
