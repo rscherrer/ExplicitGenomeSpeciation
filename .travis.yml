@@ -8,14 +8,19 @@ addons:
     - libboost-all-dev
 
 install:
+
   # Qt5
   - sudo apt-get install -qq qt5-qmake qt5-default
+  
   # cppcheck
   - sudo apt-get install -qq cppcheck
+  
   # Codecov
   - sudo pip install codecov
+  
   # OCLint
   - ./install_oclint
+  
   # valgrind, for helgrind and memcheck
   - sudo apt-get install -qq valgrind
   # SLOCcount
