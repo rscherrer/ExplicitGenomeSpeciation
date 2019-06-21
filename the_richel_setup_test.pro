@@ -1,6 +1,12 @@
 # Files
 include(the_richel_setup.pri)
 SOURCES += main_test.cpp my_functions_test.cpp
+SOURCES += GeneticArchitectureTest.cpp
+SOURCES += IndividualTest.cpp
+SOURCES += OutputFileTest.cpp
+SOURCES += ParameterSetTest.cpp
+SOURCES += Population.cpp
+SOURCES += randomTest.cpp
 
 # C++14
 CONFIG += c++14
