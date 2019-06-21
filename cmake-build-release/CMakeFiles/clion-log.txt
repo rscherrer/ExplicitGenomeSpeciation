@@ -1,4 +1,0 @@
-C:\Users\p278834\.CLion2018.3\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation
--- Configuring done
--- Generating done
--- Build files have been written to: /cygdrive/d/CLionProjects/ExplicitGenomeSpeciation/cmake-build-release
