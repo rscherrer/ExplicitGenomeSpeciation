@@ -53,6 +53,8 @@ int main(int argc, char * argv[])
 
     try {
 
+        // Dummy comment
+
         // *** Preliminaries ***
 
         // Set default parameters
