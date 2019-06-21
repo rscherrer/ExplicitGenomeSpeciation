@@ -1,0 +1,8 @@
+language: cpp
+dist: xenial
+compiler: gcc
+
+script: 
+ # Test that it compiles in debug mode
+ - echo "Debug mode"
+ - g++ main.cpp
