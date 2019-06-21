@@ -1,6 +1,6 @@
 # Files
 include(setup.pri)
-SOURCES += main_test.cpp my_functions_test.cpp
+SOURCES += mainTest.cpp
 SOURCES += GeneticArchitectureTest.cpp
 SOURCES += IndividualTest.cpp
 SOURCES += OutputFileTest.cpp

@@ -1,6 +1,3 @@
-SOURCES += my_functions.cpp
-HEADERS += my_functions.h
-
 SOURCES += GeneticArchitecture.cpp
 HEADERS += GeneticArchitecture.h
 
