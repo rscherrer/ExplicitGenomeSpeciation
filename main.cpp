@@ -44,18 +44,17 @@ Instructions for compiling and running the program
                                             main()
 ========================================================================================================*/
 
-int main(int argc, char * argv[])
+int doMain(const std::vector<std::string> &argv)
 {
-
     OutputFile logFile;
     OutputFile datFile;
     OutputFile arcFile;
 
     try {
 
-        // Dummy comment
-
         // *** Preliminaries ***
+
+        const int argc = argv.size();
 
         // Set default parameters
         ParameterSet parameters;
@@ -213,10 +212,22 @@ int main(int argc, char * argv[])
     catch(const std::exception &err) {
         std::cerr << "Exception: " << err.what() << '\n';
         logFile.file << "Exception: " << err.what() << '\n';
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     std::cout << "The simulation completed. Hurray!\n";
 
-    return EXIT_SUCCESS;
+    return 0;
+}
+
+/// Program to simulate an individual-based speciation event with explicit genomic features
+int main(int argc, char * argv[])
+{
+
+    // Preparation
+    const std::vector<std::string> args(argv, argv + argc);
+
+    // Run the program
+    return doMain(args);
+
 }
