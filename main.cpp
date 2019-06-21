@@ -200,6 +200,9 @@ int main(int argc, char * argv[])
     // Preparation
     const std::vector<std::string> args(argv, argv + argc);
 
+    // Test the program
+    assert(doMain( { "ExplicitGenomeSpeciation" } ) == 0);
+
     // Run the program
     return doMain(args);
 
