@@ -19,7 +19,7 @@ install:
  - sudo pip install codecov
   
  # OCLint
- - ./install_oclint
+ - ./setup/install_oclint
   
  # valgrind, for helgrind and memcheck
  - sudo apt-get install -qq valgrind
@@ -33,34 +33,34 @@ install:
 script: 
 
  # Build and run the tests
- - qmake setupTest.pro
+ - qmake setup/setupTest.pro
  - make --silent debug
- - ./setupTest
+ - ./setup/setupTest
   
  # helgrind
- - valgrind --tool=helgrind --log-file=helgrind.log -v ./setupTest
+ - valgrind --tool=helgrind --log-file=helgrind.log -v ./setup/setupTest
  - cat helgrind.log
   
  # memcheck
- - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./setupTest
+ - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./setup/setupTest
  - cat memcheck.log
   
  # Build and run and profile normal program
- - qmake setup.pro
+ - qmake setup/setup.pro
  - make --silent release
- - time ./setup
- - gprof setup > gprof.log
+ - time ./setup/setup
+ - gprof setup/setup > gprof.log
  - head gprof.log -n 1000
   
  # Get code coverage
- - ./get_code_cov
+ - ./setup/get_code_cov
  - codecov
   
  # cppcheck
  - cppcheck --quiet --error-exitcode=1 . 
   
  # Call OCLint
- - ./do_oclint
+ - ./setup/do_oclint
   
  # proselint
  - proselint README.md
