@@ -33,23 +33,23 @@ install:
 script: 
 
   # Build and run the tests
-  - qmake the_richel_setup_test.pro
+  - qmake setupTest.pro
   - make --silent debug
-  - ./the_richel_setup_test
+  - ./setupTest
   
   # helgrind
-  - valgrind --tool=helgrind --log-file=helgrind.log -v ./the_richel_setup_test
+  - valgrind --tool=helgrind --log-file=helgrind.log -v ./setupTest
   - cat helgrind.log
   
   # memcheck
-  - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./the_richel_setup_test
+  - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./setupTest
   - cat memcheck.log
   
   # Build and run and profile normal program
-  - qmake the_richel_setup.pro
+  - qmake setup.pro
   - make --silent release
-  - time ./the_richel_setup
-  - gprof the_richel_setup > gprof.log
+  - time ./setup
+  - gprof setup > gprof.log
   - head gprof.log -n 1000
   
   # Get code coverage
