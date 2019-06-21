@@ -30,18 +30,6 @@ Instructions for compiling and running the program
 namespace rnd
 {
 	std::mt19937_64 rng;
-    
-    unsigned int set_seed()
-	{
-        unsigned int seed = static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-		return set_seed(seed);
-	}
-
-	unsigned int set_seed(const unsigned int seed)
-	{
-		rng.seed(seed);
-        return seed;
-	}
 
 	bool bernoulli(const double p)
 	{
@@ -58,7 +46,7 @@ namespace rnd
 		return std::binomial_distribution<size_t>(n, p)(rng);
 	}
 
-	int poisson(const double lambda) 
+	size_t poisson(const double lambda)
 	{
 		return std::poisson_distribution<int>(lambda)(rng);
 	}

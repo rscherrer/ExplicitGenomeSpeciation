@@ -31,14 +31,12 @@ Instructions for compiling and running the program
 namespace rnd
 {
 	extern std::mt19937_64 rng;
-	unsigned int set_seed();
-	unsigned int set_seed(const unsigned int);
 	int random_int(const int);
     size_t random_int(const size_t);
 	bool bernoulli(const double = 0.5);
 	int binomial(const int, const double = 0.5);
 	size_t binomial(const size_t, const double = 0.5);
-	int poisson(const double = 1.0);
+	size_t poisson(const double = 1.0);
     size_t geometric(const double);
 	double uniform(const double = 1.0);
     double normal(const double = 0.0, const double = 1.0);
