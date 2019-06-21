@@ -23,39 +23,51 @@ install:
   
   # valgrind, for helgrind and memcheck
   - sudo apt-get install -qq valgrind
+  
   # SLOCcount
   - sudo apt-get install sloccount
+  
   # proselint
   - sudo pip install proselint
 
 script: 
+
   # Build and run the tests
   - qmake the_richel_setup_test.pro
   - make --silent debug
   - ./the_richel_setup_test
+  
   # helgrind
   - valgrind --tool=helgrind --log-file=helgrind.log -v ./the_richel_setup_test
   - cat helgrind.log
+  
   # memcheck
   - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./the_richel_setup_test
   - cat memcheck.log
+  
   # Build and run and profile normal program
   - qmake the_richel_setup.pro
   - make --silent release
   - time ./the_richel_setup
   - gprof the_richel_setup > gprof.log
   - head gprof.log -n 1000
+  
   # Get code coverage
   - ./get_code_cov
   - codecov
+  
   # cppcheck
   - cppcheck --quiet --error-exitcode=1 . 
+  
   # Call OCLint
   - ./do_oclint
+  
   # proselint
   - proselint README.md
+  
   # Get my folder
   - my_github=${PWD##*/}  
+  
   # SLOCcount
   #   remove OCLint and .git, otherwise it will be counted as well
   - rm -rf oclint-0.10.3 oclint-0.10.3-x86_64-linux-3.13.0-74-generic.tar.gz oclint.log
@@ -65,5 +77,6 @@ script:
   - cd ..; sloccount --overhead 1 --personcost 22614 $my_github; cd $my_github
   
  after_success:
+ 
   # Codecov
   - bash <(curl -s https://codecov.io/bash)
