@@ -9,6 +9,8 @@ addons:
 
 install:
 
+# A stupid comment
+
   # Qt5
   - sudo apt-get install -qq qt5-qmake qt5-default
   
