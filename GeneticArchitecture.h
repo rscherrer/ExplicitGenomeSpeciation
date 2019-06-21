@@ -45,7 +45,7 @@ public:
 
     // Setting
     void createRecombinationMap(const ParameterSet&);
-    void setChromosomeSizes(const ParameterSet&);
+    void setChromosomeSizes(const size_t&);
     void sampleGeneLocations(const ParameterSet&);
     void assignPhenotypes(const ParameterSet&);
     void sampleEffectSizes(const ParameterSet&);

@@ -69,17 +69,20 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
 void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
 {
 
-    setChromosomeSizes(parameters);
+
+    setChromosomeSizes(parameters.nChromosomes);
+
+
     sampleGeneLocations(parameters);
 
 }
 
-void GeneticArchitecture::setChromosomeSizes(const ParameterSet &parameters)
+void GeneticArchitecture::setChromosomeSizes(const size_t &nChromosomes)
 {
 
-    // Chromosome all have the same size
-    for (size_t i = 0u; i < parameters.nChromosomes - 1u; ++i) {
-        chromosomeSizes[i] = (i + 1.0) / parameters.nChromosomes;
+    // Chromosomes all have the same size
+    for (size_t i = 0u; i < nChromosomes; ++i) {
+        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
     }
 
 }

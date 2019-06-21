@@ -188,6 +188,7 @@ void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
     }
 }
 
+// Function to read parameters from a parameter file
 void ParameterSet::readParameters(const std::string& filename)
 {
     std::clog << "Reading parameters from file " << filename << '\n';
@@ -200,7 +201,6 @@ void ParameterSet::readParameters(const std::string& filename)
 
     // Read input
     std::string input;
-
     readSeed(inputFile, input);
     readIsArchitecture(inputFile, input);
 
