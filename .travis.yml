@@ -32,7 +32,7 @@ install:
 
 script: 
 
-  # Build and run the tests
+  # Build and run the tests blabla
   - qmake setupTest.pro
   - make --silent debug
   - ./setupTest
