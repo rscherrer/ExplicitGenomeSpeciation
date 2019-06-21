@@ -1,28 +1,3 @@
-/*==================================================================================================================================
-                                                     main.cpp
-====================================================================================================================================
-
-C++-code accompanying:	
-		 
-		(ms. in prep).
-
-Written by:
-        G. Sander van Doorn
-       	Centre for Ecological and Evolutionary Studies - Theoretical Biology Group
-        University of Groningen
-        the Netherlands
-
-Program version
-		xx/xx/2018	:	
-
-Instructions for compiling and running the program
-		
-	Versions of this program were compiled and run on Windows and Mac, using Microsoft Visual C++
-	2010 and XCode, respectively. The code is written in standard C++ and should be compatible with 
-	other compilers. 
-
-=================================================================================================================================*/
-
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Individual.h"
@@ -39,10 +14,6 @@ Instructions for compiling and running the program
 #include <list>
 #include <cassert>
 
-
-/*=======================================================================================================
-                                            main()
-========================================================================================================*/
 
 /// Function to run the program
 int doMain(const std::vector<std::string> &argv)
@@ -220,6 +191,7 @@ int doMain(const std::vector<std::string> &argv)
 
     return 0;
 }
+
 
 /// Program to simulate an individual-based speciation event with explicit genomic features
 int main(int argc, char * argv[])
