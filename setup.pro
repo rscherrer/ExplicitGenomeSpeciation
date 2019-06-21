@@ -1,5 +1,5 @@
 # Files
-include(the_richel_setup.pri)
+include(setup.pri)
 SOURCES += main.cpp
 
 # C++14

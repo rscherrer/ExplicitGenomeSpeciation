@@ -1,5 +1,5 @@
 # Files
-include(the_richel_setup.pri)
+include(setup.pri)
 SOURCES += main_test.cpp my_functions_test.cpp
 SOURCES += GeneticArchitectureTest.cpp
 SOURCES += IndividualTest.cpp
