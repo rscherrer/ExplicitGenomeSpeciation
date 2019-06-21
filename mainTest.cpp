@@ -1,1 +1,7 @@
-//
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE my_functions_test_module
+#include <boost/test/unit_test.hpp>
+
+#ifdef NDEBUG
+#error("one should not test in release mode")
+#endif
