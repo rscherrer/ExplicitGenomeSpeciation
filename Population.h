@@ -16,8 +16,7 @@ class Individual;
 class LocusVariables;
 typedef Individual const * PInd;
 
-inline double square(const double &number)
-{
+inline double sqr(const double &number) {
     return number * number;
 }
 

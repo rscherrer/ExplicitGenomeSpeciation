@@ -11,6 +11,10 @@
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
+inline double sqr(const double &number) {
+    return number * number;
+}
+
 class GeneticArchitecture {
 
 public:
