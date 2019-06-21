@@ -30,7 +30,6 @@ Instructions for compiling and running the program
 #include "ParameterSet.h"
 #include "Population.h"
 #include "GeneticArchitecture.h"
-#include "square.h"
 #include <list>
 #include <vector>
 #include <random>

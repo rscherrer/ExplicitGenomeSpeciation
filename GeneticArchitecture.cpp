@@ -4,7 +4,6 @@
 
 #include "GeneticArchitecture.h"
 #include "random.h"
-#include "square.h"
 #include <iostream>
 #include <algorithm>
 #include <fstream>

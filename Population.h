@@ -16,6 +16,11 @@ class Individual;
 class LocusVariables;
 typedef Individual const * PInd;
 
+inline double square(const double &number)
+{
+    return number * number;
+}
+
 class Population {
 
 public:

@@ -4,7 +4,6 @@
 
 #include "Population.h"
 #include "random.h"
-#include "square.h"
 #include <cassert>
 #include <vector>
 

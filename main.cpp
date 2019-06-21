@@ -216,6 +216,7 @@ int main(int argc, char * argv[])
         exit(EXIT_FAILURE);
     }
 
+    std::cout << "The simulation completed. Hurray!\n";
 
     return EXIT_SUCCESS;
 }
