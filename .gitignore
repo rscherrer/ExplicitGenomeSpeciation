@@ -1,1 +1,7 @@
+# Don't track content of these folders
 .idea
+cmake-build-debug/
+cmake-build-release/
+
+# Don't track these files
+CMakeLists.txt
