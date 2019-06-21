@@ -44,6 +44,7 @@ Instructions for compiling and running the program
                                             main()
 ========================================================================================================*/
 
+/// Function to run the program
 int doMain(const std::vector<std::string> &argv)
 {
     OutputFile logFile;
