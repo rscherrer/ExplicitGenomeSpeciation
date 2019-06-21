@@ -8,17 +8,14 @@
 #include "Individual.h"
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
+#include "utils.h"
 #include <vector>
-#include <random> //?
+#include <random>
 
 // Forward declaration
 class Individual;
 class LocusVariables;
 typedef Individual const * PInd;
-
-inline double sqr(const double &number) {
-    return number * number;
-}
 
 class Population {
 

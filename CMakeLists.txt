@@ -3,5 +3,5 @@ project(ExplicitGenomeSpeciation)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(ExplicitGenomeSpeciation main.cpp ParameterSet.cpp GeneticArchitecture.cpp Individual.cpp Population.cpp OutputFile.cpp random.cpp square.h)
+add_executable(ExplicitGenomeSpeciation main.cpp ParameterSet.cpp GeneticArchitecture.cpp Individual.cpp Population.cpp OutputFile.cpp random.cpp utils.cpp)
 

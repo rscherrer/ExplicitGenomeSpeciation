@@ -33,6 +33,7 @@ Instructions for compiling and running the program
 #include <list>
 #include <vector>
 #include <random>
+#include "utils.h"
 
 
 class Individual {
