@@ -38,7 +38,6 @@ Instructions for compiling and running the program
 #include <vector>
 #include <list>
 #include <cassert>
-#include <gtest/gtest.h>
 
 
 /*=======================================================================================================
@@ -47,15 +46,6 @@ Instructions for compiling and running the program
 
 int main(int argc, char * argv[])
 {
-
-    #if !defined(NDEBUG)
-
-        // In debug mode run tests only
-        std::cout << "Running tests in debug mode...";
-        testing::InitGoogleTest(&argc, argv);
-        int testResult = RUN_ALL_TESTS();
-
-    #else
 
     OutputFile logFile;
     OutputFile datFile;
@@ -223,8 +213,6 @@ int main(int argc, char * argv[])
         logFile.file << "Exception: " << err.what() << '\n';
         exit(EXIT_FAILURE);
     }
-
-    #endif
 
 
     return EXIT_SUCCESS;
