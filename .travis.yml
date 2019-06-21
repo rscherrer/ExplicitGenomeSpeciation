@@ -19,6 +19,7 @@ install:
  - sudo pip install codecov
   
  # OCLint
+ - chmod +x ci_setup/install_oclint 
  - ./ci_setup/install_oclint
   
  # valgrind, for helgrind and memcheck
