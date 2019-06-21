@@ -197,15 +197,13 @@ int doMain(const std::vector<std::string> &argv)
 int main(int argc, char * argv[])
 {
 
-
-
     // Preparation
-    const std::vector<std::string> args(argv, argv + argc);
+    // const std::vector<std::string> args(argv, argv + argc);
 
     // Test the program
-    assert(doMain( { "ExplicitGenomeSpeciation" } ) == 0);
+    // assert(doMain( { "ExplicitGenomeSpeciation" } ) == 0);
 
     // Run the program
-    return doMain(args);
+    // return doMain(args);
 
 }
