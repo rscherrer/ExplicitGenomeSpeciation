@@ -2,6 +2,3 @@
 .idea
 cmake-build-debug/
 cmake-build-release/
-
-# Don't track these files
-CMakeLists.txt
