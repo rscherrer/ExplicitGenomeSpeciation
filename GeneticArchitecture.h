@@ -29,9 +29,6 @@ public:
     std::vector<size_t> loci;
     std::vector<Edge> edges;
 
-    // Constructor
-    explicit GeneticArchitecture(const ParameterSet&);
-
     // High-level functions
     void generateGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);

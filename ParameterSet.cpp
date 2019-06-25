@@ -1,6 +1,7 @@
 #include "ParameterSet.h"
 #include <iostream>
 #include <chrono>
+#include <sstream>
 
 template <class T>
 void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)

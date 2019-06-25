@@ -6,6 +6,8 @@
 #include <cassert>
 #include <iostream>
 #include <chrono>
+#include <vector>
+#include <string>
 
 /// Individual-based simulation of a speciation event with explicit genomic features
 int main(int argc, char * argv[])
@@ -14,11 +16,13 @@ int main(int argc, char * argv[])
     OutputFile datFile;
     OutputFile arcFile;
 
+    const std::vector<std::string> args(argv, argv + argc);
+
     try {
 
         // *** Preliminaries ***
 
-        const int argc = argv.size();
+        const int argc = args.size();
 
         // Create a default parameter set
         ParameterSet parameters;
@@ -44,8 +48,21 @@ int main(int argc, char * argv[])
         }
         assert(parameters.architectureFileName.size() > 1u);
 
+        // Declare genetic architecture
+        GeneticArchitecture geneticArchitecture;
+
         // Initialize genetic architecture
-        GeneticArchitecture geneticArchitecture (parameters);
+        if (parameters.isGenerateArchitecture)
+        {
+            // Generate a new genetic architecture and save it
+            geneticArchitecture.generateGeneticArchitecture(parameters);
+            geneticArchitecture.storeGeneticArchitecture(parameters);
+        }
+        else
+        {
+            // Load a genetic architecture from a file
+            geneticArchitecture.loadGeneticArchitecture(parameters);
+        }
 
         // Output files
         std::clog << "Opening output files.";

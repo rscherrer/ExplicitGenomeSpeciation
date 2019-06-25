@@ -19,18 +19,6 @@ bool edgeCompare (const Edge &x, const Edge &y)
     }
 }
 
-// Constructor
-GeneticArchitecture::GeneticArchitecture(const ParameterSet &parameters)
-{
-    if (parameters.isGenerateArchitecture) {
-        generateGeneticArchitecture(parameters);
-        storeGeneticArchitecture(parameters);
-    }
-    else {
-        loadGeneticArchitecture(parameters);
-    }
-}
-
 // Generate a genetic architecture
 
 // High-level function
