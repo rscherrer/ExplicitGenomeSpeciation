@@ -19,7 +19,6 @@ int main(int argc, char * argv[])
     const std::vector<std::string> args(argv, argv + argc);
 
     // Run the program
-
     return doMain();
 
 }

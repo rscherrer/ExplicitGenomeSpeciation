@@ -1,8 +1,14 @@
 #include "doMain.h"
 #include <iostream>
+#include <vector>
+#include <string>
 
-int doMain()
+
+/// Program to run the main function
+int doMain(const std::vector<std::string> &args)
 {
-    std::cout << "Hello world!\n";
+
+    // Should have a try catch component
+
     return 0;
 }
