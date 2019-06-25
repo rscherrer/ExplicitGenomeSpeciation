@@ -9,6 +9,13 @@
 #include <vector>
 #include <string>
 
+int main()
+{
+
+}
+
+/*
+
 /// Individual-based simulation of a speciation event with explicit genomic features
 int main(int argc, char * argv[])
 {
@@ -202,3 +209,5 @@ int main(int argc, char * argv[])
     return 0;
 
 }
+
+ */
