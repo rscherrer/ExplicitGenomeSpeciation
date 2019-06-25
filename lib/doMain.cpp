@@ -8,7 +8,19 @@
 int doMain(const std::vector<std::string> &args)
 {
 
-    // Should have a try catch component
+    try
+    {
+        // Should return an error if there are more than one argument
+        if (args.size() > 2u)
+        {
+            throw std::runtime_error("More than one argument was supplied");
+        }
+    }
+    catch (const std::runtime_error &err)
+    {
+        std::cout << "Exception:" << err.what() << '\n';
+        return 1;
+    }
 
     return 0;
 }
