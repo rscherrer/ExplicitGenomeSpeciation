@@ -6,6 +6,11 @@
 
 
 // doMain should crash if provided with a nonsense input file stream
+struct testFixture
+{
+    testFixture();
+    ~testFixture();
+};
 
 
 /// Good usage of the function
