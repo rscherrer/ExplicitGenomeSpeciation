@@ -1,20 +1,18 @@
-#include "ParameterSet.h"
-#include "GeneticArchitecture.h"
-#include "Individual.h"
-#include "Population.h"
-#include "OutputFile.h"
-#include "random.h"
+#include "functions.h"
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <chrono>
-#include <string>
-#include <vector>
-#include <list>
-#include <cassert>
 
 
+/// Individual-based simulation of a speciation event with explicit genomic features
+int main(int argc, char * argv[])
+{
+
+    std::cout << "It works!\n";
+    return dummyFunction();
+
+}
+
+
+/*
 /// Function to run the program
 int doMain(const std::vector<std::string> &argv)
 {
@@ -191,19 +189,4 @@ int doMain(const std::vector<std::string> &argv)
 
     return 0;
 }
-
-
-/// Program to simulate an individual-based speciation event with explicit genomic features
-int main(int argc, char * argv[])
-{
-
-    // Preparation
-    // const std::vector<std::string> args(argv, argv + argc);
-
-    // Test the program
-    // assert(doMain( { "ExplicitGenomeSpeciation" } ) == 0);
-
-    // Run the program
-    // return doMain(args);
-
-}
+*/
