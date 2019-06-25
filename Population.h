@@ -1,16 +1,10 @@
-//
-// Created by p278834 on 7-5-2019.
-//
-
 #ifndef EXPLICITGENOMESPECIATION_POPULATION_H
 #define EXPLICITGENOMESPECIATION_POPULATION_H
 
-#include "Individual.h"
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
-#include "utils.h"
-#include <vector>
-#include <random>
+#include "random.h"
+#include <list>
 
 // Forward declaration
 class Individual;

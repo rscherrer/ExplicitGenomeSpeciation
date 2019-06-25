@@ -1,15 +1,6 @@
-//
-// Created by p278834 on 7-5-2019.
-//
-
 #include "ParameterSet.h"
-#include "random.h"
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <chrono>
-
-
 
 template <class T>
 void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)

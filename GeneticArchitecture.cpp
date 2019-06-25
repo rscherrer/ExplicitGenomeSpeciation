@@ -1,17 +1,11 @@
-//
-// Created by p278834 on 9-5-2019.
-//
-
 #include "GeneticArchitecture.h"
-#include "random.h"
+#include "ParameterSet.h"
+#include <vector>
 #include <iostream>
-#include <algorithm>
-#include <fstream>
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
 // Accessory function
-
 bool edgeCompare (const Edge &x, const Edge &y)
 {
     if (x.first == y.first) {

@@ -1,12 +1,9 @@
-//
-// Created by p278834 on 15-5-2019.
-//
-
 #ifndef EXPLICITGENOMESPECIATION_OUTPUTFILE_H
 #define EXPLICITGENOMESPECIATION_OUTPUTFILE_H
 
 #include "ParameterSet.h"
 #include <fstream>
+#include <vector>
 
 class OutputFile {
 

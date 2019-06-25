@@ -1,12 +1,6 @@
-//
-// Created by p278834 on 7-5-2019.
-//
-
 #include "Population.h"
-#include "random.h"
-#include <cassert>
-#include <vector>
-
+#include "Individual.h"
+#include "utils.h"
 
 // Accessory functions
 

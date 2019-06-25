@@ -1,20 +1,14 @@
-#include "functions.h"
+#include "OutputFile.h"
+#include "ParameterSet.h"
+#include "GeneticArchitecture.h"
+#include "Population.h"
+#include "random.h"
+#include <cassert>
 #include <iostream>
-
+#include <chrono>
 
 /// Individual-based simulation of a speciation event with explicit genomic features
 int main(int argc, char * argv[])
-{
-
-    std::cout << "It works!\n";
-    return dummyFunction();
-
-}
-
-
-/*
-/// Function to run the program
-int doMain(const std::vector<std::string> &argv)
 {
     OutputFile logFile;
     OutputFile datFile;
@@ -188,5 +182,5 @@ int doMain(const std::vector<std::string> &argv)
     std::cout << "The simulation completed. Hurray!\n";
 
     return 0;
+
 }
-*/

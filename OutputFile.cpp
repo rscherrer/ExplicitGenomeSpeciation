@@ -1,8 +1,4 @@
 #include "OutputFile.h"
-#include "ParameterSet.h"
-#include <sstream>
-#include <string>
-#include <vector>
 
 void OutputFile::open(const size_t &seed, const std::string &extension)
 {
