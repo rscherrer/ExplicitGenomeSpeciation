@@ -3,6 +3,7 @@
 #include "GeneticArchitecture.h"
 #include "Population.h"
 #include "random.h"
+#include "doMain.h"
 #include <cassert>
 #include <iostream>
 #include <chrono>
@@ -11,6 +12,8 @@
 
 int main()
 {
+
+    return doMain();
 
 }
 
