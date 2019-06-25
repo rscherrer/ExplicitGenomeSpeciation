@@ -1,7 +1,10 @@
 #include "GeneticArchitecture.h"
 #include "ParameterSet.h"
+#include "random.h"
+#include "utils.h"
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
