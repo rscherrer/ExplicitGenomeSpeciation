@@ -10,6 +10,8 @@
 #include <vector>
 #include <string>
 
+
+/// Program to run an individual-based simulation of a speciation event with explicit genomic features
 int main(int argc, char * argv[])
 {
 
