@@ -2,6 +2,7 @@
 #include "Individual.h"
 #include "utils.h"
 #include <cassert>
+#include <iostream>
 
 // Accessory functions
 
@@ -83,9 +84,10 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
         }
     }
 
-    // Or not generate an initial genome sequence
+    // If not generate an initial genome sequence
     else {
         for (size_t i = 0u; i < parameters.initialPopSize; ++i) {
+
             individuals.push_back(new Individual(parameters, geneticArchitecture));
         }
     }
