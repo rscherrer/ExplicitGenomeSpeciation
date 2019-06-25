@@ -53,10 +53,7 @@ void GeneticArchitecture::generateGeneticArchitecture(const ParameterSet& parame
 void GeneticArchitecture::createRecombinationMap(const ParameterSet &parameters)
 {
 
-
     setChromosomeSizes(parameters.nChromosomes);
-
-
     sampleGeneLocations(parameters);
 
 }
@@ -74,18 +71,29 @@ void GeneticArchitecture::setChromosomeSizes(const size_t &nChromosomes)
 void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 {
 
-    // Genes are distributed uniformly across the genome
+    // Declare a vector of gene locations
     std::vector<double> geneLocations;
+
+    // For every gene sample a uniform location
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        geneLocations[i] = rnd::uniform();
+        geneLocations.push_back(rnd::uniform());
     }
+
+    // Sort gene locations by increasing order
     std::sort(geneLocations.begin(), geneLocations.end());
+
+    // Assign to each gene its chromosome and its location
     for (size_t i = 0u, lg = 0u; i < parameters.nLoci; ++i) {
+
         while (lg < parameters.nChromosomes - 1u && geneLocations[i] > chromosomeSizes[lg]) {
             ++lg;
         }
-        locusConstants[i].chromosome = lg;
-        locusConstants[i].location = geneLocations[i];
+
+        LocusConstants gene;
+        gene.chromosome = lg;
+        gene.location = geneLocations[i];
+        locusConstants.push_back(gene);
+
     }
 
 }

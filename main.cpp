@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
         // Initialize genetic architecture
         if (parameters.isGenerateArchitecture)
         {
+            std::clog << "New architecture must be created.\n";
             // Generate a new genetic architecture and save it
             geneticArchitecture.generateGeneticArchitecture(parameters);
             geneticArchitecture.storeGeneticArchitecture(parameters);
