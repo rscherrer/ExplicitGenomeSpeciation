@@ -4,6 +4,6 @@
 #include <vector>
 #include <string>
 
-int doMain(const std::vector<std::string&>);
+int doMain(const std::vector<std::string>&);
 
 #endif //EXPLICITGENOMESPECIATION_DOMAIN_H
