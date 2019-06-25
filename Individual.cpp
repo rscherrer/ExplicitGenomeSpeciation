@@ -8,7 +8,6 @@
 struct Locus;
 
 // Accessory functions
-
 double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
 {
     return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
@@ -21,7 +20,6 @@ double calcDisassortProb(const double &matePreference, const double &matingTrait
 
 
 // Constructors
-
 Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
 isHeterogamous(rnd::bernoulli(0.5)), ecotype(0u), habitat(0u)
 {
