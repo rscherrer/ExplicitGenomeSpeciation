@@ -18,7 +18,7 @@ int doMain(const std::vector<std::string> &args)
     }
     catch (const std::runtime_error &err)
     {
-        std::cout << "Exception:" << err.what() << '\n';
+        std::cout << "Exception: " << err.what() << '\n';
         return 1;
     }
 
