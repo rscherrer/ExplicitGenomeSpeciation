@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 message(STATUS "Start running cmake...")
 
 set(Boost_DEBUG 1)
-
 set(BOOST_ROOT D:/boost_1_68_0)
+set(BOOST_LIBRARYDIR D:/boost_1_68_0/stage/lib)
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 
@@ -16,7 +16,18 @@ if (Boost_FOUND)
 
 endif()
 
-add_executable(ExplicitGenomeSpeciation main.cpp ParameterSet.cpp GeneticArchitecture.cpp Individual.cpp Population.cpp OutputFile.cpp random.cpp utils.cpp)
+add_executable(
+        ExplicitGenomeSpeciation
+        main.cpp
+        ParameterSet.cpp
+        GeneticArchitecture.cpp
+        Individual.cpp
+        Population.cpp
+        OutputFile.cpp
+        random.cpp
+        utils.cpp
+        utilsTest.cpp
+)
 
 if(Boost_FOUND)
 
