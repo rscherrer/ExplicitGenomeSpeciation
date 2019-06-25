@@ -1,6 +1,7 @@
 #include "Population.h"
 #include "Individual.h"
 #include "utils.h"
+#include <cassert>
 
 // Accessory functions
 

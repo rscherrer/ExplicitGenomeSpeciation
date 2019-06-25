@@ -1,4 +1,5 @@
 #include "OutputFile.h"
+#include <sstream>
 
 void OutputFile::open(const size_t &seed, const std::string &extension)
 {

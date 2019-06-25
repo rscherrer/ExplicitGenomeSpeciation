@@ -1,4 +1,5 @@
 #include "Individual.h"
+#include "Population.h"
 #include "utils.h"
 #include "random.h"
 #include <cmath>
