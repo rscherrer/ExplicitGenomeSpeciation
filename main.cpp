@@ -20,7 +20,7 @@ int main(int argc, char * argv[])
 
         const int argc = argv.size();
 
-        // Set default parameters
+        // Create a default parameter set
         ParameterSet parameters;
         parameters.setDefaultSeed();
 
@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
         assert(parameters.architectureFileName.size() > 1u);
 
         // Initialize genetic architecture
-        GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters);
+        GeneticArchitecture geneticArchitecture (parameters);
 
         // Output files
         std::clog << "Opening output files.";
