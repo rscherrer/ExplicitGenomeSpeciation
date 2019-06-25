@@ -101,22 +101,29 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
 {
 
+    // Create a vector with the number of genes underlying each trait
     std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
-    // Randomized vector of locus indices
+    // Randomize locus indices to make sure traits are assigned at random
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        loci[i] = i;
+        loci.push_back(i);
     }
     std::shuffle(loci.begin(), loci.end(), rnd::rng);
 
     // For each phenotypic trait
-    for (size_t crctr = 0u, k = 0u; crctr < parameters.nTraits; ++crctr) {
+    for (size_t trait = 0u, locus = 0u; trait < parameters.nTraits; ++trait) {
+
+        std::vector<size_t> networkVerticesCurrTrait;
 
         // Assign loci to the trait
-        for (size_t j = 0u; j < nVertices[crctr]; ++j, ++k) {
-            networkVertices[crctr].push_back(loci[k]);
-            locusConstants[loci[k]].trait = crctr;
+        for (size_t vertex = 0u; vertex < nVertices[trait]; ++vertex, ++locus) {
+
+            networkVerticesCurrTrait.push_back(loci[locus]);
+            locusConstants[loci[locus]].trait = trait;
         }
+
+        networkVertices.push_back(networkVerticesCurrTrait);
+
     }
 
 }
