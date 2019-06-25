@@ -194,7 +194,7 @@ void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices,
 
     // Start the network
     std::vector<size_t> degrees(nVertices, 0u);
-    initializeNetwork(nVertices, nEdges, degrees);
+    initializeNetwork(nEdges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
     std::clog << ':';
@@ -207,7 +207,7 @@ void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices,
     std::clog << ':';
 }
 
-void GeneticArchitecture::initializeNetwork(const size_t &nVertices, size_t &nEdges, std::vector<size_t> &degrees)
+void GeneticArchitecture::initializeNetwork(size_t &nEdges, std::vector<size_t> &degrees)
 {
 
     if (!edges.empty()) {

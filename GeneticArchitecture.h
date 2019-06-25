@@ -45,7 +45,7 @@ public:
     void sampleDominanceCoeff(const ParameterSet&);
     void makeRegulatoryNetworks(const ParameterSet&);
     void preferentialAttachmentNetwork(const size_t&, size_t&, const double&);
-    void initializeNetwork(const size_t&, size_t&, std::vector<size_t>&);
+    void initializeNetwork(size_t&, std::vector<size_t>&);
     void growNetwork(const size_t&, size_t&, std::vector<size_t>&, const double&);
     void sortNetwork(const size_t&, const std::vector<size_t>&);
     void sampleInteractions(const ParameterSet&, const size_t&, const size_t&);  // Per phenotypic character
