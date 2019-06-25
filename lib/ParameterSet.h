@@ -16,7 +16,7 @@ public:
     void readIsArchitecture(std::ifstream&, std::string&);
     void setScale(std::vector<double>&, std::ifstream&);
     void readInput(const std::string&, std::ifstream&);
-    void readParameters(const std::string&);
+    void readParameters(std::ifstream&);
     void newArchitectureFileName();
     void setArchitectureFileName(const std::string&);
 

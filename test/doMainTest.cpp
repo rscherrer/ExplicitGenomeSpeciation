@@ -5,6 +5,9 @@
 #include "doMain.h"
 
 
+// doMain should crash if provided with a nonsense input file stream
+
+
 /// Good usage of the function
 BOOST_AUTO_TEST_SUITE(doMainUse)
 

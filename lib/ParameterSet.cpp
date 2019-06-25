@@ -181,16 +181,8 @@ void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
 }
 
 // Function to read parameters from a parameter file
-void ParameterSet::readParameters(const std::string& filename)
+void ParameterSet::readParameters(std::ifstream& inputFile)
 {
-    std::clog << "Reading parameters from file " << filename << '\n';
-
-    // Open parameter file
-    std::ifstream inputFile(filename);
-    if (!inputFile.is_open()) {
-        throw std::runtime_error("Unable to open parameter file in readParameters()");
-    }
-
     // Read input
     std::string input;
     readSeed(inputFile, input);
@@ -199,8 +191,6 @@ void ParameterSet::readParameters(const std::string& filename)
     while (inputFile >> input) {
         readInput(input, inputFile);
     }
-
-    std::clog << "Parameters were read in successfully\n";
 }
 
 void ParameterSet::newArchitectureFileName()
