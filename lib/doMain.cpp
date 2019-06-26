@@ -1,5 +1,6 @@
 #include "doMain.h"
 #include "ParameterSet.h"
+#include "GeneticArchitecture.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -41,6 +42,30 @@ int doMain(const std::vector<std::string> &args)
         else
         {
             std::clog << "Using default parameters\n";
+        }
+
+        // Declare a genetic architecture
+        GeneticArchitecture geneticArchitecture;
+
+        // Set the genetic architecture
+        if (parameters.isGenerateArchitecture)
+        {
+
+            // Create a new genetic architecture if needed
+            geneticArchitecture.generateGeneticArchitecture(parameters);
+
+            // Create a file name for the newly created architecture
+            parameters.newArchitectureFileName();
+
+            // Store the newly created genetic architecture
+            geneticArchitecture.storeGeneticArchitecture(parameters);
+
+        } else
+        {
+
+            // Otherwise load the genetic architecture from a genetic architecture file
+            geneticArchitecture.loadGeneticArchitecture(parameters);
+
         }
 
     }
