@@ -16,20 +16,6 @@ void ParameterSet::setDefaultSeed()
     seed = static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 }
 
-void ParameterSet::readSeed(std::ifstream &inputFile, std::string &input)
-{
-    inputFile >> input;
-    if (input == "rng_seed_clock") {
-        setDefaultSeed();
-    }
-    else if (input == "rng_seed_user") {
-        inputFile >> seed;
-    }
-    else {
-        throw std::logic_error("\'rng_seed_clock\' or \'rng_seed_user <arg>\' expected at first line of parameterfile\n");
-    }
-}
-
 void ParameterSet::readIsArchitecture(std::ifstream &inputFile, std::string &input)
 {
     inputFile >> input;
@@ -61,122 +47,96 @@ void ParameterSet::setScale(std::vector<double> &scaleVector, std::ifstream &inp
     }
 }
 
-void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
-{
+void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile) {
+    bool isSeedProvided = false;
+    if (input == "rng_seed_user") {
+        inputFile >> seed;
+        isSeedProvided = true;
+    }
     if (input == "initialPopSize") {
         inputFile >> initialPopSize;
-    }
-    else if (input == "dispersalRate") {
+    } else if (input == "dispersalRate") {
         inputFile >> dispersalRate;
-    }
-    else if (input == "birthRate") {
+    } else if (input == "birthRate") {
         inputFile >> birthRate;
-    }
-    else if (input == "habitatAsymmetry") {
+    } else if (input == "habitatAsymmetry") {
         inputFile >> habitatAsymmetry;
-    }
-    else if (input == "survivalProb") {
+    } else if (input == "survivalProb") {
         inputFile >> survivalProb;
-    }
-    else if (input == "ecoSelCoeff") {
+    } else if (input == "ecoSelCoeff") {
         inputFile >> ecoSelCoeff;
-    }
-    else if (input == "matePreferenceStrength") {
+    } else if (input == "matePreferenceStrength") {
         inputFile >> matePreferenceStrength;
-    }
-    else if (input == "mateEvaluationCost") {
+    } else if (input == "mateEvaluationCost") {
         inputFile >> mateEvaluationCost;
-    }
-    else if (input == "maxResourceCapacity") {
+    } else if (input == "maxResourceCapacity") {
         inputFile >> maxResourceCapacity;
-    }
-    else if (input == "maxResourceGrowth") {
+    } else if (input == "maxResourceGrowth") {
         inputFile >> maxResourceGrowth;
-    }
-    else if (input == "nEcoLoci") {
+    } else if (input == "nEcoLoci") {
         inputFile >> nEcoLoci;
-    }
-    else if (input == "nMatLoci") {
+    } else if (input == "nMatLoci") {
         inputFile >> nMatLoci;
-    }
-    else if (input == "nNtrLoci") {
+    } else if (input == "nNtrLoci") {
         inputFile >> nNtrLoci;
-    }
-    else if (input == "nEcoInteractions") {
+    } else if (input == "nEcoInteractions") {
         inputFile >> nEcoInteractions;
-    }
-    else if (input == "nMatInteractions") {
+    } else if (input == "nMatInteractions") {
         inputFile >> nMatInteractions;
-    }
-    else if (input == "nNtrInteractions") {
+    } else if (input == "nNtrInteractions") {
         inputFile >> nNtrInteractions;
-    }
-    else if (input == "nChromosomes") {
+    } else if (input == "nChromosomes") {
         inputFile >> nChromosomes;
-    }
-    else if (input == "initialSequence") {
+    } else if (input == "initialSequence") {
         inputFile >> strInitialSequence;
         initialSequence = string2bits(strInitialSequence);
-    }
-    else if (input == "freqSNP") {
+    } else if (input == "freqSNP") {
         inputFile >> freqSNP;
-    }
-    else if (input == "mutationRate") {
+    } else if (input == "mutationRate") {
         inputFile >> mutationRate;
-    }
-    else if (input == "genomeLength") {
+    } else if (input == "genomeLength") {
         inputFile >> genomeLength;
-    }
-    else if (input == "isFemaleHeterogamy") {
+    } else if (input == "isFemaleHeterogamy") {
         inputFile >> isFemaleHeterogamy;
-    }
-    else if (input == "recombinationRate") {
+    } else if (input == "recombinationRate") {
         inputFile >> recombinationRate;
-    }
-    else if (input == "networkSkewness") {
+    } else if (input == "networkSkewness") {
         inputFile >> networkSkewness;
-    }
-    else if (input == "scaleA") {
+    } else if (input == "scaleA") {
         setScale(scaleA, inputFile);
-    }
-    else if (input == "scaleD") {
+    } else if (input == "scaleD") {
         setScale(scaleD, inputFile);
-    }
-    else if (input == "scaleI") {
+    } else if (input == "scaleI") {
         setScale(scaleI, inputFile);
-    }
-    else if (input == "scaleE") {
+    } else if (input == "scaleE") {
         setScale(scaleE, inputFile);
-    }
-    else if (input == "shapeEffectSizes") {
+    } else if (input == "shapeEffectSizes") {
         inputFile >> shapeEffectSizes;
-    }
-    else if (input == "scaleEffectSizes") {
+    } else if (input == "scaleEffectSizes") {
         inputFile >> scaleEffectSizes;
-    }
-    else if (input == "shapeInteractionWeights") {
+    } else if (input == "shapeInteractionWeights") {
         inputFile >> shapeInteractionWeights;
-    }
-    else if (input == "scaleInteractionWeights") {
+    } else if (input == "scaleInteractionWeights") {
         inputFile >> scaleInteractionWeights;
-    }
-    else if (input == "tBurnIn") {
+    } else if (input == "tBurnIn") {
         inputFile >> tBurnIn;
-    }
-    else if (input == "tEndSim") {
+    } else if (input == "tEndSim") {
         inputFile >> tEndSim;
-    }
-    else if (input == "tGetDat") {
+    } else if (input == "tGetDat") {
         inputFile >> tGetDat;
-    }
-    else if (input == "tSavDat") {
+    } else if (input == "tSavDat") {
         inputFile >> tSavDat;
-    }
-    else if (input == "tiny") {
+    } else if (input == "tiny") {
         inputFile >> tiny;
-    }
-    else {
+    } else {
         throw std::runtime_error("Unknown parameter " + input);
+    }
+    if (isSeedProvided) {
+        std::clog << "Custom seed was provided by the user\n";
+    }
+    else
+    {
+        std::clog << "No custom seed was provided, using clock seed instead\n";
     }
 }
 
@@ -185,7 +145,6 @@ void ParameterSet::readParameters(std::ifstream& inputFile)
 {
     // Read input
     std::string input;
-    readSeed(inputFile, input);
     readIsArchitecture(inputFile, input);
 
     while (inputFile >> input) {
