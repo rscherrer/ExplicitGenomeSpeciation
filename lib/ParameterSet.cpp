@@ -16,21 +16,6 @@ void ParameterSet::setDefaultSeed()
     seed = static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 }
 
-void ParameterSet::readIsArchitecture(std::ifstream &inputFile, std::string &input)
-{
-    inputFile >> input;
-    if (input == "architecture_generate") {
-        isGenerateArchitecture = true;
-    }
-    else if (input == "architecture_load") {
-        isGenerateArchitecture = false;
-        inputFile >> architectureFileName;
-    }
-    else {
-        throw std::logic_error("\'architecture_generate\' or \'architecture_load <arg>\' expected at second line of parameterfile\n");
-    }
-}
-
 std::vector<bool> string2bits(const std::string &stringSequence)
 {
     std::vector<bool> bitSequence;
@@ -52,6 +37,12 @@ void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
     if (input == "rng_seed_user") {
         inputFile >> seed;
         isSeedProvided = true;
+    } else if (input == "architecture_generate")
+    {
+        isGenerateArchitecture = true;
+    } else if (input == "architecture_load") {
+        isGenerateArchitecture = false;
+        inputFile >> architectureFileName;
     }
     if (input == "initialPopSize") {
         inputFile >> initialPopSize;
@@ -143,10 +134,7 @@ void ParameterSet::readInput(const std::string &input, std::ifstream &inputFile)
 // Function to read parameters from a parameter file
 void ParameterSet::readParameters(std::ifstream& inputFile)
 {
-    // Read input
     std::string input;
-    readIsArchitecture(inputFile, input);
-
     while (inputFile >> input) {
         readInput(input, inputFile);
     }
