@@ -345,14 +345,14 @@ void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet &parameters
     // Open genetic architecture file
     std::ifstream ifs(parameters.architectureFileName);
     if (!ifs.is_open()) {
-        throw std::runtime_error("Unable to open file in GeneticArchitecture::loadGeneticArchitecture()");
+        throw std::runtime_error("Unable to open genetic architecture file");
     }
 
-    // Make sure the loaded architecture is valid
+    // Make sure the loaded architecture is
     std::clog << "  Validation.";
     bool isValidArchitecture = validateArchitecture(ifs, parameters);
     if (!isValidArchitecture) {
-        throw std::logic_error("Genetic architecture in file is incompatible with current settings in GeneticArchitecture::loadGeneticArchitecture()");
+        throw std::logic_error("Genetic architecture in file is incompatible with current parameters");
     }
     std::clog << "..done\n";
 
