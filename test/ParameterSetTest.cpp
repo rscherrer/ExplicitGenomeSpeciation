@@ -15,6 +15,8 @@ BOOST_FIXTURE_TEST_SUITE(testParametersAreReadInCorrectly, createValidParameterF
         parameters.readParameters(inputFile);
         BOOST_CHECK_EQUAL(parameters.initialPopSize, 1000u);
         BOOST_CHECK_EQUAL(parameters.birthRate, 4.0);
+
+        // Check for parameters that are vectors with several values as well
         const std::vector<double> expectedScaleA{ 0.0, 0.5, 1.0 };
         BOOST_CHECK_EQUAL_COLLECTIONS(parameters.scaleA.begin(), parameters.scaleA.end(), expectedScaleA.begin(), expectedScaleA.end());
     }
