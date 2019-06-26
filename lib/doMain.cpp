@@ -51,6 +51,8 @@ int doMain(const std::vector<std::string> &args)
         if (parameters.isGenerateArchitecture)
         {
 
+            std::clog << "Generating a new genetic architecture\n";
+
             // Create a new genetic architecture if needed
             geneticArchitecture.generateGeneticArchitecture(parameters);
 
@@ -60,8 +62,12 @@ int doMain(const std::vector<std::string> &args)
             // Store the newly created genetic architecture
             geneticArchitecture.storeGeneticArchitecture(parameters);
 
+            std::clog << "New genetic architecture saved as " << parameters.architectureFileName << '\n';
+
         } else
         {
+
+            std::clog << "Loading a genetic architecture from file " << parameters.architectureFileName << '\n';
 
             // Otherwise load the genetic architecture from a genetic architecture file
             geneticArchitecture.loadGeneticArchitecture(parameters);

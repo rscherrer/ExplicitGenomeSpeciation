@@ -449,6 +449,7 @@ void GeneticArchitecture::storeGeneticArchitecture(const ParameterSet& parameter
         << parameters.nNtrLoci << '\n'
         << parameters.nEcoInteractions << '\n'
         << parameters.nMatInteractions << '\n'
+        << parameters.nNtrInteractions << '\n'
         << parameters.nChromosomes << '\n';
 
     // Chromosome sizes
