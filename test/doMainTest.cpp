@@ -30,7 +30,7 @@ struct createDummyParameterFile
     {
         BOOST_TEST_MESSAGE( "Setup fixture: dummy parameter file" );
         dummyParameterFile.open(dummyParameterFileName);
-        dummyParameterFile << "height 0.001\nwidth 1.66\n";
+        dummyParameterFile << "initialPopSize 1000\nbirthRate 4.0\n";
         dummyParameterFile.close();
     }
 
