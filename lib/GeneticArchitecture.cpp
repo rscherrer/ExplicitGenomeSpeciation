@@ -212,14 +212,14 @@ void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices,
     initializeNetwork(nEdges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    std::clog << ':';
+    std::clog << '.';
     growNetwork(nVertices, nEdges, degrees, skewness);
 
     // Relabel node indices after sorting with respect to degree
-    std::clog << ':';
+    std::clog << '.';
     sortNetwork(nVertices, degrees);
 
-    std::clog << ':';
+    std::clog << '.';
 }
 
 void GeneticArchitecture::initializeNetwork(size_t &nEdges, std::vector<size_t> &degrees)

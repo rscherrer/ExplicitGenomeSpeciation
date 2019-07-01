@@ -1,9 +1,11 @@
 #include "doMain.h"
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
+#include "Population.h"
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
 
 
 /// Program to run the main function
@@ -51,8 +53,6 @@ int doMain(const std::vector<std::string> &args)
         if (parameters.isGenerateArchitecture)
         {
 
-            std::clog << "Generating a new genetic architecture\n";
-
             // Create a new genetic architecture if needed
             geneticArchitecture.generateGeneticArchitecture(parameters);
 
@@ -64,7 +64,9 @@ int doMain(const std::vector<std::string> &args)
 
             std::clog << "New genetic architecture saved as " << parameters.architectureFileName << '\n';
 
-        } else
+        }
+
+        else
         {
 
             std::clog << "Loading a genetic architecture from file " << parameters.architectureFileName << '\n';
@@ -72,6 +74,83 @@ int doMain(const std::vector<std::string> &args)
             // Otherwise load the genetic architecture from a genetic architecture file
             geneticArchitecture.loadGeneticArchitecture(parameters);
 
+        }
+
+        // Record start of simulation
+        auto tStart = std::chrono::system_clock::now();
+
+        std::clog << "Creating initial population.";
+        auto population = new Population(parameters, geneticArchitecture);
+        std::clog << "..done\n";
+
+        // Enter simulation loop
+        std::clog << "Entering simulation loop:\n";
+
+        // Loop through time
+        for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
+
+            bool isBurnin = t < 0;
+            if (isBurnin) {
+
+                // Burnin period
+                if (population->getNResources() > 1u) {
+                    population->setBurnin();
+                }
+                population->resourceDynamics(0u, parameters.ecoSelCoeff);
+                population->reproduction(0u, parameters, geneticArchitecture);
+
+            }
+            else {
+
+                if (population->getNResources() < 2u) {
+                    population->endBurnin();
+                }
+
+                population->dispersal(parameters);
+                population->sortByHabitat();
+
+                // First habitat
+                population->resourceDynamics(0u, parameters.ecoSelCoeff);
+                population->reproduction(0u, parameters, geneticArchitecture);
+
+                // Second habitat
+                population->resourceDynamics(1u, parameters.ecoSelCoeff);
+                population->reproduction(1u, parameters, geneticArchitecture);
+
+            }
+
+            population->survival(parameters.survivalProb);
+
+            // Check for extinction
+            bool isExtinct = population->getPopSize() < 2u;
+            if (isExtinct) {
+                std::clog << "Population size underflow at t = " << t << '\n';
+                break;
+            }
+
+            // Time to analyze?
+
+            if (t % parameters.tGetDat == 0u) {
+
+                population->sortByHabitat();
+                population->assignEcotypes();
+
+                // Genome-wide variance decomposition
+                population->decomposeVarianceAlongGenome(parameters.tiny);
+
+                // Overall variance decomposition
+                population->decomposeVariance(parameters.tiny);
+
+                // Record data
+                // population->writePopulationData(datFile);
+                // population->screenshotIndividuals();
+                // population->screenshotLoci();
+                // population->screenshotNetworkEdges();
+
+            }
+
+            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
+            // if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 
     }
