@@ -89,6 +89,8 @@ int doMain(const std::vector<std::string> &args)
         // Loop through time
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
 
+            std::clog << t << '\n';
+
             bool isBurnin = t < 0;
             if (isBurnin) {
 
@@ -100,6 +102,7 @@ int doMain(const std::vector<std::string> &args)
                 population->reproduction(0u, parameters, geneticArchitecture);
 
             }
+
             else {
 
                 if (population->getNResources() < 2u) {
@@ -107,7 +110,10 @@ int doMain(const std::vector<std::string> &args)
                 }
 
                 population->dispersal(parameters);
+                std::clog << " Dispersal\n";
+
                 population->sortByHabitat();
+                std::clog << " Individuals sorted by habitat\n";
 
                 // First habitat
                 population->resourceDynamics(0u, parameters.ecoSelCoeff);

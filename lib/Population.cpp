@@ -71,6 +71,14 @@ void clipDown(double &value, const double &tiny, const double &lowerbound)
     value = value > tiny ? value : lowerbound;
 }
 
+void Population::initializeSizePopEcologicalMetrics(const size_t &n)
+{
+    resourceCapacities.reserve(n);
+    replenishRates.reserve(n);
+    resourceConsumption.reserve(n);
+    resourceEql.reserve(n);
+    ecotypeBoundaries.reserve(n);
+}
 
 // Constructor
 
@@ -79,6 +87,7 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
 
     // With genetic sequence provided
     if (parameters.initialSequence.size() == parameters.nBits) {
+
         for (size_t i = 0u; i < parameters.initialPopSize; ++i) {
             individuals.push_back(new Individual(parameters.initialSequence, parameters, geneticArchitecture));
         }
@@ -86,6 +95,7 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
 
     // If not generate an initial genome sequence
     else {
+
         for (size_t i = 0u; i < parameters.initialPopSize; ++i) {
 
             individuals.push_back(new Individual(parameters, geneticArchitecture));
@@ -93,6 +103,7 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
     }
 
     // Initialize resource growth parameters
+    initializeSizePopEcologicalMetrics(2u);
     setResourceCapacities(parameters.maxResourceCapacity, parameters.habitatAsymmetry);
     setReplenishRates(parameters.maxResourceGrowth);
 }

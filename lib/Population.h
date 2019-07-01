@@ -66,6 +66,9 @@ protected:
 
     // Ecological state
     size_t nAccessibleResources;
+
+    void initializeSizePopEcologicalMetrics(const size_t&);
+
     std::vector<std::pair<double, double> > resourceCapacities;
     std::vector<std::pair<double, double> > replenishRates;
     std::vector<std::pair<double, double> > resourceConsumption;

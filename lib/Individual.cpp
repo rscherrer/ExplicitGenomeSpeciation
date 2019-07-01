@@ -4,6 +4,7 @@
 #include "random.h"
 #include <cmath>
 #include <cassert>
+#include <iostream>
 
 struct Locus;
 
@@ -23,9 +24,11 @@ double calcDisassortProb(const double &matePreference, const double &matingTrait
 Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
 isHeterogamous(rnd::bernoulli(0.5)), ecotype(0u), habitat(0u)
 {
+
     setGenomeSequence(parameters.nBits, parameters.freqSNP);
     mutate(parameters);
     develop(parameters, geneticArchitecture);
+
 }
 
 Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
@@ -184,15 +187,38 @@ void Individual::mutate(const ParameterSet& parameters)
 }
 
 
+// Function to reserve a certain length for vector of genotypes along the genome
+void Individual::initializeSizeGenotypeVector(const size_t &nLoci) {
+
+    genotypes.reserve(nLoci);
+
+}
+
+void Individual::initializeSizeIndivTraitSpecificMetrics(const size_t &nTraits) {
+
+    geneticValues.reserve(nTraits);
+    envirValues.reserve(nTraits);
+    phenotypes.reserve(nTraits);
+
+}
+
+
 void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
 {
 
+    initializeSizeGenotypeVector(parameters.nLoci);
+
     // Set genetic value of all loci
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
+
         setLocusGeneticValue(i, geneticArchitecture, parameters);
+
     }
 
     // Accumulate phenotypic contributions and add environmental effect
+
+    initializeSizeIndivTraitSpecificMetrics(parameters.nTraits);
+
     for (size_t trait = 0u; trait < parameters.nTraits; ++trait) {
         setGeneticValue(trait, geneticArchitecture);
         setEnvirValue(trait, parameters.scaleE[trait]);
@@ -212,6 +238,7 @@ void Individual::expressGene(const size_t &nucleotide,
         const double &scaleD, 
         const double &dominanceCoeff)
 {
+
     // Determine genotype and local effect on the phenotype
     bool isHomozygous = genomeSequence[nucleotide] == genomeSequence[nucleotide + 1u];
     if (isHomozygous) {
@@ -222,15 +249,16 @@ void Individual::expressGene(const size_t &nucleotide,
             genotypes[locus].expression = 1.0;
         }
 
-            // Homozygote aa
+        // Homozygote aa
         else {
             genotypes[locus].alleleCount = 0u;
             genotypes[locus].expression = -1.0;
         }
     }
 
-        // Heterozygote Aa
     else {
+
+        // Heterozygote Aa
         genotypes[locus].alleleCount = 1u;
         genotypes[locus].expression = scaleD * dominanceCoeff;
     }
@@ -280,6 +308,7 @@ void Individual::setLocusGeneticValue(const size_t &locus,
                                       const GeneticArchitecture &geneticArchitecture,
                                       const ParameterSet &parameters)
 {
+
     size_t nucleotidePos = locus << 1u;  // Nucleotide position
     size_t trait = geneticArchitecture.locusConstants[locus].trait;
 
@@ -294,10 +323,12 @@ void Individual::setLocusGeneticValue(const size_t &locus,
 
 }
 
+// Function to set a random genome sequence from a SNP frequency
 void Individual::setGenomeSequence(const size_t &nBits, const double &freqSNP)
 {
     for (size_t nucleotide = 0u; nucleotide < nBits; nucleotide += 2u) {
-        genomeSequence[nucleotide] = genomeSequence[nucleotide + 1u] = (nucleotide % 4u == 0u);
+        genomeSequence.push_back(nucleotide % 4u == 0u);
+        genomeSequence.push_back(nucleotide % 4u == 0u);
         if (rnd::uniform() < freqSNP) {
             genomeSequence[nucleotide] = !genomeSequence[nucleotide];
         }

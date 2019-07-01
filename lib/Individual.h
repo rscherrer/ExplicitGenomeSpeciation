@@ -58,6 +58,10 @@ private:
     std::vector<double> geneticValues;
     std::vector<double> envirValues;
 
+    // Initialize container sizes
+    void initializeSizeGenotypeVector(const size_t&);
+    void initializeSizeIndivTraitSpecificMetrics(const size_t&);
+
     // Ecology
     void disperse(const size_t& nHabitat) const;
     void setFitness(const std::pair<double, double>&) const;
