@@ -7,11 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <fstream>
 #include <string>
+#include <iostream>
 
 
 /// Test that the main can run without argument
 BOOST_AUTO_TEST_CASE(mainCanRunWithoutArgument)
 {
+    BOOST_TEST_MESSAGE("Testing the main function...\n");
     BOOST_CHECK_EQUAL(doMain( { "ExplicitGenomeSpeciation" } ), 0);
 }
 

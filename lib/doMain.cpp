@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <cassert>
 
 
 /// Program to run the main function
@@ -81,6 +82,7 @@ int doMain(const std::vector<std::string> &args)
 
         std::clog << "Creating initial population.";
         auto population = new Population(parameters, geneticArchitecture);
+        assert(population->getPopSize() == parameters.initialPopSize);
         std::clog << "..done\n";
 
         // Enter simulation loop
@@ -88,8 +90,6 @@ int doMain(const std::vector<std::string> &args)
 
         // Loop through time
         for (int t = 1 - parameters.tBurnIn; t <= parameters.tEndSim; ++t) {
-
-            std::clog << t << '\n';
 
             bool isBurnin = t < 0;
             if (isBurnin) {
@@ -108,6 +108,9 @@ int doMain(const std::vector<std::string> &args)
                 if (population->getNResources() < 2u) {
                     population->endBurnin();
                 }
+
+                // Open question: is is better to keep all individuals in a single vector and order them by habitat,
+                // Or have two separate vectors, subpopulations 1 and 2, members of class Population?
 
                 population->dispersal(parameters);
                 std::clog << " Dispersal\n";

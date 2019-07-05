@@ -37,6 +37,9 @@ public:
     std::vector<double> getEnvirValues() const { return envirValues; }
     Locus getLocus(const size_t&) const;
 
+    // Function to reset one's habitat
+    void resetHabitat(const size_t&) const;
+
 private:
 
     friend class Population;

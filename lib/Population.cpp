@@ -108,6 +108,28 @@ Population::Population(const ParameterSet &parameters, const GeneticArchitecture
     setReplenishRates(parameters.maxResourceGrowth);
 }
 
+
+// Or construct with a given vector of individuals in mind
+Population::Population(const std::vector<PInd> &providedIndividuals, const ParameterSet &parameters)
+{
+    individuals = providedIndividuals;
+
+    // Initialize resource growth parameters
+    initializeSizePopEcologicalMetrics(2u);
+    setResourceCapacities(parameters.maxResourceCapacity, parameters.habitatAsymmetry);
+    setReplenishRates(parameters.maxResourceGrowth);
+}
+
+
+/// Function to get a vector of habitats of all individuals
+std::vector<size_t> Population::getHabitatVector() const
+{
+    std::vector<size_t> habitatVector;
+    for (auto pInd : individuals) habitatVector.push_back(pInd->getHabitat());
+    return habitatVector;
+}
+
+
 void Population::massExtinction()
 {
     while(!individuals.empty()) {
@@ -190,13 +212,8 @@ void Population::sortByHabitat()
     if (lastSortedHabitat == 0u) {
         ++iti;
     }
-
-    // Get the limit inhabitants of each habitat
-    idHabitatBoundaries[0u].first = individuals.begin();
-    idHabitatBoundaries[0u].second = iti.operator--();
-    idHabitatBoundaries[1u].first = iti;
-    idHabitatBoundaries[1u].second = individuals.end();
 }
+
 
 void Population::resourceDynamics(const size_t &habitat, const double &ecoSelCoeff)
 {

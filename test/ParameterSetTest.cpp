@@ -3,6 +3,7 @@
 #include "ParameterSet.h"
 #include "TestFixtureCreateParameterFiles.h"
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 
 /// Test that parameters are read in correctly from a file
@@ -10,6 +11,7 @@ BOOST_FIXTURE_TEST_SUITE(testParametersAreReadInCorrectly, createValidParameterF
 
     BOOST_AUTO_TEST_CASE(readParametersCanReadParameters)
     {
+        std::clog << "Running test for parameter sets\n";
         std::ifstream inputFile(validParameterFileName);
         ParameterSet parameters;
         parameters.readParameters(inputFile);

@@ -4,7 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "random.h"
-#include <list>
+#include <list> // Maybe not needed anymore, individuals was a list --- to be able to sort it?
 
 // Forward declaration
 class Individual;
@@ -16,12 +16,14 @@ class Population {
 public:
 
     Population(const ParameterSet&, const GeneticArchitecture&);
+    Population(const std::vector<PInd>&, const ParameterSet&);
 
     void massExtinction();
 
     // Getters
     size_t getPopSize() const;
     size_t getNResources() const;
+    std::vector<size_t> getHabitatVector() const;
 
     // High-level setters
     void dispersal(const ParameterSet&);
@@ -35,6 +37,9 @@ public:
     void getLocalAttackRates(std::list<std::pair<double, double> >&, const size_t&);
     void setEcotypeBoundary(const std::list<std::pair<double, double> >&, const size_t&);
     void findEcotypeBoundary(const size_t&);
+
+    // Reset the habitat of an individual
+    void resetIndividualHabitat();
 
     // Variance decomposition
     void decomposeVariance(const double&);
@@ -51,7 +56,7 @@ public:
 protected:
 
     // The population
-    std::list<PInd> individuals;
+    std::vector<PInd> individuals;
     std::vector<PInd> females;
     std::vector<PInd> males;
     std::vector<PInd> offspring;

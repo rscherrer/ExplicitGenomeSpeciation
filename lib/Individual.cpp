@@ -52,6 +52,13 @@ Individual::Individual(Individual const * const mother, Individual const * const
 }
 
 
+/// Function to reset one's habitat
+void Individual::resetHabitat(const size_t &newHabitat) const
+{
+    habitat = newHabitat;
+}
+
+
 // Getters
 
 bool Individual::isFemale(const bool &isFemaleHeterogamy) const

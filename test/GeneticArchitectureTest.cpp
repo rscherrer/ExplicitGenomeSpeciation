@@ -3,6 +3,7 @@
 #include "GeneticArchitecture.h"
 #include "TestFixtureCreateArchitectureFile.h"
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 
 /// Test to check that the genetic architecture is read properly from a file
@@ -12,6 +13,8 @@ BOOST_FIXTURE_TEST_CASE(geneticArchitectureIsLoadedProperly, createValidArchitec
     GeneticArchitecture geneticArchitecture;
     parameters.architectureFileName = validArchitectureFileName;
     geneticArchitecture.loadGeneticArchitecture(parameters);
+
+    std::clog << "Architecture tests.\n";
 
     // Check that the values are read in correctly
     BOOST_CHECK_EQUAL_COLLECTIONS(
