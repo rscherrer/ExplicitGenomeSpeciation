@@ -8,6 +8,9 @@ class ParameterSet {
 
 public:
 
+    // Constructor
+    ParameterSet();
+
     // Setters
     template <class T>
     void setParameter(T&, std::ifstream&);
