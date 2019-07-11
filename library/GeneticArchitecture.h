@@ -35,20 +35,20 @@ public:
     // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;
 
-    // A vector of traits encoded by all loci
-    std::vector<size_t> locusEncodedTraits;
-
-    // A vector of chromosomal locations for all loci
-    std::vector<size_t> locusChromosomalLocations;
-
     // A vector of genomic locations for all loci
     std::vector<double> locusGenomicLocations;
+
+    // A vector of traits encoded by all loci
+    std::vector<size_t> locusEncodedTraits;
 
     // A vector of effet sizes for all loci
     std::vector<double> locusEffectSizes;
 
     // A vector of dominance coefficients for all loci
     std::vector<double> locusDominanceCoeffs;
+
+    // A vector of epistatic interactions for all loci (interacting partner + interaction weight)
+    std::vector<Edge> locusInteractions;
 
     std::vector<std::vector<size_t> > networkVertices;
     std::vector<size_t> loci;
@@ -63,7 +63,7 @@ public:
 
     // Setting
     void createRecombinationMap(const ParameterSet&);
-    void setChromosomeSizes(const size_t&);
+    void setChromosomeSizes(const size_t&); // obsolete
     void sampleGeneLocations(const ParameterSet&);
     void assignPhenotypes(const ParameterSet&);
     void sampleEffectSizes(const ParameterSet&);
@@ -106,9 +106,30 @@ std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
 }
 
 
+/// Function to get a vector of traits encoded by all loci
+std::vector<size_t> getEncodedTraits()
+{
+
+}
+
+
+/// Function to get a vector of locations of all loci across the genome
+std::vector<double> getGenomicLocations()
+{
+    std::vector<double> genomicLocations;
+
+    return genomicLocations;
+}
+
+
 /// Constructor to generate a new genetic architecture
 GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
-chromosomeSizes(getChromosomeSizes(nChromosomes))
+chromosomeSizes(getChromosomeSizes(nChromosomes)),
+locusGenomicLocations(getGenomicLocations()),
+locusEncodedTraits(getEncodedTraits()),
+locusEffectSizes(),
+locusDominanceCoeffs(),
+locusInteractions()
 //locusConstants(getLocusConstants()),
 //networkVertices(getNetworkVertices()),
 //loci(getLoci()),
