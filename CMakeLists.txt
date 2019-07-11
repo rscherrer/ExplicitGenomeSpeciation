@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 14)
 set(SOURCE_FILES main.cpp)
 add_executable(ExplicitGenomeSpeciation ${SOURCE_FILES})
 
-include_directories(lib)
-add_subdirectory(lib)
+include_directories(library)
 
-target_link_libraries(ExplicitGenomeSpeciation lib)
+add_subdirectory(library)
+add_subdirectory(tests)
 
-add_subdirectory(test)
+target_link_libraries(ExplicitGenomeSpeciation library)
