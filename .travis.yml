@@ -36,24 +36,25 @@ script:
  # Build and run the tests
  - qmake ci_setup/setupTest.pro
  - make --silent debug
- - ./ci_setup/setupTest
+ - ./setupTest
   
  # helgrind
- - valgrind --tool=helgrind --log-file=helgrind.log -v ./ci_setup/setupTest
+ - valgrind --tool=helgrind --log-file=helgrind.log -v ./setupTest
  - cat helgrind.log
   
  # memcheck
- - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./ci_setup/setupTest
+ - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./setupTest
  - cat memcheck.log
   
  # Build and run and profile normal program
  - qmake ci_setup/setup.pro
  - make --silent release
- - time ./ci_setup/setup
- - gprof ci_setup/setup > gprof.log
+ - time ./setup
+ - gprof ./setup > gprof.log
  - head gprof.log -n 1000
   
  # Get code coverage
+ - chmod +x ci_setup/get_code_cov 
  - ./ci_setup/get_code_cov
  - codecov
   
@@ -61,6 +62,7 @@ script:
  - cppcheck --quiet --error-exitcode=1 . 
   
  # Call OCLint
+ - chmod +x ci_setup/do_oclint 
  - ./ci_setup/do_oclint
   
  # proselint
