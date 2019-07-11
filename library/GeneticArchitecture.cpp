@@ -131,7 +131,8 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 
 
 /// Function to get a vector of effect sizes for all loci across the genome
-std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, const double &shape, const double &scale)
+std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, const double &shape, const double &scale,
+        const size_t &nTraits)
 {
     std::vector<double> effectSizes;
     std::vector<double> sumsqEffectSizes {0.0, 0.0, 0.0};
@@ -145,14 +146,48 @@ std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, con
         effectSizes.push_back(effectSize);
 
         // Accumulate the sums of squared effect sizes for each trait separately
-        sumsqEffectSizes[locusEncodedTraits[locus]] += effectSize;
+        sumsqEffectSizes[locusEncodedTraits[locus]] += sqr(effectSize);
     }
 
-    // Normalize all locus effect sizes by the sum of squares of their respective trait
+    // Take the square root of the sum of squares in order to normalize
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+        sumsqEffectSizes[trait] > 0.0 ? sqrt(sumsqEffectSizes) : 1.0;
+
+    // Normalize all locus effect sizes by the square rooted sum of squares of their respective trait
     for (size_t locus = 0u; locus < nLoci; ++locus)
         effectSizes[locus] /= sumsqEffectSizes[locusEncodedTraits[locus]];
 
     return effectSizes;
+}
+
+
+/// Function to get a vector of dominance coefficients across the genome
+std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci, const size_t &nTraits)
+{
+
+    std::vector<double> dominanceCoeffs;
+    std::vector<double> sumsqDominanceCoeffs {0.0, 0.0, 0.0};
+    
+    // Loop through loci across the genome
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+        // For each one sample a dominance coefficient from a unilateral normal distribution
+        const double dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
+        dominanceCoeffs.push_back(dominanceCoeff);
+
+        // Accumulate the sums of squared dominance coefficients for each trait
+        sumsqDominanceCoeffs[locusEncodedTraits[locus]] += sqr(dominanceCoeff);
+    }
+
+    // Take the square root of the sum of squares in order to normalize
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+        sumsqDominanceCoeffs[trait] > 0.0 ? sqrt(sumsqDominanceCoeffs) : 1.0;
+
+    // Normalize the dominance coefficient of each locus by the square rooted sum of squares for its respective trait
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        dominanceCoeffs[locus] /= sumsqDominanceCoeffs[locusEncodedTraits[locus]];
+
+    return dominanceCoeffs;
 }
 
 
