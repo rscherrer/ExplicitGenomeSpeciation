@@ -68,6 +68,15 @@ void GeneticArchitecture::setChromosomeSizes(const size_t &nChromosomes)
 
 }
 
+std::vector<double> GeneticArchitecture::getGenomicLocations()
+{
+    std::vector<double> genomicLocations;
+
+
+
+    return genomicLocations;
+}
+
 void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 {
 

@@ -11,8 +11,7 @@ class GeneticArchitecture {
 
 private:
 
-    // A vector of chromosome sizes
-    std::vector<double> chromosomeSizes;
+
 
 public:
 
@@ -37,6 +36,9 @@ public:
 
     // Fields
 
+    // A vector of chromosome sizes
+    std::vector<double> chromosomeSizes;
+
     // A vector of genomic locations for all loci
     std::vector<double> locusGenomicLocations;
 
@@ -50,10 +52,15 @@ public:
     std::vector<double> locusDominanceCoeffs;
 
     // A vector of epistatic interactions for all loci (interacting partner + interaction weight)
-    std::vector<Edge> locusInteractions;
+    std::vector<std::vector<std::pair<size_t, double> > > locusInteractions;
 
+    // Three vectors indicating what loci are underlying each trait
     std::vector<std::vector<size_t> > networkVertices;
+
+    // A vector of locus indices
     std::vector<size_t> loci;
+
+    // A vector of edges of the gene regulatory network (edges are pairs of locus indices)
     std::vector<Edge> edges;
 
     // High-level functions
@@ -88,6 +95,8 @@ public:
     void writeLocusConstants(std::ofstream&, const ParameterSet&);
     void writeEpistaticInteractions(std::ofstream&, const ParameterSet&);
 
+    std::vector<double> getGenomicLocations();
+
 };
 
 // Accessory functions
@@ -110,20 +119,21 @@ std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
 
 
 
+
 /// Constructor to generate a new genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) //:
-//chromosomeSizes(getChromosomeSizes(nChromosomes))//,
-//locusGenomicLocations(getGenomicLocations()),
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+chromosomeSizes(getChromosomeSizes(nChromosomes)),
+locusGenomicLocations(getGenomicLocations())//,
 //locusEncodedTraits(getEncodedTraits()),
 //locusEffectSizes(),
 //locusDominanceCoeffs(),
 //locusInteractions()
-//locusConstants(getLocusConstants()),
+
 //networkVertices(getNetworkVertices()),
 //loci(getLoci()),
 //edges(getEdges())
 {
-    chromosomeSizes = getChromosomeSizes(nChromosomes);
+
 }
 
 
