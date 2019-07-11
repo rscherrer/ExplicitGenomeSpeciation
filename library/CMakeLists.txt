@@ -1,27 +1,19 @@
-project(lib)
+project(library)
 
 set(
         HEADER_FILES
-        GeneticArchitecture.h
-        Individual.h
-        OutputFile.h
-        ParameterSet.h
-        Population.h
-        random.h
-        utils.h
-        doMain.h
+        function1.h
+        function2.h
+        function3.h
+        function4.h
 )
 
 set(
         SOURCE_FILES
-        GeneticArchitecture.cpp
-        Individual.cpp
-        OutputFile.cpp
-        ParameterSet.cpp
-        Population.cpp
-        random.cpp
-        utils.cpp
-        doMain.cpp
+        function1.cpp
+        function2.cpp
+        function3.cpp
+        function4.cpp
 )
 
-add_library(lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
+add_library(library STATIC ${SOURCE_FILES} ${HEADER_FILES})
