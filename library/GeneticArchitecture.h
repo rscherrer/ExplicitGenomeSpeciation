@@ -106,14 +106,6 @@ std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
 }
 
 
-/// Function to get a vector of traits encoded by all loci
-std::vector<size_t> getEncodedTraits()
-{
-
-}
-
-
-}
 
 
 /// Constructor to generate a new genetic architecture
