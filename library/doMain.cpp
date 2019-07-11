@@ -48,7 +48,7 @@ int doMain(const std::vector<std::string> &args)
         }
 
         // Declare a genetic architecture
-        GeneticArchitecture geneticArchitecture;
+        GeneticArchitecture geneticArchitecture(parameters.nChromosomes);
 
         // Set the genetic architecture
         if (parameters.isGenerateArchitecture)
