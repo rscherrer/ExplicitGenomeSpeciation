@@ -68,14 +68,36 @@ void GeneticArchitecture::setChromosomeSizes(const size_t &nChromosomes)
 
 }
 
-std::vector<double> GeneticArchitecture::getGenomicLocations()
+
+/// Function to get a vector of chromosome lengths
+std::vector<double> GeneticArchitecture::getChromosomeSizes(const size_t &nChromosomes)
+{
+    std::vector<double> chromosomeSizes;
+
+    // Chromosomes all have the same size
+    for (size_t i = 0u; i < nChromosomes; ++i) {
+        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
+    }
+
+    return chromosomeSizes;
+}
+
+
+/// Function to generate a vector of gene locations across the genome
+std::vector<double> GeneticArchitecture::getGenomicLocations(const size_t &nLoci)
 {
     std::vector<double> genomicLocations;
 
+    // For every gene sample a uniform location
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        genomicLocations.push_back(rnd::uniform());
 
+    // Sort gene locations by increasing order
+    std::sort(genomicLocations.begin(), genomicLocations.end());
 
     return genomicLocations;
 }
+
 
 void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 {
@@ -106,6 +128,26 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
     }
 
 }
+
+
+/// Function to get a vector of traits encoded by each locus across the genome
+std::vector<size_t> GeneticArchitecture::getEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nVertices)
+{
+    std::vector<size_t> encodedTraits;
+
+    // Create an ordered vector of trait indices, one for each locus
+    for (size_t trait = 0u; trait < nTraits; ++trait) {
+        for (size_t vertex = 0u; vertex < nVertices[trait]; ++vertex) {
+            encodedTraits.push_back(trait);
+        }
+    }
+
+    // Shuffle the vector of encoded traits
+    std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
+
+    return encodedTraits;
+}
+
 
 void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
 {

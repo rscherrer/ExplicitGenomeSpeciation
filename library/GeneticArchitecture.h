@@ -29,7 +29,7 @@ public:
     // assigning single values to the variables
 
     // Default constructor to generate a new architecture
-    GeneticArchitecture(const size_t&);
+    GeneticArchitecture(const size_t&, const size_t&);
 
     // Constructor to load an architecture from a file
     GeneticArchitecture(const std::string&);
@@ -95,7 +95,9 @@ public:
     void writeLocusConstants(std::ofstream&, const ParameterSet&);
     void writeEpistaticInteractions(std::ofstream&, const ParameterSet&);
 
-    std::vector<double> getGenomicLocations();
+    std::vector<double> getGenomicLocations(const size_t&);
+    std::vector<double> getChromosomeSizes(const size_t&);
+    std::vector<size_t> getEncodedTraits(const size_t&, const std::vector<size_t>&);
 
 };
 
@@ -103,28 +105,16 @@ public:
 bool edgeCompare (const Edge&, const Edge&);
 
 
-/// Function to get a vector of chromosome lengths
-std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
-{
-    std::vector<double> chromosomeSizes;
-
-    // Chromosomes all have the same size
-    for (size_t i = 0u; i < nChromosomes; ++i) {
-        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
-    }
-
-    return chromosomeSizes;
-}
-
 
 
 
 
 /// Constructor to generate a new genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes, const size_t &nLoci, const size_t &nTraits,
+        const std::vector<size_t> &nVertices) :
 chromosomeSizes(getChromosomeSizes(nChromosomes)),
-locusGenomicLocations(getGenomicLocations())//,
-//locusEncodedTraits(getEncodedTraits()),
+locusGenomicLocations(getGenomicLocations(nLoci)),
+locusEncodedTraits(getEncodedTraits(nTraits, nVertices)) //,
 //locusEffectSizes(),
 //locusDominanceCoeffs(),
 //locusInteractions()
