@@ -22,6 +22,25 @@ public:
 
     };
 
+
+    // Constructor
+    // It is a bad habit to have declared but non initialized members of a class
+    // It is recommended to initialize the members using the member initialization list of the constructor
+    // But genetic architecture is a large class with many members (many genes...)
+    // So it would take a lot of computation to initialize the members by generating a new architecture,
+    // If afterwards I end up erasing it all to replace it with the architecture that is given by some input file
+    // A better alternative might be to have different constructors, one for generating a new architecture,
+    // and the other to load an architecture from a file
+    // Each constructor will have its own member initialization list
+    // NB: functions to initialize variables can be used in the initialization list, initialization needs not be
+    // assigning single values to the variables
+
+    // Default constructor to generate a new architecture
+    GeneticArchitecture();
+
+    // Constructor to load an architecture from a file
+    GeneticArchitecture(const std::string&);
+
     // Fields
     std::vector<double> chromosomeSizes;
     std::vector<LocusConstants> locusConstants;
