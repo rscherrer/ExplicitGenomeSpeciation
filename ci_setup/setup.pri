@@ -1,11 +1,23 @@
-SOURCES += library/function1.cpp
-HEADERS += library/function1.h
+SOURCES += library/doMain.cpp
+HEADERS += library/doMain.h
 
-SOURCES += library/function2.cpp
-HEADERS += library/function2.h
+SOURCES += library/GeneticArchitecture.cpp
+HEADERS += library/GeneticArchitecture.h
 
-SOURCES += library/function3.cpp
-HEADERS += library/function3.h
+SOURCES += library/Individual.cpp
+HEADERS += library/Individual.h
 
-SOURCES += library/function4.cpp
-HEADERS += library/function4.h
+SOURCES += library/OutputFile.cpp
+HEADERS += library/OutputFile.h
+
+SOURCES += library/ParameterSet.cpp
+HEADERS += library/ParameterSet.h
+
+SOURCES += library/Population.cpp
+HEADERS += library/Population.h
+
+SOURCES += library/random.cpp
+HEADERS += library/random.h
+
+SOURCES += library/utils.cpp
+HEADERS += library/utils.h
