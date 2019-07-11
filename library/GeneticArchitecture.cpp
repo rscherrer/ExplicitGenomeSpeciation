@@ -130,6 +130,32 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 }
 
 
+/// Function to get a vector of effect sizes for all loci across the genome
+std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, const double &shape, const double &scale)
+{
+    std::vector<double> effectSizes;
+    std::vector<double> sumsqEffectSizes {0.0, 0.0, 0.0};
+
+    // Loop through loci in the genome
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+        // For each one sample an effect size from a bilateral Gamma distribution
+        double effectSize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        effectSize = rnd::bernoulli(0.5) ? effectSize * -1.0 : effectSize;
+        effectSizes.push_back(effectSize);
+
+        // Accumulate the sums of squared effect sizes for each trait separately
+        sumsqEffectSizes[locusEncodedTraits[locus]] += effectSize;
+    }
+
+    // Normalize all locus effect sizes by the sum of squares of their respective trait
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        effectSizes[locus] /= sumsqEffectSizes[locusEncodedTraits[locus]];
+
+    return effectSizes;
+}
+
+
 /// Function to get a vector of traits encoded by each locus across the genome
 std::vector<size_t> GeneticArchitecture::getEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nVertices)
 {

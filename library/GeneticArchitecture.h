@@ -98,6 +98,7 @@ public:
     std::vector<double> getGenomicLocations(const size_t&);
     std::vector<double> getChromosomeSizes(const size_t&);
     std::vector<size_t> getEncodedTraits(const size_t&, const std::vector<size_t>&);
+    std::vector<double> getEffectSizes(const size_t&, const double&, const double&);
 
 };
 
@@ -111,11 +112,11 @@ bool edgeCompare (const Edge&, const Edge&);
 
 /// Constructor to generate a new genetic architecture
 GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes, const size_t &nLoci, const size_t &nTraits,
-        const std::vector<size_t> &nVertices) :
+        const std::vector<size_t> &nVertices, const double &shapeEffectSizes, const double &scaleEffectSizes) :
 chromosomeSizes(getChromosomeSizes(nChromosomes)),
 locusGenomicLocations(getGenomicLocations(nLoci)),
-locusEncodedTraits(getEncodedTraits(nTraits, nVertices)) //,
-//locusEffectSizes(),
+locusEncodedTraits(getEncodedTraits(nTraits, nVertices)),
+locusEffectSizes(getEffectSizes(nLoci, shapeEffectSizes, scaleEffectSizes))//,
 //locusDominanceCoeffs(),
 //locusInteractions()
 
