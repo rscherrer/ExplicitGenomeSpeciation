@@ -1,5 +1,5 @@
 # Files
-include(ci_setup/setup.pri)
+include(setup.pri)
 SOURCES += main.cpp
 
 # C++14

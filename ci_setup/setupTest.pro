@@ -1,12 +1,6 @@
 # Files
 include(setup.pri)
-SOURCES += mainTest.cpp
-SOURCES += GeneticArchitectureTest.cpp
-SOURCES += IndividualTest.cpp
-SOURCES += OutputFileTest.cpp
-SOURCES += ParameterSetTest.cpp
-SOURCES += Population.cpp
-SOURCES += randomTest.cpp
+SOURCES += tests/tests.cpp
 
 # C++14
 CONFIG += c++14
