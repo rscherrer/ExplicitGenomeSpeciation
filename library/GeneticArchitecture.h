@@ -9,6 +9,11 @@ typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus in
 
 class GeneticArchitecture {
 
+private:
+
+    // A vector of chromosome sizes
+    std::vector<double> chromosomeSizes;
+
 public:
 
 
@@ -31,9 +36,6 @@ public:
     GeneticArchitecture(const std::string&);
 
     // Fields
-
-    // A vector of chromosome sizes
-    std::vector<double> chromosomeSizes;
 
     // A vector of genomic locations for all loci
     std::vector<double> locusGenomicLocations;
