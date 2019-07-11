@@ -102,15 +102,13 @@ std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
 
 
 /// Constructor to generate a new genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) //:
-//chromosomeSizes(getChromosomeSizes(nChromosomes))
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+chromosomeSizes(getChromosomeSizes(nChromosomes))
 //locusConstants(getLocusConstants()),
 //networkVertices(getNetworkVertices()),
 //loci(getLoci()),
 //edges(getEdges())
 {
-
-    setChromosomeSizes(nChromosomes);
 
 }
 
