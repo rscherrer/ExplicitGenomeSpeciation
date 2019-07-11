@@ -7,20 +7,21 @@
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
+/// Container for constant features of a given locus
+struct LocusConstants {
+
+    size_t trait;
+    size_t chromosome;
+    double location;
+    double effectSize;
+    double dominanceCoeff;
+    std::list<std::pair<size_t, double> > neighbors;
+
+};
+
 class GeneticArchitecture {
 
 public:
-
-    struct LocusConstants {
-
-        size_t trait;
-        size_t chromosome;
-        double location;
-        double effectSize;
-        double dominanceCoeff;
-        std::list<std::pair<size_t, double> > neighbors;
-
-    };
 
 
     // Constructor
@@ -36,7 +37,7 @@ public:
     // assigning single values to the variables
 
     // Default constructor to generate a new architecture
-    GeneticArchitecture();
+    GeneticArchitecture(const size_t&);
 
     // Constructor to load an architecture from a file
     GeneticArchitecture(const std::string&);
@@ -85,5 +86,37 @@ public:
 // Accessory functions
 bool edgeCompare (const Edge&, const Edge&);
 
+
+/// Function to get a vector of chromosome lengths
+std::vector<double> getChromosomeSizes(const size_t &nChromosomes)
+{
+    std::vector<double> chromosomeSizes;
+
+    // Chromosomes all have the same size
+    for (size_t i = 0u; i < nChromosomes; ++i) {
+        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
+    }
+
+    return chromosomeSizes;
+}
+
+
+/// Constructor to generate a new genetic architecture
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+chromosomeSizes(getChromosomeSizes(nChromosomes)),
+//locusConstants(getLocusConstants()),
+//networkVertices(getNetworkVertices()),
+//loci(getLoci()),
+//edges(getEdges())
+{
+
+}
+
+
+/// Constructor to load a genetic architecture from a file
+GeneticArchitecture::GeneticArchitecture(const std::string &architectureFileName)
+{
+
+}
 
 #endif //EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
