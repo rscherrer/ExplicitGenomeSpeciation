@@ -7,18 +7,6 @@
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
-/// Container for constant features of a given locus
-struct LocusConstants {
-
-    size_t trait;
-    size_t chromosome;
-    double location;
-    double effectSize;
-    double dominanceCoeff;
-    std::list<std::pair<size_t, double> > neighbors;
-
-};
-
 class GeneticArchitecture {
 
 public:
@@ -43,8 +31,25 @@ public:
     GeneticArchitecture(const std::string&);
 
     // Fields
+
+    // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;
-    std::vector<LocusConstants> locusConstants;
+
+    // A vector of traits encoded by all loci
+    std::vector<size_t> locusEncodedTraits;
+
+    // A vector of chromosomal locations for all loci
+    std::vector<size_t> locusChromosomalLocations;
+
+    // A vector of genomic locations for all loci
+    std::vector<double> locusGenomicLocations;
+
+    // A vector of effet sizes for all loci
+    std::vector<double> locusEffectSizes;
+
+    // A vector of dominance coefficients for all loci
+    std::vector<double> locusDominanceCoeffs;
+
     std::vector<std::vector<size_t> > networkVertices;
     std::vector<size_t> loci;
     std::vector<Edge> edges;
