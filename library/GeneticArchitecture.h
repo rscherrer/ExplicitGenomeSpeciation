@@ -113,29 +113,23 @@ std::vector<size_t> getEncodedTraits()
 }
 
 
-/// Function to get a vector of locations of all loci across the genome
-std::vector<double> getGenomicLocations()
-{
-    std::vector<double> genomicLocations;
-
-    return genomicLocations;
 }
 
 
 /// Constructor to generate a new genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
-chromosomeSizes(getChromosomeSizes(nChromosomes)),
-locusGenomicLocations(getGenomicLocations()),
-locusEncodedTraits(getEncodedTraits()),
-locusEffectSizes(),
-locusDominanceCoeffs(),
-locusInteractions()
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) //:
+//chromosomeSizes(getChromosomeSizes(nChromosomes))//,
+//locusGenomicLocations(getGenomicLocations()),
+//locusEncodedTraits(getEncodedTraits()),
+//locusEffectSizes(),
+//locusDominanceCoeffs(),
+//locusInteractions()
 //locusConstants(getLocusConstants()),
 //networkVertices(getNetworkVertices()),
 //loci(getLoci()),
 //edges(getEdges())
 {
-
+    chromosomeSizes = getChromosomeSizes(nChromosomes);
 }
 
 
