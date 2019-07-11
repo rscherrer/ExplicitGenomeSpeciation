@@ -3,6 +3,51 @@
 #include <chrono>
 #include <sstream>
 
+/// Constructor and member initialization list
+ParameterSet::ParameterSet() : initialPopSize(100u),
+                                dispersalRate(1.0e-3),
+                                birthRate(4.0),
+                                habitatAsymmetry(0.5),
+                                survivalProb(0.8),
+                                ecoSelCoeff(1.0),
+                                matePreferenceStrength(10.0),
+                                mateEvaluationCost(0.01),
+                                maxResourceCapacity(5000.0),
+                                maxResourceGrowth(1.0),
+                                nEcoLoci(400u),
+                                nMatLoci(200u),
+                                nNtrLoci(400u),
+                                nEcoInteractions(1000u),
+                                nMatInteractions(500u),
+                                nNtrInteractions(0u),
+                                nChromosomes(3u),
+                                nLoci(nEcoLoci + nMatLoci + nNtrLoci),
+                                nLociPerTrait({nEcoLoci, nMatLoci, nNtrLoci}),
+                                nBits(2u * nLoci),
+                                freqSNP(0.02),
+                                mutationRate(1.0e-5),
+                                genomeLength(300u),
+                                isFemaleHeterogamy(false),
+                                recombinationRate(0.01),
+                                isGenerateArchitecture(true),
+                                networkSkewness(1.0),
+                                scaleA({1.0, 1.0, 1.0}),
+                                scaleD({0.0, 0.0, 0.0}),
+                                scaleI({0.0, 0.0, 0.0}),
+                                scaleE({0.0, 0.0, 0.0}),
+                                shapeEffectSizes(2.0),
+                                scaleEffectSizes(1.0),
+                                shapeInteractionWeights(5.0),
+                                scaleInteractionWeights(1.0),
+                                tBurnIn(1),
+                                tEndSim(5),
+                                tGetDat(1),
+                                tSavDat(1),
+                                tiny(1.0e-12),
+                                nHabitats(2u),
+                                nTraits(3u)
+{}
+
 template <class T>
 void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)
 {
