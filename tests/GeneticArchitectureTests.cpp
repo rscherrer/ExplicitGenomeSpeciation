@@ -5,11 +5,42 @@
 //#include "TestFixtureCreateArchitectureFile.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
+#include <cassert>
 
 
 BOOST_AUTO_TEST_CASE(dummyTest)
 {
     BOOST_CHECK_EQUAL(1, 1);
+}
+
+
+struct defaultGeneticArchitecture
+{
+
+    defaultGeneticArchitecture() : nChromosomes(3u), geneticArchitecture(GeneticArchitecture(nChromosomes)) {}
+    ~defaultGeneticArchitecture() {}
+
+    const size_t nChromosomes;
+    GeneticArchitecture geneticArchitecture;
+
+};
+
+
+/// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
+BOOST_FIXTURE_TEST_CASE(threeEqualSizedChromosomes, defaultGeneticArchitecture)
+{
+
+    std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
+    std::vector<double> realizedChromosomeSizes = geneticArchitecture.getChromosomeSizes();
+
+    assert(expectedChromosomeSizes.size() == realizedChromosomeSizes.size());
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(
+            realizedChromosomeSizes.begin(),
+            realizedChromosomeSizes.end(),
+            expectedChromosomeSizes.begin(),
+            expectedChromosomeSizes.end()
+            );
 }
 
 

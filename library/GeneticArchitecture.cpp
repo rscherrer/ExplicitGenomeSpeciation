@@ -12,16 +12,17 @@ typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus in
 
 
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture()
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+chromosomeSizes(makeChromosomeSizes(nChromosomes))
 {
 
 }
 
-/*
+
 /// Function to make a vector of chromosome sizes
-std::vector<size_t> makeChromosomeSizes(const size_t &nChromosomes)
+std::vector<double> GeneticArchitecture::makeChromosomeSizes(const size_t &nChromosomes) const noexcept
 {
-    std::vector<size_t> chromosomeSizes;
+    std::vector<double> chromosomeSizes;
 
     // Chromosomes all have the same size
     for (size_t i = 0u; i < nChromosomes; ++i) {
@@ -32,6 +33,8 @@ std::vector<size_t> makeChromosomeSizes(const size_t &nChromosomes)
 }
 
 
+
+/*
 /// Function to make a vector of interacting partner loci for each trait
 std::vector<std::vector<Edge> > makeTraitNetworkMaps()
 {

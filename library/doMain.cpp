@@ -47,7 +47,7 @@ int doMain(const std::vector<std::string> &args)
             std::clog << "Using default parameters\n";
         }
 
-        GeneticArchitecture geneticArchitecture;
+        GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters.nChromosomes);
 
 
 

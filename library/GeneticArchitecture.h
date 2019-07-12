@@ -36,13 +36,13 @@ struct Genome
 };
 
 
-/// A container of all constant genetic features of the species we are simulating
+/// A container for all constant genetic features of the species we are simulating
 class GeneticArchitecture {
 
 private:
 
     // A vector of chromosome sizes
-    std::vector<size_t> chromosomeSizes;
+    std::vector<double> chromosomeSizes;
 
     // A map of the gene regulatory network
     //std::vector<Edge> traitNetworkMaps;
@@ -55,7 +55,14 @@ private:
 
 public:
 
-    GeneticArchitecture();
+    /// Constructor
+    GeneticArchitecture(const size_t&);
+
+    /// Getters
+    std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
+
+    /// Makers
+    std::vector<double> makeChromosomeSizes(const size_t&) const noexcept;
 
     /*
     // High-level functions
