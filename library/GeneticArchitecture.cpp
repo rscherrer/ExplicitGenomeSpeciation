@@ -20,16 +20,17 @@ chromosomeSizes(makeChromosomeSizes(nChromosomes))
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomeSizes(const size_t &nChromosomes) const noexcept
+std::vector<double>  GeneticArchitecture::makeChromosomeSizes(const size_t &nChromosomes) const noexcept
 {
-    std::vector<double> chromosomeSizes;
+
+    std::vector<double> chromsizes;
 
     // Chromosomes all have the same size
-    for (size_t i = 0u; i < nChromosomes; ++i) {
-        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
-    }
+    for (size_t i = 0u; i < nChromosomes; ++i)
+        chromsizes.push_back((i + 1.0) / nChromosomes);
 
-    return chromosomeSizes;
+    return chromsizes;
+
 }
 
 
