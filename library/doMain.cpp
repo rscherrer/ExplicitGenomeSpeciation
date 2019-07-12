@@ -25,6 +25,7 @@ int doMain(const std::vector<std::string> &args)
         ParameterSet parameters;
         parameters.setDefaultSeed();
 
+        /*
         // Update parameters from a parameter file if needed
         if (args.size() == 2u)
         {
@@ -46,6 +47,7 @@ int doMain(const std::vector<std::string> &args)
         {
             std::clog << "Using default parameters\n";
         }
+         */
 
         GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters.nChromosomes);
 
