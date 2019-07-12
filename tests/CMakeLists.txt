@@ -4,12 +4,12 @@ include_directories(${Boost_INCLUDE_DIR})
 
 set(
         TEST_FILES
-        tests.cpp
-        doMainTest.cpp
-        GeneticArchitectureTest.cpp
-        ParameterSetTest.cpp
-        PopulationTest.cpp
-        utilsTest.cpp
+        #tests.cpp
+        #doMainTest.cpp
+        GeneticArchitectureTests.cpp
+        #ParameterSetTest.cpp
+        #PopulationTest.cpp
+        #utilsTest.cpp
 )
 
 add_executable(ExplicitGenomeSpeciation_test ${TEST_FILES})

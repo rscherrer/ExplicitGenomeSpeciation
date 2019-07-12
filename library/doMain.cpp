@@ -47,6 +47,13 @@ int doMain(const std::vector<std::string> &args)
             std::clog << "Using default parameters\n";
         }
 
+        GeneticArchitecture geneticArchitecture;
+
+
+
+
+
+        /*
         // Declare a genetic architecture
         GeneticArchitecture geneticArchitecture(parameters.nChromosomes);
 
@@ -161,6 +168,11 @@ int doMain(const std::vector<std::string> &args)
             // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
             // if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
+        */
+
+
+
+
 
     }
     catch (const std::runtime_error &err)

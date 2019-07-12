@@ -5,8 +5,228 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cassert>
+
 
 typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
+
+
+/// Constructor of genetic architecture
+GeneticArchitecture::GeneticArchitecture()
+{
+
+}
+
+/*
+/// Function to make a vector of chromosome sizes
+std::vector<size_t> makeChromosomeSizes(const size_t &nChromosomes)
+{
+    std::vector<size_t> chromosomeSizes;
+
+    // Chromosomes all have the same size
+    for (size_t i = 0u; i < nChromosomes; ++i) {
+        chromosomeSizes.push_back((i + 1.0) / nChromosomes);
+    }
+
+    return chromosomeSizes;
+}
+
+
+/// Function to make a vector of interacting partner loci for each trait
+std::vector<std::vector<Edge> > makeTraitNetworkMaps()
+{
+    std::vector<std::vector<Edge> > traitNetworkMaps;
+
+    // For each trait
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+    {
+
+        // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
+        std::vector<Edge> network = makeNetwork();
+
+        traitNetworkMaps.push_back(network);
+    }
+
+    // The indices in these network maps are indices among the loci underlying a given trait,
+    // not absolute loci indices across the genome
+
+    assert(traitNetworkMaps.size() == nTraits);
+
+    return traitNetworkMaps;
+}
+
+
+/// Function to make a new interaction network based on the preferential attachment algorithm
+std::vector<Edge> makeNetwork()
+{
+    std::vector<Edge> network;
+
+
+    if (!(nVertices > 1u && skewness > 0.0)) {
+        throw std::runtime_error("Invalid parameters in GeneticArchitecture::preferentialAttachmentNetwork()");
+    }
+
+    if (nEdges == 0u) {
+        return;
+    }
+
+
+    // Start the network
+    std::vector<size_t> degrees(nVertices, 0u);
+    initializeNetwork(nEdges, degrees);
+
+    // Grow network by linking preferentially to well-connected nodes
+
+    growNetwork(nVertices, nEdges, degrees, skewness);
+
+    // Relabel node indices after sorting with respect to degree
+    std::clog << '.';
+    sortNetwork(nVertices, degrees);
+
+    return network;
+}
+
+
+/// Function to make a set of layers of genetic features across all loci
+Genome makeGenome()
+{
+
+}
+
+
+/// Function to make a set of vectors of loci underlying each trait
+std::vector<std::vector<size_t> > makeTraitUnderlyingLoci()
+{
+
+}
+
+*/
+
+
+//----------------------------------------------
+
+
+/*
+void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
+{
+
+    std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
+    std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
+
+    // For each phenotypic trait
+    for (size_t crctr = 0u, offset = 0u; crctr < parameters.nTraits; ++crctr) {
+
+        // Generate edges with the preferential attachment algorithm
+        preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
+
+        // Sample interaction partners and weights for the current trait
+        sampleInteractions(parameters, crctr, offset);
+
+        // Update the offset
+        offset += nVertices[crctr];
+    }
+
+}
+
+void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges, const double &skewness)
+{
+
+    if (!(nVertices > 1u && skewness > 0.0)) {
+        throw std::runtime_error("Invalid parameters in GeneticArchitecture::preferentialAttachmentNetwork()");
+    }
+
+    if (nEdges == 0u) {
+        return;
+    }
+
+    // Start the network
+    std::vector<size_t> degrees(nVertices, 0u);
+    initializeNetwork(nEdges, degrees);
+
+    // Grow network by linking preferentially to well-connected nodes
+    std::clog << '.';
+    growNetwork(nVertices, nEdges, degrees, skewness);
+
+    // Relabel node indices after sorting with respect to degree
+    std::clog << '.';
+    sortNetwork(nVertices, degrees);
+
+    std::clog << '.';
+}
+
+void GeneticArchitecture::initializeNetwork(size_t &nEdges, std::vector<size_t> &degrees)
+{
+
+    if (!edges.empty()) {
+        edges.clear();
+    }
+
+    // Create initial network
+    edges.emplace_back(Edge {0u, 1u});
+    degrees[0u] = degrees[1u] = 1u;
+    --nEdges;
+
+}
+
+void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges, std::vector<size_t> &degrees, const double &skewness)
+{
+
+    for (size_t i = 2u; i < nVertices && nEdges > 0u; ++i) {
+        std::vector<double> w(i);
+        for (size_t j = 0u; j < i; ++j) {
+            w[j] = pow(degrees[j], skewness);
+        }
+        size_t ki = (i == nVertices - 1u ? nEdges : rnd::binomial(nEdges, 1.0 / (nVertices - i)));
+
+        while (ki) {
+
+            // Sample neighbours without replacement
+            double sumw = 0.0;
+            for (size_t j = 0u; j < i; ++j) {
+                sumw += w[j];
+            }
+            if (sumw < 1.0) {
+                break;
+            }
+            std::discrete_distribution<size_t> prob(w.begin(), w.end());
+            size_t j = prob(rnd::rng);
+            edges.emplace_back(Edge {i, j});
+            w[j] = 0.0;
+            ++degrees[j];
+            ++degrees[i];
+            --ki;
+            --nEdges;
+        }
+    }
+
+}
+
+void GeneticArchitecture::sortNetwork(const size_t &nVertices, const std::vector<size_t> &degrees)
+{
+
+    std::vector<size_t> ranks(nVertices, 0u);
+    for (size_t i = 0u; i < nVertices - 1u; ++i) {
+        for (size_t j = i + 1u; j < nVertices; ++j) {
+            if (degrees[j] > degrees[i]) {
+                ++ranks[i];
+            }
+            else {
+                ++ranks[j];
+            }
+        }
+    }
+    for (Edge &edge : edges) {
+        edge.first = ranks[edge.first];
+        edge.second = ranks[edge.second];
+        if (edge.first > edge.second) {
+            std::swap(edge.first, edge.second);
+        }
+    }
+    std::sort(edges.begin(), edges.end(), edgeCompare);
+
+}
+
+//----------------------------------------
 
 // Accessory function
 bool edgeCompare (const Edge &x, const Edge &y)
@@ -167,7 +387,7 @@ std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci,
 
     std::vector<double> dominanceCoeffs;
     std::vector<double> sumsqDominanceCoeffs {0.0, 0.0, 0.0};
-    
+
     // Loop through loci across the genome
     for (size_t locus = 0u; locus < nLoci; ++locus) {
 
@@ -287,124 +507,7 @@ void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
     }
 }
 
-void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
-{
 
-    std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
-    std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
-
-    // For each phenotypic trait
-    for (size_t crctr = 0u, offset = 0u; crctr < parameters.nTraits; ++crctr) {
-
-        // Generate edges with the preferential attachment algorithm
-        preferentialAttachmentNetwork(nVertices[crctr], nEdges[crctr], parameters.networkSkewness);
-
-        // Sample interaction partners and weights for the current trait
-        sampleInteractions(parameters, crctr, offset);
-
-        // Update the offset
-        offset += nVertices[crctr];
-    }
-
-}
-
-void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges, const double &skewness)
-{
-
-    if (!(nVertices > 1u && skewness > 0.0)) {
-        throw std::runtime_error("Invalid parameters in GeneticArchitecture::preferentialAttachmentNetwork()");
-    }
-
-    if (nEdges == 0u) {
-        return;
-    }
-
-    // Start the network
-    std::vector<size_t> degrees(nVertices, 0u);
-    initializeNetwork(nEdges, degrees);
-
-    // Grow network by linking preferentially to well-connected nodes
-    std::clog << '.';
-    growNetwork(nVertices, nEdges, degrees, skewness);
-
-    // Relabel node indices after sorting with respect to degree
-    std::clog << '.';
-    sortNetwork(nVertices, degrees);
-
-    std::clog << '.';
-}
-
-void GeneticArchitecture::initializeNetwork(size_t &nEdges, std::vector<size_t> &degrees)
-{
-
-    if (!edges.empty()) {
-        edges.clear();
-    }
-
-    // Create initial network
-    edges.emplace_back(Edge {0u, 1u});
-    degrees[0u] = degrees[1u] = 1u;
-    --nEdges;
-
-}
-
-void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges, std::vector<size_t> &degrees, const double &skewness)
-{
-
-    for (size_t i = 2u; i < nVertices && nEdges > 0u; ++i) {
-        std::vector<double> w(i);
-        for (size_t j = 0u; j < i; ++j) {
-            w[j] = pow(degrees[j], skewness);
-        }
-        size_t ki = (i == nVertices - 1u ? nEdges : rnd::binomial(nEdges, 1.0 / (nVertices - i)));
-
-        while (ki) {
-
-            // Sample neighbours without replacement
-            double sumw = 0.0;
-            for (size_t j = 0u; j < i; ++j) {
-                sumw += w[j];
-            }
-            if (sumw < 1.0) {
-                break;
-            }
-            std::discrete_distribution<size_t> prob(w.begin(), w.end());
-            size_t j = prob(rnd::rng);
-            edges.emplace_back(Edge {i, j});
-            w[j] = 0.0;
-            ++degrees[j];
-            ++degrees[i];
-            --ki;
-            --nEdges;
-        }
-    }
-
-}
-
-void GeneticArchitecture::sortNetwork(const size_t &nVertices, const std::vector<size_t> &degrees)
-{
-
-    std::vector<size_t> ranks(nVertices, 0u);
-    for (size_t i = 0u; i < nVertices - 1u; ++i) {
-        for (size_t j = i + 1u; j < nVertices; ++j) {
-            if (degrees[j] > degrees[i]) {
-                ++ranks[i];
-            }
-            else {
-                ++ranks[j];
-            }
-        }
-    }
-    for (Edge &edge : edges) {
-        edge.first = ranks[edge.first];
-        edge.second = ranks[edge.second];
-        if (edge.first > edge.second) {
-            std::swap(edge.first, edge.second);
-        }
-    }
-    std::sort(edges.begin(), edges.end(), edgeCompare);
-
-}
 
 void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, const size_t &crctr, const size_t &offset)
 {
@@ -604,7 +707,7 @@ void GeneticArchitecture::writeEpistaticInteractions(std::ofstream &ofs, const P
 }
 
 
-
+*/
 
 
 

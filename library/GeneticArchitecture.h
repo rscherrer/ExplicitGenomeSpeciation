@@ -5,65 +5,59 @@
 #include <vector>
 #include <list>
 
-typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
 
+/// An edge is a pair of interacting loci
+typedef std::pair<size_t, size_t> Edge;
+
+
+/// A container of constant genetic features across the genome
+struct Genome
+{
+    // A vector of locus indices
+    std::vector<size_t> loci;
+
+    // A vector of locus encoded traits
+    std::vector<size_t> encodedTraits;
+
+    // A vector of locus locations
+    std::vector<double> locations;
+
+    // A vector of locus effect sizes
+    std::vector<double> effectSizes;
+
+    // A vector of locus dominance coefficients
+    std::vector<double> dominanceCoeffs;
+
+    // A vector of locus epistatic interaction partners and weights
+    std::vector<std::vector<std::pair<size_t, double> > > interactions;
+
+    // All the above vectors should have the same length, use assert for that
+
+};
+
+
+/// A container of all constant genetic features of the species we are simulating
 class GeneticArchitecture {
 
 private:
 
+    // A vector of chromosome sizes
+    std::vector<size_t> chromosomeSizes;
 
+    // A map of the gene regulatory network
+    //std::vector<Edge> traitNetworkMaps;
+
+    // A series of layers of locus-specific features across the genome
+    //Genome genome;
+
+    // A set of vectors of loci underlying each trait
+    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
 
 public:
 
+    GeneticArchitecture();
 
-    // Constructor
-    // It is a bad habit to have declared but non initialized members of a class
-    // It is recommended to initialize the members using the member initialization list of the constructor
-    // But genetic architecture is a large class with many members (many genes...)
-    // So it would take a lot of computation to initialize the members by generating a new architecture,
-    // If afterwards I end up erasing it all to replace it with the architecture that is given by some input file
-    // A better alternative might be to have different constructors, one for generating a new architecture,
-    // and the other to load an architecture from a file
-    // Each constructor will have its own member initialization list
-    // NB: functions to initialize variables can be used in the initialization list, initialization needs not be
-    // assigning single values to the variables
-
-    // Default constructor to generate a new architecture
-    GeneticArchitecture(const size_t&, const size_t&, const size_t&, const std::vector<size_t>&, const double&,
-            const double&);
-
-    // Constructor to load an architecture from a file
-    GeneticArchitecture(const std::string&);
-
-    // Fields
-
-    // A vector of chromosome sizes
-    std::vector<double> chromosomeSizes;
-
-    // A vector of genomic locations for all loci
-    std::vector<double> locusGenomicLocations;
-
-    // A vector of traits encoded by all loci
-    std::vector<size_t> locusEncodedTraits;
-
-    // A vector of effet sizes for all loci
-    std::vector<double> locusEffectSizes;
-
-    // A vector of dominance coefficients for all loci
-    std::vector<double> locusDominanceCoeffs;
-
-    // A vector of epistatic interactions for all loci (interacting partner + interaction weight)
-    std::vector<std::vector<std::pair<size_t, double> > > locusInteractions;
-
-    // Three vectors indicating what loci are underlying each trait
-    std::vector<std::vector<size_t> > networkVertices;
-
-    // A vector of locus indices
-    std::vector<size_t> loci;
-
-    // A vector of edges of the gene regulatory network (edges are pairs of locus indices)
-    std::vector<Edge> edges;
-
+    /*
     // High-level functions
     void generateGeneticArchitecture(const ParameterSet&);
     void loadGeneticArchitecture(const ParameterSet&);
@@ -101,40 +95,11 @@ public:
     std::vector<size_t> getEncodedTraits(const size_t&, const std::vector<size_t>&);
     std::vector<double> getEffectSizes(const size_t&, const double&, const double&, const size_t&);
     std::vector<double> getDominanceCoeffs(const size_t&, const size_t&);
+     */
 
 };
 
 // Accessory functions
 bool edgeCompare (const Edge&, const Edge&);
-
-
-/// Constructor to generate a new genetic architecture
-GeneticArchitecture::GeneticArchitecture(
-        const size_t &nChromosomes,
-        const size_t &nLoci,
-        const size_t &nTraits,
-        const std::vector<size_t> &nVertices,
-        const double &shapeEffectSizes,
-        const double &scaleEffectSizes) :
-chromosomeSizes(getChromosomeSizes(nChromosomes)),
-locusGenomicLocations(getGenomicLocations(nLoci)),
-locusEncodedTraits(getEncodedTraits(nTraits, nVertices)),
-locusEffectSizes(getEffectSizes(nLoci, shapeEffectSizes, scaleEffectSizes)),
-locusDominanceCoeffs(getDominanceCoeffs())//,
-//locusInteractions()
-
-//networkVertices(getNetworkVertices()),
-//loci(getLoci()),
-//edges(getEdges())
-{
-
-}
-
-
-/// Constructor to load a genetic architecture from a file
-GeneticArchitecture::GeneticArchitecture(const std::string &architectureFileName)
-{
-
-}
 
 #endif //EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
