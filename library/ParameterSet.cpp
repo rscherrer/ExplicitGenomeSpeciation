@@ -3,9 +3,6 @@
 #include <chrono>
 #include <sstream>
 
-/// Constructor and member initialization list
-ParameterSet::ParameterSet()
-{}
 
 template <class T>
 void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)

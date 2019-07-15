@@ -9,7 +9,7 @@ class ParameterSet {
 public:
 
     // Constructor
-    ParameterSet();
+    ParameterSet() {}
 
     // Setters
     template <class T>
