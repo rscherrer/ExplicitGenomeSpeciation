@@ -48,7 +48,9 @@ int doMain(const std::vector<std::string> &args)
         }
          */
 
-        // GeneticArchitecture geneticArchitecture = GeneticArchitecture(pars.getNChromosomes());
+
+        // Generate a genetic architecture
+        GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes());
 
 
 

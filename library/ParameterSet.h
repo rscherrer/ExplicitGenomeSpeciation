@@ -8,10 +8,12 @@ class ParameterSet {
 
 public:
 
-    // Constructor
+    /// Constructor
     ParameterSet() {}
 
-    // Getters
+    /// Getters
+    size_t getNChromosomes() const { return nChromosomes; }
+
 
     /*
     size_t getInitialPopSize() const { return initialPopSize; }
@@ -30,7 +32,6 @@ public:
     size_t getNEcoInteractions() const { return nEcoInteractions; }
     size_t getNMatInteractions() const { return nMatInteractions; }
     size_t getNNtrInteractions() const { return nNtrInteractions; }
-    size_t getNChromosomes() const { return nChromosomes; }
     size_t getNLoci() const { return nLoci; }
     size_t getNBits() const { return nBits; }
      */
@@ -103,8 +104,6 @@ private:
     int  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed = makeDefaultSeed();
-
-    // Unsettables
     size_t  nHabitats               = 2u;
     size_t  nTraits                 = 3u;
 
