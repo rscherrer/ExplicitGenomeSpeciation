@@ -40,7 +40,7 @@ struct Genome
 struct Network
 {
 
-    Network();
+    Network(const size_t&, const size_t&, const double&);
 
     // A map of interacting genes
     std::vector<Edge> map;
@@ -50,25 +50,25 @@ struct Network
     size_t nEdges;
     double skewness;
 
-    std::vector<Edge> makeNetwork(const size_t&, const double&, size_t&) const noexcept;
+    std::vector<Edge> makeNetwork(const size_t&, const double&, size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
     void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
+    void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&, const size_t&) const noexcept;
 
 };
 
 
-Network::Network(const size_t &nVertices, const size_t &nEdges, const double &skewness) :
-    nVertices(nVertices),
-    nEdges(nEdges),
-    skewness(skewness),
-    map(makeNetwork())
-    {}
+
 
 
 /// A container for all constant genetic features of the species we are simulating
 class GeneticArchitecture {
 
 private:
+
+    std::vector<size_t> nLociPerTrait;
+    std::vector<size_t> nEdgesPerTrait;
+    std::vector<double> skewnesses;
 
     // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;
@@ -85,12 +85,12 @@ private:
     /// Makers
     std::vector<double> makeChromosomeSizes(const size_t&) const noexcept;
     std::vector<Network> makeTraitNetworkMaps(const size_t&) const noexcept;
-    Network makeNetwork(const size_t&, const double&, size_t&) const noexcept;
 
 public:
 
     /// Constructor
-    GeneticArchitecture(const size_t&);
+    GeneticArchitecture(const size_t&, const size_t&, const std::vector<size_t>&, const std::vector<size_t>&,
+            const std::vector<double>&);
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
@@ -137,7 +137,6 @@ public:
 
 };
 
-// Accessory functions
-bool edgeCompare (const Edge&, const Edge&);
+
 
 #endif //EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H

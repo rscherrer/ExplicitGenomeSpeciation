@@ -12,12 +12,15 @@ typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus in
 
 
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
+GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes, const size_t &nTraits,
+        const std::vector<size_t> &nLociPerTrait, const std::vector<size_t> &nEdgesPerTrait,
+        const std::vector<double> &skewnesses) :
+nLociPerTrait(nLociPerTrait),
+nEdgesPerTrait(nEdgesPerTrait),
+skewnesses(skewnesses),
 chromosomeSizes(makeChromosomeSizes(nChromosomes)),
-traitNetworkMaps(makeTraitNetworkMaps())
-{
-
-}
+traitNetworkMaps(makeTraitNetworkMaps(nTraits))
+{}
 
 
 /// Function to make a vector of chromosome sizes
@@ -45,7 +48,7 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTr
     {
 
         // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
-        Network network = Network(...);
+        Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait], skewnesses[trait]);
 
         networks.push_back(network);
     }
@@ -59,9 +62,18 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTr
 }
 
 
+/// Network constructor
+Network::Network(const size_t &nVertices, const size_t &nEdges, const double &skewness) :
+        nVertices(nVertices),
+        nEdges(nEdges),
+        skewness(skewness),
+        map(makeNetwork(nVertices, skewness, nEdges))
+{}
+
+
 /// Function to make a new interaction network based on the preferential attachment algorithm
 std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &skewness,
-        size_t &nEdges) const noexcept
+        size_t nEdges) const noexcept
 {
     std::vector<Edge> network;
 
@@ -75,12 +87,10 @@ std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &sk
     initializeNetwork(network, nEdges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-
-    growNetwork(nVertices, nEdges, degrees, skewness);
+    growNetwork(network, nEdges, degrees, nVertices, skewness);
 
     // Relabel node indices after sorting with respect to degree
-    std::clog << '.';
-    sortNetwork(nVertices, degrees);
+    sortNetwork(network, degrees, nVertices);
 
     return network;
 }
@@ -142,6 +152,54 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nEdges,
         }
     }
 }
+
+
+/// Function to compare edges in a network with respect to their degrees
+bool edgeCompare(const Edge &x, const Edge &y) noexcept
+{
+    if (x.first == y.first) {
+        return (x.second < y.second);
+    }
+    else {
+        return (x.first < y.first);
+    }
+}
+
+
+/// Function to sort the edges in the network by degree
+void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> &degrees,
+        const size_t &nVertices) const noexcept
+{
+
+    // Compute the ranks of all vertices with respect to their degrees
+    std::vector<size_t> ranks(nVertices, 0u);
+    for (size_t vertex = 0u; vertex < nVertices - 1u; ++vertex) {
+        for (size_t othervertex = vertex + 1u; othervertex < nVertices; ++othervertex) {
+            if (degrees[othervertex] > degrees[vertex]) {
+                ++ranks[vertex];
+            }
+            else {
+                ++ranks[othervertex];
+            }
+        }
+    }
+
+    // For each edge, swap partners to make sure the first partner always have the lower rank
+    for (Edge &edge : network) {
+        edge.first = ranks[edge.first];
+        edge.second = ranks[edge.second];
+        if (edge.first > edge.second) {
+            std::swap(edge.first, edge.second);
+        }
+    }
+
+    // Sort the edges
+    std::sort(network.begin(), network.end(), edgeCompare);
+
+}
+
+
+
 
 
 /*
