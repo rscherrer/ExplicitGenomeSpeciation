@@ -14,6 +14,7 @@ BOOST_AUTO_TEST_CASE(dummyTest)
 }
 
 
+/// Set up a simple genetic architecture
 struct defaultGeneticArchitecture
 {
 
