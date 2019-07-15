@@ -4,6 +4,21 @@
 #include <sstream>
 
 
+/// Function to create a default seed based on what time it is
+size_t ParameterSet::makeDefaultSeed()
+{
+    return static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+}
+
+
+
+
+
+
+//================================
+
+
+/*
 template <class T>
 void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)
 {
@@ -12,10 +27,7 @@ void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)
 
 // Setters
 
-size_t ParameterSet::setDefaultSeed()
-{
-    return static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-}
+
 
 std::vector<bool> string2bits(const std::string &stringSequence)
 {
@@ -153,3 +165,5 @@ void ParameterSet::setArchitectureFileName(const std::string &filename)
 {
     architectureFileName = filename;
 }
+
+ */

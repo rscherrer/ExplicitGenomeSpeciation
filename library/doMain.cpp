@@ -22,8 +22,7 @@ int doMain(const std::vector<std::string> &args)
         }
 
         // Create a default parameter set
-        ParameterSet parameters;
-        parameters.setDefaultSeed();
+        ParameterSet pars;
 
         /*
         // Update parameters from a parameter file if needed
@@ -49,7 +48,7 @@ int doMain(const std::vector<std::string> &args)
         }
          */
 
-        GeneticArchitecture geneticArchitecture = GeneticArchitecture(parameters.nChromosomes);
+        // GeneticArchitecture geneticArchitecture = GeneticArchitecture(pars.getNChromosomes());
 
 
 
