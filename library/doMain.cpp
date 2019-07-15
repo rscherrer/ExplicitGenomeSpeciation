@@ -60,8 +60,7 @@ int doMain(const std::vector<std::string> &args)
         //        pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
 
 
-        GeneticArchitecture arch = GeneticArchitecture(nChromosomes, nTraits, nLociPerTrait, nEdgesPerTrait,
-                skewnesses);
+        GeneticArchitecture arch = GeneticArchitecture(pars);
 
         std::cout << "Architecture created\n";
 

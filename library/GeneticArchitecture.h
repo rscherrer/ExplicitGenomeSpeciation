@@ -88,8 +88,7 @@ private:
 public:
 
     /// Constructor
-    GeneticArchitecture(const size_t&, const size_t&, const std::vector<size_t>&, const std::vector<size_t>&,
-            const std::vector<double>&);
+    GeneticArchitecture(const ParameterSet&);
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }

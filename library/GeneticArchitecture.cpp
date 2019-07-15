@@ -12,15 +12,18 @@
 typedef std::pair<size_t, size_t> Edge;
 
 
+// Note:
+// How about passing parameters to the genetic architecture constructor, so we don't have to pass each argument
+// one by one?
+
+
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_t &ntraits,
-        const std::vector<size_t> &locipertrait, const std::vector<size_t> &edgespertrait,
-        const std::vector<double> &skews) :
-    nTraits(ntraits),
-    nChromosomes(nchromosomes),
-    nLociPerTrait(locipertrait),
-    nEdgesPerTrait(edgespertrait),
-    skewnesses(skews),
+GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
+    nTraits(pars.getNTraits()),
+    nChromosomes(pars.getNChromosomes()),
+    nLociPerTrait(pars.getNLociPerTrait()),
+    nEdgesPerTrait(pars.getNEdgesPerTrait()),
+    skewnesses(pars.getSkewnesses()),
     chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps())
 {}

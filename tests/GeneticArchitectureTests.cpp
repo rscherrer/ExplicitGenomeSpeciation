@@ -5,30 +5,30 @@
 
 
 /// Set up a simple genetic architecture
-struct defaultGeneticArchitecture
+struct defaultGeneticArchitectureParams
 {
 
-    defaultGeneticArchitecture() {}
-    ~defaultGeneticArchitecture() {}
+    defaultGeneticArchitectureParams() {
+        pars.setNChromosomes(3u);
+        pars.setNTraits(3u);
+        pars.setNLociPerTrait({ 3u, 3u, 4u });
+        pars.setNEdgesPerTrait({ 1u, 0u, 2u });
+        pars.setSkewnesses({ 1.0, 1.0, 1.0 });
+    }
+    ~defaultGeneticArchitectureParams() {}
 
-    const size_t nChromosomes = 3u;
-    const size_t nTraits = 3u;
-    const std::vector<size_t> nLociPerTrait = { 3u, 3u, 4u };
-    const std::vector<size_t> nEdgesPerTrait = { 1u, 0u, 2u };
-    const std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
-
-    GeneticArchitecture arch = GeneticArchitecture(nChromosomes, nTraits, nLociPerTrait, nEdgesPerTrait, skewnesses);
+    ParameterSet pars;
 
 };
 
 
 /// Battery of tests using the same default genetic architecture
-BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitecture, defaultGeneticArchitecture)
+BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitecture, defaultGeneticArchitectureParams)
 
     /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
     {
-
+        GeneticArchitecture arch = GeneticArchitecture(pars);
         std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
         std::vector<double> realizedChromosomeSizes = arch.getChromosomeSizes();
 
@@ -45,6 +45,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitecture, defaultGeneticArch
     /// There should be one edge in trait 0, zero edges in trait 1 and two edges in trait 3
     BOOST_AUTO_TEST_CASE(checkNetworkEdges)
     {
+        GeneticArchitecture arch = GeneticArchitecture(pars);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].first, 0u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].second, 1u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[0u].first, 0u);

@@ -18,6 +18,13 @@ public:
     std::vector<size_t> getNEdgesPerTrait() const { return nEdgesPerTrait; }
     std::vector<double> getSkewnesses() const { return skewnesses; }
 
+    /// Setters
+    void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
+    void setNTraits(const size_t &ntraits) { nTraits = ntraits; }
+    void setNLociPerTrait(const std::vector<size_t> &locipertrait) { nLociPerTrait = locipertrait; }
+    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) { nEdgesPerTrait = edgespertrait; }
+    void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
+
 
     /*
     size_t getInitialPopSize() const { return initialPopSize; }
