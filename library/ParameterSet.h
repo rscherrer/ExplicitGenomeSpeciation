@@ -51,7 +51,6 @@ public:
     std::vector<bool> initialSequence {};
     std::string architectureFileName = "";
     std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
-
     size_t seed = setDefaultSeed();
 
     double  freqSNP                 = 0.02;
