@@ -50,7 +50,7 @@ struct Network
     size_t nEdges;
     double skewness;
 
-    std::vector<Edge> makeNetwork(const size_t&, const double&, size_t) const noexcept;
+    std::vector<Edge> makeNetwork(size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
     void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
     void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&, const size_t&) const noexcept;

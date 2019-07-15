@@ -12,11 +12,6 @@
 typedef std::pair<size_t, size_t> Edge;
 
 
-// Notes
-// Could make nChromosomes and nTraits members of genetic architecture as well
-// That way we wouldn't have to supply them in initializers of other variables like chromosomeSizes
-
-
 /// Constructor of genetic architecture
 GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_t &ntraits,
         const std::vector<size_t> &locipertrait, const std::vector<size_t> &edgespertrait,
@@ -32,7 +27,7 @@ GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double>  GeneticArchitecture::makeChromosomeSizes() const noexcept
+std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
 {
 
     std::vector<double> chromsizes;
@@ -77,13 +72,12 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nvertices, skew, nedges))
+        map(makeNetwork(nedges))
 {}
 
 
 /// Function to make a new interaction network based on the preferential attachment algorithm
-std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &skewness,
-        size_t nEdges) const noexcept
+std::vector<Edge> Network::makeNetwork(size_t nEdges) const noexcept
 {
     std::vector<Edge> network;
 
