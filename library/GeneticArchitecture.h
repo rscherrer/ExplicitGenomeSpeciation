@@ -83,7 +83,7 @@ private:
 
     /// Makers
     std::vector<double> makeChromosomeSizes() const noexcept;
-    std::vector<Network> makeTraitNetworkMaps(const size_t&) const noexcept;
+    std::vector<Network> makeTraitNetworkMaps() const noexcept;
 
 public:
 

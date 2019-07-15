@@ -27,7 +27,7 @@ GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_
     nEdgesPerTrait(edgespertrait),
     skewnesses(skews),
     chromosomeSizes(makeChromosomeSizes()),
-    traitNetworkMaps(makeTraitNetworkMaps(nTraits))
+    traitNetworkMaps(makeTraitNetworkMaps())
 {}
 
 
@@ -47,7 +47,7 @@ std::vector<double>  GeneticArchitecture::makeChromosomeSizes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTraits) const noexcept
+std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps() const noexcept
 {
     std::vector<Network> networks;
 
