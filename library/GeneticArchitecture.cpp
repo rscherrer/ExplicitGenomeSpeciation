@@ -65,10 +65,10 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTr
 
 
 /// Network constructor
-Network::Network(const size_t &nVertices, const size_t &nEdges, const double &skewness) :
-        nVertices(nVertices),
-        nEdges(nEdges),
-        skewness(skewness),
+Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew) :
+        nVertices(nvertices),
+        nEdges(nedges),
+        skewness(skew),
         map(makeNetwork(nVertices, skewness, nEdges))
 {}
 
