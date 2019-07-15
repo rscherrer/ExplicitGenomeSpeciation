@@ -56,9 +56,9 @@ void ParameterSet::setParameter(T &parameter, std::ifstream &inputFile)
 
 // Setters
 
-void ParameterSet::setDefaultSeed()
+size_t ParameterSet::setDefaultSeed()
 {
-    seed = static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    return static_cast<size_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 }
 
 std::vector<bool> string2bits(const std::string &stringSequence)

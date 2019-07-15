@@ -14,7 +14,7 @@ public:
     // Setters
     template <class T>
     void setParameter(T&, std::ifstream&);
-    void setDefaultSeed();
+    size_t setDefaultSeed();
     void readSeed(std::ifstream&, std::string&);
     void readIsArchitecture(std::ifstream&, std::string&);
     void setScale(std::vector<double>&, std::ifstream&);
@@ -47,12 +47,12 @@ public:
     std::vector<size_t> nLociPerTrait = {nEcoLoci, nMatLoci, nNtrLoci};
     size_t nBits = 2u * nLoci;
 
-    // These guys are not initialized...
     std::string strInitialSequence = "";
     std::vector<bool> initialSequence {};
     std::string architectureFileName = "";
     std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
-    size_t seed;
+
+    size_t seed = setDefaultSeed();
 
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
