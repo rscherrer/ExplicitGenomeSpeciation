@@ -13,7 +13,8 @@ typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus in
 
 /// Constructor of genetic architecture
 GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes) :
-chromosomeSizes(makeChromosomeSizes(nChromosomes))
+chromosomeSizes(makeChromosomeSizes(nChromosomes)),
+traitNetworkMaps(makeTraitNetworkMaps())
 {
 
 }
@@ -34,50 +35,44 @@ std::vector<double>  GeneticArchitecture::makeChromosomeSizes(const size_t &nChr
 }
 
 
-
-/*
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<std::vector<Edge> > makeTraitNetworkMaps()
+std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTraits) const noexcept
 {
-    std::vector<std::vector<Edge> > traitNetworkMaps;
+    std::vector<Network> networks;
 
     // For each trait
     for (size_t trait = 0u; trait < nTraits; ++trait)
     {
 
         // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
-        std::vector<Edge> network = makeNetwork();
+        Network network = Network(...);
 
-        traitNetworkMaps.push_back(network);
+        networks.push_back(network);
     }
 
     // The indices in these network maps are indices among the loci underlying a given trait,
     // not absolute loci indices across the genome
 
-    assert(traitNetworkMaps.size() == nTraits);
+    assert(networks.size() == nTraits);
 
-    return traitNetworkMaps;
+    return networks;
 }
 
 
 /// Function to make a new interaction network based on the preferential attachment algorithm
-std::vector<Edge> makeNetwork()
+std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &skewness,
+        size_t &nEdges) const noexcept
 {
     std::vector<Edge> network;
 
+    assert(nVertices > 1u);
+    assert(skewness > 0.0);
 
-    if (!(nVertices > 1u && skewness > 0.0)) {
-        throw std::runtime_error("Invalid parameters in GeneticArchitecture::preferentialAttachmentNetwork()");
-    }
-
-    if (nEdges == 0u) {
-        return;
-    }
-
+    if (nEdges == 0u) return network;
 
     // Start the network
     std::vector<size_t> degrees(nVertices, 0u);
-    initializeNetwork(nEdges, degrees);
+    initializeNetwork(network, nEdges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
 
@@ -91,6 +86,65 @@ std::vector<Edge> makeNetwork()
 }
 
 
+/// Function to create a new network
+void Network::initializeNetwork(std::vector<Edge> &network, size_t &nEdges, std::vector<size_t> &degrees)
+const noexcept
+{
+
+    if (!network.empty()) network.clear();
+
+    // Create initial network
+    network.emplace_back(Edge {0u, 1u});
+    degrees[0u] = degrees[1u] = 1u;
+    --nEdges;
+
+}
+
+
+/// Function to iteratively grow a network based on the preferential attachment algorithm
+void Network::growNetwork(std::vector<Edge> &network, size_t &nEdges,
+        std::vector<size_t> &degrees, const size_t &nVertices, const double &skewness) const noexcept
+{
+
+    // For each vertex in the network...
+    for (size_t vertex = 2u; vertex < nVertices && nEdges > 0u; ++vertex) {
+
+        // Assign probability weights to all potential partners
+        std::vector<double> weights(vertex);
+
+        for (size_t partner = 0u; partner < vertex; ++partner) {
+            weights[partner] = pow(degrees[partner], skewness);
+        }
+
+        // Sample the number of attachments of the current vertex
+        size_t nAttachments = (vertex == nVertices - 1u ? nEdges : rnd::binomial(nEdges, 1.0 / (nVertices - vertex)));
+
+        // For each new attachment...
+        while (nAttachments) {
+
+            // Compute the sum of weights, quit the loop if too small
+            double sumWeights = 0.0;
+            for (size_t partner = 0u; partner < vertex; ++partner)
+                sumWeights += weights[partner];
+            if (sumWeights < 1.0) break;
+
+            // Sample the new partner without replacement
+            std::discrete_distribution<size_t> attachmentProbs(weights.begin(), weights.end());
+            size_t partner = attachmentProbs(rnd::rng);
+
+            // Add the new partner to the network
+            network.emplace_back(Edge {vertex, partner});
+            weights[partner] = 0.0;
+            ++degrees[partner];
+            ++degrees[vertex];
+            --nAttachments;
+            --nEdges;
+        }
+    }
+}
+
+
+/*
 /// Function to make a set of layers of genetic features across all loci
 Genome makeGenome()
 {

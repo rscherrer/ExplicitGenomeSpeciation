@@ -36,6 +36,35 @@ struct Genome
 };
 
 
+/// A container for a gene regulatory network
+struct Network
+{
+
+    Network();
+
+    // A map of interacting genes
+    std::vector<Edge> map;
+
+    // Number of vertices, edges and skewness
+    size_t nVertices;
+    size_t nEdges;
+    double skewness;
+
+    std::vector<Edge> makeNetwork(const size_t&, const double&, size_t&) const noexcept;
+    void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
+    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
+
+};
+
+
+Network::Network(const size_t &nVertices, const size_t &nEdges, const double &skewness) :
+    nVertices(nVertices),
+    nEdges(nEdges),
+    skewness(skewness),
+    map(makeNetwork())
+    {}
+
+
 /// A container for all constant genetic features of the species we are simulating
 class GeneticArchitecture {
 
@@ -45,13 +74,18 @@ private:
     std::vector<double> chromosomeSizes;
 
     // A map of the gene regulatory network
-    //std::vector<Edge> traitNetworkMaps;
+    std::vector<Network> traitNetworkMaps;
 
     // A series of layers of locus-specific features across the genome
     //Genome genome;
 
     // A set of vectors of loci underlying each trait
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;
+
+    /// Makers
+    std::vector<double> makeChromosomeSizes(const size_t&) const noexcept;
+    std::vector<Network> makeTraitNetworkMaps(const size_t&) const noexcept;
+    Network makeNetwork(const size_t&, const double&, size_t&) const noexcept;
 
 public:
 
@@ -60,9 +94,6 @@ public:
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
-
-    /// Makers
-    std::vector<double> makeChromosomeSizes(const size_t&) const noexcept;
 
     /*
     // High-level functions
