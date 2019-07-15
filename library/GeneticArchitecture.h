@@ -82,7 +82,7 @@ private:
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;
 
     /// Makers
-    std::vector<double> makeChromosomeSizes(const size_t&) const noexcept;
+    std::vector<double> makeChromosomeSizes() const noexcept;
     std::vector<Network> makeTraitNetworkMaps(const size_t&) const noexcept;
 
 public:

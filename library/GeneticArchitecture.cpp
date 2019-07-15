@@ -26,13 +26,13 @@ GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_
     nLociPerTrait(locipertrait),
     nEdgesPerTrait(edgespertrait),
     skewnesses(skews),
-    chromosomeSizes(makeChromosomeSizes(nChromosomes)),
+    chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps(nTraits))
 {}
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double>  GeneticArchitecture::makeChromosomeSizes(const size_t &nChromosomes) const noexcept
+std::vector<double>  GeneticArchitecture::makeChromosomeSizes() const noexcept
 {
 
     std::vector<double> chromsizes;
