@@ -12,10 +12,17 @@
 typedef std::pair<size_t, size_t> Edge;
 
 
+// Notes
+// Could make nChromosomes and nTraits members of genetic architecture as well
+// That way we wouldn't have to supply them in initializers of other variables like chromosomeSizes
+
+
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const size_t &nChromosomes, const size_t &nTraits,
+GeneticArchitecture::GeneticArchitecture(const size_t &nchromosomes, const size_t &ntraits,
         const std::vector<size_t> &locipertrait, const std::vector<size_t> &edgespertrait,
         const std::vector<double> &skews) :
+    nTraits(ntraits),
+    nChromosomes(nchromosomes),
     nLociPerTrait(locipertrait),
     nEdgesPerTrait(edgespertrait),
     skewnesses(skews),

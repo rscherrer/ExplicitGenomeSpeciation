@@ -63,6 +63,8 @@ class GeneticArchitecture {
 
 private:
 
+    size_t nChromosomes;
+    size_t nTraits;
     std::vector<size_t> nLociPerTrait;
     std::vector<size_t> nEdgesPerTrait;
     std::vector<double> skewnesses;
