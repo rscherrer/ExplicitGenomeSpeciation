@@ -13,6 +13,10 @@ public:
 
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }
+    size_t getNTraits() const { return nTraits; }
+    std::vector<size_t> getNLociPerTrait() const { return nLociPerTrait; }
+    std::vector<size_t> getNEdgesPerTrait() const { return nEdgesPerTrait; }
+    std::vector<double> getSkewnesses() const { return skewnesses; }
 
 
     /*
@@ -87,7 +91,7 @@ private:
     // Genotype-phenotype map
     bool isGenerateArchitecture = true;
     std::string architectureFileName = "";
-    double  networkSkewness = 1.0;
+    std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
     std::vector<double> scaleA {1.0, 1.0, 1.0};
     std::vector<double> scaleD {0.0, 0.0, 0.0};
     std::vector<double> scaleI {0.0, 0.0, 0.0};

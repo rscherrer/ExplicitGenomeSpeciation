@@ -50,11 +50,10 @@ int doMain(const std::vector<std::string> &args)
 
 
         // Generate a genetic architecture
-        GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes());
+        GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes(), pars.getNTraits(),
+                pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
 
-
-
-
+        
 
         /*
         // Declare a genetic architecture

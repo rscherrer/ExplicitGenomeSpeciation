@@ -40,6 +40,8 @@ BOOST_FIXTURE_TEST_CASE(threeEqualSizedChromosomes, defaultGeneticArchitecture)
 }
 
 
+
+
 /*
 /// Test to check that the genetic architecture is read properly from a file
 BOOST_FIXTURE_TEST_CASE(geneticArchitectureIsLoadedProperly, createValidArchitectureFile)
