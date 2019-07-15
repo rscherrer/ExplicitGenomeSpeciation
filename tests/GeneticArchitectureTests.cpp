@@ -8,11 +8,16 @@
 struct defaultGeneticArchitecture
 {
 
-    defaultGeneticArchitecture() : nChromosomes(3u), geneticArchitecture(GeneticArchitecture(nChromosomes)) {}
+    defaultGeneticArchitecture() {}
     ~defaultGeneticArchitecture() {}
 
-    const size_t nChromosomes;
-    GeneticArchitecture geneticArchitecture;
+    const size_t nChromosomes = 3u;
+    const size_t nTraits = 3u;
+    const std::vector<size_t> nLociPerTrait = { 3u, 3u, 4u };
+    const std::vector<size_t> nEdgesPerTrait = { 1u, 0u, 2u };
+    const std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
+
+    GeneticArchitecture arch = GeneticArchitecture(nChromosomes, nTraits, nLociPerTrait, nEdgesPerTrait, skewnesses);
 
 };
 
@@ -22,7 +27,7 @@ BOOST_FIXTURE_TEST_CASE(threeEqualSizedChromosomes, defaultGeneticArchitecture)
 {
 
     std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
-    std::vector<double> realizedChromosomeSizes = geneticArchitecture.getChromosomeSizes();
+    std::vector<double> realizedChromosomeSizes = arch.getChromosomeSizes();
 
     assert(expectedChromosomeSizes.size() == realizedChromosomeSizes.size());
 
