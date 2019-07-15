@@ -58,9 +58,6 @@ struct Network
 };
 
 
-
-
-
 /// A container for all constant genetic features of the species we are simulating
 class GeneticArchitecture {
 
