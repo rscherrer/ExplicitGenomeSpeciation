@@ -47,8 +47,12 @@ public:
     std::vector<size_t> nLociPerTrait = {nEcoLoci, nMatLoci, nNtrLoci};
     size_t nBits = 2u * nLoci;
 
-    std::string strInitialSequence;
-    std::vector<bool> initialSequence;
+    // These guys are not initialized...
+    std::string strInitialSequence = "";
+    std::vector<bool> initialSequence {};
+    std::string architectureFileName = "";
+    std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
+    size_t seed;
 
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
@@ -59,15 +63,11 @@ public:
     // Genotype-phenotype map
     bool isGenerateArchitecture = true;
 
-    std::string architectureFileName;
-
     double  networkSkewness = 1.0;
     std::vector<double> scaleA {1.0, 1.0, 1.0};
     std::vector<double> scaleD {0.0, 0.0, 0.0};
     std::vector<double> scaleI {0.0, 0.0, 0.0};
     std::vector<double> scaleE {0.0, 0.0, 0.0};
-
-    std::vector<double> locusVarE;
 
     double shapeEffectSizes = 2.0;
     double scaleEffectSizes = 1.0;
@@ -82,8 +82,6 @@ public:
     int  tGetDat                 = 1;
     int  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
-
-    size_t seed;
 
     // Unsettables
     size_t  nHabitats               = 2u;
