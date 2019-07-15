@@ -1,5 +1,6 @@
 # Files
 include(setup.pri)
+SOURCES += tests/ParameterSetTests.cpp
 SOURCES += tests/GeneticArchitectureTests.cpp
 
 # C++14

@@ -6,8 +6,8 @@ set(
         TEST_FILES
         #tests.cpp
         #doMainTest.cpp
+        ParameterSetTests.cpp
         GeneticArchitectureTests.cpp
-        #ParameterSetTest.cpp
         #PopulationTest.cpp
         #utilsTest.cpp
 )

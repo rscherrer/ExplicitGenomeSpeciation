@@ -1,17 +1,7 @@
-#define BOOST_TEST_MAIN
-#define BOOST_TEST_MODULE testGeneticArchitecture
-
 #include "GeneticArchitecture.h"
-//#include "TestFixtureCreateArchitectureFile.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <cassert>
-
-
-BOOST_AUTO_TEST_CASE(dummyTest)
-{
-    BOOST_CHECK_EQUAL(1, 1);
-}
 
 
 /// Set up a simple genetic architecture
