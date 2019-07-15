@@ -57,6 +57,8 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps(const size_t &nTr
     // not absolute loci indices across the genome
 
     assert(networks.size() == nTraits);
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+        assert(networks[trait].map.size() == nEdgesPerTrait[trait]);
 
     return networks;
 }

@@ -49,11 +49,37 @@ int doMain(const std::vector<std::string> &args)
          */
 
 
-        // Generate a genetic architecture
-        GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes(), pars.getNTraits(),
-                pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
+        const size_t nChromosomes = 3u;
+        const size_t nTraits = 3u;
+        const std::vector<size_t> nLociPerTrait = { 3u, 3u, 4u };
+        const std::vector<size_t> nEdgesPerTrait = { 1u, 0u, 2u };
+        const std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
 
-        
+        // Generate a genetic architecture
+        // GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes(), pars.getNTraits(),
+        //        pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
+
+
+        GeneticArchitecture arch = GeneticArchitecture(nChromosomes, nTraits, nLociPerTrait, nEdgesPerTrait,
+                skewnesses);
+
+        std::cout << "Architecture created\n";
+
+        for (size_t trait = 0u; trait < nTraits; ++trait)
+        {
+            std::cout << "trait = " << trait << '\n';
+            std::cout << "nEdges = " << arch.getTraitNetworkMaps()[trait].nEdges << '\n';
+            std::cout << "nVertices = " << arch.getTraitNetworkMaps()[trait].nVertices << '\n';
+            std::cout << "skewness = " << arch.getTraitNetworkMaps()[trait].skewness << '\n';
+            std::cout << "number of interactions realized = " << arch.getTraitNetworkMaps()[trait].map.size() << '\n';
+            for (size_t edge = 0u; edge < arch.getTraitNetworkMaps()[trait].map.size(); ++edge)
+            {
+                std::cout << "Edge " << edge << ": gene " << arch.getTraitNetworkMaps()[trait].map[edge].first <<
+                " and gene " << arch.getTraitNetworkMaps()[trait].map[edge].second << '\n';
+            }
+        }
+
+
 
         /*
         // Declare a genetic architecture

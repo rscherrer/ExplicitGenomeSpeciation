@@ -22,23 +22,61 @@ struct defaultGeneticArchitecture
 };
 
 
-/// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
-BOOST_FIXTURE_TEST_CASE(threeEqualSizedChromosomes, defaultGeneticArchitecture)
+/// Battery of tests using the same default genetic architecture
+BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitecture, defaultGeneticArchitecture)
+
+    /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
+    BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
+    {
+
+        std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
+        std::vector<double> realizedChromosomeSizes = arch.getChromosomeSizes();
+
+        assert(expectedChromosomeSizes.size() == realizedChromosomeSizes.size());
+
+        BOOST_CHECK_EQUAL_COLLECTIONS(
+                realizedChromosomeSizes.begin(),
+                realizedChromosomeSizes.end(),
+                expectedChromosomeSizes.begin(),
+                expectedChromosomeSizes.end()
+                );
+    }
+
+    /// There should be one edge in trait 0, zero edges in trait 1 and two edges in trait 3
+    BOOST_AUTO_TEST_CASE(checkNetworkEdges)
+    {
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].second, 1u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[0u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[0u].second, 1u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[1u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[1u].second, 2u);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+/*
+GeneticArchitecture arch = GeneticArchitecture(nChromosomes, nTraits, nLociPerTrait, nEdgesPerTrait,
+                                               skewnesses);
+
+std::cout << "Architecture created\n";
+
+for (size_t trait = 0u; trait < nTraits; ++trait)
 {
-
-    std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
-    std::vector<double> realizedChromosomeSizes = arch.getChromosomeSizes();
-
-    assert(expectedChromosomeSizes.size() == realizedChromosomeSizes.size());
-
-    BOOST_CHECK_EQUAL_COLLECTIONS(
-            realizedChromosomeSizes.begin(),
-            realizedChromosomeSizes.end(),
-            expectedChromosomeSizes.begin(),
-            expectedChromosomeSizes.end()
-            );
+std::cout << "trait = " << trait << '\n';
+std::cout << "nEdges = " << arch.getTraitNetworkMaps()[trait].nEdges << '\n';
+std::cout << "nVertices = " << arch.getTraitNetworkMaps()[trait].nVertices << '\n';
+std::cout << "skewness = " << arch.getTraitNetworkMaps()[trait].skewness << '\n';
+std::cout << "number of interactions realized = " << arch.getTraitNetworkMaps()[trait].map.size() << '\n';
+for (size_t edge = 0u; edge < arch.getTraitNetworkMaps()[trait].map.size(); ++edge)
+{
+std::cout << "Edge " << edge << ": gene " << arch.getTraitNetworkMaps()[trait].map[edge].first <<
+" and gene " << arch.getTraitNetworkMaps()[trait].map[edge].second << '\n';
+}
 }
 
+ */
 
 
 
