@@ -72,12 +72,13 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nedges))
+        map(makeNetwork(nvertices, skew, nedges))
 {}
 
 
 /// Function to make a new interaction network based on the preferential attachment algorithm
-std::vector<Edge> Network::makeNetwork(size_t nEdges) const noexcept
+std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &skewness,
+        size_t nEdges) const noexcept
 {
     std::vector<Edge> network;
 
