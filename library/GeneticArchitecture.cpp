@@ -8,7 +8,8 @@
 #include <cassert>
 
 
-typedef std::pair<size_t, size_t> Edge;  // A network edge is a pair of locus indices
+/// A network edge is a pair of locus indices
+typedef std::pair<size_t, size_t> Edge;
 
 
 /// Constructor of genetic architecture
