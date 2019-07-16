@@ -15,6 +15,7 @@ struct defaultGeneticArchitectureParams
         pars.setNLociPerTrait({ 3u, 3u, 4u });
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
+        pars.setSeed(42u);
     }
     ~defaultGeneticArchitectureParams() {}
 
