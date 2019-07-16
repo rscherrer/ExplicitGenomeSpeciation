@@ -13,8 +13,8 @@ typedef std::pair<size_t, size_t> Edge;
 /// A container of constant genetic features across the genome
 struct Genome
 {
-    // A vector of locus indices
-    std::vector<size_t> loci;
+
+    Genome();
 
     // A vector of locus encoded traits
     std::vector<size_t> encodedTraits;

@@ -26,7 +26,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     skewnesses(pars.getSkewnesses()),
     chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps()),
-    genome(makeGenome())
+    genome(Genome())
 {}
 
 
@@ -208,7 +208,17 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 }
 
 
+// Function to make a genome
+// Must return a genome
+// What's in a genome? Multiple layers, which all are vectors, of: loci, encoded traits, locations, effect sizes,
+// dominance coefficients, and interactions
+// They all should have the same length, the number of loci in the genome
+// Use a unique for loop to initialize all of them
 
+Genome::Genome()
+{
+
+}
 
 
 /*
