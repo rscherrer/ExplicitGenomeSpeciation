@@ -21,9 +21,12 @@ typedef std::pair<size_t, size_t> Edge;
 GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     nTraits(pars.getNTraits()),
     nChromosomes(pars.getNChromosomes()),
+    nLoci(pars.getNLoci()),
     nLociPerTrait(pars.getNLociPerTrait()),
     nEdgesPerTrait(pars.getNEdgesPerTrait()),
     skewnesses(pars.getSkewnesses()),
+    effectSizeShape(pars.getEffectSizeShape()),
+    effectSizeScale(pars.getEffectSizeScale()),
     chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps()),
     genome(makeGenome())
