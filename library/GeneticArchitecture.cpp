@@ -215,9 +215,25 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 // They all should have the same length, the number of loci in the genome
 // Use a unique for loop to initialize all of them
 
+// For the encoded traits, make a vector of trait indices with as many indices per trait as there are loci encoding this trait, then shuffle that vector
+// For locations, sample uniformly and then sort in increasing order
+// Effect sizes and dominance are sampled at random
+// We'll see later for interactions
+
 Genome::Genome()
 {
 
+    // Make an ordered vector of trait indices
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+        for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus)
+            encodedTraits.push_back(trait);
+
+    assert(encodedTraits.size() == nLoci);
+
+    // Shuffle encoded traits randomly
+    std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
+
+    
 }
 
 
