@@ -31,7 +31,9 @@ struct Genome
     // A vector of locus epistatic interaction partners and weights
     std::vector<std::vector<std::pair<size_t, double> > > interactions;
 
-    // All the above vectors should have the same length, use assert for that
+    // Member functions
+    void setEncodedTraits(const size_t&, const size_t&, const std::vector<size_t>&) noexcept;
+    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&, const double&);
 
 };
 

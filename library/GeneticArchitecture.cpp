@@ -224,15 +224,40 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
         const double &shape, const double &scale)
 {
 
+    // Randomly assign loci to the traits they encode
+    setEncodedTraits(nTraits, nLoci, nLociPerTrait);
+
+    // Sample locations, effect sizes and dominance coefficients across the genome
+    setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
+
+    assert(encodedTraits.size() == nLoci);
+    assert(effectSizes.size() == nLoci);
+    assert(dominanceCoeffs.size() == nLoci);
+    assert(locations.size() == nLoci);
+
+}
+
+
+/// Function to randomly assign loci to their encoded traits
+void Genome::setEncodedTraits(const size_t &nTraits, const size_t &nLoci, const std::vector<size_t> &nLociPerTrait)
+noexcept
+{
+
     // Make an ordered vector of trait indices
     for (size_t trait = 0u; trait < nTraits; ++trait)
         for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus)
             encodedTraits.push_back(trait);
 
-    assert(encodedTraits.size() == nLoci);
-
     // Shuffle encoded traits randomly
     std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
+
+}
+
+
+/// Function to sample locations, effect sizes and dominance across the genome
+void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const size_t &nLoci, const double &shape,
+        const double &scale)
+{
 
     // Prepare squared roots of sums of squared effect sizes and dominance coefficients
     std::vector<double> sqrtsumsqEffectSizes {0.0, 0.0, 0.0};
@@ -278,13 +303,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
         effectSizes[locus] /= sqrtsumsqEffectSizes[encodedTraits[locus]];
         dominanceCoeffs[locus] /= sqrtsumsqDominanceCoeffs[encodedTraits[locus]];
     }
-
-    assert(effectSizes.size() == nLoci);
-    assert(dominanceCoeffs.size() == nLoci);
-    assert(locations.size() == nLoci);
-
 }
-
 
 
 
