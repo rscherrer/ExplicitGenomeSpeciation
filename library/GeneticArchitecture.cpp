@@ -220,7 +220,7 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 // Effect sizes and dominance are sampled at random
 // We'll see later for interactions
 
-Genome::Genome()
+Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const size_t &nLoci)
 {
 
     // Make an ordered vector of trait indices
