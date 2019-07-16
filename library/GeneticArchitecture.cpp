@@ -212,6 +212,17 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 }
 
 
+/// Function to sample interaction weights across edges of a gene regulatory network
+std::vector<double> Network::makeWeights()
+{
+    std::vector<double> interweights;
+
+    
+
+    return interweights;
+}
+
+
 /// Function from architecture to call the Genome constructor
 Genome GeneticArchitecture::makeGenome() const noexcept
 {
