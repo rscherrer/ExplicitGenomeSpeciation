@@ -233,8 +233,79 @@ Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const 
     // Shuffle encoded traits randomly
     std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
 
-    
+    // Sample locations, effect sizes and dominance coefficients
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+    {
+
+        // Locations are sampled uniformly
+        locations.push_back(rnd::uniform());
+
+        // Effect sizes are sampled from a two-sided Gamma distribution
+        double effectsize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
+        effectSizes.push_back(effectsize);
+
+
+        // Dominance coefficients are samped from a one-sided normal distribution
+
+    }
+
+    // Sort gene locations by increasing order
+    std::sort(locations.begin(), locations.end());
+
 }
+
+
+std::vector<double> effectSizes;
+std::vector<double> sumsqEffectSizes {0.0, 0.0, 0.0};
+
+// Loop through loci in the genome
+for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+// For each one sample an effect size from a bilateral Gamma distribution
+double effectSize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+effectSize = rnd::bernoulli(0.5) ? effectSize * -1.0 : effectSize;
+effectSizes.push_back(effectSize);
+
+// Accumulate the sums of squared effect sizes for each trait separately
+sumsqEffectSizes[locusEncodedTraits[locus]] += sqr(effectSize);
+}
+
+// Take the square root of the sum of squares in order to normalize
+for (size_t trait = 0u; trait < nTraits; ++trait)
+sumsqEffectSizes[trait] > 0.0 ? sqrt(sumsqEffectSizes) : 1.0;
+
+// Normalize all locus effect sizes by the square rooted sum of squares of their respective trait
+for (size_t locus = 0u; locus < nLoci; ++locus)
+effectSizes[locus] /= sumsqEffectSizes[locusEncodedTraits[locus]];
+
+return effectSizes;
+
+
+std::vector<double> dominanceCoeffs;
+std::vector<double> sumsqDominanceCoeffs {0.0, 0.0, 0.0};
+
+// Loop through loci across the genome
+for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+// For each one sample a dominance coefficient from a unilateral normal distribution
+const double dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
+dominanceCoeffs.push_back(dominanceCoeff);
+
+// Accumulate the sums of squared dominance coefficients for each trait
+sumsqDominanceCoeffs[locusEncodedTraits[locus]] += sqr(dominanceCoeff);
+}
+
+// Take the square root of the sum of squares in order to normalize
+for (size_t trait = 0u; trait < nTraits; ++trait)
+sumsqDominanceCoeffs[trait] > 0.0 ? sqrt(sumsqDominanceCoeffs) : 1.0;
+
+// Normalize the dominance coefficient of each locus by the square rooted sum of squares for its respective trait
+for (size_t locus = 0u; locus < nLoci; ++locus)
+dominanceCoeffs[locus] /= sumsqDominanceCoeffs[locusEncodedTraits[locus]];
+
+return dominanceCoeffs;
+
 
 
 /*
