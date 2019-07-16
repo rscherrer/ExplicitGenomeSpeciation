@@ -110,8 +110,8 @@ private:
     std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
-    double shapeInteractionWeights = 5.0;
-    double scaleInteractionWeights = 1.0;
+    double interactionWeightShape = 5.0;
+    double interactionWeightScale = 1.0;
 
     // Simulation parameters
     int  tBurnIn                 = 1;
