@@ -105,7 +105,7 @@ public:
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
-    std::vector<Network> getTraitNetworkMaps() const { return traitNetworks; }
+    std::vector<Network> getTraitNetworks() const { return traitNetworks; }
     Genome getGenome() const { return genome; }
 
     /*
