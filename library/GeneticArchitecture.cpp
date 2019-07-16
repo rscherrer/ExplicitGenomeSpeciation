@@ -209,7 +209,7 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 
 
 /// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome()
+Genome GeneticArchitecture::makeGenome() const noexcept
 {
     const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape, effectSizeScale);
     return gen;
