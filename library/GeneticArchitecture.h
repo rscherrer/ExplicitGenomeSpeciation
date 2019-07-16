@@ -85,7 +85,7 @@ private:
     std::vector<double> chromosomeSizes;
 
     // A map of the gene regulatory network for each trait
-    std::vector<Network> traitNetworkMaps;
+    std::vector<Network> traitNetworks;
 
     // A series of layers of locus-specific features across the genome
     Genome genome;
@@ -105,7 +105,7 @@ public:
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
-    std::vector<Network> getTraitNetworkMaps() const { return traitNetworkMaps; }
+    std::vector<Network> getTraitNetworkMaps() const { return traitNetworks; }
     Genome getGenome() const { return genome; }
 
     /*

@@ -30,7 +30,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomeSizes()),
-    traitNetworkMaps(makeTraitNetworks()),
+    traitNetworks(makeTraitNetworks()),
     genome(makeGenome())
 {}
 
