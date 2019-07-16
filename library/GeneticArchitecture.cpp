@@ -60,7 +60,8 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks() const noexcept
     {
 
         // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
-        Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait], skewnesses[trait]);
+        Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait], skewnesses[trait],
+                interactionWeightShape, interactionWeightShape);
 
         networks.push_back(network);
     }
