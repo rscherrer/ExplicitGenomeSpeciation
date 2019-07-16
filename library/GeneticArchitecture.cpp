@@ -79,7 +79,8 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nvertices, skew, nedges))
+        map(makeNetwork(nvertices, skew, nedges)),
+        weights(makeWeights())
 {}
 
 
