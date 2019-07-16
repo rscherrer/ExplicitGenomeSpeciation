@@ -216,8 +216,26 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 std::vector<double> Network::makeWeights()
 {
     std::vector<double> interweights;
+    double sqrtsumsqWeights = 0.0;
 
-    
+    // For each edge in the network...
+    for (size_t edge = 0u; edge < nEdges; ++edge) {
+
+        // Sample the weight from a two-sided Gamma distribution
+        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
+        interweights.push_back(weight);
+
+        // Accumulate square rooted sum of squared interaction weights for later normalization
+        sqrtsumsqWeights += sqr(weight);
+    }
+
+    // Square root the normalizing factor
+    sqrtsumsqWeights = sqrtsumsqWeights > 0.0 ? sqrt(sqrtsumsqWeights) : 1.0;
+
+    // Normalize at the end
+    for (size_t edge = 0u; edge < nEdges; ++edge)
+        interweights[edge] /= sqrtsumsqWeights;
 
     return interweights;
 }
