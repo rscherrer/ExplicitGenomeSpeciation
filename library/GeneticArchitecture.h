@@ -50,6 +50,7 @@ struct Network
     size_t nEdges;
     double skewness;
 
+    // Functions to make the network
     std::vector<Edge> makeNetwork(const size_t&, const double&, size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
     void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
@@ -72,7 +73,7 @@ private:
     // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;
 
-    // A map of the gene regulatory network
+    // A map of the gene regulatory network for each trait
     std::vector<Network> traitNetworkMaps;
 
     // A series of layers of locus-specific features across the genome
