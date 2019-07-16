@@ -26,7 +26,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     skewnesses(pars.getSkewnesses()),
     chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps()),
-    genome(Genome())
+    genome(makeGenome())
 {}
 
 
