@@ -222,7 +222,8 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 
 
 /// Genome constructor
-Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const size_t &nLoci)
+Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const size_t &nLoci, const double &shape,
+        const double &scale)
 {
 
     // Make an ordered vector of trait indices
