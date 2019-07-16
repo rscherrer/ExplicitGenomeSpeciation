@@ -233,9 +233,9 @@ Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const 
     // Shuffle encoded traits randomly
     std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
 
-    // Prepare sums of squared effect sizes and dominance coefficients
-    std::vector<double> sumsqEffectSizes {0.0, 0.0, 0.0};
-    std::vector<double> sumsqDominanceCoeff {0.0, 0.0, 0.0};
+    // Prepare squared roots of sums of squared effect sizes and dominance coefficients
+    std::vector<double> sqrtsumsqEffectSizes {0.0, 0.0, 0.0};
+    std::vector<double> sqrtsumsqDominanceCoeffs {0.0, 0.0, 0.0};
 
     // Sample locations, effect sizes and dominance coefficients
     for (size_t locus = 0u; locus < nLoci; ++locus)
@@ -250,19 +250,33 @@ Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const 
         effectSizes.push_back(effectsize);
 
         // Squared effect sizes are accumulated for normalizing
-        sumsqEffectSizes[encodedTraits[locus]] += sqr(effectsize);
+        sqrtsumsqEffectSizes[encodedTraits[locus]] += sqr(effectsize);
 
         // Dominance coefficients are sampled from a one-sided normal distribution
         const double dominance = fabs(rnd::normal(0.0, 1.0));
         dominanceCoeffs.push_back(dominance);
 
         // Squared dominance coefficients are accumulated for normalizing
-        sumsqDominanceCoeff[encodedTraits[locus]] += sqr(dominance);
+        sqrtsumsqDominanceCoeffs[encodedTraits[locus]] += sqr(dominance);
 
     }
 
     // Sort gene locations by increasing order
     std::sort(locations.begin(), locations.end());
+
+    // Take the square roots of the sums of squares for normalization
+    for (size_t trait = 0u; trait < nTraits; ++trait)
+    {
+        sqrtsumsqEffectSizes[trait] = sqrt(sqrtsumsqEffectSizes[trait]);
+        sqrtsumsqDominanceCoeffs[trait] = sqrt(sqrtsumsqDominanceCoeffs[trait]);
+    }
+
+    // Normalize effect sizes and dominance coefficients across the genome
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+    {
+        effectSizes[locus] /= sqrtsumsqEffectSizes[encodedTraits[locus]];
+        dominanceCoeffs[locus] /= sqrtsumsqDominanceCoeffs[encodedTraits[locus]];
+    }
 
 }
 
