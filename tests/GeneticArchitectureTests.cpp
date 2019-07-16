@@ -51,12 +51,9 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGenet
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[1u].second, 2u);
     }
 
-    BOOST_AUTO_TEST_CASE(checkGenomeLayers)
+    BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
         GeneticArchitecture arch = GeneticArchitecture(pars);
-        for (size_t locus = 0u; locus < pars.getNLoci(); ++locus)
-            std::cout << arch.getGenome().encodedTraits[locus] << ' ';
-
         std::vector<size_t> exp { 1u, 1u, 0u, 2u, 2u, 2u, 0u, 2u, 1u, 0u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
