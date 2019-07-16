@@ -64,20 +64,8 @@ int doMain(const std::vector<std::string> &args)
 
         std::cout << "Architecture created\n";
 
-        for (size_t trait = 0u; trait < nTraits; ++trait)
-        {
-            std::cout << "trait = " << trait << '\n';
-            std::cout << "nEdges = " << arch.getTraitNetworkMaps()[trait].nEdges << '\n';
-            std::cout << "nVertices = " << arch.getTraitNetworkMaps()[trait].nVertices << '\n';
-            std::cout << "skewness = " << arch.getTraitNetworkMaps()[trait].skewness << '\n';
-            std::cout << "number of interactions realized = " << arch.getTraitNetworkMaps()[trait].map.size() << '\n';
-            for (size_t edge = 0u; edge < arch.getTraitNetworkMaps()[trait].map.size(); ++edge)
-            {
-                std::cout << "Edge " << edge << ": gene " << arch.getTraitNetworkMaps()[trait].map[edge].first <<
-                " and gene " << arch.getTraitNetworkMaps()[trait].map[edge].second << '\n';
-            }
-        }
-
+        for (int i = 0; i < pars.getNLoci(); ++i)
+            std::cout << arch.getGenome().encodedTraits[i] << ' '; // should be sorted and be between 0 and 1
 
 
         /*
