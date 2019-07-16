@@ -67,11 +67,11 @@ private:
     size_t nChromosomes;
     size_t nTraits;
     size_t nLoci;
-    double effectSizeShape;
-    double effectSizeScale;
     std::vector<size_t> nLociPerTrait;
     std::vector<size_t> nEdgesPerTrait;
     std::vector<double> skewnesses;
+    double effectSizeShape;
+    double effectSizeScale;
 
     // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;

@@ -18,8 +18,8 @@ public:
     std::vector<size_t> getNLociPerTrait() const { return nLociPerTrait; }
     std::vector<size_t> getNEdgesPerTrait() const { return nEdgesPerTrait; }
     std::vector<double> getSkewnesses() const { return skewnesses; }
-    double getShapeEffectSize() const { return shapeEffectSizes; }
-    double getScaleEffectSize() const { return scaleEffectSizes; }
+    double getEffectSizeShape() const { return effectSizeShape; }
+    double getEffectSizeScale() const { return effectSizeScale; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
@@ -107,8 +107,8 @@ private:
     std::vector<double> scaleI {0.0, 0.0, 0.0};
     std::vector<double> scaleE {0.0, 0.0, 0.0};
     std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
-    double shapeEffectSizes = 2.0;
-    double scaleEffectSizes = 1.0;
+    double effectSizeShape = 2.0;
+    double effectSizeScale = 1.0;
     double shapeInteractionWeights = 5.0;
     double scaleInteractionWeights = 1.0;
 
