@@ -27,6 +27,8 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     skewnesses(pars.getSkewnesses()),
     effectSizeShape(pars.getEffectSizeShape()),
     effectSizeScale(pars.getEffectSizeScale()),
+    interactionWeightShape(pars.getInteractionWeightShape()),
+    interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomeSizes()),
     traitNetworkMaps(makeTraitNetworkMaps()),
     genome(makeGenome())
