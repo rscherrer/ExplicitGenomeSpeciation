@@ -20,6 +20,8 @@ public:
     std::vector<double> getSkewnesses() const { return skewnesses; }
     double getEffectSizeShape() const { return effectSizeShape; }
     double getEffectSizeScale() const { return effectSizeScale; }
+    double getInteractionWeightShape() const { return interactionWeightShape; }
+    double getInteractionWeightScale() const { return interactionWeightScale; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
