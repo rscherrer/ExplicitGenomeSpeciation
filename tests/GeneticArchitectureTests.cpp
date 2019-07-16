@@ -108,6 +108,11 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
         checkVectorOfDoubles(exp, real);
     }
 
+    BOOST_AUTO_TEST_CASE(checkInteractionWeights)
+    {
+        
+    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
