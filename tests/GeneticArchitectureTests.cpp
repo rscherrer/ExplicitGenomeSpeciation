@@ -4,11 +4,12 @@
 #include <cassert>
 
 
-/// Set up a simple genetic architecture
-struct defaultGeneticArchitectureParams
+/// Parameters for a simple genetic architecture
+struct simpleParams
 {
 
-    defaultGeneticArchitectureParams() {
+    simpleParams()
+    {
         pars.setNChromosomes(3u);
         pars.setNTraits(3u);
         pars.setNLoci(10u);
@@ -17,20 +18,30 @@ struct defaultGeneticArchitectureParams
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
     }
-    ~defaultGeneticArchitectureParams() {}
+    ~simpleParams() {}
 
     ParameterSet pars;
 
 };
 
 
+/// A simple genetic architecture
+struct simpleArch
+{
+    simpleArch() : arch(GeneticArchitecture(simplepars.pars)) {}
+    ~simpleArch() {}
+
+    simpleParams simplepars;
+    GeneticArchitecture arch;
+};
+
+
 /// Battery of tests using the same default genetic architecture
-BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGeneticArchitectureParams)
+BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
     {
-        GeneticArchitecture arch = GeneticArchitecture(pars);
         std::vector<double> exp {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
         std::vector<double> real = arch.getChromosomeSizes();
 
@@ -42,7 +53,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGenet
     /// There should be one edge in trait 0, zero edges in trait 1 and two edges in trait 3
     BOOST_AUTO_TEST_CASE(checkNetworkEdges)
     {
-        GeneticArchitecture arch = GeneticArchitecture(pars);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].first, 0u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[0u].map[0u].second, 1u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[0u].first, 0u);
@@ -53,12 +63,10 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGenet
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
-        GeneticArchitecture arch = GeneticArchitecture(pars);
         std::vector<size_t> exp { 1u, 1u, 0u, 2u, 2u, 2u, 0u, 2u, 1u, 0u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
-
     }
 
 BOOST_AUTO_TEST_SUITE_END()
