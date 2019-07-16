@@ -14,9 +14,12 @@ public:
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }
     size_t getNTraits() const { return nTraits; }
+    size_t getNLoci() const { return nLoci; }
     std::vector<size_t> getNLociPerTrait() const { return nLociPerTrait; }
     std::vector<size_t> getNEdgesPerTrait() const { return nEdgesPerTrait; }
     std::vector<double> getSkewnesses() const { return skewnesses; }
+    double getShapeEffectSize() const { return shapeEffectSizes; }
+    double getScaleEffectSize() const { return scaleEffectSizes; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
