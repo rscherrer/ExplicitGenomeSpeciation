@@ -219,19 +219,6 @@ Genome GeneticArchitecture::makeGenome() const noexcept
 }
 
 
-// Function to make a genome
-// Must return a genome
-// What's in a genome? Multiple layers, which all are vectors, of: loci, encoded traits, locations, effect sizes,
-// dominance coefficients, and interactions
-// They all should have the same length, the number of loci in the genome
-// Use a unique for loop to initialize all of them
-
-// For the encoded traits, make a vector of trait indices with as many indices per trait as there are loci encoding this trait, then shuffle that vector
-// For locations, sample uniformly and then sort in increasing order
-// Effect sizes and dominance are sampled at random
-// We'll see later for interactions
-
-
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, const size_t &nLoci,
         const double &shape, const double &scale)
