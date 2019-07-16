@@ -281,6 +281,10 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
         dominanceCoeffs[locus] /= sqrtsumsqDominanceCoeffs[encodedTraits[locus]];
     }
 
+    assert(effectSizes.size() == nLoci);
+    assert(dominanceCoeffs.size() == nLoci);
+    assert(locations.size() == nLoci);
+
 }
 
 
