@@ -11,6 +11,7 @@ struct defaultGeneticArchitectureParams
     defaultGeneticArchitectureParams() {
         pars.setNChromosomes(3u);
         pars.setNTraits(3u);
+        pars.setNLoci(10u);
         pars.setNLociPerTrait({ 3u, 3u, 4u });
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });

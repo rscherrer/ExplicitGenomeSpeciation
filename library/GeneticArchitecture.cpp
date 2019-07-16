@@ -234,7 +234,6 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
     assert(effectSizes.size() == nLoci);
     assert(dominanceCoeffs.size() == nLoci);
     assert(locations.size() == nLoci);
-
 }
 
 
@@ -245,8 +244,11 @@ noexcept
 
     // Make an ordered vector of trait indices
     for (size_t trait = 0u; trait < nTraits; ++trait)
-        for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus)
+        for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus) {
             encodedTraits.push_back(trait);
+            assert(encodedTraits.back() >= 0u);
+            assert(encodedTraits.back() <= 2u);
+        }
 
     // Shuffle encoded traits randomly
     std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
@@ -270,6 +272,9 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const si
         // Locations are sampled uniformly
         locations.push_back(rnd::uniform());
 
+        assert(locations.back() > 0.0);
+        assert(locations.back() < 1.0);
+
         // Effect sizes are sampled from a two-sided Gamma distribution
         double effectsize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
         effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
@@ -280,6 +285,7 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const si
 
         // Dominance coefficients are sampled from a one-sided normal distribution
         const double dominance = fabs(rnd::normal(0.0, 1.0));
+        assert(dominance > 0.0);
         dominanceCoeffs.push_back(dominance);
 
         // Squared dominance coefficients are accumulated for normalizing
@@ -290,11 +296,17 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const si
     // Sort gene locations by increasing order
     std::sort(locations.begin(), locations.end());
 
+    for (size_t locus = 1u; locus < nLoci; ++locus)
+        assert(locations[locus] > locations[locus - 1u]);
+
     // Take the square roots of the sums of squares for normalization
     for (size_t trait = 0u; trait < nTraits; ++trait)
     {
         sqrtsumsqEffectSizes[trait] = sqrt(sqrtsumsqEffectSizes[trait]);
         sqrtsumsqDominanceCoeffs[trait] = sqrt(sqrtsumsqDominanceCoeffs[trait]);
+
+        assert(sqrtsumsqEffectSizes[trait] > 0.0);
+        assert(sqrtsumsqDominanceCoeffs[trait] > 0.0);
     }
 
     // Normalize effect sizes and dominance coefficients across the genome

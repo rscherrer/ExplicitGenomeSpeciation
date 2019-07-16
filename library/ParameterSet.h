@@ -27,7 +27,7 @@ public:
     void setNLociPerTrait(const std::vector<size_t> &locipertrait) { nLociPerTrait = locipertrait; }
     void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) { nEdgesPerTrait = edgespertrait; }
     void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
-
+    void setNLoci(const size_t &nloci) { nLoci = nloci; }
 
     /*
     size_t getInitialPopSize() const { return initialPopSize; }
