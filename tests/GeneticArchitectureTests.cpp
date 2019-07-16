@@ -36,6 +36,18 @@ struct simpleArch
 };
 
 
+/// Function to compare vectors of doubles to their expectations
+void checkVectorOfDoubles(std::vector<double> exp, std::vector<double> real, const double &factor = 1000000.0)
+{
+    for (size_t i = 0u; i < real.size(); ++i) {
+        real[i] = round(real[i] * 1000000.0);
+        exp[i] = round(exp[i] * 1000000.0);
+    }
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
+}
+
+
 /// Battery of tests using the same default genetic architecture
 BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
@@ -73,52 +85,27 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
     {
         std::vector<double> exp { 0.00717771, 0.0634439, 0.141306, 0.234415, 0.50963, 0.569106, 0.590133, 0.602823,
                                   0.756531, 0.960691 };
-
         std::vector<double> real = arch.getGenome().locations;
-
-        for (size_t i = 0u; i < real.size(); ++i) {
-            real[i] = round(real[i] * 1000000.0);
-            exp[i] = round(exp[i] * 1000000.0);
-        }
-
         assert(exp.size() == real.size());
-
-        BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
+        checkVectorOfDoubles(exp, real);
     }
 
     BOOST_AUTO_TEST_CASE(checkEffectSizes)
     {
         std::vector<double> exp { -0.401348, 0.112783, 0.690384, -0.601905, -0.757984, 0.158833, 0.569097, -0.632165,
                                   0.114488, -0.806784 };
-
         std::vector<double> real = arch.getGenome().effectSizes;
-
-        for (size_t i = 0u; i < real.size(); ++i) {
-            real[i] = round(real[i] * 1000000.0);
-            exp[i] = round(exp[i] * 1000000.0);
-        }
-
         assert(exp.size() == real.size());
-
-        BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
+        checkVectorOfDoubles(exp, real);
     }
 
     BOOST_AUTO_TEST_CASE(checkDominanceCoeffs)
     {
         std::vector<double> exp { 0.948098, 0.00938372, 0.62366, 0.781639, 0.367136, 0.335983, 0.310815, 0.0671098,
                                   0.432369, 0.75192 };
-
         std::vector<double> real = arch.getGenome().dominanceCoeffs;
-
-        for (size_t i = 0u; i < real.size(); ++i) {
-            real[i] = round(real[i] * 1000000.0);
-            exp[i] = round(exp[i] * 1000000.0);
-        }
-
         assert(exp.size() == real.size());
-
-        BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
-
+        checkVectorOfDoubles(exp, real);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
