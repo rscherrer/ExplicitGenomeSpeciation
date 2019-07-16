@@ -77,7 +77,7 @@ private:
     std::vector<Network> traitNetworkMaps;
 
     // A series of layers of locus-specific features across the genome
-    //Genome genome;
+    Genome genome;
 
     // A set of vectors of loci underlying each trait
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;
