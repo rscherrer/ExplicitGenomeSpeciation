@@ -71,9 +71,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        for (int i = 0u; i < simplepars.pars.getNLoci(); ++i)
-            std::cout << arch.getGenome().locations[i] << ' ';
-
         std::vector<double> exp { 0.00717771, 0.0634439, 0.141306, 0.234415, 0.50963, 0.569106, 0.590133, 0.602823,
                                   0.756531, 0.960691 };
 
@@ -87,6 +84,18 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
         assert(exp.size() == real.size());
 
         BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
+    }
+
+    BOOST_AUTO_TEST_CASE(checkEffectSizes)
+    {
+        for (int i = 0u; i < simplepars.pars.getNLoci(); ++i)
+            std::cout << arch.getGenome().effectSizes[i] << ' ';
+
+        std::vector<double> exp { -0.401348, 0.112783, 0.690384, -0.601905, -0.757984, 0.158833, 0.569097, -0.632165,
+                                  0.114488, -0.806784 };
+
+        std::vector<double> real = arch.getGenome().locations;
+
     }
 
 BOOST_AUTO_TEST_SUITE_END()
