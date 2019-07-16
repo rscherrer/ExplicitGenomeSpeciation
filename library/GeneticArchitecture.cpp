@@ -82,7 +82,7 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
         nEdges(nedges),
         skewness(skew),
         map(makeNetwork(nvertices, skew, nedges)),
-        weights(makeWeights())
+        weights(makeWeights(shape, scale))
 {}
 
 
@@ -215,7 +215,7 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 
 
 /// Function to sample interaction weights across edges of a gene regulatory network
-std::vector<double> Network::makeWeights()
+std::vector<double> Network::makeWeights(const double &shape, const double &scale)
 {
     std::vector<double> interweights;
     double sqrtsumsqWeights = 0.0;

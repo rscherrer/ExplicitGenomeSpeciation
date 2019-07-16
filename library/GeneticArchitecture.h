@@ -56,7 +56,7 @@ struct Network
     double skewness;
 
     // Functions to make the network
-    std::vector<double> makeWeights();
+    std::vector<double> makeWeights(const double&, const double&);
     std::vector<Edge> makeNetwork(const size_t&, const double&, size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
     void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
