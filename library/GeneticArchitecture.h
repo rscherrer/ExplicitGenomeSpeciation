@@ -14,7 +14,7 @@ typedef std::pair<size_t, size_t> Edge;
 struct Genome
 {
 
-    Genome();
+    Genome(const size_t&, const std::vector<size_t>&, const size_t&, const double&, const double&);
 
     // A vector of locus encoded traits
     std::vector<size_t> encodedTraits;
