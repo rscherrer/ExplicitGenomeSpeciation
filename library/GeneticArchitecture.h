@@ -42,7 +42,7 @@ struct Genome
 struct Network
 {
 
-    Network(const size_t&, const size_t&, const double&);
+    Network(const size_t&, const size_t&, const double&, const double&, const double&);
 
     // A map of interacting genes
     std::vector<Edge> map;

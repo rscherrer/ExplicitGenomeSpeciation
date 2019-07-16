@@ -77,7 +77,8 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworkMaps() const noexcept
 
 
 /// Network constructor
-Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew) :
+Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew, const double &shape,
+        const double &scale) :
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
