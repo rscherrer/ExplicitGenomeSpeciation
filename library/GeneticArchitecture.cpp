@@ -208,6 +208,14 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 }
 
 
+/// Function from architecture to call the Genome constructor
+Genome GeneticArchitecture::makeGenome()
+{
+    const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape, effectSizeScale);
+    return gen;
+}
+
+
 // Function to make a genome
 // Must return a genome
 // What's in a genome? Multiple layers, which all are vectors, of: loci, encoded traits, locations, effect sizes,
