@@ -64,8 +64,6 @@ int doMain(const std::vector<std::string> &args)
 
         std::cout << "Architecture created\n";
 
-        for (int i = 0; i < pars.getNLoci(); ++i)
-            std::cout << arch.getGenome().encodedTraits[i] << ' '; // should be sorted and be between 0 and 1
 
 
         /*

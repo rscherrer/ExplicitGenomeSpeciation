@@ -31,17 +31,12 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGenet
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
     {
         GeneticArchitecture arch = GeneticArchitecture(pars);
-        std::vector<double> expectedChromosomeSizes {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
-        std::vector<double> realizedChromosomeSizes = arch.getChromosomeSizes();
+        std::vector<double> exp {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
+        std::vector<double> real = arch.getChromosomeSizes();
 
-        assert(expectedChromosomeSizes.size() == realizedChromosomeSizes.size());
+        assert(exp.size() == real.size());
 
-        BOOST_CHECK_EQUAL_COLLECTIONS(
-                realizedChromosomeSizes.begin(),
-                realizedChromosomeSizes.end(),
-                expectedChromosomeSizes.begin(),
-                expectedChromosomeSizes.end()
-                );
+        BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
     }
 
     /// There should be one edge in trait 0, zero edges in trait 1 and two edges in trait 3
@@ -54,6 +49,19 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGenet
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[0u].second, 1u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[1u].first, 0u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworkMaps()[2u].map[1u].second, 2u);
+    }
+
+    BOOST_AUTO_TEST_CASE(checkGenomeLayers)
+    {
+        GeneticArchitecture arch = GeneticArchitecture(pars);
+        for (size_t locus = 0u; locus < pars.getNLoci(); ++locus)
+            std::cout << arch.getGenome().encodedTraits[locus] << ' ';
+
+        std::vector<size_t> exp { 1u, 1u, 0u, 2u, 2u, 2u, 0u, 2u, 1u, 0u };
+        std::vector<size_t> real = arch.getGenome().encodedTraits;
+        assert(exp.size() == real.size());
+        BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
+
     }
 
 BOOST_AUTO_TEST_SUITE_END()
