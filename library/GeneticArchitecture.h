@@ -78,6 +78,8 @@ private:
     std::vector<double> skewnesses;
     double effectSizeShape;
     double effectSizeScale;
+    double interactionWeightShape;
+    double interactionWeightScale;
 
     // A vector of chromosome sizes
     std::vector<double> chromosomeSizes;
