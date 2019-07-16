@@ -23,7 +23,7 @@ struct defaultGeneticArchitectureParams
 
 
 /// Battery of tests using the same default genetic architecture
-BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitecture, defaultGeneticArchitectureParams)
+BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, defaultGeneticArchitectureParams)
 
     /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
