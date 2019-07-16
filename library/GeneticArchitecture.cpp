@@ -233,6 +233,10 @@ Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const 
     // Shuffle encoded traits randomly
     std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
 
+    // Prepare sums of squared effect sizes and dominance coefficients
+    std::vector<double> sumsqEffectSizes {0.0, 0.0, 0.0};
+    std::vector<double> sumsqDominanceCoeff {0.0, 0.0, 0.0};
+
     // Sample locations, effect sizes and dominance coefficients
     for (size_t locus = 0u; locus < nLoci; ++locus)
     {
@@ -245,8 +249,15 @@ Genome::Genome(const size_t &nTraits, std::vector<size_t> &nLociPerTrait, const 
         effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
         effectSizes.push_back(effectsize);
 
+        // Squared effect sizes are accumulated for normalizing
+        sumsqEffectSizes[encodedTraits[locus]] += sqr(effectsize);
 
-        // Dominance coefficients are samped from a one-sided normal distribution
+        // Dominance coefficients are sampled from a one-sided normal distribution
+        const double dominance = fabs(rnd::normal(0.0, 1.0));
+        dominanceCoeffs.push_back(dominance);
+
+        // Squared dominance coefficients are accumulated for normalizing
+        sumsqDominanceCoeff[encodedTraits[locus]] += sqr(dominance);
 
     }
 
