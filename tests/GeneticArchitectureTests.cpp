@@ -75,7 +75,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
-        std::vector<size_t> exp { 1u, 1u, 0u, 2u, 2u, 2u, 0u, 2u, 1u, 0u };
+        std::vector<size_t> exp { 1u, 2u, 0u, 1u, 2u, 2u, 2u, 0u, 0u, 1u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
@@ -83,8 +83,8 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        std::vector<double> exp { 0.00717771, 0.0634439, 0.141306, 0.234415, 0.50963, 0.569106, 0.590133, 0.602823,
-                                  0.756531, 0.960691 };
+        std::vector<double> exp { 0.0245672, 0.121113, 0.462783, 0.485052, 0.498453, 0.557455, 0.668395, 0.792946,
+                                  0.85107, 0.986548 };
         std::vector<double> real = arch.getGenome().locations;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -92,8 +92,11 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEffectSizes)
     {
-        std::vector<double> exp { -0.401348, 0.112783, 0.690384, -0.601905, -0.757984, 0.158833, 0.569097, -0.632165,
-                                  0.114488, -0.806784 };
+        for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
+            std::cout << arch.getGenome().dominanceCoeffs[locus] << ' ';
+
+        std::vector<double> exp { -0.76702, 0.428359, 0.72599, 0.14135, 0.323973, 0.553825, 0.414186, -0.854193,
+                                  0.548988, 0.258618 };
         std::vector<double> real = arch.getGenome().effectSizes;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -101,9 +104,14 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkDominanceCoeffs)
     {
-        std::vector<double> exp { 0.948098, 0.00938372, 0.62366, 0.781639, 0.367136, 0.335983, 0.310815, 0.0671098,
-                                  0.432369, 0.75192 };
+        std::vector<double> exp { 0.106584, 0.0328968, 0.116384, 0.696944, 0.633289, 0.766541, 0.402709, 0.215222,
+                                  0.907899, 0.683276 };
         std::vector<double> real = arch.getGenome().dominanceCoeffs;
+
+        std::cout << "\n";
+        for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
+            std::cout << real[locus] << ' ';
+
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
     }

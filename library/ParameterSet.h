@@ -125,6 +125,7 @@ private:
     size_t  nHabitats               = 2u;
     size_t  nTraits                 = 3u;
 
+    /// Makers
     size_t makeDefaultSeed();
 
 };
