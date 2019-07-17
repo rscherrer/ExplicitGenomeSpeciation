@@ -22,6 +22,7 @@ public:
     double getEffectSizeScale() const { return effectSizeScale; }
     double getInteractionWeightShape() const { return interactionWeightShape; }
     double getInteractionWeightScale() const { return interactionWeightScale; }
+    size_t getSeed() const { return seed; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
