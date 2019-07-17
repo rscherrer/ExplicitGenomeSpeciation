@@ -40,8 +40,8 @@ struct simpleArch
 void checkVectorOfDoubles(std::vector<double> exp, std::vector<double> real, const double &factor = 1000000.0)
 {
     for (size_t i = 0u; i < real.size(); ++i) {
-        real[i] = round(real[i] * 1000000.0);
-        exp[i] = round(exp[i] * 1000000.0);
+        real[i] = round(real[i] * factor);
+        exp[i] = round(exp[i] * factor);
     }
 
     BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
