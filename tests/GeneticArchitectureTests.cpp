@@ -18,8 +18,6 @@ struct simpleParams
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
 
-        std::cout << "Seed was reset to " << pars.getSeed() << '\n';
-
     }
     ~simpleParams() {}
 
@@ -31,10 +29,7 @@ struct simpleParams
 /// A simple genetic architecture
 struct simpleArch
 {
-    simpleArch() : arch(GeneticArchitecture(simplepars.pars))
-    {
-        std::cout << "A new test architecture was created." << '\n';
-    }
+    simpleArch() : arch(GeneticArchitecture(simplepars.pars)) {}
     ~simpleArch() {}
 
     simpleParams simplepars;
