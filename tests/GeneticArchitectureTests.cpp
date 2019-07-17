@@ -105,16 +105,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
         checkVectorOfDoubles(exp, real);
     }
 
-    BOOST_AUTO_TEST_CASE(checkDominanceCoeffs)
-    {
-        std::vector<double> exp { 0.106584, 0.0328968, 0.116384, 0.696944, 0.633289, 0.766541, 0.402709, 0.215222,
-                                  0.907899, 0.683276 };
-        std::vector<double> real = arch.getGenome().dominanceCoeffs;
-
-        assert(exp.size() == real.size());
-        checkVectorOfDoubles(exp, real);
-    }
-
 BOOST_AUTO_TEST_SUITE_END()
 
 
