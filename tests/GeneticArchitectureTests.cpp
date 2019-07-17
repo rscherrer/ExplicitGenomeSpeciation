@@ -19,7 +19,7 @@ struct simpleParams
         pars.setSeed(42u);
 
         std::cout << "Seed was reset to " << pars.getSeed();
-        
+
     }
     ~simpleParams() {}
 
@@ -117,16 +117,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
-    }
-
-    BOOST_AUTO_TEST_CASE(checkInteractionWeights)
-    {
-        for (size_t trait = 0u; trait < simplepars.pars.getNTraits(); ++trait)
-            for (size_t edge = 0u; edge < simplepars.pars.getNEdgesPerTrait()[trait]; ++edge)
-            {
-                std::cout << arch.getTraitNetworks()[trait].weights[edge] << ' ';
-            }
-        std::cout << '\n';
     }
 
 BOOST_AUTO_TEST_SUITE_END()
