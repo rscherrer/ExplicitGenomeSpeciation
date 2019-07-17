@@ -18,7 +18,7 @@ struct simpleParams
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
 
-        std::cout << "Seed was reset to " << pars.getSeed();
+        std::cout << "Seed was reset to " << pars.getSeed() << '\n';
 
     }
     ~simpleParams() {}
@@ -31,7 +31,10 @@ struct simpleParams
 /// A simple genetic architecture
 struct simpleArch
 {
-    simpleArch() : arch(GeneticArchitecture(simplepars.pars)) {}
+    simpleArch() : arch(GeneticArchitecture(simplepars.pars))
+    {
+        std::cout << "A new test architecture was created." << '\n';
+    }
     ~simpleArch() {}
 
     simpleParams simplepars;
@@ -95,9 +98,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEffectSizes)
     {
-        for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
-            std::cout << arch.getGenome().dominanceCoeffs[locus] << ' ';
-
         std::vector<double> exp { -0.76702, 0.428359, 0.72599, 0.14135, 0.323973, 0.553825, 0.414186, -0.854193,
                                   0.548988, 0.258618 };
         std::vector<double> real = arch.getGenome().effectSizes;
@@ -110,10 +110,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
         std::vector<double> exp { 0.106584, 0.0328968, 0.116384, 0.696944, 0.633289, 0.766541, 0.402709, 0.215222,
                                   0.907899, 0.683276 };
         std::vector<double> real = arch.getGenome().dominanceCoeffs;
-
-        std::cout << "\n";
-        for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
-            std::cout << real[locus] << ' ';
 
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
