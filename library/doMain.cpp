@@ -48,13 +48,6 @@ int doMain(const std::vector<std::string> &args)
         }
          */
 
-
-        const size_t nChromosomes = 3u;
-        const size_t nTraits = 3u;
-        const std::vector<size_t> nLociPerTrait = { 3u, 3u, 4u };
-        const std::vector<size_t> nEdgesPerTrait = { 1u, 0u, 2u };
-        const std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
-
         // Generate a genetic architecture
         // GeneticArchitecture arch = GeneticArchitecture(pars.getNChromosomes(), pars.getNTraits(),
         //        pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
