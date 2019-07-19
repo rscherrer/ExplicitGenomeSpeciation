@@ -251,7 +251,11 @@ Genome GeneticArchitecture::makeGenome() const noexcept
 
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, const size_t &nLoci,
-        const double &shape, const double &scale)
+        const double &shape, const double &scale) :
+    encodedTraits(std::vector<size_t> { 0u }),
+    locations(std::vector<double> { 0.0 }),
+    effectSizes(std::vector<double> { 0.0 }),
+    dominanceCoeffs(std::vector<double> { 0.0 })
 {
 
     // Randomly assign loci to the traits they encode
