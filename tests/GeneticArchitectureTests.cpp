@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
-        std::vector<size_t> exp { 1u, 2u, 0u, 1u, 2u, 2u, 2u, 0u, 0u, 1u };
+        std::vector<size_t> exp { 1u, 2u, 0u, 0u, 1u, 1u, 2u, 2u, 2u, 0u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
@@ -87,8 +87,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        std::vector<double> exp { 0.0245672, 0.121113, 0.462783, 0.485052, 0.498453, 0.557455, 0.668395, 0.792946,
-                                  0.85107, 0.986548 };
+        std::vector<double> exp { 0.207918, 0.234415, 0.254931, 0.256963, 0.311207, 0.358894, 0.409707, 0.521725, 0.590133, 0.802339 };
         std::vector<double> real = arch.getGenome().locations;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -96,8 +95,8 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEffectSizes)
     {
-        std::vector<double> exp { -0.76702, 0.428359, 0.72599, 0.14135, 0.323973, 0.553825, 0.414186, -0.854193,
-                                  0.548988, 0.258618 };
+
+        std::vector<double> exp { 0.950368, 0.283178, -0.468101, -0.337048, -0.948958, -0.154836, 0.128879, -0.816872, 0.0910685, 0.259251 };
         std::vector<double> real = arch.getGenome().effectSizes;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -109,8 +108,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
             std::cout << arch.getGenome().dominanceCoeffs[locus] << ' ';
         std::cout << '\n';
 
-        std::vector<double> exp { 0.48246, 0.269249, 0.483417, 0.147075, 0.4715, 0.951774, 0.738187, 0.618192,
-                                  0.617521, 0.0530536 };
+        std::vector<double> exp { 0.829453, 0.241587, 0.686339, 0.0740643, 0.442264, 0.132761, 0.54257, 0.737295, 0.510684, 0.681974 };
         std::vector<double> real = arch.getGenome().dominanceCoeffs;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
