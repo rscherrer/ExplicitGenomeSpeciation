@@ -13,6 +13,8 @@ QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++ -
 # Allow debug and release mode
 CONFIG += debug_and_release
 
+INCLUDEPATH += /usr/lib/x86_64-linux-gnu
+
 # In debug mode, turn on gcov, memcache and UBSAN
 CONFIG(debug, debug|release) {
 
