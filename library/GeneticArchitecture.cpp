@@ -252,17 +252,22 @@ Genome GeneticArchitecture::makeGenome() const noexcept
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, const size_t &nLoci,
         const double &shape, const double &scale) :
-    encodedTraits(std::vector<size_t> { 0u }),
+    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait)),
     locations(std::vector<double> { 0.0 }),
     effectSizes(std::vector<double> { 0.0 }),
     dominanceCoeffs(std::vector<double> { 0.0 })
 {
 
-    // Randomly assign loci to the traits they encode
-    setEncodedTraits(nTraits, nLociPerTrait);
+    locations.pop_back();
+    effectSizes.pop_back();
+    dominanceCoeffs.pop_back();
 
     // Sample locations, effect sizes and dominance coefficients across the genome
     setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
+
+    std::cout << nLoci << '\n';
+    std::cout << encodedTraits.size() << '\n';
+
 
     assert(encodedTraits.size() == nLoci);
     assert(effectSizes.size() == nLoci);
@@ -272,19 +277,23 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
 
 
 /// Function to randomly assign loci to their encoded traits
-void Genome::setEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait)
-noexcept
+std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait) const noexcept
 {
 
+    std::vector<size_t> traits;
+
     // Make an ordered vector of trait indices
-    for (size_t trait = 0u; trait < nTraits; ++trait)
+    for (size_t trait = 0u; trait < nTraits; ++trait) {
         for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus) {
-            encodedTraits.push_back(trait);
-            assert(encodedTraits.back() <= 2u);
+            traits.push_back(trait);
+            assert(traits.back() <= 2u);
         }
+    }
 
     // Shuffle encoded traits randomly
-    std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
+    std::shuffle(traits.begin(), traits.end(), rnd::rng);
+
+    return traits;
 
 }
 

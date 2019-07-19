@@ -32,7 +32,7 @@ struct Genome
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;
 
     // Member functions
-    void setEncodedTraits(const size_t&, const std::vector<size_t>&) noexcept;
+    std::vector<size_t> makeEncodedTraits(const size_t&, const std::vector<size_t>&) const noexcept;
     void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&, const double&);
 
 };
