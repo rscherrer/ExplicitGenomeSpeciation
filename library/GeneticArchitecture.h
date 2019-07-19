@@ -29,7 +29,7 @@ struct Genome
     std::vector<double> dominanceCoeffs;
 
     // A vector of locus epistatic interaction partners and weights
-    std::vector<std::vector<std::pair<size_t, double> > > interactions;
+    // std::vector<std::vector<std::pair<size_t, double> > > interactions;
 
     // Member functions
     void setEncodedTraits(const size_t&, const size_t&, const std::vector<size_t>&) noexcept;
