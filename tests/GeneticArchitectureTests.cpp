@@ -8,7 +8,7 @@
 struct simpleParams
 {
 
-    simpleParams()
+    simpleParams() : pars(ParameterSet())
     {
         pars.setNChromosomes(3u);
         pars.setNTraits(3u);
@@ -29,7 +29,10 @@ struct simpleParams
 /// A simple genetic architecture
 struct simpleArch
 {
-    simpleArch() : arch(GeneticArchitecture(simplepars.pars)) {}
+    simpleArch() :
+        simplepars(simpleParams()),
+        arch(GeneticArchitecture(simplepars.pars))
+    {}
     ~simpleArch() {}
 
     simpleParams simplepars;
