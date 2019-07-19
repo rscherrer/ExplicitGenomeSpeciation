@@ -1,4 +1,4 @@
-#include "GeneticArchitecture.h"
+#include "library/GeneticArchitecture.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <cassert>
