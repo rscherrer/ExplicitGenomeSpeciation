@@ -265,10 +265,6 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
     // Sample locations, effect sizes and dominance coefficients across the genome
     setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
 
-    std::cout << nLoci << '\n';
-    std::cout << encodedTraits.size() << '\n';
-
-
     assert(encodedTraits.size() == nLoci);
     assert(effectSizes.size() == nLoci);
     assert(dominanceCoeffs.size() == nLoci);
