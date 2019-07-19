@@ -105,7 +105,7 @@ std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
     growNetwork(network, nedges, degrees);
 
     // Relabel node indices after sorting with respect to degree
-    sortNetwork(network, degrees, nVertices);
+    sortNetwork(network, degrees);
 
     return network;
 }
@@ -181,8 +181,7 @@ bool edgeCompare(const Edge &x, const Edge &y) noexcept
 
 
 /// Function to sort the edges in the network by degree
-void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> &degrees,
-        const size_t &nVertices) const noexcept
+void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> &degrees) const noexcept
 {
 
     // Compute the ranks of all vertices with respect to their degrees
