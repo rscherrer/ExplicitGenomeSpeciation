@@ -83,7 +83,7 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nvertices, skew, nedges)),
+        map(makeNetwork(nedges)),
         weights(makeWeights(shape, scale))
 {}
 
@@ -112,7 +112,7 @@ std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
 
 
 /// Function to create a new network
-void Network::initializeNetwork(std::vector<Edge> &network, size_t &nEdges, std::vector<size_t> &degrees)
+void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges, std::vector<size_t> &degrees)
 const noexcept
 {
 
@@ -121,7 +121,7 @@ const noexcept
     // Create initial network
     network.emplace_back(Edge {0u, 1u});
     degrees[0u] = degrees[1u] = 1u;
-    --nEdges;
+    --nedges;
 
 }
 
