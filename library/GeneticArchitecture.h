@@ -70,8 +70,8 @@ class GeneticArchitecture {
 
 private:
 
-    size_t nChromosomes;
     size_t nTraits;
+    size_t nChromosomes;
     size_t nLoci;
     std::vector<size_t> nLociPerTrait;
     std::vector<size_t> nEdgesPerTrait;
