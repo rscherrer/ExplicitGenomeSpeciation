@@ -272,7 +272,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
 
 
 /// Function to randomly assign loci to their encoded traits
-void Genome::setEncodedTraits(const size_t &nTraits, const size_t &nLoci, const std::vector<size_t> &nLociPerTrait)
+void Genome::setEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait)
 noexcept
 {
 
