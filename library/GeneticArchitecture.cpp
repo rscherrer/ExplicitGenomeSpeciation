@@ -280,7 +280,6 @@ noexcept
     for (size_t trait = 0u; trait < nTraits; ++trait)
         for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus) {
             encodedTraits.push_back(trait);
-            assert(encodedTraits.back() >= 0u);
             assert(encodedTraits.back() <= 2u);
         }
 
