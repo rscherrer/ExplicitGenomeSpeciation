@@ -102,7 +102,7 @@ std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
     initializeNetwork(network, nedges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    growNetwork(network, nedges, degrees, nVertices, skewness);
+    growNetwork(network, nedges, degrees);
 
     // Relabel node indices after sorting with respect to degree
     sortNetwork(network, degrees, nVertices);
@@ -127,8 +127,7 @@ const noexcept
 
 
 /// Function to iteratively grow a network based on the preferential attachment algorithm
-void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
-        std::vector<size_t> &degrees) const noexcept
+void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vector<size_t> &degrees) const noexcept
 {
 
     // For each vertex in the network...
