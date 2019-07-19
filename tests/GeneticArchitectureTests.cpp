@@ -5,10 +5,10 @@
 
 
 /// Parameters for a simple genetic architecture
-struct simpleParams
+struct SimpleParams
 {
 
-    simpleParams() : pars(ParameterSet())
+    SimpleParams() : pars(ParameterSet())
     {
         pars.setNChromosomes(3u);
         pars.setNTraits(3u);
@@ -19,7 +19,7 @@ struct simpleParams
         pars.setSeed(42u);
 
     }
-    ~simpleParams() {}
+    ~SimpleParams() {}
 
     ParameterSet pars;
 
@@ -27,15 +27,15 @@ struct simpleParams
 
 
 /// A simple genetic architecture
-struct simpleArch
+struct SimpleArch
 {
-    simpleArch() :
-        simplepars(simpleParams()),
+    SimpleArch() :
+        simplepars(SimpleParams()),
         arch(GeneticArchitecture(simplepars.pars))
     {}
-    ~simpleArch() {}
+    ~SimpleArch() {}
 
-    simpleParams simplepars;
+    SimpleParams simplepars;
     GeneticArchitecture arch;
 };
 
@@ -53,7 +53,7 @@ void checkVectorOfDoubles(std::vector<double> exp, std::vector<double> real, con
 
 
 /// Battery of tests using the same default genetic architecture
-BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, simpleArch)
+BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
