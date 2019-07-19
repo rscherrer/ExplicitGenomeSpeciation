@@ -1,9 +1,9 @@
-#include "OutputFile.h"
-#include "ParameterSet.h"
-#include "GeneticArchitecture.h"
-#include "Population.h"
-#include "random.h"
-#include "doMain.h"
+//#include "OutputFile.h"
+#include "library/ParameterSet.h"
+#include "library/GeneticArchitecture.h"
+#include "library/Population.h"
+#include "library/random.h"
+#include "library/doMain.h"
 #include <cassert>
 #include <iostream>
 #include <chrono>

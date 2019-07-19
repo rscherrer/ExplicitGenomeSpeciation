@@ -259,7 +259,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
 {
 
     // Randomly assign loci to the traits they encode
-    setEncodedTraits(nTraits, nLoci, nLociPerTrait);
+    setEncodedTraits(nTraits, nLociPerTrait);
 
     // Sample locations, effect sizes and dominance coefficients across the genome
     setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
