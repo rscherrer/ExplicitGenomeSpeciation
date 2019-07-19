@@ -44,16 +44,16 @@ struct Network
 
     Network(const size_t&, const size_t&, const double&, const double&, const double&);
 
+    // Number of vertices, edges and skewness
+    size_t nVertices;
+    size_t nEdges;
+    double skewness;
+
     // A map of interacting genes
     std::vector<Edge> map;
 
     // A vector of interaction weights
     std::vector<double> weights;
-
-    // Number of vertices, edges and skewness
-    size_t nVertices;
-    size_t nEdges;
-    double skewness;
 
     // Functions to make the network
     std::vector<double> makeWeights(const double&, const double&) const noexcept;
