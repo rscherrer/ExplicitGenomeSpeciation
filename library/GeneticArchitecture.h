@@ -59,7 +59,7 @@ struct Network
     std::vector<double> makeWeights(const double&, const double&) const noexcept;
     std::vector<Edge> makeNetwork(size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
-    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, const size_t&, const double&) const noexcept;
+    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
     void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&, const size_t&) const noexcept;
 
 };

@@ -127,43 +127,43 @@ const noexcept
 
 
 /// Function to iteratively grow a network based on the preferential attachment algorithm
-void Network::growNetwork(std::vector<Edge> &network, size_t &nEdges,
-        std::vector<size_t> &degrees, const size_t &nVertices, const double &skewness) const noexcept
+void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
+        std::vector<size_t> &degrees) const noexcept
 {
 
     // For each vertex in the network...
-    for (size_t vertex = 2u; vertex < nVertices && nEdges > 0u; ++vertex) {
+    for (size_t vertex = 2u; vertex < nVertices && nedges > 0u; ++vertex) {
 
         // Assign probability weights to all potential partners
-        std::vector<double> weights(vertex);
+        std::vector<double> probs(vertex);
 
         for (size_t partner = 0u; partner < vertex; ++partner) {
-            weights[partner] = pow(degrees[partner], skewness);
+            probs[partner] = pow(degrees[partner], skewness);
         }
 
         // Sample the number of attachments of the current vertex
-        size_t nAttachments = (vertex == nVertices - 1u ? nEdges : rnd::binomial(nEdges, 1.0 / (nVertices - vertex)));
+        size_t nAttachments = (vertex == nVertices - 1u ? nedges : rnd::binomial(nedges, 1.0 / (nVertices - vertex)));
 
         // For each new attachment...
         while (nAttachments) {
 
             // Compute the sum of weights, quit the loop if too small
-            double sumWeights = 0.0;
+            double sumProbs = 0.0;
             for (size_t partner = 0u; partner < vertex; ++partner)
-                sumWeights += weights[partner];
-            if (sumWeights < 1.0) break;
+                sumProbs += probs[partner];
+            if (sumProbs < 1.0) break;
 
             // Sample the new partner without replacement
-            std::discrete_distribution<size_t> attachmentProbs(weights.begin(), weights.end());
+            std::discrete_distribution<size_t> attachmentProbs(probs.begin(), probs.end());
             size_t partner = attachmentProbs(rnd::rng);
 
             // Add the new partner to the network
             network.emplace_back(Edge {vertex, partner});
-            weights[partner] = 0.0;
+            probs[partner] = 0.0;
             ++degrees[partner];
             ++degrees[vertex];
             --nAttachments;
-            --nEdges;
+            --nedges;
         }
     }
 }
