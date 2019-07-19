@@ -89,22 +89,20 @@ Network::Network(const size_t &nvertices, const size_t &nedges, const double &sk
 
 
 /// Function to make a new interaction network based on the preferential attachment algorithm
-std::vector<Edge> Network::makeNetwork(const size_t &nVertices, const double &skewness,
-        size_t nEdges) const noexcept
+std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
 {
     std::vector<Edge> network;
 
     assert(nVertices > 1u);
-    assert(skewness > 0.0);
 
-    if (nEdges == 0u) return network;
+    if (nedges == 0u) return network;
 
     // Start the network
     std::vector<size_t> degrees(nVertices, 0u);
-    initializeNetwork(network, nEdges, degrees);
+    initializeNetwork(network, nedges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    growNetwork(network, nEdges, degrees, nVertices, skewness);
+    growNetwork(network, nedges, degrees, nVertices, skewness);
 
     // Relabel node indices after sorting with respect to degree
     sortNetwork(network, degrees, nVertices);
