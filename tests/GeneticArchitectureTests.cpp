@@ -1,4 +1,5 @@
 #include "library/GeneticArchitecture.h"
+#include "library/random.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <cassert>
@@ -17,7 +18,7 @@ struct SimpleParams
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
-
+        rnd::rng.seed(pars.getSeed());
     }
     ~SimpleParams() {}
 
@@ -79,7 +80,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
-        std::vector<size_t> exp { 1u, 2u, 0u, 0u, 1u, 1u, 2u, 2u, 2u, 0u };
+        std::vector<size_t> exp { 2u, 2u, 0u, 2u, 2u, 1u, 1u, 0u, 0u, 1u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(), exp.end());
@@ -87,7 +88,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        std::vector<double> exp { 0.207918, 0.234415, 0.254931, 0.256963, 0.311207, 0.358894, 0.409707, 0.521725, 0.590133, 0.802339 };
+        std::vector<double> exp { 0.0645945, 0.138685, 0.402559, 0.416049, 0.443436, 0.444609, 0.493076, 0.686054, 0.735338, 0.773019 };
         std::vector<double> real = arch.getGenome().locations;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -95,8 +96,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEffectSizes)
     {
-
-        std::vector<double> exp { 0.950368, 0.283178, -0.468101, -0.337048, -0.948958, -0.154836, 0.128879, -0.816872, 0.0910685, 0.259251 };
+        std::vector<double> exp { -0.151555, 0.337905, -0.280014, -0.716991, -0.590573, -0.192771, 0.973196, 0.328876, 0.901905, 0.125417 };
         std::vector<double> real = arch.getGenome().effectSizes;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
@@ -104,11 +104,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkDominanceCoeffs)
     {
-        for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
-            std::cout << arch.getGenome().dominanceCoeffs[locus] << ' ';
-        std::cout << '\n';
-
-        std::vector<double> exp { 0.829453, 0.241587, 0.686339, 0.0740643, 0.442264, 0.132761, 0.54257, 0.737295, 0.510684, 0.681974 };
+        std::vector<double> exp { 0.997809, 0.0533615, 0.269254, 0.0368082, 0.0132147, 0.555865, 0.822442, 0.958672, 0.0919276, 0.120843 };
         std::vector<double> real = arch.getGenome().dominanceCoeffs;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
