@@ -18,7 +18,7 @@ struct SimpleParams
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
-        //rnd::rng.seed(pars.getSeed());
+        rnd::rng.seed(pars.getSeed()); // resetting the seed works but not on Travis...
     }
     ~SimpleParams() {}
 
@@ -80,11 +80,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
-
-        for (size_t i = 0u; i < simplepars.pars.getNLoci(); ++i)
-            std::cout << arch.getGenome().encodedTraits[i];
-        std::cout << '\n';
-
         std::vector<size_t> exp { 2u, 2u, 0u, 2u, 2u, 1u, 1u, 0u, 0u, 1u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());
@@ -93,10 +88,6 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        for (size_t i = 0u; i < simplepars.pars.getNLoci(); ++i)
-            std::cout << arch.getGenome().encodedTraits[i];
-        std::cout << '\n';
-
         std::vector<double> exp { 0.0645945, 0.138685, 0.402559, 0.416049, 0.443436, 0.444609, 0.493076, 0.686054, 0.735338, 0.773019 };
         std::vector<double> real = arch.getGenome().locations;
         assert(exp.size() == real.size());
