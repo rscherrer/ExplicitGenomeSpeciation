@@ -80,6 +80,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
+        rnd::rng.seed(42u);
         std::vector<size_t> exp { 2u, 2u, 0u, 2u, 2u, 1u, 1u, 0u, 0u, 1u };
         std::vector<size_t> real = arch.getGenome().encodedTraits;
         assert(exp.size() == real.size());

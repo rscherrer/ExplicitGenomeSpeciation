@@ -1,5 +1,5 @@
 # Files
-include(setup.pri)
+include(program.pri)
 SOURCES += tests/ParameterSetTests.cpp
 SOURCES += tests/GeneticArchitectureTests.cpp
 
