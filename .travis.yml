@@ -34,23 +34,23 @@ install:
 script: 
 
  # Build and run the tests
- - qmake ci_setup/setupTest.pro
+ - qmake ci_setup/program_test.pro
  - make --silent debug
- - ./setupTest
+ - ./program_test
   
  # helgrind
- - valgrind --tool=helgrind --log-file=helgrind.log -v ./setupTest
+ - valgrind --tool=helgrind --log-file=helgrind.log -v ./program_test
  - cat helgrind.log
   
  # memcheck
- - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./setupTest
+ - valgrind --leak-check=full -v --show-reachable=yes --log-file=memcheck.log ./program_test
  - cat memcheck.log
   
  # Build and run and profile normal program
- - qmake ci_setup/setup.pro
+ - qmake ci_setup/program.pro
  - make --silent release
- - time ./setup
- - gprof ./setup > gprof.log
+ - time ./program
+ - gprof ./program > gprof.log
  - head gprof.log -n 1000
   
  # Get code coverage
