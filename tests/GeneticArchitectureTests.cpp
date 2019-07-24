@@ -1,5 +1,5 @@
 #include "library/GeneticArchitecture.h"
-#include "library/random.h"
+#include "library/Random.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <cassert>
@@ -18,7 +18,6 @@ struct SimpleParams
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
-        rnd::rng.seed(pars.getSeed());
     }
     ~SimpleParams() {}
 
@@ -32,11 +31,13 @@ struct SimpleArch
 {
     SimpleArch() :
         simplepars(SimpleParams()),
-        arch(GeneticArchitecture(simplepars.pars))
+        rnd(Random(simplepars.pars.getSeed())),
+        arch(GeneticArchitecture(simplepars.pars, rnd))
     {}
     ~SimpleArch() {}
 
     SimpleParams simplepars;
+    Random rnd;
     GeneticArchitecture arch;
 };
 

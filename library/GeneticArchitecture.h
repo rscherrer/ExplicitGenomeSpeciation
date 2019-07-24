@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
 
 #include "ParameterSet.h"
+#include "Random.h"
 #include <vector>
 #include <list>
 
@@ -14,7 +15,8 @@ typedef std::pair<size_t, size_t> Edge;
 struct Genome
 {
 
-    Genome(const size_t&, const std::vector<size_t>&, const size_t&, const double&, const double&);
+    Genome(const size_t&, const std::vector<size_t>&, const size_t&, const double&, const double&,
+           Random&);
 
     // A vector of locus encoded traits
     std::vector<size_t> encodedTraits;
@@ -32,8 +34,10 @@ struct Genome
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;
 
     // Member functions
-    std::vector<size_t> makeEncodedTraits(const size_t&, const std::vector<size_t>&) const noexcept;
-    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&, const double&);
+    std::vector<size_t> makeEncodedTraits(const size_t&, const std::vector<size_t>&,
+                                          Random&) const noexcept;
+    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&, const double&,
+                                             Random&);
 
 };
 
@@ -42,7 +46,8 @@ struct Genome
 struct Network
 {
 
-    Network(const size_t&, const size_t&, const double&, const double&, const double&);
+    Network(const size_t&, const size_t&, const double&, const double&, const double&,
+            Random&);
 
     // Number of vertices, edges and skewness
     size_t nVertices;
@@ -56,10 +61,10 @@ struct Network
     std::vector<double> weights;
 
     // Functions to make the network
-    std::vector<double> makeWeights(const double&, const double&) const noexcept;
-    std::vector<Edge> makeNetwork(size_t) const noexcept;
+    std::vector<double> makeWeights(const double&, const double&, Random&) const noexcept;
+    std::vector<Edge> makeNetwork(size_t, Random&) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
-    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&) const noexcept;
+    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, Random&) const noexcept;
     void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&) const noexcept;
 
 };
@@ -95,13 +100,13 @@ private:
 
     /// Makers
     std::vector<double> makeChromosomeSizes() const noexcept;
-    std::vector<Network> makeTraitNetworks() const noexcept;
-    Genome makeGenome() const noexcept;
+    std::vector<Network> makeTraitNetworks(Random&) const noexcept;
+    Genome makeGenome(Random&) const noexcept;
 
 public:
 
     /// Constructor
-    GeneticArchitecture(const ParameterSet&);
+    GeneticArchitecture(const ParameterSet&, Random&);
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }

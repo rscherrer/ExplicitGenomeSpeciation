@@ -2,6 +2,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Population.h"
+#include "Random.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -25,7 +26,7 @@ int doMain(const std::vector<std::string> &args)
         ParameterSet pars;
 
         // Create and seed a random number generator
-        Random rnd;
+        Random rnd = Random(42u);
 
         /*
         // Update parameters from a parameter file if needed
@@ -56,7 +57,7 @@ int doMain(const std::vector<std::string> &args)
         //        pars.getNLociPerTrait(), pars.getNEdgesPerTrait(), pars.getSkewnesses());
 
 
-        GeneticArchitecture arch = GeneticArchitecture(pars);
+        GeneticArchitecture arch = GeneticArchitecture(pars, rnd);
 
         std::cout << "Architecture created\n";
 

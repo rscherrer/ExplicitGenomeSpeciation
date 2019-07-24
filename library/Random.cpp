@@ -1,5 +1,15 @@
 #include "Random.h"
-#include <chrono>
+
+
+/// Function to make a random number generator
+std::mt19937_64 Random::makeRandomGenerator(const size_t &seed)
+{
+    std::mt19937_64 generator;
+
+    generator.seed(seed);
+
+    return generator;
+}
 
 
 /// Function to sample a binary event

@@ -12,13 +12,8 @@
 typedef std::pair<size_t, size_t> Edge;
 
 
-// Note:
-// How about passing parameters to the genetic architecture constructor, so we don't have to pass each argument
-// one by one?
-
-
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
+GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars, Random &rnd) :
     nTraits(pars.getNTraits()),
     nChromosomes(pars.getNChromosomes()),
     nLoci(pars.getNLoci()),
@@ -30,8 +25,8 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomeSizes()),
-    traitNetworks(makeTraitNetworks()),
-    genome(makeGenome())
+    traitNetworks(makeTraitNetworks(rnd)),
+    genome(makeGenome(rnd))
 {}
 
 
@@ -51,7 +46,7 @@ std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeTraitNetworks() const noexcept
+std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const noexcept
 {
     std::vector<Network> networks;
 
@@ -61,7 +56,7 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks() const noexcept
 
         // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
         Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait], skewnesses[trait],
-                interactionWeightShape, interactionWeightShape);
+                interactionWeightShape, interactionWeightShape, rnd);
 
         networks.push_back(network);
     }
@@ -79,17 +74,17 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks() const noexcept
 
 /// Network constructor
 Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew, const double &shape,
-        const double &scale) :
+        const double &scale, Random &rnd) :
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nedges)),
-        weights(makeWeights(shape, scale))
+        map(makeNetwork(nedges, rnd)),
+        weights(makeWeights(shape, scale, rnd))
 {}
 
 
 /// Function to make a new interaction network based on the preferential attachment algorithm
-std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
+std::vector<Edge> Network::makeNetwork(size_t nedges, Random &rnd) const noexcept
 {
     std::vector<Edge> network;
 
@@ -102,7 +97,7 @@ std::vector<Edge> Network::makeNetwork(size_t nedges) const noexcept
     initializeNetwork(network, nedges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    growNetwork(network, nedges, degrees);
+    growNetwork(network, nedges, degrees, rnd);
 
     // Relabel node indices after sorting with respect to degree
     sortNetwork(network, degrees);
@@ -127,7 +122,8 @@ const noexcept
 
 
 /// Function to iteratively grow a network based on the preferential attachment algorithm
-void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vector<size_t> &degrees) const noexcept
+void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vector<size_t> &degrees,
+                          Random &rnd) const noexcept
 {
 
     // For each vertex in the network...
@@ -213,7 +209,7 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 
 
 /// Function to sample interaction weights across edges of a gene regulatory network
-std::vector<double> Network::makeWeights(const double &shape, const double &scale) const noexcept
+std::vector<double> Network::makeWeights(const double &shape, const double &scale, Random &rnd) const noexcept
 {
     std::vector<double> interweights;
     double sqrtsumsqWeights = 0.0;
@@ -242,17 +238,17 @@ std::vector<double> Network::makeWeights(const double &shape, const double &scal
 
 
 /// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome() const noexcept
+Genome GeneticArchitecture::makeGenome(Random &rnd) const noexcept
 {
-    const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape, effectSizeScale);
+    const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape, effectSizeScale, rnd);
     return gen;
 }
 
 
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, const size_t &nLoci,
-        const double &shape, const double &scale) :
-    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait)),
+        const double &shape, const double &scale, Random &rnd) :
+    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait, rnd)),
     locations(std::vector<double> { 0.0 }),
     effectSizes(std::vector<double> { 0.0 }),
     dominanceCoeffs(std::vector<double> { 0.0 })
@@ -263,7 +259,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
     dominanceCoeffs.pop_back();
 
     // Sample locations, effect sizes and dominance coefficients across the genome
-    setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
+    setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale, rnd);
 
     assert(encodedTraits.size() == nLoci);
     assert(effectSizes.size() == nLoci);
@@ -273,7 +269,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
 
 
 /// Function to randomly assign loci to their encoded traits
-std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait) const noexcept
+std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, Random &rnd) const noexcept
 {
 
     std::vector<size_t> traits;
@@ -296,7 +292,7 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::
 
 /// Function to sample locations, effect sizes and dominance across the genome
 void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const size_t &nLoci, const double &shape,
-        const double &scale)
+        const double &scale, Random &rnd)
 {
 
     // Prepare squared roots of sums of squared effect sizes and dominance coefficients
@@ -308,7 +304,7 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const si
     {
 
         // Locations are sampled uniformly
-        locations.push_back(rnd.uniform());
+        locations.push_back(rnd.uniform(1.0));
 
         assert(locations.back() > 0.0);
         assert(locations.back() < 1.0);

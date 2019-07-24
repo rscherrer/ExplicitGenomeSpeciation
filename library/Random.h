@@ -1,14 +1,26 @@
 #ifndef EXPLICITGENOMESPECIATION_RANDOM_H
 #define EXPLICITGENOMESPECIATION_RANDOM_H
 
+
 #include <random>
 #include <vector>
+
 
 struct Random
 {
 
+    /// Constructor
+    Random(const size_t &seed) : rng(makeRandomGenerator(seed)) {}
+    ~Random() {}
+
+
     /// Random number generator
     std::mt19937_64 rng;
+
+
+    /// Makers
+    std::mt19937_64 makeRandomGenerator(const size_t&);
+
 
     /// Functions to generate random numbers
     bool bernoulli(const double&);
