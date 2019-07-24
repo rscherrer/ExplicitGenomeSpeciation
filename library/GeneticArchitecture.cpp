@@ -1,6 +1,6 @@
 #include "GeneticArchitecture.h"
 #include "ParameterSet.h"
-#include "random.h"
+#include "Random.h"
 #include "utils.h"
 #include <vector>
 #include <iostream>
@@ -141,7 +141,7 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vecto
         }
 
         // Sample the number of attachments of the current vertex
-        size_t nAttachments = (vertex == nVertices - 1u ? nedges : rnd::binomial(nedges, 1.0 / (nVertices - vertex)));
+        size_t nAttachments = (vertex == nVertices - 1u ? nedges : rnd.binomial(nedges, 1.0 / (nVertices - vertex)));
 
         // For each new attachment...
         while (nAttachments) {
@@ -154,7 +154,7 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vecto
 
             // Sample the new partner without replacement
             std::discrete_distribution<size_t> attachmentProbs(probs.begin(), probs.end());
-            size_t partner = attachmentProbs(rnd::rng);
+            size_t partner = attachmentProbs(rnd.rng);
 
             // Add the new partner to the network
             network.emplace_back(Edge {vertex, partner});
@@ -222,8 +222,8 @@ std::vector<double> Network::makeWeights(const double &shape, const double &scal
     for (size_t edge = 0u; edge < nEdges; ++edge) {
 
         // Sample the weight from a two-sided Gamma distribution
-        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
-        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
+        double weight = std::gamma_distribution<double>(shape, scale)(rnd.rng);
+        weight = rnd.bernoulli(0.5) ? weight * -1.0 : weight;
         interweights.push_back(weight);
 
         // Accumulate square rooted sum of squared interaction weights for later normalization
@@ -287,7 +287,7 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::
     }
 
     // Shuffle encoded traits randomly
-    std::shuffle(traits.begin(), traits.end(), rnd::rng);
+    std::shuffle(traits.begin(), traits.end(), rnd.rng);
 
     return traits;
 
@@ -308,21 +308,21 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const si
     {
 
         // Locations are sampled uniformly
-        locations.push_back(rnd::uniform());
+        locations.push_back(rnd.uniform());
 
         assert(locations.back() > 0.0);
         assert(locations.back() < 1.0);
 
         // Effect sizes are sampled from a two-sided Gamma distribution
-        double effectsize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
-        effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
+        double effectsize = std::gamma_distribution<double>(shape, scale)(rnd.rng);
+        effectsize = rnd.bernoulli(0.5) ? effectsize * -1.0 : effectsize;
         effectSizes.push_back(effectsize);
 
         // Squared effect sizes are accumulated for normalizing
         sqrtsumsqEffectSizes[encodedTraits[locus]] += sqr(effectsize);
 
         // Dominance coefficients are sampled from a one-sided normal distribution
-        const double dominance = fabs(rnd::normal(0.0, 1.0));
+        const double dominance = fabs(rnd.normal(0.0, 1.0));
         assert(dominance > 0.0);
         dominanceCoeffs.push_back(dominance);
 
@@ -447,7 +447,7 @@ void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges, s
         for (size_t j = 0u; j < i; ++j) {
             w[j] = pow(degrees[j], skewness);
         }
-        size_t ki = (i == nVertices - 1u ? nEdges : rnd::binomial(nEdges, 1.0 / (nVertices - i)));
+        size_t ki = (i == nVertices - 1u ? nEdges : rnd.binomial(nEdges, 1.0 / (nVertices - i)));
 
         while (ki) {
 
@@ -460,7 +460,7 @@ void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges, s
                 break;
             }
             std::discrete_distribution<size_t> prob(w.begin(), w.end());
-            size_t j = prob(rnd::rng);
+            size_t j = prob(rnd.rng);
             edges.emplace_back(Edge {i, j});
             w[j] = 0.0;
             ++degrees[j];
@@ -581,7 +581,7 @@ std::vector<double> GeneticArchitecture::getGenomicLocations(const size_t &nLoci
 
     // For every gene sample a uniform location
     for (size_t locus = 0u; locus < nLoci; ++locus)
-        genomicLocations.push_back(rnd::uniform());
+        genomicLocations.push_back(rnd.uniform());
 
     // Sort gene locations by increasing order
     std::sort(genomicLocations.begin(), genomicLocations.end());
@@ -598,7 +598,7 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 
     // For every gene sample a uniform location
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
-        geneLocations.push_back(rnd::uniform());
+        geneLocations.push_back(rnd.uniform());
     }
 
     // Sort gene locations by increasing order
@@ -632,8 +632,8 @@ std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, con
     for (size_t locus = 0u; locus < nLoci; ++locus) {
 
         // For each one sample an effect size from a bilateral Gamma distribution
-        double effectSize = std::gamma_distribution<double>(shape, scale)(rnd::rng);
-        effectSize = rnd::bernoulli(0.5) ? effectSize * -1.0 : effectSize;
+        double effectSize = std::gamma_distribution<double>(shape, scale)(rnd.rng);
+        effectSize = rnd.bernoulli(0.5) ? effectSize * -1.0 : effectSize;
         effectSizes.push_back(effectSize);
 
         // Accumulate the sums of squared effect sizes for each trait separately
@@ -663,7 +663,7 @@ std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci,
     for (size_t locus = 0u; locus < nLoci; ++locus) {
 
         // For each one sample a dominance coefficient from a unilateral normal distribution
-        const double dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
+        const double dominanceCoeff = fabs(rnd.normal(0.0, 1.0));
         dominanceCoeffs.push_back(dominanceCoeff);
 
         // Accumulate the sums of squared dominance coefficients for each trait
@@ -695,7 +695,7 @@ std::vector<size_t> GeneticArchitecture::getEncodedTraits(const size_t &nTraits,
     }
 
     // Shuffle the vector of encoded traits
-    std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd::rng);
+    std::shuffle(encodedTraits.begin(), encodedTraits.end(), rnd.rng);
 
     return encodedTraits;
 }
@@ -711,7 +711,7 @@ void GeneticArchitecture::assignPhenotypes(const ParameterSet &parameters)
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
         loci.push_back(i);
     }
-    std::shuffle(loci.begin(), loci.end(), rnd::rng);
+    std::shuffle(loci.begin(), loci.end(), rnd.rng);
 
     // For each phenotypic trait
     for (size_t trait = 0u, locus = 0u; trait < parameters.nTraits; ++trait) {
@@ -741,8 +741,8 @@ void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
         for (size_t i : networkVertices[crctr]) {
 
             // Sample additive effect size from a bilateral Gamma distribution
-            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.shapeEffectSizes, parameters.scaleEffectSizes)(rnd::rng);
-            if (rnd::bernoulli(0.5)) {
+            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.shapeEffectSizes, parameters.scaleEffectSizes)(rnd.rng);
+            if (rnd.bernoulli(0.5)) {
                 locusConstants[i].effectSize *= -1.0;
             }
             sumsqAdditive += sqr(locusConstants[i].effectSize);
@@ -766,7 +766,7 @@ void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
         for (size_t i : networkVertices[crctr]) {
 
             // Sample dominance coefficient
-            locusConstants[i].dominanceCoeff = fabs(rnd::normal(0.0, 1.0));
+            locusConstants[i].dominanceCoeff = fabs(rnd.normal(0.0, 1.0));
             sumsqDominance += sqr(locusConstants[i].dominanceCoeff);
         }
 
@@ -799,8 +799,8 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
         }
 
         // Sample interaction weight
-        double interactionWeight = std::gamma_distribution<double>(parameters.shapeInteractionWeights, parameters.scaleInteractionWeights)(rnd::rng);
-        if (rnd::bernoulli(0.5)) {
+        double interactionWeight = std::gamma_distribution<double>(parameters.shapeInteractionWeights, parameters.scaleInteractionWeights)(rnd.rng);
+        if (rnd.bernoulli(0.5)) {
             interactionWeight *= -1.0;
         }
 

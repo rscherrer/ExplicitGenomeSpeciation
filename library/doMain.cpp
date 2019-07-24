@@ -24,6 +24,9 @@ int doMain(const std::vector<std::string> &args)
         // Create a default parameter set
         ParameterSet pars;
 
+        // Create and seed a random number generator
+        Random rnd;
+
         /*
         // Update parameters from a parameter file if needed
         if (args.size() == 2u)

@@ -3,7 +3,7 @@
 
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
-#include "random.h"
+#include "Random.h"
 #include <list> // Maybe not needed anymore, individuals was a list --- to be able to sort it?
 
 // Forward declaration

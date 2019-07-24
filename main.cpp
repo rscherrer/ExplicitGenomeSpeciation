@@ -2,7 +2,7 @@
 #include "library/ParameterSet.h"
 #include "library/GeneticArchitecture.h"
 #include "library/Population.h"
-#include "library/random.h"
+#include "library/Random.h"
 #include "library/doMain.h"
 #include <cassert>
 #include <iostream>
