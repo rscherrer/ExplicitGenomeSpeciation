@@ -3,7 +3,7 @@
 
 namespace rnd
 {
-	std::mt19937_64 rng;
+    std::mt19937_64 rng;
 
 	bool bernoulli(const double p)
 	{
