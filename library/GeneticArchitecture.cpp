@@ -54,7 +54,8 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const n
     for (size_t trait = 0u; trait < nTraits; ++trait)
     {
 
-        // Make a network map (a vector of edges) for the current trait using the preferential attachment algorithm
+        // Make a network map (a vector of edges) for the current trait using the preferential
+        // attachment algorithm
         Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait], skewnesses[trait],
                 interactionWeightShape, interactionWeightShape, rnd);
 
@@ -73,8 +74,8 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const n
 
 
 /// Network constructor
-Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew, const double &shape,
-        const double &scale, Random &rnd) :
+Network::Network(const size_t &nvertices, const size_t &nedges, const double &skew,
+                 const double &shape, const double &scale, Random &rnd) :
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
@@ -107,8 +108,8 @@ std::vector<Edge> Network::makeNetwork(size_t nedges, Random &rnd) const noexcep
 
 
 /// Function to create a new network
-void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges, std::vector<size_t> &degrees)
-const noexcept
+void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges,
+                                std::vector<size_t> &degrees) const noexcept
 {
 
     if (!network.empty()) network.clear();
@@ -137,7 +138,9 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges, std::vecto
         }
 
         // Sample the number of attachments of the current vertex
-        size_t nAttachments = (vertex == nVertices - 1u ? nedges : rnd.binomial(nedges, 1.0 / (nVertices - vertex)));
+        size_t nAttachments =
+                (vertex == nVertices - 1u ?
+                     nedges : rnd.binomial(nedges, 1.0 / (nVertices - vertex)));
 
         // For each new attachment...
         while (nAttachments) {
@@ -177,7 +180,8 @@ bool edgeCompare(const Edge &x, const Edge &y) noexcept
 
 
 /// Function to sort the edges in the network by degree
-void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> &degrees) const noexcept
+void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> &degrees)
+const noexcept
 {
 
     // Compute the ranks of all vertices with respect to their degrees
@@ -209,7 +213,8 @@ void Network::sortNetwork(std::vector<Edge> &network, const std::vector<size_t> 
 
 
 /// Function to sample interaction weights across edges of a gene regulatory network
-std::vector<double> Network::makeWeights(const double &shape, const double &scale, Random &rnd) const noexcept
+std::vector<double> Network::makeWeights(const double &shape, const double &scale, Random &rnd)
+const noexcept
 {
     std::vector<double> interweights;
     double sqrtsumsqWeights = 0.0;
@@ -269,7 +274,9 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, 
 
 
 /// Function to randomly assign loci to their encoded traits
-std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait, Random &rnd) const noexcept
+std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits,
+                                              const std::vector<size_t> &nLociPerTrait,
+                                              Random &rnd) const noexcept
 {
 
     std::vector<size_t> traits;
@@ -291,8 +298,9 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits, const std::
 
 
 /// Function to sample locations, effect sizes and dominance across the genome
-void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const size_t &nLoci, const double &shape,
-        const double &scale, Random &rnd)
+void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits, const size_t &nLoci,
+                                                 const double &shape, const double &scale,
+                                                 Random &rnd)
 {
 
     // Prepare squared roots of sums of squared effect sizes and dominance coefficients
