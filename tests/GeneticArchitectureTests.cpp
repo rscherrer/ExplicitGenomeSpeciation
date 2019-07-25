@@ -79,6 +79,8 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].second, 2u);
     }
 
+    //
+
     /*
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
