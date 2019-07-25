@@ -27,8 +27,10 @@ public:
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
     void setNTraits(const size_t &ntraits) { nTraits = ntraits; }
-    void setNLociPerTrait(const std::vector<size_t> &locipertrait) { nLociPerTrait = locipertrait; }
-    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) { nEdgesPerTrait = edgespertrait; }
+    void setNLociPerTrait(const std::vector<size_t> &locipertrait) {
+        nLociPerTrait = locipertrait; }
+    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) {
+        nEdgesPerTrait = edgespertrait; }
     void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
@@ -110,7 +112,8 @@ private:
     std::vector<double> scaleD {0.0, 0.0, 0.0};
     std::vector<double> scaleI {0.0, 0.0, 0.0};
     std::vector<double> scaleE {0.0, 0.0, 0.0};
-    std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
+    std::vector<double> locusVarE { scaleE[0u] / nEcoLoci, scaleE[1u] / nMatLoci,
+                scaleE[2u] / nNtrLoci };
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
     double interactionWeightShape = 5.0;

@@ -36,7 +36,8 @@ struct Genome
     // Member functions
     std::vector<size_t> makeEncodedTraits(const size_t&, const std::vector<size_t>&,
                                           Random&) const noexcept;
-    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&, const double&,
+    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&, const double&,
+                                             const double&,
                                              Random&);
 
 };

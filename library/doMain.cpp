@@ -80,14 +80,16 @@ int doMain(const std::vector<std::string> &args)
             // Store the newly created genetic architecture
             geneticArchitecture.storeGeneticArchitecture(parameters);
 
-            std::clog << "New genetic architecture saved as " << parameters.architectureFileName << '\n';
+            std::clog << "New genetic architecture saved as " << parameters.architectureFileName
+            << '\n';
 
         }
 
         else
         {
 
-            std::clog << "Loading a genetic architecture from file " << parameters.architectureFileName << '\n';
+            std::clog << "Loading a genetic architecture from file " <<
+            parameters.architectureFileName << '\n';
 
             // Otherwise load the genetic architecture from a genetic architecture file
             geneticArchitecture.loadGeneticArchitecture(parameters);
@@ -126,8 +128,10 @@ int doMain(const std::vector<std::string> &args)
                     population->endBurnin();
                 }
 
-                // Open question: is is better to keep all individuals in a single vector and order them by habitat,
-                // Or have two separate vectors, subpopulations 1 and 2, members of class Population?
+                // Open question: is is better to keep all individuals in a single vector
+                // and order them by habitat,
+                // Or have two separate vectors, subpopulations 1 and 2, members of class
+                // Population?
 
                 population->dispersal(parameters);
                 std::clog << " Dispersal\n";
@@ -175,7 +179,8 @@ int doMain(const std::vector<std::string> &args)
 
             }
 
-            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
+            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers,
+            // arcFile, datFile, population, genome);
             // if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
         */

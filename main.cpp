@@ -11,7 +11,8 @@
 #include <string>
 
 
-/// Program to run an individual-based simulation of a speciation event with explicit genomic features
+/// Program to run an individual-based simulation of a speciation event with explicit genomic
+/// features
 int main(int argc, char * argv[])
 {
 
@@ -187,7 +188,8 @@ int main(int argc, char * argv[])
 
             }
 
-            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers, arcFile, datFile, population, genome);
+            // if(t % parameters.tGetDat == 0u) decomposeVariance(t, parameters, bufferPointers,
+            // arcFile, datFile, population, genome);
             // if(t % parameters.tSavDat == 0u) analyseNetwork(t, parameters, population, genome);
         }
 

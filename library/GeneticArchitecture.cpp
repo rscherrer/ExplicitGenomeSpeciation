@@ -385,7 +385,8 @@ std::vector<std::vector<size_t> > makeTraitUnderlyingLoci()
 void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
 {
 
-    std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions, parameters.nNtrInteractions};
+    std::vector<size_t> nEdges {parameters.nEcoInteractions, parameters.nMatInteractions,
+    parameters.nNtrInteractions};
     std::vector<size_t> nVertices {parameters.nEcoLoci, parameters.nMatLoci, parameters.nNtrLoci};
 
     // For each phenotypic trait
@@ -403,11 +404,13 @@ void GeneticArchitecture::makeRegulatoryNetworks(const ParameterSet &parameters)
 
 }
 
-void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges, const double &skewness)
+void GeneticArchitecture::preferentialAttachmentNetwork(const size_t &nVertices, size_t &nEdges,
+const double &skewness)
 {
 
     if (!(nVertices > 1u && skewness > 0.0)) {
-        throw std::runtime_error("Invalid parameters in GeneticArchitecture::preferentialAttachmentNetwork()");
+        throw std::runtime_error("Invalid parameters in
+GeneticArchitecture::preferentialAttachmentNetwork()");
     }
 
     if (nEdges == 0u) {
@@ -443,7 +446,8 @@ void GeneticArchitecture::initializeNetwork(size_t &nEdges, std::vector<size_t> 
 
 }
 
-void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges, std::vector<size_t> &degrees, const double &skewness)
+void GeneticArchitecture::growNetwork(const size_t &nVertices, size_t &nEdges,
+std::vector<size_t> &degrees, const double &skewness)
 {
 
     for (size_t i = 2u; i < nVertices && nEdges > 0u; ++i) {
@@ -626,7 +630,8 @@ void GeneticArchitecture::sampleGeneLocations(const ParameterSet &parameters)
 
 
 /// Function to get a vector of effect sizes for all loci across the genome
-std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, const double &shape, const double &scale,
+std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, const double &shape,
+const double &scale,
         const size_t &nTraits)
 {
     std::vector<double> effectSizes;
@@ -648,7 +653,8 @@ std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, con
     for (size_t trait = 0u; trait < nTraits; ++trait)
         sumsqEffectSizes[trait] > 0.0 ? sqrt(sumsqEffectSizes) : 1.0;
 
-    // Normalize all locus effect sizes by the square rooted sum of squares of their respective trait
+    // Normalize all locus effect sizes by the square rooted sum of squares of their respective
+trait
     for (size_t locus = 0u; locus < nLoci; ++locus)
         effectSizes[locus] /= sumsqEffectSizes[locusEncodedTraits[locus]];
 
@@ -657,7 +663,8 @@ std::vector<double> GeneticArchitecture::getEffectSizes(const size_t &nLoci, con
 
 
 /// Function to get a vector of dominance coefficients across the genome
-std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci, const size_t &nTraits)
+std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci,
+const size_t &nTraits)
 {
 
     std::vector<double> dominanceCoeffs;
@@ -678,7 +685,8 @@ std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci,
     for (size_t trait = 0u; trait < nTraits; ++trait)
         sumsqDominanceCoeffs[trait] > 0.0 ? sqrt(sumsqDominanceCoeffs) : 1.0;
 
-    // Normalize the dominance coefficient of each locus by the square rooted sum of squares for its respective trait
+    // Normalize the dominance coefficient of each locus by the square rooted sum of squares for
+its respective trait
     for (size_t locus = 0u; locus < nLoci; ++locus)
         dominanceCoeffs[locus] /= sumsqDominanceCoeffs[locusEncodedTraits[locus]];
 
@@ -687,7 +695,8 @@ std::vector<double> GeneticArchitecture::getDominanceCoeffs(const size_t &nLoci,
 
 
 /// Function to get a vector of traits encoded by each locus across the genome
-std::vector<size_t> GeneticArchitecture::getEncodedTraits(const size_t &nTraits, const std::vector<size_t> &nVertices)
+std::vector<size_t> GeneticArchitecture::getEncodedTraits(const size_t &nTraits,
+const std::vector<size_t> &nVertices)
 {
     std::vector<size_t> encodedTraits;
 
@@ -745,7 +754,8 @@ void GeneticArchitecture::sampleEffectSizes(const ParameterSet &parameters)
         for (size_t i : networkVertices[crctr]) {
 
             // Sample additive effect size from a bilateral Gamma distribution
-            locusConstants[i].effectSize = std::gamma_distribution<double>(parameters.shapeEffectSizes, parameters.scaleEffectSizes)(rnd.rng);
+            locusConstants[i].effectSize = std::gamma_distribution<double>(
+parameters.shapeEffectSizes, parameters.scaleEffectSizes)(rnd.rng);
             if (rnd.bernoulli(0.5)) {
                 locusConstants[i].effectSize *= -1.0;
             }
@@ -784,7 +794,9 @@ void GeneticArchitecture::sampleDominanceCoeff(const ParameterSet &parameters)
 
 
 
-void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, const size_t &crctr, const size_t &offset)
+void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, const size_t &crctr,
+
+const size_t &offset)
 {
 
     double sumsqWeights = 0.0;  // For later normalization
@@ -799,11 +811,13 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
         // Make sure that both partner genes underlie the current phenotypic trait
         bool isSametrait = locusConstants[i].trait == crctr && locusConstants[j].trait == crctr;
         if (!isSametrait) {
-            throw std::logic_error("Invalid epistatic interaction in GeneticArchitecture::generateGeneticArchitecture()");
+            throw std::logic_error("Invalid epistatic interaction in
+GeneticArchitecture::generateGeneticArchitecture()");
         }
 
         // Sample interaction weight
-        double interactionWeight = std::gamma_distribution<double>(parameters.shapeInteractionWeights, parameters.scaleInteractionWeights)(rnd.rng);
+        double interactionWeight = std::gamma_distribution<double>(
+parameters.shapeInteractionWeights, parameters.scaleInteractionWeights)(rnd.rng);
         if (rnd.bernoulli(0.5)) {
             interactionWeight *= -1.0;
         }
@@ -830,7 +844,8 @@ void GeneticArchitecture::sampleInteractions(const ParameterSet &parameters, con
 // High-level function
 void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet &parameters)
 {
-    std::clog << "Loading genetic architecture from file " << parameters.architectureFileName << '\n';
+    std::clog << "Loading genetic architecture from file " << parameters.architectureFileName <<
+ '\n';
 
     // Open genetic architecture file
     std::ifstream ifs(parameters.architectureFileName);
@@ -842,7 +857,8 @@ void GeneticArchitecture::loadGeneticArchitecture(const ParameterSet &parameters
     std::clog << "  Validation.";
     bool isValidArchitecture = validateArchitecture(ifs, parameters);
     if (!isValidArchitecture) {
-        throw std::logic_error("Genetic architecture in file is incompatible with current parameters");
+        throw std::logic_error("Genetic architecture in file is incompatible with current
+parameters");
     }
     std::clog << "..done\n";
 
@@ -876,7 +892,8 @@ bool GeneticArchitecture::validateArchitecture(std::ifstream &ifs, const Paramet
     size_t tmpMatInteractions;
     size_t tmpChromosomes;
 
-    ifs >> tmpEcoLoci >> tmpMatLoci >> tmpNtrLoci >> tmpEcoInteractions >> tmpMatInteractions >> tmpChromosomes;
+    ifs >> tmpEcoLoci >> tmpMatLoci >> tmpNtrLoci >> tmpEcoInteractions >> tmpMatInteractions >>
+tmpChromosomes;
 
     bool isValid = tmpEcoLoci == parameters.nEcoLoci &&
                    tmpMatLoci == parameters.nMatLoci &&
@@ -907,7 +924,8 @@ void GeneticArchitecture::loadLocusConstants(std::ifstream &ifs, const Parameter
             >> locusConstants[j].dominanceCoeff;
         networkVertices[locusConstants[j].trait].push_back(j);
 
-        while (lg < parameters.nChromosomes - 1u && locusConstants[j].location > chromosomeSizes[lg]) {
+        while (lg < parameters.nChromosomes - 1u && locusConstants[j].location >
+ chromosomeSizes[lg]) {
             ++lg;
         }
         locusConstants[i].chromosome = lg;
@@ -972,7 +990,8 @@ void GeneticArchitecture::writeLocusConstants(std::ofstream &ofs, const Paramete
     }
 }
 
-void GeneticArchitecture::writeEpistaticInteractions(std::ofstream &ofs, const ParameterSet &parameters)
+void GeneticArchitecture::writeEpistaticInteractions(std::ofstream &ofs,
+const ParameterSet &parameters)
 {
     for (size_t i = 0u; i < parameters.nLoci; ++i) {
         for (const std::pair<size_t, double> &edge : locusConstants[i].neighbors) {

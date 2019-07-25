@@ -57,7 +57,8 @@ void checkVectorOfDoubles(std::vector<double> exp, std::vector<double> real, con
 /// Battery of tests using the same default genetic architecture
 BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
-    /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes 0.33, 0.66 and 1
+    /// A genetic architecture created with 3 equal sized chromosomes must have chromosome sizes
+    /// 0.33, 0.66 and 1
     BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
     {
         std::vector<double> exp {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0, (2.0 + 1.0) / 3.0};
@@ -92,7 +93,8 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
 
     BOOST_AUTO_TEST_CASE(checkLocations)
     {
-        std::vector<double> exp { 0.0645945, 0.138685, 0.402559, 0.416049, 0.443436, 0.444609, 0.493076, 0.686054, 0.735338, 0.773019 };
+        std::vector<double> exp { 0.0645945, 0.138685, 0.402559, 0.416049, 0.443436, 0.444609,
+0.493076, 0.686054, 0.735338, 0.773019 };
         std::vector<double> real = arch.getGenome().locations;
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
