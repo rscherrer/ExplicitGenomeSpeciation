@@ -79,6 +79,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].second, 2u);
     }
 
+    /*
     BOOST_AUTO_TEST_CASE(checkEncodedTraits)
     {
         std::vector<size_t> exp { 2u, 2u, 0u, 2u, 2u, 1u, 1u, 0u, 0u, 1u };
@@ -103,6 +104,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         checkVectorOfDoubles(exp, real);
     }
 
+
     BOOST_AUTO_TEST_CASE(checkDominanceCoeffs)
     {
         std::vector<double> exp { 0.997809, 0.0533615, 0.269254, 0.0368082, 0.0132147, 0.555865, 0.822442, 0.958672, 0.0919276, 0.120843 };
@@ -110,6 +112,7 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         assert(exp.size() == real.size());
         checkVectorOfDoubles(exp, real);
     }
+    */
 
 BOOST_AUTO_TEST_SUITE_END()
 
