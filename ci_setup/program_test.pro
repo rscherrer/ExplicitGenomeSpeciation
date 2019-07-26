@@ -1,5 +1,6 @@
 # Files
 include(program.pri)
+SOURCES += tests/doMainTests.cpp
 SOURCES += tests/ParameterSetTests.cpp
 SOURCES += tests/GeneticArchitectureTests.cpp
 
