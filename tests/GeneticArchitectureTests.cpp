@@ -86,6 +86,20 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].second, 2u);
     }
 
+    BOOST_AUTO_TEST_CASE(drawNumbers)
+    {
+        for (size_t i = 0u; i < 5u; ++i)
+            std::cout << rnd.poisson(2.0) << ' ';
+        std::cout << '\n';
+    }
+
+    BOOST_AUTO_TEST_CASE(drawOtherNumbers)
+    {
+        for (size_t i = 0u; i < 5u; ++i)
+            std::cout << rnd.poisson(2.0) << ' ';
+        std::cout << '\n';
+    }
+
     BOOST_AUTO_TEST_CASE(showEncodedTraits)
     {
         for (size_t locus = 0u; locus < simplepars.pars.getNLoci(); ++locus)
