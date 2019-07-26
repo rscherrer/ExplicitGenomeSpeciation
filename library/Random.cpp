@@ -57,7 +57,8 @@ double Random::uniform(const double &max)
 /// Function to sample from a normal distribution
 double Random::normal(const double &mean, const double &stdev)
 {
-    return stdev == 0.0 ? 0.0 : std::normal_distribution<double>(mean, stdev)(rng);
+    return stdev == 0.0 ? 0.0 : std::normal_distribution<double>(mean, stdev)(
+     rng);
 }
 
 
