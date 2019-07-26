@@ -353,7 +353,6 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
         // Squared dominance coefficients are accumulated for normalizing
         sqrtsumsqDominanceCoeffs[encodedTraits[locus]] += sqr(dominance);
 
-
     }
 
     // Sort gene locations by increasing order

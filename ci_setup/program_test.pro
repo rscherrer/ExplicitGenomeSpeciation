@@ -1,9 +1,6 @@
 # Files
 include(program.pri)
-SOURCES += tests/doMainTests.cpp
-SOURCES += tests/ParameterSetTests.cpp
-SOURCES += tests/GeneticArchitectureTests.cpp
-HEADERS += tests/testUtilities.h
+include(program_test.pri)
 
 # C++14
 CONFIG += c++14

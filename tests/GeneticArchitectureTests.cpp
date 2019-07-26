@@ -1,5 +1,6 @@
 #include "library/GeneticArchitecture.h"
 #include "library/Random.h"
+#include "library/utils.h"
 #include "tests/testUtilities.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
@@ -41,45 +42,13 @@ struct SimpleArch
 };
 
 
-/// A parameter set with a thousand genes
-struct BigParams {
+// Tests on a small genome
+BOOST_FIXTURE_TEST_SUITE(smallGenomeTests, SimpleArch)
 
-    BigParams() : pars(ParameterSet()) {
-        pars.setNChromosomes(3u);
-        pars.setNTraits(3u);
-        pars.setNLoci(1000u);
-        pars.setNLociPerTrait({ 300u, 300u, 400u });
-        pars.setNEdgesPerTrait({ 0u, 0u, 0u });
-        pars.setSkewnesses({ 1.0, 1.0, 1.0 });
-        pars.setSeed(42u);
-    }
-    ~BigParams() {}
+    // A genetic architecture created with 3 equal sized chromosomes must have
+    // chromosome sizes 0.33, 0.66 and 1
+    BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes) {
 
-    ParameterSet pars;
-};
-
-
-/// A genetic architecture with a thousand genes
-struct BigArch {
-
-    BigArch() : bigpars(BigParams()), rnd(Random(bigpars.pars.getSeed())),
-     arch(GeneticArchitecture(bigpars.pars, rnd)) {}
-    ~BigArch() {}
-
-    BigParams bigpars;
-    Random rnd;
-    GeneticArchitecture arch;
-};
-
-
-/// Battery of tests using the same default genetic architecture
-BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
-
-    /// A genetic architecture created with 3 equal sized chromosomes must have
-    /// chromosome sizes
-    /// 0.33, 0.66 and 1
-    BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes)
-    {
         std::vector<double> exp {(0.0 + 1.0) / 3.0, (1.0 + 1.0) / 3.0,
          (2.0 + 1.0) / 3.0};
         std::vector<double> real = arch.getChromosomeSizes();
@@ -90,10 +59,10 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
          exp.end());
     }
 
-    /// There should be one edge in trait 0, zero edges in trait 1 and two edges
-    /// in trait 3
-    BOOST_AUTO_TEST_CASE(checkNetworkEdges)
-    {
+    // There should be one edge in trait 0, zero edges in trait 1 and two edges
+    // in trait 3
+    BOOST_AUTO_TEST_CASE(checkNetworkEdges) {
+
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[0u].map[0u].first, 0u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[0u].map[0u].second, 1u);
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[0u].first, 0u);

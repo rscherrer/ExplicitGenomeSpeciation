@@ -18,16 +18,9 @@ struct Genome
     Genome(const size_t&, const std::vector<size_t>&, const size_t&,
      const double&, const double&, Random&);
 
-    // A vector of locus encoded traits
     std::vector<size_t> encodedTraits;
-
-    // A vector of locus locations
     std::vector<double> locations;
-
-    // A vector of locus effect sizes
     std::vector<double> effectSizes;
-
-    // A vector of locus dominance coefficients
     std::vector<double> dominanceCoeffs;
 
     // A vector of locus epistatic interaction partners and weights
