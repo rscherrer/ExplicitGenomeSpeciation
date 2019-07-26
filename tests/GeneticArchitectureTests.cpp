@@ -9,8 +9,7 @@
 struct SimpleParams
 {
 
-    SimpleParams() : pars(ParameterSet())
-    {
+    SimpleParams() : pars(ParameterSet()) {
         pars.setNChromosomes(3u);
         pars.setNTraits(3u);
         pars.setNLoci(10u);
@@ -29,14 +28,44 @@ struct SimpleParams
 /// A simple genetic architecture
 struct SimpleArch
 {
-    SimpleArch() :
-        simplepars(SimpleParams()),
-        rnd(Random(simplepars.pars.getSeed())),
-        arch(GeneticArchitecture(simplepars.pars, rnd))
-    {}
+
+    SimpleArch() : simplepars(SimpleParams()),
+     rnd(Random(simplepars.pars.getSeed())),
+      arch(GeneticArchitecture(simplepars.pars, rnd)) {}
     ~SimpleArch() {}
 
     SimpleParams simplepars;
+    Random rnd;
+    GeneticArchitecture arch;
+};
+
+
+/// A parameter set with a thousand genes
+struct BigParams {
+
+    BigParams() : pars(ParameterSet()) {
+        pars.setNChromosomes(3u);
+        pars.setNTraits(3u);
+        pars.setNLoci(1000u);
+        pars.setNLociPerTrait({ 300u, 300u, 400u });
+        pars.setNEdgesPerTrait({ 0u, 0u, 0u });
+        pars.setSkewnesses({ 1.0, 1.0, 1.0 });
+        pars.setSeed(42u);
+    }
+    ~BigParams() {}
+
+    ParameterSet pars;
+};
+
+
+/// A genetic architecture with a thousand genes
+struct BigArch {
+
+    BigArch() : bigpars(BigParams()), rnd(Random(bigpars.pars.getSeed())),
+     arch(GeneticArchitecture(bigpars.pars, rnd)) {}
+    ~BigArch() {}
+
+    BigParams bigpars;
     Random rnd;
     GeneticArchitecture arch;
 };
