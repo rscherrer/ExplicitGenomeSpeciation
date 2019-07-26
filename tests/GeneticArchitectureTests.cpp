@@ -1,5 +1,6 @@
 #include "library/GeneticArchitecture.h"
 #include "library/Random.h"
+#include "tests/testUtilities.h"
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <cassert>
@@ -69,20 +70,6 @@ struct BigArch {
     Random rnd;
     GeneticArchitecture arch;
 };
-
-
-/// Function to compare vectors of doubles to their expectations
-void checkVectorOfDoubles(std::vector<double> exp, std::vector<double> real,
- const double &factor = 1.0e6)
-{
-    for (size_t i = 0u; i < real.size(); ++i) {
-        real[i] = round(real[i] * factor);
-        exp[i] = round(exp[i] * factor);
-    }
-
-    BOOST_CHECK_EQUAL_COLLECTIONS(real.begin(), real.end(), exp.begin(),
-     exp.end());
-}
 
 
 /// Battery of tests using the same default genetic architecture
