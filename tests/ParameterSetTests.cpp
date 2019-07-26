@@ -1,5 +1,3 @@
-#define BOOST_TEST_MAIN
-
 #include "library/ParameterSet.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
