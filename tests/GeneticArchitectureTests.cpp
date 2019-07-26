@@ -86,5 +86,20 @@ BOOST_FIXTURE_TEST_SUITE(testSuiteDefaultGeneticArchitectureParams, SimpleArch)
         BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].second, 2u);
     }
 
+    BOOST_AUTO_TEST_CASE(drawingNumbers)
+    {
+        for (int i = 0; i < 5; ++i)
+            std::cout << rnd.poisson(2.0) << " ";
+        std::cout << "\n";
+    }
+
+    BOOST_AUTO_TEST_CASE(drawingMoreNumbers)
+    {
+        for (int i = 0; i < 5; ++i)
+            std::cout << rnd.poisson(2.0) << " ";
+        std::cout << "\n";
+    }
+
+
 
 BOOST_AUTO_TEST_SUITE_END()
