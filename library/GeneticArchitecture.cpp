@@ -13,8 +13,7 @@ typedef std::pair<size_t, size_t> Edge;
 
 
 /// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars,
- Random &rnd) :
+GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     nTraits(pars.getNTraits()),
     nChromosomes(pars.getNChromosomes()),
     nLoci(pars.getNLoci()),
@@ -26,8 +25,8 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars,
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomeSizes()),
-    traitNetworks(makeTraitNetworks(rnd)),
-    genome(makeGenome(rnd))
+    traitNetworks(makeTraitNetworks()),
+    genome(makeGenome())
 {}
 
 
@@ -47,7 +46,7 @@ std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const
+std::vector<Network> GeneticArchitecture::makeTraitNetworks() const
  noexcept
 {
     std::vector<Network> networks;
@@ -60,8 +59,7 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const
         // the preferential
         // attachment algorithm
         Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait],
-         skewnesses[trait], interactionWeightShape, interactionWeightShape,
-          rnd);
+         skewnesses[trait], interactionWeightShape, interactionWeightShape);
 
         networks.push_back(network);
     }
@@ -80,18 +78,18 @@ std::vector<Network> GeneticArchitecture::makeTraitNetworks(Random &rnd) const
 
 /// Network constructor
 Network::Network(const size_t &nvertices, const size_t &nedges,
- const double &skew, const double &shape, const double &scale, Random &rnd) :
+ const double &skew, const double &shape, const double &scale) :
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeNetwork(nedges, rnd)),
-        weights(makeWeights(shape, scale, rnd))
+        map(makeNetwork(nedges)),
+        weights(makeWeights(shape, scale))
 {}
 
 
 /// Function to make a new interaction network based on the preferential
 /// attachment algorithm
-std::vector<Edge> Network::makeNetwork(size_t nedges, Random &rnd) const
+std::vector<Edge> Network::makeNetwork(size_t nedges) const
  noexcept
 {
     std::vector<Edge> network;
@@ -105,7 +103,7 @@ std::vector<Edge> Network::makeNetwork(size_t nedges, Random &rnd) const
     initializeNetwork(network, nedges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    growNetwork(network, nedges, degrees, rnd);
+    growNetwork(network, nedges, degrees);
 
     // Relabel node indices after sorting with respect to degree
     sortNetwork(network, degrees);
@@ -132,7 +130,7 @@ void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges,
 /// Function to iteratively grow a network based on the preferential attachment
 /// algorithm
 void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
- std::vector<size_t> &degrees, Random &rnd) const noexcept
+ std::vector<size_t> &degrees) const noexcept
 {
 
     // For each vertex in the network...
@@ -148,7 +146,7 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
         // Sample the number of attachments of the current vertex
         size_t nAttachments =
                 (vertex == nVertices - 1u ?
-                     nedges : rnd.binomial(nedges, 1.0 / (nVertices - vertex)));
+                     nedges : rnd::binomial(nedges, 1.0 / (nVertices - vertex)));
 
         // For each new attachment...
         while (nAttachments) {
@@ -162,7 +160,7 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
             // Sample the new partner without replacement
             std::discrete_distribution<size_t> attachmentProbs(probs.begin(),
              probs.end());
-            size_t partner = attachmentProbs(rnd.rng);
+            size_t partner = attachmentProbs(rnd::rng);
 
             // Add the new partner to the network
             network.emplace_back(Edge {vertex, partner});
@@ -230,7 +228,7 @@ void Network::sortNetwork(std::vector<Edge> &network,
 /// Function to sample interaction weights across edges of a gene regulatory
 /// network
 std::vector<double> Network::makeWeights(const double &shape,
- const double &scale, Random &rnd) const noexcept
+ const double &scale) const noexcept
 {
     std::vector<double> interweights;
     double sqrtsumsqWeights = 0.0;
@@ -239,8 +237,8 @@ std::vector<double> Network::makeWeights(const double &shape,
     for (size_t edge = 0u; edge < nEdges; ++edge) {
 
         // Sample the weight from a two-sided Gamma distribution
-        double weight = std::gamma_distribution<double>(shape, scale)(rnd.rng);
-        weight = rnd.bernoulli(0.5) ? weight * -1.0 : weight;
+        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
         interweights.push_back(weight);
 
         // Accumulate square rooted sum of squared interaction weights for
@@ -260,18 +258,18 @@ std::vector<double> Network::makeWeights(const double &shape,
 
 
 /// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome(Random &rnd) const noexcept
+Genome GeneticArchitecture::makeGenome() const noexcept
 {
     const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape,
-     effectSizeScale, rnd);
+     effectSizeScale);
     return gen;
 }
 
 
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait,
- const size_t &nLoci, const double &shape, const double &scale, Random &rnd) :
-    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait, rnd)),
+ const size_t &nLoci, const double &shape, const double &scale) :
+    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait)),
     locations(std::vector<double> { 0.0 }),
     effectSizes(std::vector<double> { 0.0 }),
     dominanceCoeffs(std::vector<double> { 0.0 })
@@ -283,7 +281,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait,
 
     // Sample locations, effect sizes and dominance coefficients across the
     // genome
-    setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale, rnd);
+    setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
 
     assert(encodedTraits.size() == nLoci);
     assert(effectSizes.size() == nLoci);
@@ -294,7 +292,7 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait,
 
 /// Function to randomly assign loci to their encoded traits
 std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits,
- const std::vector<size_t> &nLociPerTrait, Random &rnd) const noexcept
+ const std::vector<size_t> &nLociPerTrait) const noexcept
 {
 
     std::vector<size_t> traits;
@@ -308,7 +306,7 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits,
     }
 
     // Shuffle encoded traits randomly
-    std::shuffle(traits.begin(), traits.end(), rnd.rng);
+    std::shuffle(traits.begin(), traits.end(), rnd::rng);
 
     return traits;
 
@@ -317,7 +315,7 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits,
 
 /// Function to sample locations, effect sizes and dominance across the genome
 void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
- const size_t &nLoci, const double &shape, const double &scale, Random &rnd)
+ const size_t &nLoci, const double &shape, const double &scale)
 {
 
     // Prepare squared roots of sums of squared effect sizes and dominance
@@ -330,15 +328,15 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
     {
 
         // Locations are sampled uniformly
-        locations.push_back(rnd.uniform(1.0));
+        locations.push_back(rnd::uniform(1.0));
 
         assert(locations.back() > 0.0);
         assert(locations.back() < 1.0);
 
         // Effect sizes are sampled from a two-sided Gamma distribution
         double effectsize = std::gamma_distribution<double>(shape, scale)(
-                    rnd.rng);
-        effectsize = rnd.bernoulli(0.5) ? effectsize * -1.0 : effectsize;
+         rnd::rng);
+        effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
         effectSizes.push_back(effectsize);
 
         // Squared effect sizes are accumulated for normalizing
@@ -346,7 +344,7 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
 
         // Dominance coefficients are sampled from a one-sided normal
         // distribution
-        const double dominance = fabs(rnd.normal(0.0, 1.0));
+        const double dominance = fabs(rnd::normal(0.0, 1.0));
         assert(dominance > 0.0);
         dominanceCoeffs.push_back(dominance);
 

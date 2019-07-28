@@ -6,16 +6,11 @@
 #include <vector>
 
 
-struct Random
+namespace rnd
 {
 
-    /// Constructor
-    Random(const size_t &seed) : rng(makeRandomGenerator(seed)) {}
-    ~Random() {}
-
-
     /// Random number generator
-    std::mt19937_64 rng;
+    extern std::mt19937_64 rng;
 
 
     /// Makers
@@ -32,6 +27,6 @@ struct Random
     double normal(const double&, const double&);
     double exponential(const double&);
     size_t sample(const double[], const size_t&);
-};
+}
 
 #endif

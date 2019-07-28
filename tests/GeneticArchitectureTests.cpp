@@ -19,6 +19,7 @@ struct SimpleParams
         pars.setNEdgesPerTrait({ 1u, 0u, 2u });
         pars.setSkewnesses({ 1.0, 1.0, 1.0 });
         pars.setSeed(42u);
+        rnd::rng.seed(pars.getSeed());
     }
     ~SimpleParams() {}
 
@@ -32,12 +33,10 @@ struct SimpleArch
 {
 
     SimpleArch() : simplepars(SimpleParams()),
-     rnd(Random(simplepars.pars.getSeed())),
-      arch(GeneticArchitecture(simplepars.pars, rnd)) {}
+      arch(GeneticArchitecture(simplepars.pars)) {}
     ~SimpleArch() {}
 
     SimpleParams simplepars;
-    Random rnd;
     GeneticArchitecture arch;
 };
 

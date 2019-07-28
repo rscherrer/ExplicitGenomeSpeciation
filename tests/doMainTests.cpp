@@ -2,7 +2,7 @@
 
 #include "library/doMain.h"
 #include "library/Population.h"
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <iostream>
 
 

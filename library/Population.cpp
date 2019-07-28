@@ -1,6 +1,7 @@
 #include "Population.h"
 #include "Individual.h"
 #include "utils.h"
+#include "Random.h"
 #include <cassert>
 #include <iostream>
 
@@ -25,6 +26,13 @@ std::vector<PInd> Population::populate(const size_t &popsize)
 
     return indivs;
 
+}
+
+
+/// Function to make it to the next generation
+void Population::survive(const double &survival)
+{
+    rnd::bernoulli(survival);
 }
 
 

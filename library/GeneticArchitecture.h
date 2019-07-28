@@ -16,7 +16,7 @@ struct Genome
 {
 
     Genome(const size_t&, const std::vector<size_t>&, const size_t&,
-     const double&, const double&, Random&);
+     const double&, const double&);
 
     std::vector<size_t> encodedTraits;
     std::vector<double> locations;
@@ -28,9 +28,9 @@ struct Genome
 
     // Member functions
     std::vector<size_t> makeEncodedTraits(const size_t&,
-     const std::vector<size_t>&, Random&) const noexcept;
+     const std::vector<size_t>&) const noexcept;
     void setLocationsEffectSizesAndDominance(const size_t&, const size_t&,
-     const double&, const double&, Random&);
+     const double&, const double&);
 
 };
 
@@ -40,7 +40,7 @@ struct Network
 {
 
     Network(const size_t&, const size_t&, const double&, const double&,
-     const double&, Random&);
+     const double&);
 
     // Number of vertices, edges and skewness
     size_t nVertices;
@@ -54,12 +54,12 @@ struct Network
     std::vector<double> weights;
 
     // Functions to make the network
-    std::vector<double> makeWeights(const double&, const double&, Random&) const
+    std::vector<double> makeWeights(const double&, const double&) const
      noexcept;
-    std::vector<Edge> makeNetwork(size_t, Random&) const noexcept;
+    std::vector<Edge> makeNetwork(size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
      const noexcept;
-    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&, Random&)
+    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
      const noexcept;
     void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&) const
      noexcept;
@@ -98,13 +98,13 @@ private:
 
     /// Makers
     std::vector<double> makeChromosomeSizes() const noexcept;
-    std::vector<Network> makeTraitNetworks(Random&) const noexcept;
-    Genome makeGenome(Random&) const noexcept;
+    std::vector<Network> makeTraitNetworks() const noexcept;
+    Genome makeGenome() const noexcept;
 
 public:
 
     /// Constructor
-    GeneticArchitecture(const ParameterSet&, Random&);
+    GeneticArchitecture(const ParameterSet&);
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }

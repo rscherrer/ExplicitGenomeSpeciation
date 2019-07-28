@@ -24,7 +24,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax)
         // Reproduction
 
         // Survival
-        pop.survive();
+        pop.survive(1.0);
 
     }
 
@@ -48,10 +48,10 @@ int doMain(const std::vector<std::string> &args)
         ParameterSet pars;
 
         // Create and seed a random number generator
-        Random rnd = Random(42u);
+        rnd::rng.seed(42u);
 
         // Create a genetic architecture
-        GeneticArchitecture arch = GeneticArchitecture(pars, rnd);
+        GeneticArchitecture arch = GeneticArchitecture(pars);
 
         std::cout << "Architecture created\n";
 
