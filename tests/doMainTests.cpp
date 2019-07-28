@@ -25,15 +25,16 @@ BOOST_AUTO_TEST_CASE(checkTimeAfterSimul)
     size_t t = 0u;
     size_t tmax = 100u;
 
-    Population pop = Population();
+    ParameterSet pars;
+    Population pop = Population(pars.getInitialPopSize());
 
-    runSimulation(t, tmax, pop);
+    runSimulation(t, pop, tmax);
 
     BOOST_CHECK_EQUAL(t, tmax);
 
     // After a simulation, the population should still be there and
     // have individuals
-    BOOST_CHECK(pop.getPopSize() != 0u);
+    BOOST_CHECK(pop.getPopSize() > 0u);
 }
 
 

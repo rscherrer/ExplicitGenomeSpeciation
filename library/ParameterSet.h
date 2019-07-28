@@ -24,6 +24,7 @@ public:
     double getInteractionWeightScale() const { return interactionWeightScale; }
     size_t getSeed() const { return seed; }
     size_t getTEndSim() const { return tEndSim; }
+    size_t getInitialPopSize() const { return initialPopSize; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }

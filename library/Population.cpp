@@ -4,6 +4,30 @@
 #include <cassert>
 #include <iostream>
 
+
+/// Constructor
+Population::Population(const size_t &popsize) : individuals(populate(popsize)),
+ popSize(individuals.size())
+{
+
+}
+
+
+
+/// Function to initialize a population of individuals
+std::vector<PInd> Population::populate(const size_t &popsize)
+{
+
+    std::vector<PInd> indivs;
+
+    for (size_t ind = 0u; ind < popsize; ++ind)
+        indivs.push_back(new Individual);
+
+    return indivs;
+
+}
+
+
 /*
 Population::Population(const ParameterSet &parameters,
  const GeneticArchitecture &geneticArchitecture)

@@ -1,7 +1,6 @@
 #include "doMain.h"
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
-#include "Population.h"
 #include "Random.h"
 #include <iostream>
 #include <vector>
@@ -11,13 +10,15 @@
 
 
 /// Function to run a simulation
-void runSimulation(size_t &t, const size_t &tmax)
+void runSimulation(size_t &t, Population &pop, const size_t &tmax)
 
 {
     // Loop through time
     // At every generation perform the steps of the life cycle
     // and update the population accordingly
     for (; t < tmax; ++t);
+
+    pop.getPopSize();
 
 
 }
@@ -45,11 +46,12 @@ int doMain(const std::vector<std::string> &args)
         std::cout << "Architecture created\n";
 
         // Create a population of individuals
+        Population pop = Population(pars.getInitialPopSize());
 
         // Run the simulation
         size_t t = 0u;
         size_t tmax = pars.getTEndSim();
-        runSimulation(t, tmax);
+        runSimulation(t, pop, tmax);
 
     }
     catch (const std::runtime_error &err)

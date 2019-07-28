@@ -4,7 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Random.h"
-#include <list>
+// #include <list>
 
 class Individual;
 class LocusVariables;
@@ -14,7 +14,13 @@ class Population {
 
 public:
 
-    Population();
+    Population(const size_t&);
+    ~Population() {};
+
+    // Getters
+    size_t getPopSize() const { return popSize; };
+
+
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
     // Population(const std::vector<PInd>&, const ParameterSet&);
@@ -22,7 +28,6 @@ public:
     // void massExtinction();
 
     // Getters
-    size_t getPopSize() const { return individuals.size(); };
     // size_t getNResources() const;
     // std::vector<size_t> getHabitatVector() const;
 
@@ -59,8 +64,14 @@ public:
 
 private:
 
+    // Makers
+    std::vector<PInd> populate(const size_t&);
+
     // The population
     std::vector<PInd> individuals;
+
+    // Census
+    size_t popSize;
 
     // std::vector<PInd> females;
     // std::vector<PInd> males;

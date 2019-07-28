@@ -20,25 +20,27 @@ public:
     };
 
     // Constructors
-    Individual(const ParameterSet&, const GeneticArchitecture&);
-    Individual(const std::vector<bool>&, const ParameterSet&, const GeneticArchitecture&);
-    Individual(Individual const * const, Individual const * const, const ParameterSet&, const GeneticArchitecture&);
+    // Individual(const ParameterSet&, const GeneticArchitecture&);
+    // Individual(const std::vector<bool>&, const ParameterSet&,
+    //  const GeneticArchitecture&);
+    // Individual(Individual const * const, Individual const * const,
+    //  const ParameterSet&, const GeneticArchitecture&);
 
     // Getters
-    bool isFemale(const bool&) const;
-    double getFitness() const { return fitness;}
-    size_t getHabitat() const { return habitat; }
-    size_t getEcotype() const { return ecotype; }
-    std::pair<double, double> getAttackRates() const { return attackRates; }
-    std::vector<size_t> getMates() const { return mates; }
-    std::vector<bool> getGenomeSequence() const { return genomeSequence; }
-    std::vector<double> getPhenotypes() const { return phenotypes; }
-    std::vector<double> getGeneticValues() const { return geneticValues; }
-    std::vector<double> getEnvirValues() const { return envirValues; }
-    Locus getLocus(const size_t&) const;
+    // bool isFemale(const bool&) const;
+    // double getFitness() const { return fitness;}
+    // size_t getHabitat() const { return habitat; }
+    // size_t getEcotype() const { return ecotype; }
+    // std::pair<double, double> getAttackRates() const { return attackRates; }
+    // std::vector<size_t> getMates() const { return mates; }
+    // std::vector<bool> getGenomeSequence() const { return genomeSequence; }
+    // std::vector<double> getPhenotypes() const { return phenotypes; }
+    // std::vector<double> getGeneticValues() const { return geneticValues; }
+    // std::vector<double> getEnvirValues() const { return envirValues; }
+    // Locus getLocus(const size_t&) const;
 
     // Function to reset one's habitat
-    void resetHabitat(const size_t&) const;
+    // void resetHabitat(const size_t&) const;
 
 private:
 

@@ -21,3 +21,6 @@ HEADERS += library/Genome.h
 
 SOURCES += library/Population.cpp
 HEADERS += library/Population.h
+
+SOURCES += library/Individual.cpp
+HEADERS += library/Individual.h
