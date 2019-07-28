@@ -1,27 +1,34 @@
 #include "Individual.h"
 #include "Population.h"
 #include "utils.h"
-#include "random.h"
+#include "Random.h"
 #include <cmath>
 #include <cassert>
 #include <iostream>
 
 struct Locus;
 
+/*
 // Accessory functions
-double calcAssortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+double calcAssortProb(const double &matePreference, const double &matingTrait,
+ const double &ecoTraitDistance)
 {
     return exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
 }
 
-double calcDisassortProb(const double &matePreference, const double &matingTrait, const double &ecoTraitDistance)
+double calcDisassortProb(const double &matePreference,
+ const double &matingTrait, const double &ecoTraitDistance)
 {
-    return 1.0 - sqr(sqr(matingTrait)) * exp(- matePreference * matingTrait * ecoTraitDistance * 0.5);
+    return 1.0 - sqr(sqr(matingTrait)) * exp(- matePreference * matingTrait *
+     ecoTraitDistance * 0.5);
 }
+*/
 
 
+/*
 // Constructors
-Individual::Individual(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
+Individual::Individual(const ParameterSet& parameters,
+ const GeneticArchitecture &geneticArchitecture) :
 isHeterogamous(rnd::bernoulli(0.5)), ecotype(0u), habitat(0u)
 {
 
@@ -31,14 +38,18 @@ isHeterogamous(rnd::bernoulli(0.5)), ecotype(0u), habitat(0u)
 
 }
 
-Individual::Individual(const std::vector<bool>& sequence, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
-genomeSequence(sequence), isHeterogamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
+Individual::Individual(const std::vector<bool>& sequence,
+ const ParameterSet& parameters,
+  const GeneticArchitecture &geneticArchitecture) : genomeSequence(sequence),
+   isHeterogamous(rnd::bernoulli(0.5)), habitat(0u), ecotype(0u)
 {
     mutate(parameters);
     develop(parameters, geneticArchitecture);
 }
 
-Individual::Individual(Individual const * const mother, Individual const * const father, const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture) :
+Individual::Individual(Individual const * const mother,
+ Individual const * const father, const ParameterSet& parameters,
+  const GeneticArchitecture &geneticArchitecture) :
         isHeterogamous(false), habitat(mother->habitat)
 {
 
@@ -50,17 +61,20 @@ Individual::Individual(Individual const * const mother, Individual const * const
     mutate(parameters);
     develop(parameters, geneticArchitecture);
 }
+*/
 
-
+/*
 /// Function to reset one's habitat
 void Individual::resetHabitat(const size_t &newHabitat) const
 {
     habitat = newHabitat;
 }
+*/
 
 
 // Getters
 
+/*
 bool Individual::isFemale(const bool &isFemaleHeterogamy) const
 {
     return isHeterogamous == isFemaleHeterogamy;
@@ -70,10 +84,12 @@ Individual::Locus Individual::getLocus(const size_t &locus) const
 {
     return genotypes[locus];
 }
+*/
 
 
 // Setters
 
+/*
 void Individual::disperse(const size_t &nHabitat) const
 {
     habitat = (habitat + 1u) % nHabitat;
@@ -81,10 +97,12 @@ void Individual::disperse(const size_t &nHabitat) const
 
 void Individual::setFitness (const std::pair<double, double> &resources) const
 {
-    fitness = attackRates.first * resources.first + attackRates.second * resources.second;
+    fitness = attackRates.first * resources.first + attackRates.second *
+     resources.second;
 }
 
-void Individual::setBurninFitness(const std::pair<double, double> &resources, const double &ecoSelCoeff) const
+void Individual::setBurninFitness(const std::pair<double, double> &resources,
+ const double &ecoSelCoeff) const
 {
     setFitness(resources);
     fitness *= exp(-ecoSelCoeff * sqr(phenotypes[1u]));
@@ -125,16 +143,19 @@ void Individual::chooseMates(const double &matingSeasonEnd,
     }
 }
 
-double Individual::assessMatingProb(const double &ecoTraitDistance, const double &tiny) const
+double Individual::assessMatingProb(const double &ecoTraitDistance,
+ const double &tiny) const
 {
     double matingProb;
 
     // Assortative or disassortative mating
     if (matePreference >= 0) {
-        matingProb = calcAssortProb(matePreference, phenotypes[1u], ecoTraitDistance);
+        matingProb = calcAssortProb(matePreference, phenotypes[1u],
+         ecoTraitDistance);
     }
     else {
-        matingProb = calcDisassortProb(matePreference, phenotypes[1u], ecoTraitDistance);
+        matingProb = calcDisassortProb(matePreference, phenotypes[1u],
+         ecoTraitDistance);
     }
 
     // Normalize
@@ -146,7 +167,8 @@ double Individual::assessMatingProb(const double &ecoTraitDistance, const double
 
 }
 
-bool Individual::acceptMate(Individual const * const male, const ParameterSet& parameters) const
+bool Individual::acceptMate(Individual const * const male,
+ const ParameterSet& parameters) const
 {
 
     // In case of random mating, mate
@@ -174,7 +196,8 @@ bool Individual::survive(const double &survivalProb) const
     return rnd::bernoulli(survivalProb);
 }
 
-void Individual::setEcotype(const std::pair<double, double> &ecotypeBoundary) const
+void Individual::setEcotype(const std::pair<double, double> &ecotypeBoundary)
+ const
 {
     ecotype = compareAlongTradeOff(attackRates, ecotypeBoundary) ? 1u : 0u;
 }
@@ -183,7 +206,8 @@ void Individual::mutate(const ParameterSet& parameters)
 {
 
     // Sample mutations
-    size_t nMutations = rnd::poisson(parameters.nBits * parameters.mutationRate);
+    size_t nMutations = rnd::poisson(parameters.nBits *
+     parameters.mutationRate);
 
     // Distribute them across the genome
     while (nMutations) {
@@ -201,7 +225,8 @@ void Individual::initializeSizeGenotypeVector(const size_t &nLoci) {
 
 }
 
-void Individual::initializeSizeIndivTraitSpecificMetrics(const size_t &nTraits) {
+void Individual::initializeSizeIndivTraitSpecificMetrics(const size_t &nTraits)
+{
 
     geneticValues.reserve(nTraits);
     envirValues.reserve(nTraits);
@@ -210,7 +235,8 @@ void Individual::initializeSizeIndivTraitSpecificMetrics(const size_t &nTraits) 
 }
 
 
-void Individual::develop(const ParameterSet& parameters, const GeneticArchitecture &geneticArchitecture)
+void Individual::develop(const ParameterSet& parameters,
+ const GeneticArchitecture &geneticArchitecture)
 {
 
     initializeSizeGenotypeVector(parameters.nLoci);
@@ -247,7 +273,8 @@ void Individual::expressGene(const size_t &nucleotide,
 {
 
     // Determine genotype and local effect on the phenotype
-    bool isHomozygous = genomeSequence[nucleotide] == genomeSequence[nucleotide + 1u];
+    bool isHomozygous = genomeSequence[nucleotide] ==
+     genomeSequence[nucleotide + 1u];
     if (isHomozygous) {
 
         // Homozygote AA
@@ -271,9 +298,11 @@ void Individual::expressGene(const size_t &nucleotide,
     }
 }
 
-void Individual::setAdditiveValue(const size_t &i, const double &scaleA, const double &effectSize)
+void Individual::setAdditiveValue(const size_t &i, const double &scaleA,
+ const double &effectSize)
 {
-    genotypes[i].locusGeneticValue = scaleA * effectSize * genotypes[i].expression;
+    genotypes[i].locusGeneticValue = scaleA * effectSize *
+     genotypes[i].expression;
 }
 
 void Individual::setEpistaticValue(const size_t &i, const double &scaleI, const std::list<std::pair<size_t, double> > &neighbors)
@@ -283,8 +312,10 @@ void Individual::setEpistaticValue(const size_t &i, const double &scaleI, const 
 
         size_t j = edge.first;
 
-        // Compute interaction strength and distribute phenotypic effect over contributing loci
-        double epistaticEffect = 0.5 * scaleI * edge.second * genotypes[i].expression * genotypes[j].expression;
+        // Compute interaction strength and distribute phenotypic effect over
+        // contributing loci
+        double epistaticEffect = 0.5 * scaleI * edge.second *
+         genotypes[i].expression * genotypes[j].expression;
         genotypes[i].locusGeneticValue += epistaticEffect;
         genotypes[j].locusGeneticValue += epistaticEffect;
     }
@@ -301,7 +332,8 @@ void Individual::setEnvirValue(const size_t &trait, const double &scaleE)
     envirValues[trait] = rnd::normal(0.0, scaleE);
 }
 
-void Individual::setGeneticValue(const size_t &trait, const GeneticArchitecture &geneticArchitecture)
+void Individual::setGeneticValue(const size_t &trait,
+ const GeneticArchitecture &geneticArchitecture)
 {
     geneticValues[trait] = 0.0;
 
@@ -312,8 +344,7 @@ void Individual::setGeneticValue(const size_t &trait, const GeneticArchitecture 
 }
 
 void Individual::setLocusGeneticValue(const size_t &locus,
-                                      const GeneticArchitecture &geneticArchitecture,
-                                      const ParameterSet &parameters)
+ const GeneticArchitecture &geneticArchitecture, const ParameterSet &parameters)
 {
 
     size_t nucleotidePos = locus << 1u;  // Nucleotide position
@@ -364,7 +395,8 @@ void Individual::recombineFreely(size_t &haplotype,
     }
 }
 
-void Individual::crossOver(size_t &haplotype, const double &recombinationRate, const double &mapLength, double &crossOverPoint) const
+void Individual::crossOver(size_t &haplotype, const double &recombinationRate,
+ const double &mapLength, double &crossOverPoint) const
 {
     // Cross over to the opposite haplotype
     haplotype = (haplotype + 1u) % 2u;
@@ -373,13 +405,16 @@ void Individual::crossOver(size_t &haplotype, const double &recombinationRate, c
     crossOverPoint += rnd::exponential(recombinationRate * mapLength);
 }
 
-void Individual::inheritLocus(Individual const * const parent, const bool &isMother, const size_t &locus, const size_t &haplotype)
+void Individual::inheritLocus(Individual const * const parent,
+ const bool &isMother, const size_t &locus, const size_t &haplotype)
 {
     size_t genomePosition = isMother ? locus << 1 : (locus << 1) + 1u;
-    genomeSequence[genomePosition] = parent->genomeSequence[(locus << 1u) + haplotype];
+    genomeSequence[genomePosition] =
+     parent->genomeSequence[(locus << 1u) + haplotype];
 }
 
-void Individual::determineSex(const bool &isMother, const bool &isFemaleHeterogamy, const size_t &haplotype)
+void Individual::determineSex(const bool &isMother,
+ const bool &isFemaleHeterogamy, const size_t &haplotype)
 {
     if (isMother) {
         isHeterogamous = haplotype == 0u && isFemaleHeterogamy;
@@ -389,17 +424,21 @@ void Individual::determineSex(const bool &isMother, const bool &isFemaleHeteroga
     }
 }
 
-void Individual::inheritGamete(Individual const * const parent, const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
+void Individual::inheritGamete(Individual const * const parent,
+ const ParameterSet &parameters, const GeneticArchitecture &geneticArchitecture)
 {
 
     double freeRecombinationPoint = 0.0;
     double crossOverPoint = 0.0;
 
     // Loop through loci
-    for (size_t locus = 0u, chromosome = 0u, haplotype = 0u; locus < parameters.nLoci; ++locus) {
+    for (size_t locus = 0u, chromosome = 0u, haplotype = 0u;
+     locus < parameters.nLoci; ++locus) {
 
         // Interchromosomal recombination
-        bool isFreeRecombination = geneticArchitecture.locusConstants[locus].location > freeRecombinationPoint;
+        bool isFreeRecombination =
+         geneticArchitecture.locusConstants[locus].location >
+          freeRecombinationPoint;
         if (isFreeRecombination) {
             recombineFreely(haplotype, chromosome, 
                     parameters.nChromosomes, 
@@ -408,9 +447,11 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
         }
 
         // Intrachromosomal recombination
-        bool isCrossOver = geneticArchitecture.locusConstants[locus].location > crossOverPoint;
+        bool isCrossOver = geneticArchitecture.locusConstants[locus].location >
+         crossOverPoint;
         if (isCrossOver) {
-            crossOver(haplotype, parameters.recombinationRate, parameters.genomeLength, crossOverPoint);
+            crossOver(haplotype, parameters.recombinationRate,
+             parameters.genomeLength, crossOverPoint);
         }
 
         // Inherit parental haplotype
@@ -425,7 +466,7 @@ void Individual::inheritGamete(Individual const * const parent, const ParameterS
     }
 }
 
-
+*/
 
 
 
