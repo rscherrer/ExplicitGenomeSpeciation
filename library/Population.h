@@ -20,7 +20,7 @@ public:
     // Getters
     size_t getPopSize() const { return popSize; };
 
-
+    void survive() {};
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
     // Population(const std::vector<PInd>&, const ParameterSet&);

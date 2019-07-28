@@ -14,10 +14,19 @@
 void runSimulation(size_t &t, Population &pop, const size_t &tmax)
 
 {
-    // Loop through time
-    // At every generation perform the steps of the life cycle
-    // and update the population accordingly
-    for (; t < tmax; ++t);
+    // Loop through time...
+    for (; t < tmax; ++t) {
+
+        // Dispersion
+
+        // Resource acquisition
+
+        // Reproduction
+
+        // Survival
+        pop.survive();
+
+    }
 
     pop.getPopSize();
 
