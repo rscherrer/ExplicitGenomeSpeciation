@@ -54,6 +54,8 @@ int doMain(const std::vector<std::string> &args)
         size_t tmax = pars.getTEndSim();
         runSimulation(t, pop, tmax);
 
+        std::cout << "Simulation ended\n";
+
     }
     catch (const std::runtime_error &err)
     {
