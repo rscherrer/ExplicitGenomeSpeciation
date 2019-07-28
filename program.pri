@@ -18,3 +18,6 @@ HEADERS += library/Network.h
 
 SOURCES += library/Genome.cpp
 HEADERS += library/Genome.h
+
+SOURCES += library/Population.cpp
+HEADERS += library/Population.h

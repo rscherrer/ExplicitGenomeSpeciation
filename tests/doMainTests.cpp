@@ -1,6 +1,7 @@
 #define BOOST_TEST_MAIN
 
 #include "library/doMain.h"
+#include "library/Population.h"
 #include <boost/test/unit_test.hpp>
 
 
@@ -24,7 +25,15 @@ BOOST_AUTO_TEST_CASE(checkTimeAfterSimul)
     size_t t = 0u;
     size_t tmax = 100u;
 
-    runSimulation(t, tmax);
+    Population pop = Population();
+
+    runSimulation(t, tmax, pop);
 
     BOOST_CHECK_EQUAL(t, tmax);
+
+    // After a simulation, the population should still be there and
+    // have individuals
+    BOOST_CHECK(pop.getPopSize() != 0u);
 }
+
+
