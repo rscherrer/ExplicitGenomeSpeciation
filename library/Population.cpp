@@ -71,14 +71,6 @@ void Population::massExtinction()
 */
 
 
-// Getters
-
-size_t Population::getPopSize() const
-{
-    size_t popSize = individuals.size();
-    return popSize;
-}
-
 /*
 size_t Population::getNResources() const
 {
