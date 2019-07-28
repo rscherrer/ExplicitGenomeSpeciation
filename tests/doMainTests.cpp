@@ -16,3 +16,10 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 {
     BOOST_CHECK_EQUAL(doMain({ "program", "arg1", "arg2" }), 1);
 }
+
+
+// After a simulation ends, the time should be tmax
+BOOST_AUTO_TEST_CASE(checkTimeAfterSimul)
+{
+    runSimulation();
+}

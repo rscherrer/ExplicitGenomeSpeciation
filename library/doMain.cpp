@@ -13,7 +13,9 @@
 /// Function to run a simulation
 void runSimulation()
 {
-
+    // Loop through time
+    // At every generation perform the steps of the life cycle
+    // and update the population accordingly
 }
 
 
@@ -41,10 +43,6 @@ int doMain(const std::vector<std::string> &args)
         // Create a population of individuals
 
         // Run the simulation
-
-        // Loop through time
-        // At every generation perform the steps of the life cycle
-        // and update the population accordingly
         runSimulation();
 
     }
