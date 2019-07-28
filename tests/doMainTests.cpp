@@ -3,6 +3,7 @@
 #include "library/doMain.h"
 #include "library/Population.h"
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 
 // Check that the program can run without arguments

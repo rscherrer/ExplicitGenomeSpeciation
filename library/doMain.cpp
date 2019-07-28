@@ -2,6 +2,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Random.h"
+#include "Population.h"
 #include <iostream>
 #include <vector>
 #include <string>
