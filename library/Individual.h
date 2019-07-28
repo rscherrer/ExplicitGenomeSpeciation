@@ -12,12 +12,14 @@ public:
 
     typedef Individual const * PInd;
 
+    /*
     struct Locus
     {
         size_t alleleCount;
         double expression;
         double locusGeneticValue;
     };
+    */
 
     // Constructors
     // Individual(const ParameterSet&, const GeneticArchitecture&);
