@@ -12,3 +12,9 @@ HEADERS += library/random.h
 
 SOURCES += library/utils.cpp
 HEADERS += library/utils.h
+
+SOURCES += library/Population.cpp
+HEADERS += library/Population.h
+
+SOURCES += library/Individual.cpp
+HEADERS += library/Individual.h
