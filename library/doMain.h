@@ -6,7 +6,7 @@
 
 
 /// Function to run the simulation
-void runSimulation();
+void runSimulation(size_t &t, const size_t&);
 
 /// Function to run the program
 int doMain(const std::vector<std::string>&);

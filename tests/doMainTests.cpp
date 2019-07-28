@@ -21,5 +21,10 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 // After a simulation ends, the time should be tmax
 BOOST_AUTO_TEST_CASE(checkTimeAfterSimul)
 {
-    runSimulation();
+    size_t t = 0u;
+    size_t tmax = 100u;
+
+    runSimulation(t, tmax);
+
+    BOOST_CHECK_EQUAL(t, tmax);
 }
