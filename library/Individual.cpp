@@ -13,6 +13,13 @@ Individual::Individual() : isFemale(rnd::bernoulli(0.5))
 
 }
 
+
+/// Function to evaluate a potential mate
+bool Individual::acceptMate() const
+{
+    return true;
+}
+
 /*
 // Accessory functions
 double calcAssortProb(const double &matePreference, const double &matingTrait,

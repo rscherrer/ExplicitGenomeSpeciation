@@ -66,14 +66,14 @@ void Population::reproduce(const double &birth)
             males.push_back(ind);
 
     // Every mom gets a chance to produce babies
-    size_t nMoms = females.size();
-    while (nMoms) {
+    for (auto mom : females) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
-            offspring.push_back(new Individual);
-            --nOffspring;
+            if (mom->acceptMate()) {
+                offspring.push_back(new Individual);
+                --nOffspring;
+            }
         }
-        --nMoms;
     }
 
     females.clear();

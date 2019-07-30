@@ -16,6 +16,7 @@ public:
     ~Individual() {}
 
     bool getGender() const { return isFemale; };
+    bool acceptMate() const;
 
     /*
     struct Locus
