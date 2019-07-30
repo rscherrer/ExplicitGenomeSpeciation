@@ -24,7 +24,10 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
         // Reproduction
 
         // Survival
-        pop.survive(survival);
+        if (!pop.survive(survival)) {
+            std::cout << "The population went extinct at t = " << t << '\n';
+            break;
+        }
 
     }
 

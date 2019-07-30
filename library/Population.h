@@ -20,7 +20,8 @@ public:
     // Getters
     size_t getPopSize() const { return individuals.size(); }
 
-    void survive(const double&);
+    // Life cycle
+    bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
     // Population(const std::vector<PInd>&, const ParameterSet&);
