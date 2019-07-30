@@ -53,10 +53,10 @@ int doMain(const std::vector<std::string> &args)
         // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
-        std::cout << "Architecture created\n";
-
         // Create a population of individuals
         Population pop = Population(pars.getInitialPopSize());
+
+        std::cout << "Simulation startes\n";
 
         // Run the simulation
         size_t t = 0u;
