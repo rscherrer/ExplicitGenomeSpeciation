@@ -62,6 +62,3 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     BOOST_CHECK(t < tmax);
     BOOST_CHECK(pop.getPopSize() == 0u);
 }
-
-
-

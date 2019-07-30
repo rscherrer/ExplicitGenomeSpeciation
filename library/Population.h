@@ -71,6 +71,7 @@ private:
 
     // The population
     std::vector<PInd> individuals;
+    std::vector<PInd> offspring;
     std::vector<PInd> survivors;
 
     // Census

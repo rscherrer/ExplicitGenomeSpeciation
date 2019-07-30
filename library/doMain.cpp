@@ -32,9 +32,6 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
 
     }
 
-    pop.getPopSize();
-
-
 }
 
 

@@ -8,7 +8,7 @@
 
 /// Constructor
 Population::Population(const size_t &popsize) : individuals(populate(popsize)),
- survivors({ })
+ offspring({ }), survivors({ })
 {
 
 }
@@ -37,7 +37,7 @@ void Population::reproduce(const double &birth)
     while (nAdults) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
-            individuals.push_back(new Individual);
+            offspring.push_back(new Individual);
             --nOffspring;
         }
         --nAdults;
@@ -49,7 +49,7 @@ void Population::reproduce(const double &birth)
 bool Population::survive(const double &survival)
 {
 
-    // Sample life or death for every individual
+    // Sample life or death for every adult
     for (auto ind : individuals)
         if (rnd::bernoulli(survival))
             survivors.push_back(ind);
@@ -60,14 +60,24 @@ bool Population::survive(const double &survival)
     const size_t nSurvivors = survivors.size();
     const bool isAlive = nSurvivors != 0u;
 
+    // Survivors make it to the next generation
     if (isAlive) {
         for (auto ind : survivors)
             individuals.push_back(ind);
         survivors.clear();
     }
 
+    // Offspring make it to the next generation
+    const size_t nOffspring = offspring.size();
+    if (nOffspring != 0u) {
+        for (auto ind : offspring)
+            individuals.push_back(ind);
+        offspring.clear();
+    }
+
     assert(survivors.size() == 0u);
-    assert(individuals.size() == nSurvivors);
+    assert(offspring.size() == 0u);
+    assert(individuals.size() == nSurvivors + nOffspring);
 
     return isAlive;
 }
