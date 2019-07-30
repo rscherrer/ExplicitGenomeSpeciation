@@ -29,7 +29,7 @@ std::vector<PInd> Population::populate(const size_t &popsize)
 }
 
 
-/// Reproduction function
+/// Asexual reproduction function
 void Population::reproduceAsexual(const double &birth)
 {
     // Everybody gets a chance to produce babies
@@ -48,6 +48,16 @@ void Population::reproduceAsexual(const double &birth)
 /// Sexual reproduction function
 void Population::reproduce(const double &birth)
 {
+
+    // Males have mating successes (a discrete distribution)
+    // Each female can produce multiple offspring
+    // Her offspring can come from different fathers
+    // The mating season has a limited duration
+    // The mating seaon consists in multiple time steps
+    // In each time step, the female encoutners a male based on mating success
+    // Each male encountered is evaluated
+    // If the male is accepted, he becomes the father of a newborn
+
     // Sort out moms and dads
     for (auto ind : individuals)
         if (ind->getGender())
