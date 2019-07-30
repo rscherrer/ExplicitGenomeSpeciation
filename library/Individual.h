@@ -18,6 +18,8 @@ public:
     bool getGender() const { return isFemale; };
     bool acceptMate() const;
 
+
+
     /*
     struct Locus
     {
@@ -55,6 +57,7 @@ private:
     friend class Population;
 
     bool isFemale;
+    double matingPreference;
 
     // Ecological attributes
     // mutable size_t habitat;

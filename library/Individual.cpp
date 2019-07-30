@@ -8,16 +8,47 @@
 
 struct Locus;
 
-Individual::Individual() : isFemale(rnd::bernoulli(0.5))
+Individual::Individual() : isFemale(rnd::bernoulli(0.5)), matingPreference(0.0)
 {
 
+}
+
+
+/// Function to calculate mating probability under homogamy
+double calcAssortativeMatingProb()
+{
+    double prob = 1.0;
+
+    return prob;
+}
+
+
+/// Function to calculate mating probability under heterogamy
+double calcDisassortativeMatingProb()
+{
+    double prob = 1.0;
+
+    return prob;
 }
 
 
 /// Function to evaluate a potential mate
 bool Individual::acceptMate() const
 {
-    return true;
+
+    double matingProb = 0.5;
+
+    if (matingPreference >= 0.0)
+        matingProb = calcAssortativeMatingProb();
+    else
+        matingProb = calcDisassortativeMatingProb();
+
+    // double matingProb = scale >= 0 ? exp(- matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u]))
+
+    const bool isAccepted = rnd::bernoulli(matingProb);
+
+    return isAccepted;
+
 }
 
 /*
