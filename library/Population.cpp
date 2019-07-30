@@ -30,7 +30,7 @@ std::vector<PInd> Population::populate(const size_t &popsize)
 
 
 /// Reproduction function
-void Population::reproduce(const double &birth)
+void Population::reproduceAsexual(const double &birth)
 {
     // Everybody gets a chance to produce babies
     size_t nAdults = individuals.size();
@@ -46,7 +46,7 @@ void Population::reproduce(const double &birth)
 
 
 /// Sexual reproduction function
-void Population::reproduceSexual(const double &birth)
+void Population::reproduce(const double &birth)
 {
     // Sort out moms and dads
     for (auto ind : individuals)

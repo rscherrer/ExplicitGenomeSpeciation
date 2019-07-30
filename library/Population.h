@@ -22,7 +22,7 @@ public:
 
     // Life cycle
     void reproduce(const double&);
-    void reproduceSexual(const double&);
+    void reproduceAsexual(const double&);
     bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
