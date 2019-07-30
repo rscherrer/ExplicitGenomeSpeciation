@@ -32,10 +32,11 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     const size_t tmax = 100u;
     const size_t initPopSize = 10u;
     const double survival = 1.0;
+    const double birth = 0.0;
 
     Population pop = Population(initPopSize);
 
-    runSimulation(t, pop, tmax, survival);
+    runSimulation(t, pop, tmax, survival, birth);
 
     BOOST_CHECK_EQUAL(t, tmax);
     BOOST_CHECK(pop.getPopSize() > 0u);
@@ -52,10 +53,11 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     const size_t tmax = 100u;
     const size_t initPopSize = 10u;
     const double survival = 0.1;
+    const double birth = 0.0;
 
     Population pop = Population(initPopSize);
 
-    runSimulation(t, pop, tmax, survival);
+    runSimulation(t, pop, tmax, survival, birth);
 
     BOOST_CHECK(t < tmax);
     BOOST_CHECK(pop.getPopSize() == 0u);

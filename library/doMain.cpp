@@ -12,7 +12,7 @@
 
 /// Function to run a simulation
 void runSimulation(size_t &t, Population &pop, const size_t &tmax,
- const double &survival)
+ const double &survival, const double &birth)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
@@ -22,6 +22,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
         // Resource acquisition
 
         // Reproduction
+        pop.reproduce(birth);
 
         // Survival
         if (!pop.survive(survival)) {
@@ -65,7 +66,8 @@ int doMain(const std::vector<std::string> &args)
         size_t t = 0u;
         size_t tmax = pars.getTEndSim();
         const double survival = pars.getSurvivalProb();
-        runSimulation(t, pop, tmax, survival);
+        const double birth = pars.getBirthRate();
+        runSimulation(t, pop, tmax, survival, birth);
 
         std::cout << "Simulation ended\n";
 

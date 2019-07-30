@@ -26,6 +26,7 @@ public:
     size_t getTEndSim() const { return tEndSim; }
     size_t getInitialPopSize() const { return initialPopSize; }
     double getSurvivalProb() const { return survivalProb; }
+    double getBirthRate() const { return birthRate; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }

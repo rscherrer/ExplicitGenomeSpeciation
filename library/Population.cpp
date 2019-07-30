@@ -29,6 +29,22 @@ std::vector<PInd> Population::populate(const size_t &popsize)
 }
 
 
+/// Reproduction function
+void Population::reproduce(const double &birth)
+{
+    // Everybody gets a chance to produce babies
+    size_t nAdults = individuals.size();
+    while (nAdults) {
+        size_t nOffspring = rnd::poisson(birth);
+        while (nOffspring) {
+            individuals.push_back(new Individual);
+            --nOffspring;
+        }
+        --nAdults;
+    }
+}
+
+
 /// Function to make it to the next generation
 bool Population::survive(const double &survival)
 {

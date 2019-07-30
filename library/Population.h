@@ -21,6 +21,7 @@ public:
     size_t getPopSize() const { return individuals.size(); }
 
     // Life cycle
+    void reproduce(const double&);
     bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
