@@ -8,7 +8,7 @@
 
 /// Constructor
 Population::Population(const size_t &popsize) : individuals(populate(popsize)),
- popSize(individuals.size())
+ survivors({ })
 {
 
 }
@@ -32,7 +32,25 @@ std::vector<PInd> Population::populate(const size_t &popsize)
 /// Function to make it to the next generation
 void Population::survive(const double &survival)
 {
-    rnd::bernoulli(survival);
+    // Sample life or death for every individual
+    for (auto ind : individuals)
+        if (rnd::bernoulli(survival))
+            survivors.push_back(ind);
+    const size_t nSurvivors = survivors.size();
+
+    individuals.clear();
+    assert(individuals.size() == 0u);
+
+    if (survivors.size() == 0u)
+        std::cout << "The population went extinct\n";
+    else {
+        for (auto ind : survivors)
+            individuals.push_back(ind);
+        survivors.clear();
+    }
+
+    assert(survivors.size() == 0u);
+    assert(individuals.size() == nSurvivors);
 }
 
 

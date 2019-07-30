@@ -18,7 +18,7 @@ public:
     ~Population() {};
 
     // Getters
-    size_t getPopSize() const { return popSize; };
+    size_t getPopSize() const { return individuals.size(); }
 
     void survive(const double&);
 
@@ -69,9 +69,10 @@ private:
 
     // The population
     std::vector<PInd> individuals;
+    std::vector<PInd> survivors;
 
     // Census
-    size_t popSize;
+    //size_t popSize;
 
     // std::vector<PInd> females;
     // std::vector<PInd> males;
