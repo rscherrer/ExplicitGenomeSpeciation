@@ -16,7 +16,7 @@ public:
     ~Individual() {}
 
     bool getGender() const { return isFemale; };
-    bool acceptMate() const;
+    bool acceptMate(const double&, const double&) const;
 
 
 
@@ -57,7 +57,8 @@ private:
     friend class Population;
 
     bool isFemale;
-    double matingPreference;
+    double ecoTrait;
+    double matePref;
 
     // Ecological attributes
     // mutable size_t habitat;

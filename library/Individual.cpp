@@ -8,46 +8,41 @@
 
 struct Locus;
 
-Individual::Individual() : isFemale(rnd::bernoulli(0.5)), matingPreference(0.0)
+Individual::Individual() : isFemale(rnd::bernoulli(0.5)), matingPreference(0.0),
+ ecoTrait(-1.0)
 {
 
 }
 
 
 /// Function to calculate mating probability under homogamy
-double calcAssortativeMatingProb()
+double calcAssortProb(const double &y, const double &xi,
+ const double &xj, const double &alpha)
 {
-    double prob = 1.0;
-
-    return prob;
+    const double d = xi - xj;
+    return exp(- 0.5 * alpha * sqr(y * d));
 }
 
 
 /// Function to calculate mating probability under heterogamy
-double calcDisassortativeMatingProb()
+double calcDisassortProb(const double &y, const double &xi,
+ const double &xj, const double &alpha)
 {
-    double prob = 1.0;
-
-    return prob;
+    return 1.0 - sqr(sqr(y)) * calcAssortProb(y, xi, xj, alpha);
 }
 
 
 /// Function to evaluate a potential mate
-bool Individual::acceptMate() const
+bool Individual::acceptMate(const double &xj, const double &strength) const
 {
 
-    double matingProb = 0.5;
+    // Calculate the probability of mating
+    const double prob = matePref >= 0.0 ?
+     calcAssortProb(matePref, ecoTrait, xj, strength) :
+      calcDisassortProb(matePref, ecoTrait, xj, strength);
 
-    if (matingPreference >= 0.0)
-        matingProb = calcAssortativeMatingProb();
-    else
-        matingProb = calcDisassortativeMatingProb();
-
-    // double matingProb = scale >= 0 ? exp(- matePreferenceStrength * sqr(traitP[1u]) * dij / 2.0) : 1.0 - sqr(sqr(traitP[1u]))
-
-    const bool isAccepted = rnd::bernoulli(matingProb);
-
-    return isAccepted;
+    // Sample mating event
+    return rnd::bernoulli(matingProb);
 
 }
 
