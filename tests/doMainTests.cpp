@@ -21,21 +21,21 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 
 
 // After a simulation ends, the time should be tmax
-BOOST_AUTO_TEST_CASE(checkTimeAfterSimul)
+BOOST_AUTO_TEST_CASE(checkSimulReachesTMax)
 {
     size_t t = 0u;
-    size_t tmax = 100u;
+    const size_t tmax = 100u;
+    const size_t initPopSize = 10u;
+    const double survival = 1.0;
 
     ParameterSet pars;
-    Population pop = Population(pars.getInitialPopSize());
+    Population pop = Population(initPopSize);
 
-    runSimulation(t, pop, tmax);
+    runSimulation(t, pop, tmax, survival);
 
     BOOST_CHECK_EQUAL(t, tmax);
-
-    // After a simulation, the population should still be there and
-    // have individuals
-    BOOST_CHECK(pop.getPopSize() > 0u);
 }
+
+
 
 

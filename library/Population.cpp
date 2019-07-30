@@ -36,12 +36,13 @@ void Population::survive(const double &survival)
     for (auto ind : individuals)
         if (rnd::bernoulli(survival))
             survivors.push_back(ind);
+
     const size_t nSurvivors = survivors.size();
 
     individuals.clear();
     assert(individuals.size() == 0u);
 
-    if (survivors.size() == 0u)
+    if (nSurvivors == 0u)
         std::cout << "The population went extinct\n";
     else {
         for (auto ind : survivors)
