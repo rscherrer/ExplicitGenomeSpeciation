@@ -1,5 +1,5 @@
 #include "library/Population.h"
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 
 // Check that zero survival leaves no survivors in the population

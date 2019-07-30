@@ -2,7 +2,7 @@
 #include "library/Random.h"
 #include "library/utils.h"
 #include "tests/testUtilities.h"
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <cassert>
 
