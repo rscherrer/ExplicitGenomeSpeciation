@@ -12,6 +12,11 @@ public:
 
     typedef Individual const * PInd;
 
+    Individual();
+    ~Individual() {}
+
+    bool getGender() const { return isFemale; };
+
     /*
     struct Locus
     {
@@ -48,6 +53,8 @@ private:
 
     friend class Population;
 
+    bool isFemale;
+
     // Ecological attributes
     // mutable size_t habitat;
     // mutable size_t ecotype;
@@ -58,6 +65,7 @@ private:
     // std::pair<double, double> attackRates;
 
     // Genetic attributes
+
     // bool isHeterogamous;
     // std::vector<bool> genomeSequence;
     // std::vector<Locus> genotypes;

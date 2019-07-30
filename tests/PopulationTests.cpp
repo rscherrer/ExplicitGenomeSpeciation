@@ -43,3 +43,13 @@ BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
     pop.survive(0.0);
     BOOST_CHECK(pop.getPopSize() > 0u);
 }
+
+// Test that the population has grown after sexual reproduction
+BOOST_AUTO_TEST_CASE(checkGrowthSexual)
+{
+    std::cout << "Testing population growth with sexual reproduction...\n";
+    Population pop = Population(10u);
+    pop.reproduceSexual(4.0);
+    pop.survive(1.0);
+    BOOST_CHECK(pop.getPopSize() > 10u);
+}

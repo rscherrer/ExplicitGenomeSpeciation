@@ -8,7 +8,7 @@
 
 /// Constructor
 Population::Population(const size_t &popsize) : individuals(populate(popsize)),
- offspring({ }), survivors({ })
+ females({ }), males({ }), offspring({ }), survivors({ })
 {
 
 }
@@ -42,6 +42,32 @@ void Population::reproduce(const double &birth)
         }
         --nAdults;
     }
+}
+
+
+/// Sexual reproduction function
+void Population::reproduceSexual(const double &birth)
+{
+    // Sort out moms and dads
+    for (auto ind : individuals)
+        if (ind->getGender())
+            females.push_back(ind);
+        else
+            males.push_back(ind);
+
+    // Every mom gets a chance to produce babies
+    size_t nMoms = females.size();
+    while (nMoms) {
+        size_t nOffspring = rnd::poisson(birth);
+        while (nOffspring) {
+            offspring.push_back(new Individual);
+            --nOffspring;
+        }
+        --nMoms;
+    }
+
+    females.clear();
+    males.clear();
 }
 
 

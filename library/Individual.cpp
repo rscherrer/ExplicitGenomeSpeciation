@@ -8,6 +8,11 @@
 
 struct Locus;
 
+Individual::Individual() : isFemale(rnd::bernoulli(0.5))
+{
+
+}
+
 /*
 // Accessory functions
 double calcAssortProb(const double &matePreference, const double &matingTrait,

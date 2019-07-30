@@ -22,6 +22,7 @@ public:
 
     // Life cycle
     void reproduce(const double&);
+    void reproduceSexual(const double&);
     bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
@@ -71,6 +72,8 @@ private:
 
     // The population
     std::vector<PInd> individuals;
+    std::vector<PInd> females;
+    std::vector<PInd> males;
     std::vector<PInd> offspring;
     std::vector<PInd> survivors;
 
