@@ -12,3 +12,9 @@ BOOST_AUTO_TEST_CASE(checkNoSurvivors)
 
 
 // Check that no mortality leaves all individuals in the population
+BOOST_AUTO_TEST_CASE(checkNoMortality)
+{
+    Population pop = Population(10u);
+    pop.survive(1.0);
+    BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
+}
