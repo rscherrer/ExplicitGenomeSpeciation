@@ -46,7 +46,7 @@ void Population::reproduceAsexual(const double &birth)
 
 
 /// Sexual reproduction function
-void Population::reproduce(const double &birth)
+void Population::reproduce(const double &birth, const double &strength)
 {
 
     // Males have mating successes (a discrete distribution)
@@ -69,7 +69,10 @@ void Population::reproduce(const double &birth)
     for (auto mom : females) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
-            if (mom->acceptMate()) {
+
+            auto dad = males[0u];
+
+            if (mom->acceptMate(dad->getEcoTrait(), strength)) {
                 offspring.push_back(new Individual);
                 --nOffspring;
             }

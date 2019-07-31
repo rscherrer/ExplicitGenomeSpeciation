@@ -15,7 +15,9 @@ public:
     Individual();
     ~Individual() {}
 
-    bool getGender() const { return isFemale; };
+    bool getGender() const { return isFemale; }
+    double getEcoTrait() const { return ecoTrait; }
+
     bool acceptMate(const double&, const double&) const;
 
 

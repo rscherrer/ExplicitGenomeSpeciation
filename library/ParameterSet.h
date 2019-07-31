@@ -27,6 +27,7 @@ public:
     size_t getInitialPopSize() const { return initialPopSize; }
     double getSurvivalProb() const { return survivalProb; }
     double getBirthRate() const { return birthRate; }
+    double getMatePreferenceStrength() const { return matePreferenceStrength; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }

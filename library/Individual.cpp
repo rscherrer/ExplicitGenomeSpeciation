@@ -8,8 +8,8 @@
 
 struct Locus;
 
-Individual::Individual() : isFemale(rnd::bernoulli(0.5)), matingPreference(0.0),
- ecoTrait(-1.0)
+Individual::Individual() : isFemale(rnd::bernoulli(0.5)),  ecoTrait(-1.0),
+ matePref(0.0)
 {
 
 }
@@ -37,12 +37,12 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 {
 
     // Calculate the probability of mating
-    const double prob = matePref >= 0.0 ?
+    const double mateProb = matePref >= 0.0 ?
      calcAssortProb(matePref, ecoTrait, xj, strength) :
       calcDisassortProb(matePref, ecoTrait, xj, strength);
 
     // Sample mating event
-    return rnd::bernoulli(matingProb);
+    return rnd::bernoulli(mateProb);
 
 }
 
