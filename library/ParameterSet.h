@@ -63,13 +63,16 @@ private:
     size_t nMatInteractions = 500u;
     size_t nNtrInteractions = 0u;
     size_t nChromosomes     = 3u;
+
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     std::vector<size_t> nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
     std::vector<size_t> nEdgesPerTrait = { nEcoInteractions, nMatInteractions,
      nNtrInteractions };
     size_t nBits = 2u * nLoci;
+
     //std::string strInitialSequence = "";
     //std::vector<bool> initialSequence {};
+
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
     double  genomeLength            = 300.0;
