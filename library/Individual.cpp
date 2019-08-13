@@ -41,6 +41,9 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
      calcAssortProb(matePref, ecoTrait, xj, strength) :
       calcDisassortProb(matePref, ecoTrait, xj, strength);
 
+    assert(mateProb >= 0.0);
+    assert(mateProb <= 1.0);
+
     // Sample mating event
     return rnd::bernoulli(mateProb);
 
