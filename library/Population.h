@@ -21,7 +21,7 @@ public:
     size_t getPopSize() const { return individuals.size(); }
 
     // Life cycle
-    void reproduce(const double&, const double&);
+    void reproduce(const double&, const double&, const double& = 0.01);
     void reproduceAsexual(const double&);
     bool survive(const double&);
 

@@ -46,7 +46,8 @@ void Population::reproduceAsexual(const double &birth)
 
 
 /// Sexual reproduction function
-void Population::reproduce(const double &birth, const double &strength)
+void Population::reproduce(const double &birth, const double &strength,
+ const double &cost)
 {
 
     // Males have mating successes (a discrete distribution)
@@ -73,10 +74,18 @@ void Population::reproduce(const double &birth, const double &strength)
     std::discrete_distribution<size_t> maleMarket(successes.begin(),
      successes.end());
 
+    // Sample the duration of the mating season this year
+    const size_t seasonEnd = rnd::geometric(cost);
+
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
+
         size_t nOffspring = rnd::poisson(birth);
-        while (nOffspring) {
+
+        size_t time = 0u;
+
+        // The mating season begins...
+        while (nOffspring && time < seasonEnd) {
 
             // Sample a male
             const size_t encounter = maleMarket(rnd::rng);
@@ -87,6 +96,8 @@ void Population::reproduce(const double &birth, const double &strength)
                 offspring.push_back(new Individual);
                 --nOffspring;
             }
+
+            ++time;
         }
     }
 
