@@ -54,7 +54,7 @@ void Population::reproduce(const double &birth, const double &strength)
     // Her offspring can come from different fathers
     // The mating season has a limited duration
     // The mating seaon consists in multiple time steps
-    // In each time step, the female encoutners a male based on mating success
+    // In each time step, the female encounters a male based on mating success
     // Each male encountered is evaluated
     // If the male is accepted, he becomes the father of a newborn
 
@@ -65,12 +65,23 @@ void Population::reproduce(const double &birth, const double &strength)
         else
             males.push_back(ind);
 
+    // Prepare a weighted lottery based on male mating successes
+    std::vector<double> successes;
+    for (auto male : males)
+        successes.push_back(male->getFitness());
+
+    std::discrete_distribution<size_t> maleMarket(successes.begin(),
+     successes.end());
+
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
 
-            auto dad = males[0u];
+            // Sample a male
+            const size_t encounter = maleMarket(rnd::rng);
+            assert(encounter < males.size());
+            auto dad = males[encounter];
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
                 offspring.push_back(new Individual);

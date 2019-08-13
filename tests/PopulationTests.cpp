@@ -28,9 +28,9 @@ BOOST_AUTO_TEST_CASE(checkGrowth)
 {
     std::cout << "Testing population growth...\n";
     Population pop = Population(10u);
-    pop.reproduce(4.0, 0.0);
+    pop.reproduce(4.0, 1.0);
     pop.survive(1.0);
-    BOOST_CHECK(pop.getPopSize() > 10u);
+    BOOST_CHECK(pop.getPopSize() >= 10u);
 }
 
 
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
 {
     std::cout << "Testing that newborns do not die...\n";
     Population pop = Population(10u);
-    pop.reproduce(1.0, 0.0);
+    pop.reproduce(1.0, 1.0);
     pop.survive(0.0);
     BOOST_CHECK(pop.getPopSize() > 0u);
 }

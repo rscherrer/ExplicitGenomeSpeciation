@@ -17,9 +17,12 @@ public:
 
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
+    double getFitness() const { return fitness; }
 
     bool acceptMate(const double&, const double&) const;
 
+    void setEcoTrait(const double &value) { ecoTrait = value; }
+    void setMatePref(const double &value) { matePref = value; }
 
 
     /*
@@ -61,6 +64,7 @@ private:
     bool isFemale;
     double ecoTrait;
     double matePref;
+    double fitness;
 
     // Ecological attributes
     // mutable size_t habitat;

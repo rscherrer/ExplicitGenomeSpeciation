@@ -9,7 +9,7 @@
 struct Locus;
 
 Individual::Individual() : isFemale(rnd::bernoulli(0.5)),  ecoTrait(-1.0),
- matePref(0.0)
+ matePref(0.0), fitness(1.0)
 {
 
 }
