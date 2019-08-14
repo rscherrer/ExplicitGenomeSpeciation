@@ -12,8 +12,7 @@ typedef std::pair<size_t, size_t> Edge;
 
 
 /// A container of constant genetic features across the genome
-struct Genome
-{
+struct Genome {
 
     Genome(const size_t&, const std::vector<size_t>&, const size_t&,
      const double&, const double&);
@@ -36,8 +35,7 @@ struct Genome
 
 
 /// A container for a gene regulatory network
-struct Network
-{
+struct Network {
 
     Network(const size_t&, const size_t&, const double&, const double&,
      const double&);
