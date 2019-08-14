@@ -24,6 +24,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 /// Constructor
 Individual::Individual(const Genome &genome) :
     sequence(makeSequence(genome.nloci)),
+    geneticValues({ }),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome)),
     ecoTrait(traits[0u]),
@@ -72,8 +73,9 @@ std::vector<double> Individual::develop(const Genome &genome)
     // And each gene is diploid
     // And there is dominance
     // Each gene contributes to the value of its encoded trait
+    // The effect of each gene is also altered by interactions
 
-    std::vector<double> traitValues {0.0, 0.0, 0.0};
+    std::vector<double> phenotypes {0.0, 0.0, 0.0};
 
     for (size_t locus = 0u; locus < sequence[0u].size(); ++locus) {
 
@@ -82,6 +84,8 @@ std::vector<double> Individual::develop(const Genome &genome)
         for (size_t strain = 0u; strain < 2u; ++strain)
             if (sequence[strain][locus])
                 ++genotype;
+
+        assert(genotype < 3u);
 
         // Determine gene expression
         double expression;
@@ -98,12 +102,16 @@ std::vector<double> Individual::develop(const Genome &genome)
         // Determine encoded trait
         const size_t trait = genome.traits[locus];
 
-        // Contribute to trait
-        traitValues[trait] += genome.effects[locus] * expression;
+        // Compute locus genetic value
+        const double genetic = genome.effects[locus] * expression;
+        geneticValues.push_back(genetic);
+
+        // Contribute to the trait value
+        phenotypes[trait] += genetic;
 
     }
 
-    return traitValues;
+    return phenotypes;
 }
 
 
