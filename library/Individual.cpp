@@ -15,11 +15,13 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 {
     const double rate1 = maxi * exp(- sel * sqr(trait + 1.0));
     const double rate2 = maxi * exp(- sel * sqr(trait - 1.0));
+    assert(rate1 >= 0.0);
+    assert(rate2 >= 0.0);
     return { rate1, rate2 };
 }
 
 
-Individual::Individual() : isFemale(rnd::bernoulli(0.5)),  ecoTrait(-1.0),
+Individual::Individual() : isFemale(rnd::bernoulli(0.5)), ecoTrait(-1.0),
  matePref(0.0), fitness(1.0), feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
@@ -43,6 +45,7 @@ Individual::Individual() : isFemale(rnd::bernoulli(0.5)),  ecoTrait(-1.0),
 void Individual::feed(const std::vector<double> &food)
 {
     fitness = feedingRates[0u] * food[0u] + feedingRates[1u] * food[1u];
+    assert(fitness >= 0.0);
 }
 
 

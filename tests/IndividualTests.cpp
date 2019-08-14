@@ -33,3 +33,12 @@ BOOST_AUTO_TEST_CASE(checkRandomMating)
     BOOST_CHECK(ind.acceptMate(1.0, 1.0));
     BOOST_CHECK(ind.acceptMate(-1.0, 1.0));
 }
+
+// We know exactly the fitness that a default individual should get from food
+BOOST_AUTO_TEST_CASE(checkFeeding)
+{
+    std::cout << "Testing fitness obtained by feeding...\n";
+    Individual ind = Individual();
+    ind.feed({ 100.0, 100.0 });
+    BOOST_CHECK(ind.getFitness() == 0.0004 * 100.0 + 0.0004 * exp(-4.0) * 100);
+}

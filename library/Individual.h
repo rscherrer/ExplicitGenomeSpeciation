@@ -20,8 +20,8 @@ public:
     double getFitness() const { return fitness; }
     std::vector<double> getFeedingRates() const { return feedingRates; }
 
-    bool acceptMate(const double&, const double&) const;
     void feed(const std::vector<double>&);
+    bool acceptMate(const double&, const double&) const;
 
     void setEcoTrait(const double &value) { ecoTrait = value; }
     void setMatePref(const double &value) { matePref = value; }
