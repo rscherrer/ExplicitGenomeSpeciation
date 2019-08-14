@@ -38,27 +38,6 @@ Individual::Individual(const std::vector<double> &genome) :
 }
 
 
-/// Build the genome of an individual
-std::vector<double> Individual::makeGenome(const size_t &nloci)
-{
-    std::vector<double> sequence;
-    double sumsq = 0.0;
-
-    // The vector of gene values should be a property of the architecture
-
-    for (size_t locus = 0u; locus < nloci; ++locus) {
-        const double value = -1.0;
-        sequence.push_back(value);
-        sumsq += sqr(value);
-    }
-
-    for (size_t locus = 0u; locus < nloci; ++locus)
-        sequence[locus] /= sumsq;
-
-    return sequence;
-}
-
-
 /// Development
 double Individual::develop(const std::vector<double> &genome)
 {

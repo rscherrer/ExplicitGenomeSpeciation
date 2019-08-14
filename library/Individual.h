@@ -75,7 +75,6 @@ private:
 
     // Makers
     double develop(const std::vector<double>&);
-    std::vector<double> makeGenome(const size_t& = 3u);
 
     // Fields
     bool isFemale;
