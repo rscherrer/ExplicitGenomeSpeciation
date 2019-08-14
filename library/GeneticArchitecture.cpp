@@ -272,7 +272,8 @@ Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait,
     traits(makeEncodedTraits(nTraits, nLociPerTrait)),
     locations(std::vector<double> { }),
     effects(std::vector<double> { }),
-    dominances(std::vector<double> { })
+    dominances(std::vector<double> { }),
+    nloci(nLoci)
 {
 
     // Sample locations, effect sizes and dominance coefficients across the

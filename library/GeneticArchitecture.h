@@ -22,6 +22,8 @@ struct Genome {
     std::vector<double> effects;
     std::vector<double> dominances;
 
+    size_t nloci;
+
     // A vector of locus epistatic interaction partners and weights
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;
 

@@ -23,7 +23,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor
 Individual::Individual(const Genome &genome) :
-    sequence(makeSequence(genome.effects.size())),
+    sequence(makeSequence(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome)),
     ecoTrait(traits),
