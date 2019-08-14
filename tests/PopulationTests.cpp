@@ -1,22 +1,7 @@
 #include "library/Population.h"
+#include "GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-
-
-struct GenFixture {
-
-    GenFixture() :
-        pars(ParameterSet()),
-        arch(GeneticArchitecture(pars)),
-        genome(arch.getGenome())
-    {}
-    ~GenFixture() {}
-
-    ParameterSet pars;
-    GeneticArchitecture arch;
-    Genome genome;
-
-};
 
 
 BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
