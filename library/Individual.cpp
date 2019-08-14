@@ -22,9 +22,10 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual(const std::vector<double> &genome) :
+Individual::Individual(const std::vector<double> &effects) :
+    genome(makeSequence(effects.size())),
     isFemale(rnd::bernoulli(0.5)),
-    traits(develop(genome)),
+    traits(develop(effects)),
     ecoTrait(traits),
     matePref(0.0),
     fitness(1.0),
@@ -38,18 +39,36 @@ Individual::Individual(const std::vector<double> &genome) :
 }
 
 
+/// Generate DNA sequence
+std::vector<bool> Individual::makeSequence(const size_t &nloci)
+{
+
+    // Generate a random genetic sequence of alleles
+    std::vector<bool> sequence;
+    for (size_t locus = 0u; locus < nloci; ++locus)
+        sequence.push_back(rnd::bernoulli(0.5));
+
+    return sequence;
+
+}
+
+
 /// Development
-double Individual::develop(const std::vector<double> &genome)
+double Individual::develop(const std::vector<double> &effects)
 {
 
     // Development reads the genome and computes trait values
     // Loop throughout the genome
     // Each gene contributes to the trait value
+    // But each gene has a certain allele in a certain individual
 
     double trait = 0.0;
 
-    for (size_t locus = 0u; locus < genome.size(); ++locus)
-        trait += genome[locus];
+    for (size_t locus = 0u; locus < genome.size(); ++locus) {
+        const bool allele = genome[locus];
+        const double expression = allele ? 1.0 : -1.0;
+        trait += effects[locus] * expression;
+    }
 
     return trait;
 }
