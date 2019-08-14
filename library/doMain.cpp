@@ -12,7 +12,8 @@
 
 /// Function to run a simulation
 void runSimulation(size_t &t, Population &pop, const size_t &tmax,
- const double &survival, const double &birth, const double &strength)
+ const double &survival, const double &birth, const double &strength,
+  const std::vector<double> &genome)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
@@ -23,7 +24,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
         pop.consume();
 
         // Reproduction
-        pop.reproduce(birth, strength);
+        pop.reproduce(birth, strength, genome);
 
         // Survival
         if (!pop.survive(survival)) {
@@ -56,7 +57,8 @@ int doMain(const std::vector<std::string> &args)
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
         // Create a population of individuals
-        Population pop = Population(pars.getInitialPopSize());
+        std::vector<double> genome = arch.getGenome().effectSizes;
+        Population pop = Population(pars.getInitialPopSize(), genome);
 
         std::cout << "Simulation started\n";
 
@@ -67,7 +69,7 @@ int doMain(const std::vector<std::string> &args)
         const double birth = pars.getBirthRate();
         const double strength = pars.getMatePreferenceStrength();
 
-        runSimulation(t, pop, tmax, survival, birth, strength);
+        runSimulation(t, pop, tmax, survival, birth, strength, genome);
 
         std::cout << "Simulation ended\n";
 

@@ -6,8 +6,11 @@
 BOOST_AUTO_TEST_CASE(checkAssortative)
 {
     std::cout << "Testing homogamous female...\n";
-    Individual ind = Individual();
-    ind.setEcoTrait(0.0);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Individual ind = Individual(genome);
+    ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(1.0);
     BOOST_CHECK(ind.acceptMate(0.0, 1.0));
 }
@@ -16,8 +19,11 @@ BOOST_AUTO_TEST_CASE(checkAssortative)
 BOOST_AUTO_TEST_CASE(checkDisassortative)
 {
     std::cout << "Testing heterogamous female...\n";
-    Individual ind = Individual();
-    ind.setEcoTrait(0.0);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Individual ind = Individual(genome);
+    ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(-1.0);
     BOOST_CHECK(!ind.acceptMate(0.0, 1.0));
 }
@@ -26,8 +32,11 @@ BOOST_AUTO_TEST_CASE(checkDisassortative)
 BOOST_AUTO_TEST_CASE(checkRandomMating)
 {
     std::cout << "Testing random mating female...\n";
-    Individual ind = Individual();
-    ind.setEcoTrait(0.0);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Individual ind = Individual(genome);
+    ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(0.0);
     BOOST_CHECK(ind.acceptMate(0.0, 1.0));
     BOOST_CHECK(ind.acceptMate(1.0, 1.0));
@@ -38,7 +47,11 @@ BOOST_AUTO_TEST_CASE(checkRandomMating)
 BOOST_AUTO_TEST_CASE(checkFeeding)
 {
     std::cout << "Testing fitness obtained by feeding...\n";
-    Individual ind = Individual();
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Individual ind = Individual(genome);
+    ind.setEcoTrait(-1.0, 1.0);
     ind.feed({ 100.0, 100.0 });
     BOOST_CHECK(ind.getFitness() == 0.0004 * 100.0 + 0.0004 * exp(-4.0) * 100);
 }

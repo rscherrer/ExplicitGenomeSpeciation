@@ -6,13 +6,17 @@
 #include <vector>
 #include <random>
 
+/// Function to calculate feeding rates
+std::vector<double> calcFeedingRates(const double &sel, const double &trait,
+ const double &maxi = 0.0004);
+
 class Individual {
 
 public:
 
     typedef Individual const * PInd;
 
-    Individual();
+    Individual(const std::vector<double>&);
     ~Individual() {}
 
     // Getters
@@ -26,7 +30,10 @@ public:
     bool acceptMate(const double&, const double&) const;
 
     // Setters
-    void setEcoTrait(const double &value) { ecoTrait = value; }
+    void setEcoTrait(const double &value, const double &sel) {
+        ecoTrait = value;
+        feedingRates = calcFeedingRates(sel, value);
+    }
     void setMatePref(const double &value) { matePref = value; }
 
 
@@ -67,11 +74,10 @@ private:
     friend class Population;
 
     // Makers
-    double develop();
+    double develop(const std::vector<double>&);
     std::vector<double> makeGenome(const size_t& = 3u);
 
     // Fields
-    std::vector<double> genome;
     bool isFemale;
     double traits;
     double ecoTrait;

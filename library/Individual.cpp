@@ -11,7 +11,7 @@ struct Locus;
 
 /// Function to calculate feeding rates
 std::vector<double> calcFeedingRates(const double &sel, const double &trait,
- const double &maxi = 0.0004)
+ const double &maxi)
 {
     const double rate1 = maxi * exp(- sel * sqr(trait + 1.0));
     const double rate2 = maxi * exp(- sel * sqr(trait - 1.0));
@@ -22,9 +22,13 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual() : genome(makeGenome()),
- isFemale(rnd::bernoulli(0.5)), traits(develop()), ecoTrait(traits),
-  matePref(0.0), fitness(1.0), feedingRates(calcFeedingRates(1.0, ecoTrait))
+Individual::Individual(const std::vector<double> &genome) :
+    isFemale(rnd::bernoulli(0.5)),
+    traits(develop(genome)),
+    ecoTrait(traits),
+    matePref(0.0),
+    fitness(1.0),
+    feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
     // Ecological trait is not always -1
@@ -40,6 +44,8 @@ std::vector<double> Individual::makeGenome(const size_t &nloci)
     std::vector<double> sequence;
     double sumsq = 0.0;
 
+    // The vector of gene values should be a property of the architecture
+
     for (size_t locus = 0u; locus < nloci; ++locus) {
         const double value = -1.0;
         sequence.push_back(value);
@@ -54,7 +60,7 @@ std::vector<double> Individual::makeGenome(const size_t &nloci)
 
 
 /// Development
-double Individual::develop()
+double Individual::develop(const std::vector<double> &genome)
 {
 
     // Development reads the genome and computes trait values

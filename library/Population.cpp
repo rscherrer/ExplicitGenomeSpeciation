@@ -7,9 +7,16 @@
 
 
 /// Constructor
-Population::Population(const size_t &popsize) : individuals(populate(popsize)),
- females({ }), males({ }), offspring({ }), survivors({ }),
-  capacity({100.0, 100.0}), replenish({1.0, 1.0}), resources(capacity)
+Population::Population(const size_t &popsize,
+ const std::vector<double> &genome) :
+    individuals(populate(popsize, genome)),
+    females({ }),
+    males({ }),
+    offspring({ }),
+    survivors({ }),
+    capacity({100.0, 100.0}),
+    replenish({1.0, 1.0}),
+    resources(capacity)
 {
 
 }
@@ -17,13 +24,14 @@ Population::Population(const size_t &popsize) : individuals(populate(popsize)),
 
 
 /// Function to initialize a population of individuals
-std::vector<PInd> Population::populate(const size_t &popsize)
+std::vector<PInd> Population::populate(const size_t &popsize,
+ const std::vector<double> &genome)
 {
 
     std::vector<PInd> indivs;
 
     for (size_t ind = 0u; ind < popsize; ++ind)
-        indivs.push_back(new Individual);
+        indivs.push_back(new Individual(genome));
 
     return indivs;
 
@@ -65,14 +73,15 @@ void Population::consume()
 
 
 /// Asexual reproduction function
-void Population::reproduceAsexual(const double &birth)
+void Population::reproduceAsexual(const double &birth,
+ const std::vector<double> &genome)
 {
     // Everybody gets a chance to produce babies
     size_t nAdults = individuals.size();
     while (nAdults) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
-            offspring.push_back(new Individual);
+            offspring.push_back(new Individual(genome));
             --nOffspring;
         }
         --nAdults;
@@ -82,7 +91,7 @@ void Population::reproduceAsexual(const double &birth)
 
 /// Sexual reproduction function
 void Population::reproduce(const double &birth, const double &strength,
- const double &cost)
+ const std::vector<double> &genome, const double &cost)
 {
 
     // Sort out moms and dads
@@ -119,7 +128,7 @@ void Population::reproduce(const double &birth, const double &strength,
             auto dad = males[encounter];
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
-                offspring.push_back(new Individual);
+                offspring.push_back(new Individual(genome));
                 --nOffspring;
             }
 

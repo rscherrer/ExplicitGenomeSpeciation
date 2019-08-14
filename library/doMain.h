@@ -8,7 +8,7 @@
 
 /// Function to run the simulation
 void runSimulation(size_t&, Population&, const size_t&, const double&,
- const double&, const double&);
+ const double&, const double&, const std::vector<double>&);
 
 /// Function to run the program
 int doMain(const std::vector<std::string>&);

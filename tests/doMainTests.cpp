@@ -35,9 +35,12 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     const double birth = 0.0;
     const double strength = 0.0;
 
-    Population pop = Population(initPopSize);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(initPopSize, genome);
 
-    runSimulation(t, pop, tmax, survival, birth, strength);
+    runSimulation(t, pop, tmax, survival, birth, strength, genome);
 
     BOOST_CHECK_EQUAL(t, tmax);
     BOOST_CHECK(pop.getPopSize() > 0u);
@@ -57,9 +60,12 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     const double birth = 0.0;
     const double strength = 0.0;
 
-    Population pop = Population(initPopSize);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(initPopSize, genome);
 
-    runSimulation(t, pop, tmax, survival, birth, strength);
+    runSimulation(t, pop, tmax, survival, birth, strength, genome);
 
     BOOST_CHECK(t < tmax);
     BOOST_CHECK(pop.getPopSize() == 0u);

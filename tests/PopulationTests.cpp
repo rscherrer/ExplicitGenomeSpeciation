@@ -6,7 +6,10 @@
 BOOST_AUTO_TEST_CASE(checkNoSurvivors)
 {
     std::cout << "Testing population wipe-out...\n";
-    Population pop = Population(10u);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(10u, genome);
     pop.survive(0.0);
     BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
 }
@@ -16,7 +19,10 @@ BOOST_AUTO_TEST_CASE(checkNoSurvivors)
 BOOST_AUTO_TEST_CASE(checkNoMortality)
 {
     std::cout << "Testing absence of mortality...\n";
-    Population pop = Population(10u);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(10u, genome);
     pop.survive(1.0);
     BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
 }
@@ -26,8 +32,11 @@ BOOST_AUTO_TEST_CASE(checkNoMortality)
 BOOST_AUTO_TEST_CASE(checkGrowth)
 {
     std::cout << "Testing population growth...\n";
-    Population pop = Population(10u);
-    pop.reproduce(4.0, 1.0);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(10u, genome);
+    pop.reproduce(4.0, 1.0, genome);
     pop.survive(1.0);
     BOOST_CHECK(pop.getPopSize() >= 10u);
 }
@@ -37,8 +46,11 @@ BOOST_AUTO_TEST_CASE(checkGrowth)
 BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
 {
     std::cout << "Testing that newborns do not die...\n";
-    Population pop = Population(10u);
-    pop.reproduce(1.0, 1.0);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(10u, genome);
+    pop.reproduce(1.0, 1.0, genome);
     pop.survive(0.0);
     BOOST_CHECK(pop.getPopSize() > 0u);
 }
@@ -47,7 +59,10 @@ BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
 BOOST_AUTO_TEST_CASE(checkResourceIsDepleted)
 {
     std::cout << "Testing resource depletion...\n";
-    Population pop = Population(10u);
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    std::vector<double> genome = arch.getGenome().effectSizes;
+    Population pop = Population(10u, genome);
     std::vector<double> resourcesBefore = pop.getResources();
     pop.consume();
     std::vector<double> resourcesAfter = pop.getResources();
