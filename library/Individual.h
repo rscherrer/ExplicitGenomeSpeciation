@@ -68,7 +68,7 @@ private:
 
     // Makers
     double develop();
-    std::vector<double> makeGenome();
+    std::vector<double> makeGenome(const size_t& = 3u);
 
     // Fields
     std::vector<double> genome;
