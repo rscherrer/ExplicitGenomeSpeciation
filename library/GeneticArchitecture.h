@@ -18,10 +18,10 @@ struct Genome
     Genome(const size_t&, const std::vector<size_t>&, const size_t&,
      const double&, const double&);
 
-    std::vector<size_t> encodedTraits;
+    std::vector<size_t> traits;
     std::vector<double> locations;
-    std::vector<double> effectSizes;
-    std::vector<double> dominanceCoeffs;
+    std::vector<double> effects;
+    std::vector<double> dominances;
 
     // A vector of locus epistatic interaction partners and weights
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;

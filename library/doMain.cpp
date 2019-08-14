@@ -57,7 +57,7 @@ int doMain(const std::vector<std::string> &args)
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
         // Create a population of individuals
-        std::vector<double> genome = arch.getGenome().effectSizes;
+        std::vector<double> genome = arch.getGenome().effects;
         Population pop = Population(pars.getInitialPopSize(), genome);
 
         std::cout << "Simulation started\n";

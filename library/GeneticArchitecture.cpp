@@ -269,23 +269,19 @@ Genome GeneticArchitecture::makeGenome() const noexcept
 /// Genome constructor
 Genome::Genome(const size_t &nTraits, const std::vector<size_t> &nLociPerTrait,
  const size_t &nLoci, const double &shape, const double &scale) :
-    encodedTraits(makeEncodedTraits(nTraits, nLociPerTrait)),
-    locations(std::vector<double> { 0.0 }),
-    effectSizes(std::vector<double> { 0.0 }),
-    dominanceCoeffs(std::vector<double> { 0.0 })
+    traits(makeEncodedTraits(nTraits, nLociPerTrait)),
+    locations(std::vector<double> { }),
+    effects(std::vector<double> { }),
+    dominances(std::vector<double> { })
 {
-
-    locations.pop_back();
-    effectSizes.pop_back();
-    dominanceCoeffs.pop_back();
 
     // Sample locations, effect sizes and dominance coefficients across the
     // genome
     setLocationsEffectSizesAndDominance(nTraits, nLoci, shape, scale);
 
-    assert(encodedTraits.size() == nLoci);
-    assert(effectSizes.size() == nLoci);
-    assert(dominanceCoeffs.size() == nLoci);
+    assert(traits.size() == nLoci);
+    assert(effects.size() == nLoci);
+    assert(dominances.size() == nLoci);
     assert(locations.size() == nLoci);
 }
 
@@ -295,20 +291,20 @@ std::vector<size_t> Genome::makeEncodedTraits(const size_t &nTraits,
  const std::vector<size_t> &nLociPerTrait) const noexcept
 {
 
-    std::vector<size_t> traits;
+    std::vector<size_t> encoded;
 
     // Make an ordered vector of trait indices
     for (size_t trait = 0u; trait < nTraits; ++trait) {
         for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus) {
-            traits.push_back(trait);
-            assert(traits.back() <= 2u);
+            encoded.push_back(trait);
+            assert(encoded.back() <= 2u);
         }
     }
 
     // Shuffle encoded traits randomly
-    std::shuffle(traits.begin(), traits.end(), rnd::rng);
+    std::shuffle(encoded.begin(), encoded.end(), rnd::rng);
 
-    return traits;
+    return encoded;
 
 }
 
@@ -337,19 +333,19 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
         double effectsize = std::gamma_distribution<double>(shape, scale)(
          rnd::rng);
         effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
-        effectSizes.push_back(effectsize);
+        effects.push_back(effectsize);
 
         // Squared effect sizes are accumulated for normalizing
-        sqrtsumsqEffectSizes[encodedTraits[locus]] += sqr(effectsize);
+        sqrtsumsqEffectSizes[traits[locus]] += sqr(effectsize);
 
         // Dominance coefficients are sampled from a one-sided normal
         // distribution
         const double dominance = fabs(rnd::normal(0.0, 1.0));
         assert(dominance > 0.0);
-        dominanceCoeffs.push_back(dominance);
+        dominances.push_back(dominance);
 
         // Squared dominance coefficients are accumulated for normalizing
-        sqrtsumsqDominanceCoeffs[encodedTraits[locus]] += sqr(dominance);
+        sqrtsumsqDominanceCoeffs[traits[locus]] += sqr(dominance);
 
     }
 
@@ -372,8 +368,8 @@ void Genome::setLocationsEffectSizesAndDominance(const size_t &nTraits,
     // Normalize effect sizes and dominance coefficients across the genome
     for (size_t locus = 0u; locus < nLoci; ++locus)
     {
-        effectSizes[locus] /= sqrtsumsqEffectSizes[encodedTraits[locus]];
-        dominanceCoeffs[locus] /= sqrtsumsqDominanceCoeffs[
-                encodedTraits[locus]];
+        effects[locus] /= sqrtsumsqEffectSizes[traits[locus]];
+        dominances[locus] /= sqrtsumsqDominanceCoeffs[
+                traits[locus]];
     }
 }
