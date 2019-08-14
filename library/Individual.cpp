@@ -22,10 +22,10 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual(const std::vector<double> &effects) :
-    sequence(makeSequence(effects.size())),
+Individual::Individual(const Genome &genome) :
+    sequence(makeSequence(genome.effects.size())),
     isFemale(rnd::bernoulli(0.5)),
-    traits(develop(effects)),
+    traits(develop(genome)),
     ecoTrait(traits),
     matePref(0.0),
     fitness(1.0),
@@ -62,7 +62,7 @@ std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 
 
 /// Development
-double Individual::develop(const std::vector<double> &effects)
+double Individual::develop(const Genome &genome)
 {
 
     // Development reads the genome and computes trait values
@@ -84,8 +84,9 @@ double Individual::develop(const std::vector<double> &effects)
 
         // Determine gene expression
         double expression;
+        const double dominance = genome.dominances[locus];
         switch(genotype) {
-            case 1u : expression = 0.0; break; // Aa
+            case 1u : expression = dominance; break; // Aa
             case 2u : expression = 1.0; break; // AA
             default : expression = -1.0; break; // aa
         }
@@ -94,7 +95,7 @@ double Individual::develop(const std::vector<double> &effects)
         assert(expression <= 1.0);
 
         // Contribute to trait
-        trait += effects[locus] * expression;
+        trait += genome.effects[locus] * expression;
 
     }
 

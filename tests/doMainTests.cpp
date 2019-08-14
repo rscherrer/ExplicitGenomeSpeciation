@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effects;
+    Genome genome = arch.getGenome();
     Population pop = Population(initPopSize, genome);
 
     runSimulation(t, pop, tmax, survival, birth, strength, genome);
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effects;
+    Genome genome = arch.getGenome();
     Population pop = Population(initPopSize, genome);
 
     runSimulation(t, pop, tmax, survival, birth, strength, genome);

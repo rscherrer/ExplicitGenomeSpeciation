@@ -16,7 +16,7 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const std::vector<double>&);
+    Individual(const Genome&);
     ~Individual() {}
 
     // Getters
@@ -75,7 +75,7 @@ private:
 
     // Makers
     std::vector<std::vector<bool> > makeSequence(const size_t&);
-    double develop(const std::vector<double>&);
+    double develop(const Genome&);
 
     // Fields
     std::vector<std::vector<bool> > sequence;
