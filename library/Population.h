@@ -8,7 +8,7 @@
 
 class Individual;
 class LocusVariables;
-typedef Individual const * PInd;
+typedef Individual * PInd;
 
 class Population {
 
@@ -19,8 +19,10 @@ public:
 
     // Getters
     size_t getPopSize() const { return individuals.size(); }
+    std::vector<double> getResources() const { return resources; }
 
     // Life cycle
+    void consume();
     void reproduce(const double&, const double&, const double& = 0.01);
     void reproduceAsexual(const double&);
     bool survive(const double&);
@@ -76,6 +78,10 @@ private:
     std::vector<PInd> males;
     std::vector<PInd> offspring;
     std::vector<PInd> survivors;
+
+    std::vector<double> capacity;
+    std::vector<double> replenish;
+    std::vector<double> resources;
 
     // Census
     //size_t popSize;

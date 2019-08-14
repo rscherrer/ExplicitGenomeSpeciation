@@ -8,10 +8,41 @@
 
 struct Locus;
 
+
+/// Function to calculate feeding rates
+std::vector<double> calcFeedingRates(const double &sel, const double &trait,
+ const double &maxi = 0.0004)
+{
+    const double rate1 = maxi * exp(- sel * sqr(trait + 1.0));
+    const double rate2 = maxi * exp(- sel * sqr(trait - 1.0));
+    return { rate1, rate2 };
+}
+
+
 Individual::Individual() : isFemale(rnd::bernoulli(0.5)),  ecoTrait(-1.0),
- matePref(0.0), fitness(1.0)
+ matePref(0.0), fitness(1.0), feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
+    // Fitness is not always 1
+    // The fitness of an individual depends on its internal trait values
+    // but also on the state of the resources in the environment
+    // It should be re-evaluated at every generation
+    // Re-evaluation of fitness should be done with resource consumption
+    // Before reproduction
+    // And would be done at the population level
+
+    // The consumption function should leave the population with depleted resources
+    // So resources should be an attribute of the population
+    // Consumption should affect the level of resources of the population
+    // And the fitnesses of the individuals
+
+}
+
+
+/// Feed and get a fitness value
+void Individual::feed(const std::vector<double> &food)
+{
+    fitness = feedingRates[0u] * food[0u] + feedingRates[1u] * food[1u];
 }
 
 

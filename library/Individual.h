@@ -18,8 +18,10 @@ public:
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
     double getFitness() const { return fitness; }
+    std::vector<double> getFeedingRates() const { return feedingRates; }
 
     bool acceptMate(const double&, const double&) const;
+    void feed(const std::vector<double>&);
 
     void setEcoTrait(const double &value) { ecoTrait = value; }
     void setMatePref(const double &value) { matePref = value; }
@@ -65,6 +67,7 @@ private:
     double ecoTrait;
     double matePref;
     double fitness;
+    std::vector<double> feedingRates;
 
     // Ecological attributes
     // mutable size_t habitat;

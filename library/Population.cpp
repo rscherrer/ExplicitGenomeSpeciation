@@ -8,7 +8,8 @@
 
 /// Constructor
 Population::Population(const size_t &popsize) : individuals(populate(popsize)),
- females({ }), males({ }), offspring({ }), survivors({ })
+ females({ }), males({ }), offspring({ }), survivors({ }),
+  capacity({100.0, 100.0}), replenish({1.0, 1.0}), resources(capacity)
 {
 
 }
@@ -25,6 +26,40 @@ std::vector<PInd> Population::populate(const size_t &popsize)
         indivs.push_back(new Individual);
 
     return indivs;
+
+}
+
+
+/// Resource consumption
+void Population::consume()
+{
+
+    // cap is the carrying capacity (K)
+    // repl is the rate of replenishment of the resource (r)
+    // The resource dynamics are as follows:
+    // dR/dt = r (1 - R / K) - C R, where C is the consumption
+
+    // Calculate the total amount of food consumed
+    std::vector<double> consumed{0.0, 0.0};
+    for (auto ind : individuals) {
+        std::vector<double> rates = ind->getFeedingRates();
+        for (size_t res = 0u; res < 2u; ++res)
+            consumed[res] += rates[res];
+    }
+
+    assert(consumed[0u] >= 0.0);
+    assert(consumed[1u] >= 0.0);
+
+    // Update the resource equilibrium state
+    for (size_t res = 0u; res < 2u; ++res)
+        resources[res] = capacity[res] * (1.0 - consumed[res] / replenish[res]);
+
+    assert(resources[0u] >= 0.0);
+    assert(resources[1u] >= 0.0);
+
+    // Split the resource among the individuals
+    for (auto ind : individuals)
+        ind->feed(resources);
 
 }
 
@@ -50,15 +85,6 @@ void Population::reproduce(const double &birth, const double &strength,
  const double &cost)
 {
 
-    // Males have mating successes (a discrete distribution)
-    // Each female can produce multiple offspring
-    // Her offspring can come from different fathers
-    // The mating season has a limited duration
-    // The mating seaon consists in multiple time steps
-    // In each time step, the female encounters a male based on mating success
-    // Each male encountered is evaluated
-    // If the male is accepted, he becomes the father of a newborn
-
     // Sort out moms and dads
     for (auto ind : individuals)
         if (ind->getGender())
@@ -80,7 +106,7 @@ void Population::reproduce(const double &birth, const double &strength,
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
 
-        size_t nOffspring = rnd::poisson(birth);
+        size_t nOffspring = rnd::poisson(birth * mom->getFitness());
 
         size_t time = 0u;
 
