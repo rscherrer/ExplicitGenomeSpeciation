@@ -23,7 +23,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor
 Individual::Individual(const std::vector<double> &effects) :
-    genome(makeSequence(effects.size())),
+    sequence(makeSequence(effects.size())),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(effects)),
     ecoTrait(traits),
@@ -39,17 +39,25 @@ Individual::Individual(const std::vector<double> &effects) :
 }
 
 
-/// Generate DNA sequence
-std::vector<bool> Individual::makeSequence(const size_t &nloci)
+/// Generate a diploid allele sequence
+std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 {
 
-    // Generate a random genetic sequence of alleles
-    std::vector<bool> sequence;
-    for (size_t locus = 0u; locus < nloci; ++locus)
-        sequence.push_back(rnd::bernoulli(0.5));
+    std::vector<std::vector<bool> > sequences;
 
-    return sequence;
+    for (size_t strain = 0u; strain < 2u; ++strain) {
 
+        // Generate a random genetic sequence of alleles
+        std::vector<bool> haplotype;
+        for (size_t locus = 0u; locus < nloci; ++locus)
+            haplotype.push_back(rnd::bernoulli(0.5));
+        sequences.push_back(haplotype);
+
+    }
+
+    assert(sequences[0u].size() == sequences[1u].size());
+
+    return sequences;
 }
 
 
@@ -61,13 +69,33 @@ double Individual::develop(const std::vector<double> &effects)
     // Loop throughout the genome
     // Each gene contributes to the trait value
     // But each gene has a certain allele in a certain individual
+    // And each gene is diploid
+    // And there is dominance
 
     double trait = 0.0;
 
-    for (size_t locus = 0u; locus < genome.size(); ++locus) {
-        const bool allele = genome[locus];
-        const double expression = allele ? 1.0 : -1.0;
+    for (size_t locus = 0u; locus < sequence[0u].size(); ++locus) {
+
+        // Determine genotype
+        size_t genotype = 0u;
+        for (size_t strain = 0u; strain < 2u; ++strain)
+            if (sequence[strain][locus])
+                ++genotype;
+
+        // Determine gene expression
+        double expression;
+        switch(genotype) {
+            case 1u : expression = 0.0; break; // Aa
+            case 2u : expression = 1.0; break; // AA
+            default : expression = -1.0; break; // aa
+        }
+
+        assert(expression >= -1.0);
+        assert(expression <= 1.0);
+
+        // Contribute to trait
         trait += effects[locus] * expression;
+
     }
 
     return trait;

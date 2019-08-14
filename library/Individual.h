@@ -74,11 +74,11 @@ private:
     friend class Population;
 
     // Makers
-    std::vector<bool> makeSequence(const size_t&);
+    std::vector<std::vector<bool> > makeSequence(const size_t&);
     double develop(const std::vector<double>&);
 
     // Fields
-    std::vector<bool> genome;
+    std::vector<std::vector<bool> > sequence;
     bool isFemale;
     double traits;
     double ecoTrait;
