@@ -15,14 +15,17 @@ public:
     Individual();
     ~Individual() {}
 
+    // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
     double getFitness() const { return fitness; }
     std::vector<double> getFeedingRates() const { return feedingRates; }
 
+    // Actions
     void feed(const std::vector<double>&);
     bool acceptMate(const double&, const double&) const;
 
+    // Setters
     void setEcoTrait(const double &value) { ecoTrait = value; }
     void setMatePref(const double &value) { matePref = value; }
 
@@ -63,7 +66,12 @@ private:
 
     friend class Population;
 
+    // Makers
+    std::vector<double> develop();
+
+    // Fields
     bool isFemale;
+    std::vector<double> traits;
     double ecoTrait;
     double matePref;
     double fitness;

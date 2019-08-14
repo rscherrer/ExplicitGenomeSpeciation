@@ -20,6 +20,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
         // Dispersion
 
         // Resource acquisition
+        pop.consume();
 
         // Reproduction
         pop.reproduce(birth, strength);
