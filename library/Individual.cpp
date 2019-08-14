@@ -23,7 +23,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor
 Individual::Individual() : isFemale(rnd::bernoulli(0.5)), traits(develop()),
- ecoTrait(traits[0u]), matePref(traits[1u]), fitness(1.0),
+ ecoTrait(traits), matePref(0.0), fitness(1.0),
   feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
@@ -35,9 +35,14 @@ Individual::Individual() : isFemale(rnd::bernoulli(0.5)), traits(develop()),
 
 
 /// Development
-std::vector<double> Individual::develop()
+double Individual::develop()
 {
-    return {-1.0, 0.0};
+
+    // Development reads the genome and computes trait values
+    // Loop throughout the genome
+    // Each gene contributes -1 to the trait value
+
+    return -1.0;
 }
 
 

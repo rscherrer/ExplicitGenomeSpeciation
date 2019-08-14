@@ -67,11 +67,11 @@ private:
     friend class Population;
 
     // Makers
-    std::vector<double> develop();
+    double develop();
 
     // Fields
     bool isFemale;
-    std::vector<double> traits;
+    double traits;
     double ecoTrait;
     double matePref;
     double fitness;
