@@ -68,8 +68,10 @@ private:
 
     // Makers
     double develop();
+    std::vector<double> makeGenome();
 
     // Fields
+    std::vector<double> genome;
     bool isFemale;
     double traits;
     double ecoTrait;

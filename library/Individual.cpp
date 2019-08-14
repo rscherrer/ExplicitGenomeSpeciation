@@ -22,15 +22,34 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual() : isFemale(rnd::bernoulli(0.5)), traits(develop()),
- ecoTrait(traits), matePref(0.0), fitness(1.0),
-  feedingRates(calcFeedingRates(1.0, ecoTrait))
+Individual::Individual() : genome(makeGenome()),
+ isFemale(rnd::bernoulli(0.5)), traits(develop()), ecoTrait(traits),
+  matePref(0.0), fitness(1.0), feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
     // Ecological trait is not always -1
     // The trait of an individual is determined by its genome sequence
     // Through development
 
+}
+
+
+/// Function to make a genome
+std::vector<double> Individual::makeGenome()
+{
+    std::vector<double> sequence;
+    double sumsq = 0.0;
+
+    for (size_t locus = 0u; locus < 3u; ++locus) {
+        const double value = -1.0;
+        sequence.push_back(value);
+        sumsq += sqr(value);
+    }
+
+    for (size_t locus = 0u; locus < sequence.size(); ++locus)
+        sequence[locus] /= sumsq;
+
+    return sequence;
 }
 
 
@@ -42,7 +61,12 @@ double Individual::develop()
     // Loop throughout the genome
     // Each gene contributes -1 to the trait value
 
-    return -1.0;
+    double trait = 0.0;
+
+    for (size_t locus = 0u; locus < genome.size(); ++locus)
+        trait += genome[locus];
+
+    return trait;
 }
 
 
