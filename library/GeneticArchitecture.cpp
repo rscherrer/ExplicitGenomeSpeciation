@@ -24,6 +24,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     genome(makeGenome()),
     networks(makeNetworks())
 {
+    assert(networks.size() == 3u);
 }
 
 
