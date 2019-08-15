@@ -24,14 +24,9 @@ Network::Network(const size_t &character, const size_t &nVertices,
     assert(weights.size() == nedges);
 }
 
-/// Function to make a new interaction network based on the preferential
-/// attachment algorithm
+/// // Make a map of pairwise connexions
 std::vector<Edge> Network::makeMap()
 {
-
-    // Make a map of pairwise connexions
-
-    std::vector<Edge> connexions;
 
     // There is a total number of vertices
     // There is a total number of edges that can be made
@@ -41,16 +36,27 @@ std::vector<Edge> Network::makeMap()
     // The partners of that vertex are sampled without replacement
     // The number of edges still to be made is updated
 
-    size_t nleft = nedges;
+    assert(nvertices > 1u);
+    std::vector<Edge> connexions;
+    if (!nedges) return connexions;
+    connexions.push_back(std::make_pair(0u, 1u));
+    size_t nleft = nedges - 1;
 
-    for (size_t vertex = 0u; nleft && vertex < nvertices; ++vertex) {
+    for (size_t vertex = 2u; nleft && vertex < nvertices; ++vertex) {
+
         for (size_t edge = 0u; nleft && edge < 10u; ++edge) {
+
+            std::cout << nleft << "/" << nedges << '\n';
             connexions.push_back(std::make_pair(0u, 1u));
             --nleft;
+
         }
     }
 
     assert(nleft == 0u);
+    assert(connexions.size() == nedges);
+
+    return connexions;
 
     //assert(nvertices > 1u);
 
@@ -66,12 +72,6 @@ std::vector<Edge> Network::makeMap()
     // Relabel node indices after sorting with respect to degree
     //sortNetwork(network, degrees);
 
-    if (connexions.size() != nedges)
-        std::cout << connexions.size() << ' ' << nedges << '\n';
-
-    assert(connexions.size() == nedges);
-
-    return connexions;
 }
 
 /// Function to detect the loci underlying a trait
