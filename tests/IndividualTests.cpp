@@ -9,7 +9,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkAssortative)
     {
         std::cout << "Testing homogamous female...\n";
-        Individual ind = Individual(genome);
+        Individual ind = Individual(genome, networks);
         ind.setEcoTrait(0.0, 1.0);
         ind.setMatePref(1.0);
         BOOST_CHECK(ind.acceptMate(0.0, 1.0));
@@ -19,7 +19,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkDisassortative)
     {
         std::cout << "Testing heterogamous female...\n";
-        Individual ind = Individual(genome);
+        Individual ind = Individual(genome, networks);
         ind.setEcoTrait(0.0, 1.0);
         ind.setMatePref(-1.0);
         BOOST_CHECK(!ind.acceptMate(0.0, 1.0));
@@ -29,7 +29,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkRandomMating)
     {
         std::cout << "Testing random mating female...\n";
-        Individual ind = Individual(genome);
+        Individual ind = Individual(genome, networks);
         ind.setEcoTrait(0.0, 1.0);
         ind.setMatePref(0.0);
         BOOST_CHECK(ind.acceptMate(0.0, 1.0));
@@ -41,7 +41,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkFeeding)
     {
         std::cout << "Testing fitness obtained by feeding...\n";
-        Individual ind = Individual(genome);
+        Individual ind = Individual(genome, networks);
         ind.setEcoTrait(-1.0, 1.0);
         ind.feed({ 100.0, 100.0 });
         BOOST_CHECK(ind.getFitness() == 0.04 + 0.0004 * exp(-4.0) * 100);

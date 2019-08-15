@@ -5,10 +5,11 @@
 #include <vector>
 #include <string>
 
+typedef std::vector<Network> MultiNet;
 
 /// Function to run the simulation
 void runSimulation(size_t&, Population&, const size_t&, const double&,
- const double&, const double&, const Genome&);
+ const double&, const double&, const Genome&, const MultiNet&);
 
 /// Function to run the program
 int doMain(const std::vector<std::string>&);

@@ -6,6 +6,8 @@
 #include <vector>
 #include <random>
 
+typedef std::vector<Network> MultiNet;
+
 /// Function to calculate feeding rates
 std::vector<double> calcFeedingRates(const double &sel, const double &trait,
  const double &maxi = 0.0004);
@@ -16,7 +18,7 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const Genome&);
+    Individual(const Genome&, const std::vector<Network>&);
     ~Individual() {}
 
     // Getters
@@ -76,10 +78,11 @@ private:
 
     // Makers
     std::vector<std::vector<bool> > makeSequence(const size_t&);
-    std::vector<double> develop(const Genome&);
+    std::vector<double> develop(const Genome&, const MultiNet&);
 
     // Fields
     std::vector<std::vector<bool> > sequence;
+    std::vector<double> genexp;
     bool isFemale;
     std::vector<double> traits;
     double ecoTrait;

@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <cassert>
 
+typedef std::vector<Network> MultiNet;
 
 /// Constructor of genetic architecture
 GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
-    nTraits(pars.getNTraits()),
     nChromosomes(pars.getNChromosomes()),
     nLoci(pars.getNLoci()),
     nLociPerTrait(pars.getNLociPerTrait()),
@@ -21,13 +21,14 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomes()),
-    traitNetworks(makeNetworks()),
-    genome(makeGenome())
-{}
+    genome(makeGenome()),
+    traitNetworks(makeNetworks())
+{
+}
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomes() const noexcept
+std::vector<double> GeneticArchitecture::makeChromosomes()
 {
 
     std::vector<double> chromsizes;
@@ -42,20 +43,17 @@ std::vector<double> GeneticArchitecture::makeChromosomes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeNetworks() const
- noexcept
+MultiNet GeneticArchitecture::makeNetworks()
 {
     std::vector<Network> networks;
 
     // For each trait
-    for (size_t trait = 0u; trait < nTraits; ++trait)
+    for (size_t trait = 0u; trait < 3u; ++trait)
     {
 
-        // Make a network map (a vector of edges) for the current trait using
-        // the preferential
-        // attachment algorithm
-        Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait],
-         skewnesses[trait], interactionWeightShape, interactionWeightShape);
+        Network network = Network(trait, nLociPerTrait[trait],
+         nEdgesPerTrait[trait], skewnesses[trait], interactionWeightShape,
+          interactionWeightShape, genome);
 
         networks.push_back(network);
     }
@@ -64,18 +62,20 @@ std::vector<Network> GeneticArchitecture::makeNetworks() const
     // a given trait,
     // not absolute loci indices across the genome
 
-    assert(networks.size() == nTraits);
-    for (size_t trait = 0u; trait < nTraits; ++trait)
+    assert(networks.size() == 3u);
+
+    for (size_t trait = 0u; trait < 3u; ++trait) {
         assert(networks[trait].map.size() == nEdgesPerTrait[trait]);
+    }
 
     return networks;
 }
 
 
 /// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome() const noexcept
+Genome GeneticArchitecture::makeGenome()
 {
-    const Genome gen = Genome(nTraits, nLociPerTrait, nLoci, effectSizeShape,
+    const Genome gen = Genome(nLociPerTrait, nLoci, effectSizeShape,
      effectSizeScale);
     return gen;
 }

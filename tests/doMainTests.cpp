@@ -5,6 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+typedef std::vector<Network> MultiNet;
 
 // Check that the program can run without arguments
 BOOST_AUTO_TEST_CASE(testUseNoArgs)
@@ -38,9 +39,10 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
-    Population pop = Population(initPopSize, genome);
+    MultiNet networks = arch.getTraitNetworks();
+    Population pop = Population(initPopSize, genome, networks);
 
-    runSimulation(t, pop, tmax, survival, birth, strength, genome);
+    runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
     BOOST_CHECK(pop.getPopSize() > 0u);
@@ -63,9 +65,10 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
-    Population pop = Population(initPopSize, genome);
+    MultiNet networks = arch.getTraitNetworks();
+    Population pop = Population(initPopSize, genome, networks);
 
-    runSimulation(t, pop, tmax, survival, birth, strength, genome);
+    runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);
 
     BOOST_CHECK(t < tmax);
     BOOST_CHECK(pop.getPopSize() == 0u);

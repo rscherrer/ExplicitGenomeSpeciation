@@ -16,36 +16,6 @@ typedef std::pair<size_t, size_t> Edge;
 /// simulating
 class GeneticArchitecture {
 
-private:
-
-    size_t nTraits;
-    size_t nChromosomes;
-    size_t nLoci;
-    std::vector<size_t> nLociPerTrait;
-    std::vector<size_t> nEdgesPerTrait;
-    std::vector<double> skewnesses;
-    double effectSizeShape;
-    double effectSizeScale;
-    double interactionWeightShape;
-    double interactionWeightScale;
-
-    // A vector of chromosome sizes
-    std::vector<double> chromosomeSizes;
-
-    // A map of the gene regulatory network for each trait
-    std::vector<Network> traitNetworks;
-
-    // A series of layers of locus-specific features across the genome
-    Genome genome;
-
-    // A set of vectors of loci underlying each trait
-    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
-
-    /// Makers
-    std::vector<double> makeChromosomes() const noexcept;
-    std::vector<Network> makeNetworks() const noexcept;
-    Genome makeGenome() const noexcept;
-
 public:
 
     /// Constructor
@@ -99,6 +69,31 @@ const std::vector<size_t>&);
 const double&, const size_t&);
     std::vector<double> getDominanceCoeffs(const size_t&, const size_t&);
      */
+
+
+private:
+
+    size_t nChromosomes;
+    size_t nLoci;
+    std::vector<size_t> nLociPerTrait;
+    std::vector<size_t> nEdgesPerTrait;
+    std::vector<double> skewnesses;
+    double effectSizeShape;
+    double effectSizeScale;
+    double interactionWeightShape;
+    double interactionWeightScale;
+
+    std::vector<double> chromosomeSizes;
+    Genome genome;
+    std::vector<Network> traitNetworks;
+
+    // A set of vectors of loci underlying each trait
+    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
+
+    /// Makers
+    std::vector<double> makeChromosomes();
+    Genome makeGenome();
+    std::vector<Network> makeNetworks();
 
 };
 

@@ -22,10 +22,12 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual(const Genome &genome) :
+Individual::Individual(const Genome &genome,
+ const std::vector<Network> &networks) :
     sequence(makeSequence(genome.effects.size())),
+    genexp(zeros(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
-    traits(develop(genome)),
+    traits(develop(genome, networks)),
     ecoTrait(traits[0u]),
     matePref(traits[1u]),
     neutral(traits[2u]),
@@ -63,7 +65,8 @@ std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 
 
 /// Development
-std::vector<double> Individual::develop(const Genome &genome)
+std::vector<double> Individual::develop(const Genome &genome,
+ const std::vector<Network> &networks)
 {
 
     // Development reads the genome and computes trait values
@@ -103,6 +106,27 @@ std::vector<double> Individual::develop(const Genome &genome)
         // Contribute to trait
         phenotypes[trait] += genome.effects[locus] * expression;
 
+    }
+
+    // For epistasis,
+    // For each trait,
+    // loop through the edges of the network
+    // record the expression level of both partners and multiply them
+    // multiply the result by the weight of the interaction
+    // add the result to the phenotype
+
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+
+        for (size_t e = 0u; e < networks[trait].nedges; ++e) {
+
+            // Careful genexp is empty for now!
+            // Careful edges is empty!
+
+            const Edge edge = networks[trait].edges[e];
+            const double intexp = genexp[edge.first] * genexp[edge.second];
+            phenotypes[trait] += intexp * networks[trait].weights[e];
+
+        }
     }
 
     return phenotypes;

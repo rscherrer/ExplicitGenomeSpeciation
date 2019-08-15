@@ -2,43 +2,104 @@
 #include "utils.h"
 #include <cassert>
 #include <algorithm>
+#include <iostream>
+
 
 /// Network constructor
-Network::Network(const size_t &nvertices, const size_t &nedges,
- const double &skew, const double &shape, const double &scale) :
-        nVertices(nvertices),
-        nEdges(nedges),
-        skewness(skew),
-        map(makeNetwork(nedges)),
-        weights(makeWeights(shape, scale))
+Network::Network(const size_t &character, const size_t &nVertices,
+ const size_t &nEdges, const double &skew, const double &shape,
+  const double &scale, const Genome &genome) :
+    trait(character),
+    nvertices(nVertices),
+    nedges(nEdges),
+    skewness(skew),
+    map(makeMap()),
+    loci(makeLoci(genome)),
+    edges(makeEdges()),
+    weights(makeWeights(shape, scale))
 {}
 
 /// Function to make a new interaction network based on the preferential
 /// attachment algorithm
-std::vector<Edge> Network::makeNetwork(size_t nedges) const
- noexcept
+std::vector<Edge> Network::makeMap()
 {
-    std::vector<Edge> network;
 
-    assert(nVertices > 1u);
+    // Make a map of pairwise connexions
 
-    if (nedges == 0u) return network;
+    std::vector<Edge> connexions;
+
+    for (size_t edge = 0u; edge < nedges; ++edge) {
+        const size_t node1 = rnd::random(nvertices);
+        const size_t node2 = rnd::random(nvertices);
+        connexions.push_back(std::make_pair(node1, node2));
+    }
+
+    //assert(nvertices > 1u);
+
+    //if (n_edges == 0u) return pairs;
 
     // Start the network
-    std::vector<size_t> degrees(nVertices, 0u);
-    initializeNetwork(network, nedges, degrees);
+    //std::vector<size_t> degrees(nvertices, 0u);
+    //initializeNetwork(network, n_edges, degrees);
 
     // Grow network by linking preferentially to well-connected nodes
-    growNetwork(network, nedges, degrees);
+    //growNetwork(network, n_edges, degrees);
 
     // Relabel node indices after sorting with respect to degree
-    sortNetwork(network, degrees);
+    //sortNetwork(network, degrees);
 
-    return network;
+    assert(connexions.size() == nedges);
+
+    return connexions;
+}
+
+/// Function to detect the loci underlying a trait
+std::vector<size_t> Network::makeLoci(const Genome& genome)
+{
+    std::vector<size_t> underlying;
+
+    // The current trait must be a field of the network
+    // Loop throughout the genome's vector of encoded traits
+    // Record all loci that encode the current trait
+
+    for (size_t locus = 0u; locus < genome.nloci; ++locus)
+        if (genome.traits[locus] == trait)
+            underlying.push_back(locus);
+
+    // Genome has nloci = zero so this function goes nuts
+    // There is a problem in how the genome is initialized
+
+    if (underlying.size() != nvertices)
+        std::cout << "\nProblematic genome, nloci = " << genome.nloci <<
+         ", length of effect sizes = " << genome.effects.size() << "\n\n";
+
+    assert(underlying.size() == nvertices);
+
+    return underlying;
+}
+
+/// Function to map the network to the genome
+std::vector<Edge> Network::makeEdges()
+{
+
+    std::vector<Edge> mapped;
+
+    // Loop through the pairs in the map
+    // Use the map id to find the loci in the vector of underlying loci
+    // Add theses id to the vector of mapped edges
+
+    for (Edge partners : map) {
+        const size_t locus1 = loci[partners.first];
+        const size_t locus2 = loci[partners.second];
+        mapped.push_back(std::make_pair(locus1, locus2));
+    }
+
+    return mapped;
+
 }
 
 /// Function to create a new network
-void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges,
+void Network::initializeNetwork(std::vector<Edge> &network, size_t &n_edges,
                                 std::vector<size_t> &degrees) const noexcept
 {
 
@@ -47,19 +108,19 @@ void Network::initializeNetwork(std::vector<Edge> &network, size_t &nedges,
     // Create initial network
     network.emplace_back(Edge {0u, 1u});
     degrees[0u] = degrees[1u] = 1u;
-    --nedges;
+    --n_edges;
 
 }
 
 
 /// Function to iteratively grow a network based on the preferential attachment
 /// algorithm
-void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
+void Network::growNetwork(std::vector<Edge> &network, size_t &n_edges,
  std::vector<size_t> &degrees) const noexcept
 {
 
     // For each vertex in the network...
-    for (size_t vertex = 2u; vertex < nVertices && nedges > 0u; ++vertex) {
+    for (size_t vertex = 2u; vertex < nvertices && n_edges > 0u; ++vertex) {
 
         // Assign probability weights to all potential partners
         std::vector<double> probs(vertex);
@@ -69,9 +130,8 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
         }
 
         // Sample the number of attachments of the current vertex
-        size_t nAttachments =
-                (vertex == nVertices - 1u ?
-                     nedges : rnd::binomial(nedges, 1.0 / (nVertices - vertex)));
+        size_t nAttachments = (vertex == nvertices - 1u ? nedges :
+         rnd::binomial(nedges, 1.0 / (nvertices - vertex)));
 
         // For each new attachment...
         while (nAttachments) {
@@ -93,7 +153,7 @@ void Network::growNetwork(std::vector<Edge> &network, size_t &nedges,
             ++degrees[partner];
             ++degrees[vertex];
             --nAttachments;
-            --nedges;
+            --n_edges;
         }
     }
 }
@@ -116,9 +176,9 @@ void Network::sortNetwork(std::vector<Edge> &network,
 {
 
     // Compute the ranks of all vertices with respect to their degrees
-    std::vector<size_t> ranks(nVertices, 0u);
-    for (size_t vertex = 0u; vertex < nVertices - 1u; ++vertex) {
-        for (size_t othervertex = vertex + 1u; othervertex < nVertices;
+    std::vector<size_t> ranks(nvertices, 0u);
+    for (size_t vertex = 0u; vertex < nvertices - 1u; ++vertex) {
+        for (size_t othervertex = vertex + 1u; othervertex < nvertices;
              ++othervertex)
         {
             if (degrees[othervertex] > degrees[vertex])
@@ -152,13 +212,13 @@ void Network::sortNetwork(std::vector<Edge> &network,
 /// Function to sample interaction weights across edges of a gene regulatory
 /// network
 std::vector<double> Network::makeWeights(const double &shape,
- const double &scale) const noexcept
+ const double &scale)
 {
     std::vector<double> interweights;
     double sqrtsumsqWeights = 0.0;
 
     // For each edge in the network...
-    for (size_t edge = 0u; edge < nEdges; ++edge) {
+    for (size_t edge = 0u; edge < nedges; ++edge) {
 
         // Sample the weight from a two-sided Gamma distribution
         double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
@@ -174,7 +234,7 @@ std::vector<double> Network::makeWeights(const double &shape,
     sqrtsumsqWeights = sqrtsumsqWeights > 0.0 ? sqrt(sqrtsumsqWeights) : 1.0;
 
     // Normalize at the end
-    for (size_t edge = 0u; edge < nEdges; ++edge)
+    for (size_t edge = 0u; edge < nedges; ++edge)
         interweights[edge] /= sqrtsumsqWeights;
 
     return interweights;

@@ -8,8 +8,8 @@
 
 /// Constructor
 Population::Population(const size_t &popsize,
- const Genome &genome) :
-    individuals(populate(popsize, genome)),
+ const Genome &genome, const std::vector<Network> &networks) :
+    individuals(populate(popsize, genome, networks)),
     females({ }),
     males({ }),
     offspring({ }),
@@ -24,13 +24,13 @@ Population::Population(const size_t &popsize,
 
 /// Function to initialize a population of individuals
 std::vector<PInd> Population::populate(const size_t &popsize,
- const Genome &genome)
+ const Genome &genome, const std::vector<Network> &networks)
 {
 
     std::vector<PInd> indivs;
 
     for (size_t ind = 0u; ind < popsize; ++ind)
-        indivs.push_back(new Individual(genome));
+        indivs.push_back(new Individual(genome, networks));
 
     return indivs;
 
@@ -73,14 +73,14 @@ void Population::consume()
 
 /// Asexual reproduction function
 void Population::reproduceAsexual(const double &birth,
- const Genome &genome)
+ const Genome &genome, const std::vector<Network> &networks)
 {
     // Everybody gets a chance to produce babies
     size_t nAdults = individuals.size();
     while (nAdults) {
         size_t nOffspring = rnd::poisson(birth);
         while (nOffspring) {
-            offspring.push_back(new Individual(genome));
+            offspring.push_back(new Individual(genome, networks));
             --nOffspring;
         }
         --nAdults;
@@ -90,7 +90,7 @@ void Population::reproduceAsexual(const double &birth,
 
 /// Sexual reproduction function
 void Population::reproduce(const double &birth, const double &strength,
- const Genome &genome, const double &cost)
+ const Genome &genome, const std::vector<Network> &networks, const double &cost)
 {
 
     // Sort out moms and dads
@@ -127,7 +127,7 @@ void Population::reproduce(const double &birth, const double &strength,
             auto dad = males[encounter];
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
-                offspring.push_back(new Individual(genome));
+                offspring.push_back(new Individual(genome, networks));
                 --nOffspring;
             }
 

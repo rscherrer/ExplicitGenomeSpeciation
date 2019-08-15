@@ -14,7 +14,7 @@ class Population {
 
 public:
 
-    Population(const size_t&, const Genome&);
+    Population(const size_t&, const Genome&, const std::vector<Network>&);
     ~Population() {};
 
     // Getters
@@ -24,8 +24,9 @@ public:
     // Life cycle
     void consume();
     void reproduce(const double&, const double&, const Genome&,
-     const double& = 0.01);
-    void reproduceAsexual(const double&, const Genome&);
+     const std::vector<Network>&, const double& = 0.01);
+    void reproduceAsexual(const double&, const Genome&,
+     const std::vector<Network>&);
     bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
@@ -71,7 +72,8 @@ public:
 private:
 
     // Makers
-    std::vector<PInd> populate(const size_t&, const Genome&);
+    std::vector<PInd> populate(const size_t&, const Genome&,
+     const std::vector<Network>&);
 
     // The population
     std::vector<PInd> individuals;

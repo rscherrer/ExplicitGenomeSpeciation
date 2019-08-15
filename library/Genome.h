@@ -5,8 +5,10 @@
 struct Genome
 {
 
-    Genome(const size_t&, const std::vector<size_t>&, const size_t&,
+    Genome(const std::vector<size_t>&, const size_t&,
      const double&, const double&);
+
+    size_t nloci;
 
     std::vector<size_t> traits;
     std::vector<double> locations;
@@ -17,9 +19,8 @@ struct Genome
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;
 
     // Member functions
-    std::vector<size_t> makeEncodedTraits(const size_t&,
-     const std::vector<size_t>&) const noexcept;
-    void setLocationsEffectSizesAndDominance(const size_t&, const size_t&,
+    std::vector<size_t> makeEncodedTraits(const std::vector<size_t>&);
+    void setLocationsEffectSizesAndDominance(const size_t&,
      const double&, const double&);
 
 };
