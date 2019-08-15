@@ -16,7 +16,7 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const std::vector<double>&);
+    Individual(const Genome&);
     ~Individual() {}
 
     // Getters
