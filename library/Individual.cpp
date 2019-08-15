@@ -73,6 +73,7 @@ std::vector<double> Individual::develop(const Genome &genome)
     // And each gene is diploid
     // And there is dominance
     // And there are multiple traits
+    // And there is epistasis...
 
     std::vector<double> phenotypes {0.0, 0.0, 0.0};
 
