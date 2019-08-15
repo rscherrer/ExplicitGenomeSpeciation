@@ -2,6 +2,23 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+
+struct GenFixture {
+
+    GenFixture() :
+        pars(ParameterSet()),
+        arch(GeneticArchitecture(pars)),
+        genome(arch.getGenome())
+    {}
+    ~GenFixture() {}
+
+    ParameterSet pars;
+    GeneticArchitecture arch;
+    Genome genome;
+
+};
+
+
 // Check that zero survival leaves no survivors in the population
 BOOST_AUTO_TEST_CASE(checkNoSurvivors)
 {
