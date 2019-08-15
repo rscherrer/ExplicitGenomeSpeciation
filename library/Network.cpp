@@ -33,11 +33,24 @@ std::vector<Edge> Network::makeMap()
 
     std::vector<Edge> connexions;
 
-    for (size_t edge = 0u; edge < nedges; ++edge) {
-        const size_t node1 = rnd::random(nvertices);
-        const size_t node2 = rnd::random(nvertices);
-        connexions.push_back(std::make_pair(node1, node2));
+    // There is a total number of vertices
+    // There is a total number of edges that can be made
+    // The network starts with one edge between 0 and 1
+    // Then each new vertex comes in
+    // The number of partners of that vertex is sampled
+    // The partners of that vertex are sampled without replacement
+    // The number of edges still to be made is updated
+
+    size_t nleft = nedges;
+
+    for (size_t vertex = 0u; nleft && vertex < nvertices; ++vertex) {
+        for (size_t edge = 0u; nleft && edge < 10u; ++edge) {
+            connexions.push_back(std::make_pair(0u, 1u));
+            --nleft;
+        }
     }
+
+    assert(nleft == 0u);
 
     //assert(nvertices > 1u);
 
@@ -52,6 +65,9 @@ std::vector<Edge> Network::makeMap()
 
     // Relabel node indices after sorting with respect to degree
     //sortNetwork(network, degrees);
+
+    if (connexions.size() != nedges)
+        std::cout << connexions.size() << ' ' << nedges << '\n';
 
     assert(connexions.size() == nedges);
 
