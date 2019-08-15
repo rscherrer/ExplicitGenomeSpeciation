@@ -42,8 +42,8 @@ private:
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;
 
     /// Makers
-    std::vector<double> makeChromosomeSizes() const noexcept;
-    std::vector<Network> makeTraitNetworks() const noexcept;
+    std::vector<double> makeChromosomes() const noexcept;
+    std::vector<Network> makeNetworks() const noexcept;
     Genome makeGenome() const noexcept;
 
 public:

@@ -20,14 +20,14 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     effectSizeScale(pars.getEffectSizeScale()),
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
-    chromosomeSizes(makeChromosomeSizes()),
-    traitNetworks(makeTraitNetworks()),
+    chromosomeSizes(makeChromosomes()),
+    traitNetworks(makeNetworks()),
     genome(makeGenome())
 {}
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
+std::vector<double> GeneticArchitecture::makeChromosomes() const noexcept
 {
 
     std::vector<double> chromsizes;
@@ -42,7 +42,7 @@ std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeTraitNetworks() const
+std::vector<Network> GeneticArchitecture::makeNetworks() const
  noexcept
 {
     std::vector<Network> networks;
