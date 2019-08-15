@@ -18,7 +18,6 @@ Population::Population(const size_t &popsize,
     replenish({1.0, 1.0}),
     resources(capacity)
 {
-
 }
 
 

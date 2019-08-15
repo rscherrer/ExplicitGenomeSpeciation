@@ -22,6 +22,7 @@ public:
     // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
+    double getMatePref() const { return matePref; }
     double getFitness() const { return fitness; }
     std::vector<double> getFeedingRates() const { return feedingRates; }
 

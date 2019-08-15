@@ -97,10 +97,10 @@ std::vector<double> Individual::develop(const Genome &genome)
         assert(expression <= 1.0);
 
         // Determine the encoded trait
-        // const size_t trait = genome.traits[locus];
+        const size_t trait = genome.traits[locus];
 
         // Contribute to trait
-        // phenotypes[trait] += genome.effects[locus] * expression;
+        phenotypes[trait] += genome.effects[locus] * expression;
 
     }
 
@@ -137,10 +137,15 @@ double calcDisassortProb(const double &y, const double &xi,
 bool Individual::acceptMate(const double &xj, const double &strength) const
 {
 
+    const double tiny = 0.00000001;
+
     // Calculate the probability of mating
-    const double mateProb = matePref >= 0.0 ?
+    double mateProb = matePref >= 0.0 ?
      calcAssortProb(matePref, ecoTrait, xj, strength) :
       calcDisassortProb(matePref, ecoTrait, xj, strength);
+
+    if (mateProb < tiny) mateProb = 0.0;
+    if (mateProb > 1.0 - tiny) mateProb = 1.0;
 
     assert(mateProb >= 0.0);
     assert(mateProb <= 1.0);
