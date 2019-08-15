@@ -25,7 +25,8 @@ Network::Network(const size_t &character, const size_t &nVertices,
     assert(weights.size() == nedges);
 }
 
-/// // Make a map of pairwise connexions
+
+/// Make a map of pairwise connexions
 std::vector<Edge> Network::makeMap()
 {
 
@@ -107,6 +108,7 @@ std::vector<Edge> Network::makeMap()
 
 }
 
+
 /// Function to detect the loci underlying a trait
 std::vector<size_t> Network::makeLoci(const Genome& genome)
 {
@@ -132,6 +134,7 @@ std::vector<size_t> Network::makeLoci(const Genome& genome)
     return underlying;
 }
 
+
 /// Function to map the network to the genome
 std::vector<Edge> Network::makeEdges()
 {
@@ -152,66 +155,39 @@ std::vector<Edge> Network::makeEdges()
 
 }
 
-/// Function to create a new network
-void Network::initializeNetwork(std::vector<Edge> &network, size_t &n_edges,
-                                std::vector<size_t> &degrees) const noexcept
+
+/// Sample interaction weights
+std::vector<double> Network::makeWeights(const double &shape,
+ const double &scale)
 {
+    std::vector<double> interweights;
+    double sqrtsumsqWeights = 0.0;
 
-    if (!network.empty()) network.clear();
+    // For each edge in the network...
+    for (size_t edge = 0u; edge < nedges; ++edge) {
 
-    // Create initial network
-    network.emplace_back(Edge {0u, 1u});
-    degrees[0u] = degrees[1u] = 1u;
-    --n_edges;
+        // Sample the weight from a two-sided Gamma distribution
+        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
+        interweights.push_back(weight);
 
-}
-
-
-/// Function to iteratively grow a network based on the preferential attachment
-/// algorithm
-void Network::growNetwork(std::vector<Edge> &network, size_t &n_edges,
- std::vector<size_t> &degrees) const noexcept
-{
-
-    // For each vertex in the network...
-    for (size_t vertex = 2u; vertex < nvertices && n_edges > 0u; ++vertex) {
-
-        // Assign probability weights to all potential partners
-        std::vector<double> probs(vertex);
-
-        for (size_t partner = 0u; partner < vertex; ++partner) {
-            probs[partner] = pow(degrees[partner], skewness);
-        }
-
-        // Sample the number of attachments of the current vertex
-        size_t nAttachments = (vertex == nvertices - 1u ? nedges :
-         rnd::binomial(nedges, 1.0 / (nvertices - vertex)));
-
-        // For each new attachment...
-        while (nAttachments) {
-
-            // Compute the sum of weights, quit the loop if too small
-            double sumProbs = 0.0;
-            for (size_t partner = 0u; partner < vertex; ++partner)
-                sumProbs += probs[partner];
-            if (sumProbs < 1.0) break;
-
-            // Sample the new partner without replacement
-            std::discrete_distribution<size_t> attachmentProbs(probs.begin(),
-             probs.end());
-            size_t partner = attachmentProbs(rnd::rng);
-
-            // Add the new partner to the network
-            network.emplace_back(Edge {vertex, partner});
-            probs[partner] = 0.0;
-            ++degrees[partner];
-            ++degrees[vertex];
-            --nAttachments;
-            --n_edges;
-        }
+        // Accumulate square rooted sum of squared interaction weights for
+        // later normalization
+        sqrtsumsqWeights += sqr(weight);
     }
+
+    // Square root the normalizing factor
+    sqrtsumsqWeights = sqrtsumsqWeights > 0.0 ? sqrt(sqrtsumsqWeights) : 1.0;
+
+    // Normalize at the end
+    for (size_t edge = 0u; edge < nedges; ++edge)
+        interweights[edge] /= sqrtsumsqWeights;
+
+    return interweights;
 }
 
+
+//-------------
 
 /// Function to compare edges in a network with respect to their degrees
 bool edgeCompare(const Edge &x, const Edge &y) noexcept
@@ -260,36 +236,4 @@ void Network::sortNetwork(std::vector<Edge> &network,
     // Sort the edges
     std::sort(network.begin(), network.end(), edgeCompare);
 
-}
-
-
-/// Function to sample interaction weights across edges of a gene regulatory
-/// network
-std::vector<double> Network::makeWeights(const double &shape,
- const double &scale)
-{
-    std::vector<double> interweights;
-    double sqrtsumsqWeights = 0.0;
-
-    // For each edge in the network...
-    for (size_t edge = 0u; edge < nedges; ++edge) {
-
-        // Sample the weight from a two-sided Gamma distribution
-        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
-        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
-        interweights.push_back(weight);
-
-        // Accumulate square rooted sum of squared interaction weights for
-        // later normalization
-        sqrtsumsqWeights += sqr(weight);
-    }
-
-    // Square root the normalizing factor
-    sqrtsumsqWeights = sqrtsumsqWeights > 0.0 ? sqrt(sqrtsumsqWeights) : 1.0;
-
-    // Normalize at the end
-    for (size_t edge = 0u; edge < nedges; ++edge)
-        interweights[edge] /= sqrtsumsqWeights;
-
-    return interweights;
 }

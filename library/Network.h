@@ -27,10 +27,6 @@ struct Network
     std::vector<double> makeWeights(const double&, const double&);
 
     // Builders
-    void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
-     const noexcept;
-    void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
-     const noexcept;
     void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&) const
      noexcept;
 
