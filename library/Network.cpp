@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 
+typedef std::discrete_distribution<size_t> Discrete;
 
 /// Network constructor
 Network::Network(const size_t &character, const size_t &nVertices,
@@ -53,13 +54,20 @@ std::vector<Edge> Network::makeMap()
         if (vertex == nvertices - 1u)
             npartners = rnd::binomial(nleft, prob);
 
+        // Attachment probabilities
+        std::vector<double> probs(vertex);
+        for (size_t node = 0u; node < vertex; ++node)
+            probs[node] = 1.0;
+
         // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
 
-            // Choose partner
-            const size_t partner = rnd::random(vertex);
+            // Choose partner without replacement
+            Discrete attachment(probs.begin(), probs.end());
+            const size_t partner = attachment(rnd::rng);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
+            probs[partner] = 0.0;
             --nleft;
 
         }
