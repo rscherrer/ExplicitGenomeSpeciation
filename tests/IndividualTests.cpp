@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_CASE(checkAssortative)
     std::cout << "Testing homogamous female...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Individual ind = Individual(genome);
     ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(1.0);
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(checkDisassortative)
     std::cout << "Testing heterogamous female...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Individual ind = Individual(genome);
     ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(-1.0);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(checkRandomMating)
     std::cout << "Testing random mating female...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Individual ind = Individual(genome);
     ind.setEcoTrait(0.0, 1.0);
     ind.setMatePref(0.0);
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(checkFeeding)
     std::cout << "Testing fitness obtained by feeding...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Individual ind = Individual(genome);
     ind.setEcoTrait(-1.0, 1.0);
     ind.feed({ 100.0, 100.0 });
