@@ -121,13 +121,6 @@ std::vector<size_t> Network::makeLoci(const Genome& genome)
         if (genome.traits[locus] == trait)
             underlying.push_back(locus);
 
-    // Genome has nloci = zero so this function goes nuts
-    // There is a problem in how the genome is initialized
-
-    if (underlying.size() != nvertices)
-        std::cout << "\nProblematic genome, nloci = " << genome.nloci <<
-         ", length of effect sizes = " << genome.effects.size() << "\n\n";
-
     assert(underlying.size() == nvertices);
 
     return underlying;
@@ -159,19 +152,19 @@ std::vector<Edge> Network::makeEdges()
 std::vector<double> Network::makeWeights(const double &shape,
  const double &scale)
 {
-    std::vector<double> interweights;
+    std::vector<double> intweights;
+
     double sqrtsumsqWeights = 0.0;
 
     // For each edge in the network...
     for (size_t edge = 0u; edge < nedges; ++edge) {
 
-        // Sample the weight from a two-sided Gamma distribution
-        double weight = std::gamma_distribution<double>(shape, scale)(rnd::rng);
+        // Two-sided Gamma distribution
+        double weight = rnd::gamma(shape, scale);
         weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
-        interweights.push_back(weight);
+        intweights.push_back(weight);
 
-        // Accumulate square rooted sum of squared interaction weights for
-        // later normalization
+        // For later normalizing
         sqrtsumsqWeights += sqr(weight);
     }
 
@@ -180,9 +173,9 @@ std::vector<double> Network::makeWeights(const double &shape,
 
     // Normalize at the end
     for (size_t edge = 0u; edge < nedges; ++edge)
-        interweights[edge] /= sqrtsumsqWeights;
+        intweights[edge] /= sqrtsumsqWeights;
 
-    return interweights;
+    return intweights;
 }
 
 

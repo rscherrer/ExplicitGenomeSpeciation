@@ -66,3 +66,10 @@ size_t rnd::sample(const std::vector<double> &probs)
 {
     return std::discrete_distribution<size_t>(probs.begin(), probs.end())(rng);
 }
+
+
+/// Gamma distribution
+double rnd::gamma(const double &shape, const double &scale)
+{
+    return std::gamma_distribution<double>(shape, scale)(rng);
+}

@@ -12,11 +12,6 @@ namespace rnd
     /// Random number generator
     extern std::mt19937_64 rng;
 
-
-    /// Makers
-    //std::mt19937_64 makeRandomGenerator(const size_t&);
-
-
     /// Functions to generate random numbers
     bool bernoulli(const double&);
     size_t binomial(const size_t&, const double&);
@@ -27,6 +22,7 @@ namespace rnd
     double normal(const double&, const double&);
     double exponential(const double&);
     size_t sample(const std::vector<double>&);
+    double gamma(const double&, const double&);
 }
 
 #endif
