@@ -154,26 +154,21 @@ std::vector<double> Network::makeWeights(const double &shape,
 {
     std::vector<double> intweights;
 
-    double sqrtsumsqWeights = 0.0;
+    double sqrtsumsq = 0.0; // square-rooted sum of squares
 
     // For each edge in the network...
     for (size_t edge = 0u; edge < nedges; ++edge) {
 
         // Two-sided Gamma distribution
-        double weight = rnd::gamma(shape, scale);
-        weight = rnd::bernoulli(0.5) ? weight * -1.0 : weight;
+        const double weight = rnd::bigamma(shape, scale);
         intweights.push_back(weight);
-
-        // For later normalizing
-        sqrtsumsqWeights += sqr(weight);
+        sqrtsumsq += sqr(weight);
     }
 
-    // Square root the normalizing factor
-    sqrtsumsqWeights = sqrtsumsqWeights > 0.0 ? sqrt(sqrtsumsqWeights) : 1.0;
-
-    // Normalize at the end
+    // Normalize
+    sqrtsumsq = sqrtsumsq > 0.0 ? sqrt(sqrtsumsq) : 1.0;
     for (size_t edge = 0u; edge < nedges; ++edge)
-        intweights[edge] /= sqrtsumsqWeights;
+        intweights[edge] /= sqrtsumsq;
 
     return intweights;
 }

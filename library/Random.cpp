@@ -68,8 +68,24 @@ size_t rnd::sample(const std::vector<double> &probs)
 }
 
 
+/// Flip a number with a certain probability
+double rnd::flip(const double &x, const double &p)
+{
+    return rnd::bernoulli(p) ? x : -1.0 * x;
+}
+
+
 /// Gamma distribution
 double rnd::gamma(const double &shape, const double &scale)
 {
     return std::gamma_distribution<double>(shape, scale)(rng);
 }
+
+
+/// Two-sided gamma
+double rnd::bigamma(const double &shape, const double &scale)
+{
+    return rnd::flip(rnd::gamma(shape, scale), 0.5);
+}
+
+

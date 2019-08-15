@@ -22,7 +22,10 @@ namespace rnd
     double normal(const double&, const double&);
     double exponential(const double&);
     size_t sample(const std::vector<double>&);
+    double flip(const double&, const double&);
     double gamma(const double&, const double&);
+    double bigamma(const double&, const double&);
+
 }
 
 #endif
