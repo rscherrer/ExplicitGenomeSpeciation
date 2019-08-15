@@ -6,6 +6,9 @@
 #include <iostream>
 
 
+typedef std::discrete_distribution<size_t> Discrete;
+
+
 /// Constructor
 Population::Population(const size_t &popsize,
  const Genome &genome, const MultiNet &networks) :
@@ -19,7 +22,6 @@ Population::Population(const size_t &popsize,
     resources(capacity)
 {
 }
-
 
 
 /// Function to initialize a population of individuals
@@ -105,8 +107,9 @@ void Population::reproduce(const double &birth, const double &strength,
     for (auto male : males)
         successes.push_back(male->getFitness());
 
-    std::discrete_distribution<size_t> maleMarket(successes.begin(),
-     successes.end());
+    Discrete maleMarket(successes.begin(), successes.end());
+
+
 
     // Sample the duration of the mating season this year
     const size_t seasonEnd = rnd::geometric(cost);
@@ -216,7 +219,7 @@ Population::Population(const ParameterSet &parameters,
  const ParameterSet &parameters)
 {
     individuals = providedIndividuals;
-
+nLociPerTrait
     // Initialize resource growth parameters
     initializeSizePopEcologicalMetrics(2u);
     setResourceCapacities(parameters.maxResourceCapacity,
