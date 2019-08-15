@@ -14,7 +14,7 @@ namespace rnd
 
 
     /// Makers
-    std::mt19937_64 makeRandomGenerator(const size_t&);
+    //std::mt19937_64 makeRandomGenerator(const size_t&);
 
 
     /// Functions to generate random numbers

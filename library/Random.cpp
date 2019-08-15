@@ -4,18 +4,6 @@
 /// Random number generator
 std::mt19937_64 rnd::rng;
 
-
-/// Function to make a random number generator
-std::mt19937_64 rnd::makeRandomGenerator(const size_t &seed)
-{
-    std::mt19937_64 generator;
-
-    generator.seed(seed);
-
-    return generator;
-}
-
-
 /// Function to sample a binary event
 bool rnd::bernoulli(const double &p)
 {

@@ -73,7 +73,7 @@ std::vector<Edge> Network::makeMap()
             if (sum(probs) < 1.0) break;
 
             // Make a bond without replacement and update degree distribution
-            const size_t partner = rnd::sample2(probs);
+            const size_t partner = rnd::sample(probs);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
             probs[partner] = 0.0;
