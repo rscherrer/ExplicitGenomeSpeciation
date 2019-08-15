@@ -23,7 +23,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor
 Individual::Individual(const Genome &genome,
- const std::vector<Network> &networks) :
+ const MultiNet &networks) :
     sequence(makeSequence(genome.effects.size())),
     genexp(zeros(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
@@ -66,7 +66,7 @@ std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 
 /// Development
 std::vector<double> Individual::develop(const Genome &genome,
- const std::vector<Network> &networks)
+ const MultiNet &networks)
 {
 
     // Development reads the genome and computes trait values

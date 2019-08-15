@@ -6,7 +6,6 @@
 #include <vector>
 #include <random>
 
-typedef std::vector<Network> MultiNet;
 
 /// Function to calculate feeding rates
 std::vector<double> calcFeedingRates(const double &sel, const double &trait,
@@ -18,7 +17,7 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const Genome&, const std::vector<Network>&);
+    Individual(const Genome&, const MultiNet&);
     ~Individual() {}
 
     // Getters

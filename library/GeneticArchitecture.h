@@ -9,6 +9,7 @@
 
 
 typedef std::pair<size_t, size_t> Edge;
+typedef std::vector<Network> MultiNet;
 
 /// A container for all constant genetic features
 class GeneticArchitecture {
@@ -19,8 +20,8 @@ public:
 
     /// Getters
     std::vector<double> getChromosomes() const { return chromosomeSizes; }
-    std::vector<Network> getNetworks() const { return traitNetworks; }
     Genome getGenome() const { return genome; }
+    MultiNet getNetworks() const { return traitNetworks; }
 
 private:
 

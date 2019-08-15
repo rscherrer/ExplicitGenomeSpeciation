@@ -4,7 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Random.h"
-// #include <list>
+
 
 class Individual;
 class LocusVariables;
@@ -14,7 +14,7 @@ class Population {
 
 public:
 
-    Population(const size_t&, const Genome&, const std::vector<Network>&);
+    Population(const size_t&, const Genome&, const MultiNet&);
     ~Population() {};
 
     // Getters
@@ -24,9 +24,9 @@ public:
     // Life cycle
     void consume();
     void reproduce(const double&, const double&, const Genome&,
-     const std::vector<Network>&, const double& = 0.01);
+     const MultiNet&, const double& = 0.01);
     void reproduceAsexual(const double&, const Genome&,
-     const std::vector<Network>&);
+     const MultiNet&);
     bool survive(const double&);
 
     // Population(const ParameterSet&, const GeneticArchitecture&);
@@ -73,7 +73,7 @@ private:
 
     // Makers
     std::vector<PInd> populate(const size_t&, const Genome&,
-     const std::vector<Network>&);
+     const MultiNet&);
 
     // The population
     std::vector<PInd> individuals;
