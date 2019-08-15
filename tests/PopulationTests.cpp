@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_CASE(checkNoSurvivors)
     std::cout << "Testing population wipe-out...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Population pop = Population(10u, genome);
     pop.survive(0.0);
     BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(checkNoMortality)
     std::cout << "Testing absence of mortality...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Population pop = Population(10u, genome);
     pop.survive(1.0);
     BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(checkGrowth)
     std::cout << "Testing population growth...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Population pop = Population(10u, genome);
     pop.reproduce(4.0, 1.0, genome);
     pop.survive(1.0);
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
     std::cout << "Testing that newborns do not die...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Population pop = Population(10u, genome);
     pop.reproduce(1.0, 1.0, genome);
     pop.survive(0.0);
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(checkResourceIsDepleted)
     std::cout << "Testing resource depletion...\n";
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> genome = arch.getGenome().effectSizes;
+    std::vector<double> genome = arch.getGenome().effects;
     Population pop = Population(10u, genome);
     std::vector<double> resourcesBefore = pop.getResources();
     pop.consume();
