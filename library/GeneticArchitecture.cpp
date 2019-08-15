@@ -51,9 +51,14 @@ MultiNet GeneticArchitecture::makeNetworks()
     for (size_t trait = 0u; trait < 3u; ++trait)
     {
 
-        Network network = Network(trait, nLociPerTrait[trait],
-         nEdgesPerTrait[trait], skewnesses[trait], interactionWeightShape,
-          interactionWeightShape, genome);
+        const size_t nloci = nLociPerTrait[trait];
+        const size_t nedges = nEdgesPerTrait[trait];
+        const double skew = skewnesses[trait];
+        const double intshape = interactionWeightShape;
+        const double intscale = interactionWeightScale;
+
+        Network network = Network(trait, nloci, nedges, skew, intshape,
+         intscale, genome);
 
         multinet.push_back(network);
     }
