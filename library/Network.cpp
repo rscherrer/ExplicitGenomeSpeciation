@@ -42,18 +42,22 @@ std::vector<Edge> Network::makeMap()
     connexions.push_back(std::make_pair(0u, 1u));
     size_t nleft = nedges - 1;
 
+    // For each vertex
     for (size_t vertex = 2u; nleft && vertex < nvertices; ++vertex) {
 
-        size_t npartners;
-
+        // Number of partners
+        size_t npartners = nleft;
+        const double prob = 1.0 / (nvertices - vertex);
+        assert(prob >= 0.0);
+        assert(prob <= 1.0);
         if (vertex == nvertices - 1u)
-            npartners = nleft;
-        else
-            npartners = rnd::binomial(nleft, 1.0 / (nvertices - vertex));
+            npartners = rnd::binomial(nleft, prob);
 
+        // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
 
-            const size_t partner = 0u;
+            // Choose partner
+            const size_t partner = rnd::random(vertex);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
             --nleft;
