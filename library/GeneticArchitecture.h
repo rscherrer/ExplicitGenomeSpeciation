@@ -21,7 +21,7 @@ public:
     /// Getters
     std::vector<double> getChromosomes() const { return chromosomeSizes; }
     Genome getGenome() const { return genome; }
-    MultiNet getNetworks() const { return traitNetworks; }
+    MultiNet getNetworks() const { return networks; }
 
 private:
 
@@ -37,7 +37,7 @@ private:
 
     std::vector<double> chromosomeSizes;
     Genome genome;
-    std::vector<Network> traitNetworks;
+    std::vector<Network> networks;
 
     // A set of vectors of loci underlying each trait
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;

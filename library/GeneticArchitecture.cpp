@@ -22,7 +22,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     interactionWeightScale(pars.getInteractionWeightScale()),
     chromosomeSizes(makeChromosomes()),
     genome(makeGenome()),
-    traitNetworks(makeNetworks())
+    networks(makeNetworks())
 {
 }
 
@@ -45,7 +45,7 @@ std::vector<double> GeneticArchitecture::makeChromosomes()
 /// Function to make a vector of interacting partner loci for each trait
 MultiNet GeneticArchitecture::makeNetworks()
 {
-    std::vector<Network> networks;
+    MultiNet multinet;
 
     // For each trait
     for (size_t trait = 0u; trait < 3u; ++trait)
@@ -55,20 +55,20 @@ MultiNet GeneticArchitecture::makeNetworks()
          nEdgesPerTrait[trait], skewnesses[trait], interactionWeightShape,
           interactionWeightShape, genome);
 
-        networks.push_back(network);
+        multinet.push_back(network);
     }
 
     // The indices in these network maps are indices among the loci underlying
     // a given trait,
     // not absolute loci indices across the genome
 
-    assert(networks.size() == 3u);
+    assert(multinet.size() == 3u);
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        assert(networks[trait].map.size() == nEdgesPerTrait[trait]);
+        assert(multinet[trait].map.size() == nEdgesPerTrait[trait]);
     }
 
-    return networks;
+    return multinet;
 }
 
 
