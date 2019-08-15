@@ -18,4 +18,22 @@ void checkVectorOfDoubles(std::vector<double> expected,
      expected.begin(), expected.end());
 }
 
+
+
+
+
+struct GenFixture {
+
+    GenFixture() :
+        pars(ParameterSet()),
+        arch(GeneticArchitecture(pars)),
+        genome(arch.getGenome())
+    {}
+    ~GenFixture() {}
+
+    ParameterSet pars;
+    GeneticArchitecture arch;
+    Genome genome;
+
+};
 #endif

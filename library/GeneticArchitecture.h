@@ -39,28 +39,24 @@ struct Genome {
 /// A container for a gene regulatory network
 struct Network {
 
-    Network(const size_t&, const size_t&, const size_t&, const double&,
-     const double&, const double&, const Genome&);
+    Network(const size_t&, const size_t&, const double&, const double&,
+     const double&);
 
-    size_t trait;
+    // Number of vertices, edges and skewness
     size_t nVertices;
     size_t nEdges;
     double skewness;
 
+    // A map of interacting genes
     std::vector<Edge> map;
-    std::vector<size_t> loci;
-    std::vector<Edge> edges;
+
+    // A vector of interaction weights
     std::vector<double> weights;
 
-    // Makers
-    std::vector<Edge> makeMap(size_t) const noexcept;
-    std::vector<size_t> makeLoci(const Genome&) const noexcept;
-    std::vector<Edge> makeEdges();
+    // Functions to make the network
     std::vector<double> makeWeights(const double&, const double&) const
      noexcept;
-
-
-
+    std::vector<Edge> makeNetwork(size_t) const noexcept;
     void initializeNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
      const noexcept;
     void growNetwork(std::vector<Edge>&, size_t&, std::vector<size_t>&)
@@ -75,6 +71,36 @@ struct Network {
 /// simulating
 class GeneticArchitecture {
 
+private:
+
+    size_t nTraits;
+    size_t nChromosomes;
+    size_t nLoci;
+    std::vector<size_t> nLociPerTrait;
+    std::vector<size_t> nEdgesPerTrait;
+    std::vector<double> skewnesses;
+    double effectSizeShape;
+    double effectSizeScale;
+    double interactionWeightShape;
+    double interactionWeightScale;
+
+    // A vector of chromosome sizes
+    std::vector<double> chromosomeSizes;
+
+    // A map of the gene regulatory network for each trait
+    std::vector<Network> traitNetworks;
+
+    // A series of layers of locus-specific features across the genome
+    Genome genome;
+
+    // A set of vectors of loci underlying each trait
+    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
+
+    /// Makers
+    std::vector<double> makeChromosomeSizes() const noexcept;
+    std::vector<Network> makeTraitNetworks() const noexcept;
+    Genome makeGenome() const noexcept;
+
 public:
 
     /// Constructor
@@ -82,7 +108,7 @@ public:
 
     /// Getters
     std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
-    std::vector<Network> getNetworks() const { return networks; }
+    std::vector<Network> getTraitNetworks() const { return traitNetworks; }
     Genome getGenome() const { return genome; }
 
     /*
@@ -128,31 +154,6 @@ const std::vector<size_t>&);
 const double&, const size_t&);
     std::vector<double> getDominanceCoeffs(const size_t&, const size_t&);
      */
-
-private:
-
-    size_t nTraits;
-    size_t nChromosomes;
-    size_t nLoci;
-    std::vector<size_t> nLociPerTrait;
-    std::vector<size_t> nEdgesPerTrait;
-    std::vector<double> skewnesses;
-    double effectSizeShape;
-    double effectSizeScale;
-    double interactionWeightShape;
-    double interactionWeightScale;
-
-    std::vector<double> chromosomeSizes;
-    std::vector<Network> networks;
-    Genome genome;
-
-    // A set of vectors of loci underlying each trait
-    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
-
-    /// Makers
-    std::vector<double> makeChromosomes() const noexcept;
-    std::vector<Network> makeNetworks() const noexcept;
-    Genome makeGenome() const noexcept;
 
 };
 

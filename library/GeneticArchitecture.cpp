@@ -24,14 +24,14 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     effectSizeScale(pars.getEffectSizeScale()),
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
-    chromosomeSizes(makeChromosomes()),
-    networks(makeNetworks()),
+    chromosomeSizes(makeChromosomeSizes()),
+    traitNetworks(makeTraitNetworks()),
     genome(makeGenome())
 {}
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomes() const noexcept
+std::vector<double> GeneticArchitecture::makeChromosomeSizes() const noexcept
 {
 
     std::vector<double> chromsizes;
@@ -46,10 +46,10 @@ std::vector<double> GeneticArchitecture::makeChromosomes() const noexcept
 
 
 /// Function to make a vector of interacting partner loci for each trait
-std::vector<Network> GeneticArchitecture::makeNetworks() const
+std::vector<Network> GeneticArchitecture::makeTraitNetworks() const
  noexcept
 {
-    std::vector<Network> nets;
+    std::vector<Network> networks;
 
     // For each trait
     for (size_t trait = 0u; trait < nTraits; ++trait)
@@ -58,40 +58,38 @@ std::vector<Network> GeneticArchitecture::makeNetworks() const
         // Make a network map (a vector of edges) for the current trait using
         // the preferential
         // attachment algorithm
-        Network network = Network(trait, nLociPerTrait[trait],
-         nEdgesPerTrait[trait], skewnesses[trait], interactionWeightShape,
-          interactionWeightShape, genome);
+        Network network = Network(nLociPerTrait[trait], nEdgesPerTrait[trait],
+         skewnesses[trait], interactionWeightShape, interactionWeightShape);
 
-        nets.push_back(network);
+        networks.push_back(network);
     }
 
-    assert(nets.size() == nTraits);
+    // The indices in these network maps are indices among the loci underlying
+    // a given trait,
+    // not absolute loci indices across the genome
 
+    assert(networks.size() == nTraits);
     for (size_t trait = 0u; trait < nTraits; ++trait)
-        assert(nets[trait].map.size() == nEdgesPerTrait[trait]);
+        assert(networks[trait].map.size() == nEdgesPerTrait[trait]);
 
-    return nets;
+    return networks;
 }
 
 
 /// Network constructor
-Network::Network(const size_t &character, const size_t &nvertices,
- const size_t &nedges, const double &skew, const double &shape,
-  const double &scale, const Genome &genome) :
-        trait(character),
+Network::Network(const size_t &nvertices, const size_t &nedges,
+ const double &skew, const double &shape, const double &scale) :
         nVertices(nvertices),
         nEdges(nedges),
         skewness(skew),
-        map(makeMap(nedges)),
-        loci(makeLoci(genome)),
-        edges(makeEdges()),
+        map(makeNetwork(nedges)),
         weights(makeWeights(shape, scale))
 {}
 
 
 /// Function to make a new interaction network based on the preferential
 /// attachment algorithm
-std::vector<Edge> Network::makeMap(size_t nedges) const
+std::vector<Edge> Network::makeNetwork(size_t nedges) const
  noexcept
 {
     std::vector<Edge> network;
@@ -224,37 +222,6 @@ void Network::sortNetwork(std::vector<Edge> &network,
     // Sort the edges
     std::sort(network.begin(), network.end(), edgeCompare);
 
-}
-
-
-/// Detect the loci underlying a trait's network
-std::vector<size_t> Network::makeLoci(const Genome &genome) const noexcept
-{
-
-    std::vector<size_t> underlying;
-
-    for (size_t locus = 0u; locus < genome.nloci; ++locus)
-        if (genome.traits[locus] == trait)
-            underlying.push_back(locus);
-
-    return underlying;
-
-}
-
-
-/// Map the network actual edges in the genome
-std::vector<Edge> Network::makeEdges()
-{
-    std::vector<Edge> mapped;
-
-    for (size_t edge = 0u; edge < map.size(); ++edge) {
-        Edge partners;
-        partners.first = loci[map[edge].first];
-        partners.second = loci[map[edge].second];
-        mapped.push_back(partners);
-    }
-
-    return mapped;
 }
 
 

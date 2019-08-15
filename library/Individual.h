@@ -79,7 +79,6 @@ private:
 
     // Fields
     std::vector<std::vector<bool> > sequence;
-    std::vector<double> geneticValues;
     bool isFemale;
     std::vector<double> traits;
     double ecoTrait;

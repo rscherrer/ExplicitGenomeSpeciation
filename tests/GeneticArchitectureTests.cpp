@@ -62,12 +62,12 @@ BOOST_FIXTURE_TEST_SUITE(smallGenomeTests, SimpleArch)
     // in trait 3
     BOOST_AUTO_TEST_CASE(checkNetworkEdges) {
 
-        BOOST_CHECK_EQUAL(arch.getNetworks()[0u].map[0u].first, 0u);
-        BOOST_CHECK_EQUAL(arch.getNetworks()[0u].map[0u].second, 1u);
-        BOOST_CHECK_EQUAL(arch.getNetworks()[2u].map[0u].first, 0u);
-        BOOST_CHECK_EQUAL(arch.getNetworks()[2u].map[0u].second, 1u);
-        BOOST_CHECK_EQUAL(arch.getNetworks()[2u].map[1u].first, 0u);
-        BOOST_CHECK_EQUAL(arch.getNetworks()[2u].map[1u].second, 2u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[0u].map[0u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[0u].map[0u].second, 1u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[0u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[0u].second, 1u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].first, 0u);
+        BOOST_CHECK_EQUAL(arch.getTraitNetworks()[2u].map[1u].second, 2u);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
