@@ -22,11 +22,12 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor
-Individual::Individual(const std::vector<double> &effects) :
-    sequence(makeSequence(effects.size())),
+Individual::Individual(const Genome &genome) :
+    sequence(makeSequence(genome.nloci)),
+    geneticValues({ }),
     isFemale(rnd::bernoulli(0.5)),
-    traits(develop(effects)),
-    ecoTrait(traits),
+    traits(develop(genome)),
+    ecoTrait(traits[0u]),
     matePref(0.0),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait))
@@ -62,7 +63,7 @@ std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 
 
 /// Development
-double Individual::develop(const std::vector<double> &effects)
+std::vector<double> Individual::develop(const Genome &genome)
 {
 
     // Development reads the genome and computes trait values
@@ -71,8 +72,10 @@ double Individual::develop(const std::vector<double> &effects)
     // But each gene has a certain allele in a certain individual
     // And each gene is diploid
     // And there is dominance
+    // Each gene contributes to the value of its encoded trait
+    // The effect of each gene is also altered by interactions
 
-    double trait = 0.0;
+    std::vector<double> phenotypes {0.0, 0.0, 0.0};
 
     for (size_t locus = 0u; locus < sequence[0u].size(); ++locus) {
 
@@ -82,10 +85,13 @@ double Individual::develop(const std::vector<double> &effects)
             if (sequence[strain][locus])
                 ++genotype;
 
+        assert(genotype < 3u);
+
         // Determine gene expression
         double expression;
+        const double dominance = genome.dominances[locus];
         switch(genotype) {
-            case 1u : expression = 0.0; break; // Aa
+            case 1u : expression = dominance; break; // Aa
             case 2u : expression = 1.0; break; // AA
             default : expression = -1.0; break; // aa
         }
@@ -93,12 +99,19 @@ double Individual::develop(const std::vector<double> &effects)
         assert(expression >= -1.0);
         assert(expression <= 1.0);
 
-        // Contribute to trait
-        trait += effects[locus] * expression;
+        // Determine encoded trait
+        const size_t trait = genome.traits[locus];
+
+        // Compute locus genetic value
+        const double genetic = genome.effects[locus] * expression;
+        geneticValues.push_back(genetic);
+
+        // Contribute to the trait value
+        phenotypes[trait] += genetic;
 
     }
 
-    return trait;
+    return phenotypes;
 }
 
 

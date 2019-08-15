@@ -1,6 +1,8 @@
 #include "library/Population.h"
+#include "GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+
 
 // Check that zero survival leaves no survivors in the population
 BOOST_AUTO_TEST_CASE(checkNoSurvivors)
@@ -14,6 +16,7 @@ BOOST_AUTO_TEST_CASE(checkNoSurvivors)
     BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
 }
 
+BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
 
 // Check that no mortality leaves all individuals in the population
 BOOST_AUTO_TEST_CASE(checkNoMortality)

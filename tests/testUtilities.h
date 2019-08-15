@@ -18,5 +18,4 @@ void checkVectorOfDoubles(std::vector<double> expected,
      expected.begin(), expected.end());
 }
 
-
 #endif

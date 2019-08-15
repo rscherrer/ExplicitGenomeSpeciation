@@ -1,6 +1,8 @@
 #include "library/Individual.h"
+#include "GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+
 
 // Check that a fully homogamous female will always accept identical mate
 BOOST_AUTO_TEST_CASE(checkAssortative)

@@ -13,7 +13,7 @@
 /// Function to run a simulation
 void runSimulation(size_t &t, Population &pop, const size_t &tmax,
  const double &survival, const double &birth, const double &strength,
-  const std::vector<double> &genome)
+  const Genome &genome)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
@@ -57,7 +57,9 @@ int doMain(const std::vector<std::string> &args)
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
         // Create a population of individuals
+
         std::vector<double> genome = arch.getGenome().effects;
+
         Population pop = Population(pars.getInitialPopSize(), genome);
 
         std::cout << "Simulation started\n";
