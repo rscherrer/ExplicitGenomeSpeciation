@@ -38,15 +38,22 @@ std::vector<Edge> Network::makeMap()
     // The number of edges still to be made is updated
 
     assert(nvertices > 1u);
+
     std::vector<Edge> connexions;
     if (!nedges) return connexions;
+    std::vector<size_t> degrees = uzeros(nvertices);
+
+    // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
-    size_t nleft = nedges - 1;
+    ++degrees[0u];
+    ++degrees[1u];
+
+    size_t nleft = nedges - 1; // number edges left to make
 
     // For each vertex
     for (size_t vertex = 2u; nleft && vertex < nvertices; ++vertex) {
 
-        // Number of partners
+        // Sample number of partners
         size_t npartners = nleft;
         const double prob = 1.0 / (nvertices - vertex);
         assert(prob >= 0.0);
@@ -54,10 +61,10 @@ std::vector<Edge> Network::makeMap()
         if (vertex == nvertices - 1u)
             npartners = rnd::binomial(nleft, prob);
 
-        // Attachment probabilities
+        // Assign attachment probabilities
         std::vector<double> probs(vertex);
         for (size_t node = 0u; node < vertex; ++node)
-            probs[node] = 1.0;
+            probs[node] = pow(degrees[node], skewness);
 
         // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
@@ -68,6 +75,10 @@ std::vector<Edge> Network::makeMap()
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
             probs[partner] = 0.0;
+            ++degrees[vertex];
+            ++degrees[partner];
+            assert(degrees[vertex] < nedges);
+            assert(degrees[partner] < nedges);
             --nleft;
 
         }
