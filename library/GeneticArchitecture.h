@@ -6,7 +6,6 @@
 #include "Genome.h"
 #include "Network.h"
 #include <vector>
-#include <list>
 
 
 typedef std::pair<size_t, size_t> Edge;
