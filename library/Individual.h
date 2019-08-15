@@ -75,14 +75,15 @@ private:
 
     // Makers
     std::vector<std::vector<bool> > makeSequence(const size_t&);
-    double develop(const Genome&);
+    std::vector<double> develop(const Genome&);
 
     // Fields
     std::vector<std::vector<bool> > sequence;
     bool isFemale;
-    double traits;
+    std::vector<double> traits;
     double ecoTrait;
     double matePref;
+    double neutral;
     double fitness;
     std::vector<double> feedingRates;
 

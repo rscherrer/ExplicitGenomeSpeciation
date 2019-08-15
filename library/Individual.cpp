@@ -26,8 +26,9 @@ Individual::Individual(const Genome &genome) :
     sequence(makeSequence(genome.effects.size())),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome)),
-    ecoTrait(traits),
-    matePref(0.0),
+    ecoTrait(traits[0u]),
+    matePref(traits[1u]),
+    neutral(traits[2u]),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
@@ -62,7 +63,7 @@ std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 
 
 /// Development
-double Individual::develop(const Genome &genome)
+std::vector<double> Individual::develop(const Genome &genome)
 {
 
     // Development reads the genome and computes trait values
@@ -71,8 +72,9 @@ double Individual::develop(const Genome &genome)
     // But each gene has a certain allele in a certain individual
     // And each gene is diploid
     // And there is dominance
+    // And there are multiple traits
 
-    double trait = 0.0;
+    std::vector<double> phenotypes {0.0, 0.0, 0.0};
 
     for (size_t locus = 0u; locus < sequence[0u].size(); ++locus) {
 
@@ -94,12 +96,15 @@ double Individual::develop(const Genome &genome)
         assert(expression >= -1.0);
         assert(expression <= 1.0);
 
+        // Determine the encoded trait
+        // const size_t trait = genome.traits[locus];
+
         // Contribute to trait
-        trait += genome.effects[locus] * expression;
+        // phenotypes[trait] += genome.effects[locus] * expression;
 
     }
 
-    return trait;
+    return phenotypes;
 }
 
 
