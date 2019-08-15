@@ -27,6 +27,7 @@ namespace rnd
     double normal(const double&, const double&);
     double exponential(const double&);
     size_t sample(const double[], const size_t&);
+    size_t sample2(const std::vector<double>&);
 }
 
 #endif

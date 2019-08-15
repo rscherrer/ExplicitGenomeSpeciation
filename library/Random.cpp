@@ -78,3 +78,10 @@ size_t rnd::sample(const double pdf[], const size_t &J)
 {
     return std::discrete_distribution<size_t>(pdf, pdf + J)(rng);
 }
+
+
+/// Discrete distribution from vector of probabilities
+size_t rnd::sample2(const std::vector<double> &probs)
+{
+    return std::discrete_distribution<size_t>(probs.begin(), probs.end())(rng);
+}
