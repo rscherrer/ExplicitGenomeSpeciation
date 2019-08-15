@@ -69,7 +69,9 @@ std::vector<Edge> Network::makeMap()
         // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
 
-            // Choose partner without replacement
+            if (sum(probs) < 1.0) break;
+
+            // Make a bond without replacement and update degree distribution
             Discrete attachment(probs.begin(), probs.end());
             const size_t partner = attachment(rnd::rng);
             assert(partner < vertex);
