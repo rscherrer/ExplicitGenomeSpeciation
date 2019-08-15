@@ -11,7 +11,7 @@ struct GenFixture {
         pars(ParameterSet()),
         arch(GeneticArchitecture(pars)),
         genome(arch.getGenome()),
-        networks(arch.getTraitNetworks())
+        networks(arch.getNetworks())
     {}
     ~GenFixture() {}
 

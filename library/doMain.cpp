@@ -58,7 +58,7 @@ int doMain(const std::vector<std::string> &args)
 
         // Create a population of individuals
         Genome genome = arch.getGenome();
-        MultiNet networks = arch.getTraitNetworks();
+        MultiNet networks = arch.getNetworks();
         Population pop = Population(pars.getInitialPopSize(), genome, networks);
 
         std::cout << "Simulation started\n";

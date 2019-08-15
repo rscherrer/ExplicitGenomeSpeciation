@@ -18,8 +18,8 @@ public:
     GeneticArchitecture(const ParameterSet&);
 
     /// Getters
-    std::vector<double> getChromosomeSizes() const { return chromosomeSizes; }
-    std::vector<Network> getTraitNetworks() const { return traitNetworks; }
+    std::vector<double> getChromosomes() const { return chromosomeSizes; }
+    std::vector<Network> getNetworks() const { return traitNetworks; }
     Genome getGenome() const { return genome; }
 
 private:

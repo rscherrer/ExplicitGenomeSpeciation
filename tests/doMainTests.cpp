@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
-    MultiNet networks = arch.getTraitNetworks();
+    MultiNet networks = arch.getNetworks();
     Population pop = Population(initPopSize, genome, networks);
 
     runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
-    MultiNet networks = arch.getTraitNetworks();
+    MultiNet networks = arch.getNetworks();
     Population pop = Population(initPopSize, genome, networks);
 
     runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);

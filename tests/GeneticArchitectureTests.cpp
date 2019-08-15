@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(threeEqualSizedChromosomes) {
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    std::vector<double> real = arch.getChromosomeSizes();
+    std::vector<double> real = arch.getChromosomes();
 
     assert(exp.size() == real.size());
 
