@@ -17,7 +17,12 @@ Network::Network(const size_t &character, const size_t &nVertices,
     loci(makeLoci(genome)),
     edges(makeEdges()),
     weights(makeWeights(shape, scale))
-{}
+{
+    assert(map.size() == nedges);
+    assert(loci.size() == nvertices);
+    assert(edges.size() == nedges);
+    assert(weights.size() == nedges);
+}
 
 /// Function to make a new interaction network based on the preferential
 /// attachment algorithm

@@ -48,8 +48,7 @@ MultiNet GeneticArchitecture::makeNetworks()
     MultiNet multinet;
 
     // For each trait
-    for (size_t trait = 0u; trait < 3u; ++trait)
-    {
+    for (size_t trait = 0u; trait < 3u; ++trait) {
 
         const size_t nloci = nLociPerTrait[trait];
         const size_t nedges = nEdgesPerTrait[trait];
