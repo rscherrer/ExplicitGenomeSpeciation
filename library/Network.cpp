@@ -44,10 +44,18 @@ std::vector<Edge> Network::makeMap()
 
     for (size_t vertex = 2u; nleft && vertex < nvertices; ++vertex) {
 
-        for (size_t edge = 0u; nleft && edge < 10u; ++edge) {
+        size_t npartners;
 
-            std::cout << nleft << "/" << nedges << '\n';
-            connexions.push_back(std::make_pair(0u, 1u));
+        if (vertex == nvertices - 1u)
+            npartners = nleft;
+        else
+            npartners = rnd::binomial(nleft, 1.0 / (nvertices - vertex));
+
+        for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
+
+            const size_t partner = 0u;
+            assert(partner < vertex);
+            connexions.push_back(std::make_pair(partner, vertex));
             --nleft;
 
         }
