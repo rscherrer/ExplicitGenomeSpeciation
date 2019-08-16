@@ -127,10 +127,10 @@ std::vector<double> Individual::develop(const Genome &genome,
 
             assert(networks[trait].edges.size() > 0u);
 
-            // Careful genexp is empty for now!
-
             const Edge edge = networks[trait].edges[e];
             const double intexp = genexp[edge.first] * genexp[edge.second];
+            assert(intexp >= -1.0);
+            assert(intexp <= 1.0);
             phenotypes[trait] += intexp * networks[trait].weights[e];
 
         }
