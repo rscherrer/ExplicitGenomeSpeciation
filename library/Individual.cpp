@@ -257,6 +257,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
     }
 
     assert(crossover > locations.back());
+    assert(crossover <= 1.0);
     assert(gamete.size() == nloci);
 
     return gamete;
