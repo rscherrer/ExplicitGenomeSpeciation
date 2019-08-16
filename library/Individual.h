@@ -20,6 +20,11 @@ public:
     Individual(const Genome&, const MultiNet&);
     ~Individual() {}
 
+    // For now individuals are made with a randomly generated genome
+    // They should inherit their genome from their parents
+    // Implement inheritance from one parent first
+    // ...
+
     // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
