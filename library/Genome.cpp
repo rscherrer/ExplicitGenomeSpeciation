@@ -5,8 +5,10 @@
 
 /// Genome constructor
 Genome::Genome(const std::vector<size_t> &nLociPerTrait,
- const size_t &nLoci, const double &shape, const double &scale) :
+ const size_t &nLoci, const size_t &nchrom, const double &shape,
+  const double &scale) :
     nloci(nLoci),
+    chromosomes(makeChromosomes(nchrom)),
     traits(makeEncodedTraits(nLociPerTrait)),
     locations(std::vector<double> { }),
     effects(std::vector<double> { }),
@@ -14,12 +16,28 @@ Genome::Genome(const std::vector<size_t> &nLociPerTrait,
 {
 
     setLocationsEffectSizesAndDominance(nLoci, shape, scale);
-
+    assert(chromosomes.size() == nchrom);
     assert(traits.size() == nloci);
     assert(effects.size() == nloci);
     assert(dominances.size() == nloci);
     assert(locations.size() == nloci);
 }
+
+
+/// Function to make a vector of chromosome sizes
+std::vector<double> Genome::makeChromosomes(const size_t &nchrom)
+{
+
+    std::vector<double> chromends;
+
+    // Chromosomes all have the same size
+    for (size_t chrom = 0u; chrom < nchrom; ++chrom)
+        chromends.push_back((chrom + 1.0) / nchrom);
+
+    return chromends;
+
+}
+
 
 /// Function to randomly assign loci to their encoded traits
 std::vector<size_t> Genome::makeEncodedTraits(const std::vector<size_t>

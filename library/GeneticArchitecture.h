@@ -19,7 +19,6 @@ public:
     GeneticArchitecture(const ParameterSet&);
 
     /// Getters
-    std::vector<double> getChromosomes() const { return chromosomeSizes; }
     Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
 
@@ -35,7 +34,6 @@ private:
     double interactionWeightShape;
     double interactionWeightScale;
 
-    std::vector<double> chromosomeSizes;
     Genome genome;
     std::vector<Network> networks;
 

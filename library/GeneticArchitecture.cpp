@@ -20,7 +20,6 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     effectSizeScale(pars.getEffectSizeScale()),
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
-    chromosomeSizes(makeChromosomes()),
     genome(makeGenome()),
     networks(makeNetworks())
 {
@@ -80,7 +79,7 @@ MultiNet GeneticArchitecture::makeNetworks()
 /// Function from architecture to call the Genome constructor
 Genome GeneticArchitecture::makeGenome()
 {
-    const Genome gen = Genome(nLociPerTrait, nLoci, effectSizeShape,
-     effectSizeScale);
+    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
+     effectSizeShape, effectSizeScale);
     return gen;
 }
