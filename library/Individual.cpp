@@ -58,8 +58,8 @@ Individual::Individual(const Genome &genome,
 
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
- const MultiNet &networks, const Diplotype &parental) :
-    sequence(parental),
+ const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm) :
+    sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome, networks)),
@@ -92,6 +92,16 @@ Diplotype Individual::makeSequence(const size_t &nloci)
     assert(sequences[0u].size() == sequences[1u].size());
 
     return sequences;
+}
+
+
+/// Fecundation
+Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
+{
+    Diplotype zygote(2u);
+    zygote[0u] = egg;
+    zygote[1u] = sperm;
+    return zygote;
 }
 
 

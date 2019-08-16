@@ -43,7 +43,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
         std::cout << "Testing that newborns do not die...\n";
         Population pop = Population(10u, genome, networks);
         pop.reproduce(1.0, 1.0, genome, networks);
-        pop.survive(0.0);
+        pop.survive(0.0); // kill all adults
         BOOST_CHECK(pop.getPopSize() > 0u);
     }
 

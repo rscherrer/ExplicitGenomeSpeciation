@@ -107,18 +107,22 @@ void Population::reproduce(const double &birth, const double &strength,
     for (auto male : males)
         successes.push_back(male->getFitness());
 
-    Discrete maleMarket(successes.begin(), successes.end());
+    assert(successes.size() == males.size());
 
+    Discrete maleMarket(successes.begin(), successes.end());
 
     // Sample the duration of the mating season this year
     const size_t seasonEnd = rnd::geometric(cost);
+    //std::cout << seasonEnd << '\n';
+    assert(seasonEnd > 0u);
 
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
 
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
         if (!nOffspring) break;
-        const Diplotype dna = mom->getSequence();
+
+        const Haplotype egg = mom->getSequence()[0u];
 
         size_t time = 0u;
 
@@ -129,9 +133,11 @@ void Population::reproduce(const double &birth, const double &strength,
             const size_t encounter = maleMarket(rnd::rng);
             assert(encounter < males.size());
             auto dad = males[encounter];
+            const Haplotype sperm = dad->getSequence()[1u];
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
-                offspring.push_back(new Individual(genome, networks, dna));
+                offspring.push_back(new Individual(genome, networks, egg,
+                 sperm));
                 --nOffspring;
             }
 

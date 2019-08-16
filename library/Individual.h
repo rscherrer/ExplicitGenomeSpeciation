@@ -21,13 +21,14 @@ public:
     typedef Individual const * PInd;
 
     Individual(const Genome&, const MultiNet&);
-    Individual(const Genome&, const MultiNet&, const Diplotype&);
+    Individual(const Genome&, const MultiNet&, const Haplotype&,
+     const Haplotype&);
     ~Individual() {}
 
     // For now individuals are made with a randomly generated genome
     // They should inherit their genome from their parents
     // Implement inheritance from one parent first
-    // ...
+    // Yeah but one strain comes from the dad and the other from the mom!
 
     // Getters
     bool getGender() const { return isFemale; }
@@ -56,6 +57,7 @@ private:
 
     // Makers
     Diplotype makeSequence(const size_t&);
+    Diplotype fecundate(const Haplotype&, const Haplotype&);
     std::vector<double> develop(const Genome&, const MultiNet&);
 
     // Fields
