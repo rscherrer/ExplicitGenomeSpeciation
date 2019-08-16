@@ -110,7 +110,6 @@ void Population::reproduce(const double &birth, const double &strength,
     Discrete maleMarket(successes.begin(), successes.end());
 
 
-
     // Sample the duration of the mating season this year
     const size_t seasonEnd = rnd::geometric(cost);
 
