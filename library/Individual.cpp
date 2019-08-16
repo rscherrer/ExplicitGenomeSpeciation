@@ -236,13 +236,22 @@ Haplotype Individual::recombine()
     // Choose a random haplotype
     // Loop through loci along this haplotype
     // Add this locus to the inherited gamete
+    // Yes but there are crossing overs
+    // Upon a crossover the strain changes
 
     const size_t nloci = sequence[0u].size();
 
     size_t strain = rnd::random(2u); // start with random haplotype
 
-    for (size_t locus = 0u; locus < nloci; ++locus)
+    size_t crossover = 1u;
+
+    for (size_t locus = 0u; locus < nloci; ++locus) {
+        if (locus > crossover) {
+            strain = strain == 0u ? 1u : 0u; // flip
+            crossover = nloci;
+        }
         gamete.push_back(sequence[strain][locus]);
+    }
 
     assert(gamete.size() == nloci);
 
