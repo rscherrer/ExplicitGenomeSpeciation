@@ -29,6 +29,7 @@ public:
     // They should inherit their genome from their parents
     // Implement inheritance from one parent first
     // Yeah but one strain comes from the dad and the other from the mom!
+    // What strain comes from the dad and which comes from the mom is random
 
     // Getters
     bool getGender() const { return isFemale; }
