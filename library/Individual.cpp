@@ -21,6 +21,23 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 }
 
 
+/// Assert fields of individual upon creation
+void assertIndividual(const Diplotype& seq,
+ const std::vector<double> &xp, const Genome& genome,
+  const std::vector<double> &traits, const double &fitness,
+   const std::vector<double> &rates)
+{
+    assert(seq.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(seq[strain].size() == genome.nloci);
+    assert(xp.size() == genome.nloci);
+    assert(traits.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(rates[res] > 0.0);
+}
+
+
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks) :
@@ -35,18 +52,11 @@ Individual::Individual(const Genome &genome,
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
-    assert(sequence.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(sequence[strain].size() == genome.nloci);
-    assert(genexp.size() == genome.nloci);
-    assert(traits.size() == 3u);
-    assert(fitness > 0.0);
-    for (size_t res = 0u; res < 2u; ++res)
-        assert(feedingRates[res] > 0.0);
+    assertIndividual(sequence, genexp, genome, traits, fitness, feedingRates);
 }
 
 
-/// Constructor that can inherit a genome
+/// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Diplotype &parental) :
     sequence(parental),
@@ -59,15 +69,7 @@ Individual::Individual(const Genome &genome,
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
-
-    assert(sequence.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(sequence[strain].size() == genome.nloci);
-    assert(genexp.size() == genome.nloci);
-    assert(traits.size() == 3u);
-    assert(fitness > 0.0);
-    for (size_t res = 0u; res < 2u; ++res)
-        assert(feedingRates[res] > 0.0);
+    assertIndividual(sequence, genexp, genome, traits, fitness, feedingRates);
 }
 
 
