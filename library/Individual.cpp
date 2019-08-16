@@ -229,7 +229,7 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 
 /// Meiosis to produce a gamete
-Haplotype Individual::recombine()
+Haplotype Individual::recombine(const std::vector<double> &locations)
 {
     Haplotype gamete;
 
@@ -238,17 +238,18 @@ Haplotype Individual::recombine()
     // Add this locus to the inherited gamete
     // Yes but there are crossing overs
     // Upon a crossover the strain changes
+    // The crossover point is a location along the genome, not a specific locus
 
     const size_t nloci = sequence[0u].size();
 
     size_t strain = rnd::random(2u); // start with random haplotype
 
-    size_t crossover = 1u;
+    double crossover = 0.5;
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
-        if (locus > crossover) {
+        if (locations[locus] > crossover) {
             strain = strain == 0u ? 1u : 0u; // flip
-            crossover = nloci;
+            crossover = 1.0;
         }
         gamete.push_back(sequence[strain][locus]);
     }
