@@ -227,6 +227,17 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 }
 
+
+/// Meiosis to produce a gamete
+Haplotype Individual::recombine()
+{
+    Haplotype gamete;
+
+    gamete = sequence[rnd::random(2u)];
+
+    return gamete;
+}
+
 /*
 // Accessory functions
 double calcAssortProb(const double &matePreference, const double &matingTrait,

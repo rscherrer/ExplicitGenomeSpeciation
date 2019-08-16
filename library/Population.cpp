@@ -120,7 +120,7 @@ void Population::reproduce(const double &birth, const double &strength,
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
         if (!nOffspring) break;
 
-        const Haplotype egg = mom->getSequence()[rnd::random(2u)];
+        const Haplotype egg = mom->recombine();
 
         size_t time = 0u;
 
@@ -131,7 +131,7 @@ void Population::reproduce(const double &birth, const double &strength,
             const size_t encounter = maleMarket(rnd::rng);
             assert(encounter < males.size());
             auto dad = males[encounter];
-            const Haplotype sperm = dad->getSequence()[rnd::random(2u)];
+            const Haplotype sperm = dad->recombine();
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
                 offspring.push_back(new Individual(genome, networks, egg,

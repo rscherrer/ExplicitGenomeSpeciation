@@ -30,6 +30,10 @@ public:
     // Implement inheritance from one parent first
     // Yeah but one strain comes from the dad and the other from the mom!
     // What strain comes from the dad and which comes from the mom is random
+    // Yeah but the gametes have to go through meiosis first
+
+    // How to make a gamete?
+    //
 
     // Getters
     bool getGender() const { return isFemale; }
@@ -42,6 +46,7 @@ public:
     // Actions
     void feed(const std::vector<double>&);
     bool acceptMate(const double&, const double&) const;
+    Haplotype recombine();
 
     // Setters
     void setEcoTrait(const double &value, const double &sel) {
