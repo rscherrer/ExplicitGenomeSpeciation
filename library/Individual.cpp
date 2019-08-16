@@ -239,21 +239,24 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
     // Yes but there are crossing overs
     // Upon a crossover the strain changes
     // The crossover point is a location along the genome, not a specific locus
+    // There can be several crossover points
 
     const size_t nloci = sequence[0u].size();
 
     size_t strain = rnd::random(2u); // start with random haplotype
 
-    double crossover = 0.5;
+    double crossover = 0.0;
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
         if (locations[locus] > crossover) {
             strain = strain == 0u ? 1u : 0u; // flip
-            crossover = 1.0;
+            crossover += rnd::exponential(3.0); // next crossover
+            crossover = crossover > 1.0 ? 1.0 : crossover;
         }
         gamete.push_back(sequence[strain][locus]);
     }
 
+    assert(crossover > locations.back());
     assert(gamete.size() == nloci);
 
     return gamete;

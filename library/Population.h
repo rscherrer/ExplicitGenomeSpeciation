@@ -19,6 +19,7 @@ public:
 
     // Getters
     size_t getPopSize() const { return individuals.size(); }
+    size_t getNOffspring() const { return offspring.size(); }
     std::vector<double> getResources() const { return resources; }
 
     // Life cycle

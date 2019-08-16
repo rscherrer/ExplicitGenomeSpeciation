@@ -118,7 +118,6 @@ void Population::reproduce(const double &birth, const double &strength,
     for (auto mom : females) {
 
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
-        if (!nOffspring) break;
 
         const Haplotype egg = mom->recombine(genome.locations);
 
@@ -141,6 +140,7 @@ void Population::reproduce(const double &birth, const double &strength,
 
             ++time;
         }
+
     }
 
     females.clear();
