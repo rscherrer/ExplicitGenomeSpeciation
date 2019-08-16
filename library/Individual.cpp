@@ -35,10 +35,14 @@ Individual::Individual(const Genome &genome,
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
 
-    // Ecological trait is not always -1
-    // The trait of an individual is determined by its genome sequence
-    // Through development
-
+    assert(sequence.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(sequence[strain].size() == genome.nloci);
+    assert(genexp.size() == genome.nloci);
+    assert(traits.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(feedingRates[res] > 0.0);
 }
 
 
@@ -119,8 +123,9 @@ std::vector<double> Individual::develop(const Genome &genome,
 
         for (size_t e = 0u; e < networks[trait].nedges; ++e) {
 
+            assert(networks[trait].edges.size() > 0u);
+
             // Careful genexp is empty for now!
-            // Careful edges is empty!
 
             const Edge edge = networks[trait].edges[e];
             const double intexp = genexp[edge.first] * genexp[edge.second];
