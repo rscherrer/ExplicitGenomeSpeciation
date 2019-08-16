@@ -113,8 +113,6 @@ void Population::reproduce(const double &birth, const double &strength,
 
     // Sample the duration of the mating season this year
     const size_t seasonEnd = rnd::geometric(cost);
-    //std::cout << seasonEnd << '\n';
-    assert(seasonEnd > 0u);
 
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
