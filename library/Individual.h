@@ -7,9 +7,11 @@
 #include <random>
 
 
+typedef std::vector<std::vector<bool> > Diplotype;
+
 /// Function to calculate feeding rates
-std::vector<double> calcFeedingRates(const double &sel, const double &trait,
- const double &maxi = 0.0004);
+std::vector<double> calcFeedingRates(const double&, const double&,
+ const double& = 0.0004);
 
 class Individual {
 
@@ -18,6 +20,7 @@ public:
     typedef Individual const * PInd;
 
     Individual(const Genome&, const MultiNet&);
+    Individual(const Genome&, const MultiNet&, const Diplotype&);
     ~Individual() {}
 
     // For now individuals are made with a randomly generated genome

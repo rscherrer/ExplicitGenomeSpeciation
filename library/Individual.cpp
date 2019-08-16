@@ -46,6 +46,31 @@ Individual::Individual(const Genome &genome,
 }
 
 
+/// Altnerative constructor that can inherit a genome
+Individual::Individual(const Genome &genome,
+ const MultiNet &networks, const Diplotype &parental) :
+    sequence(parental),
+    genexp(zeros(genome.nloci)),
+    isFemale(rnd::bernoulli(0.5)),
+    traits(develop(genome, networks)),
+    ecoTrait(traits[0u]),
+    matePref(traits[1u]),
+    neutral(traits[2u]),
+    fitness(1.0),
+    feedingRates(calcFeedingRates(1.0, ecoTrait))
+{
+
+    assert(sequence.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(sequence[strain].size() == genome.nloci);
+    assert(genexp.size() == genome.nloci);
+    assert(traits.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(feedingRates[res] > 0.0);
+}
+
+
 /// Generate a diploid allele sequence
 std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
 {
