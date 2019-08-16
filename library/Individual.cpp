@@ -127,10 +127,13 @@ std::vector<double> Individual::develop(const Genome &genome,
 
             assert(networks[trait].edges.size() > 0u);
 
+            // Level of expression of an interaction
             const Edge edge = networks[trait].edges[e];
             const double intexp = genexp[edge.first] * genexp[edge.second];
+
             assert(intexp >= -1.0);
             assert(intexp <= 1.0);
+
             phenotypes[trait] += intexp * networks[trait].weights[e];
 
         }
