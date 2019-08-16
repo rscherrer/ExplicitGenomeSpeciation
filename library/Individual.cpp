@@ -21,7 +21,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 }
 
 
-/// Constructor
+/// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks) :
     sequence(makeSequence(genome.effects.size())),
@@ -46,7 +46,7 @@ Individual::Individual(const Genome &genome,
 }
 
 
-/// Altnerative constructor that can inherit a genome
+/// Constructor that can inherit a genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Diplotype &parental) :
     sequence(parental),
