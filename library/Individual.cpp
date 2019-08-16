@@ -104,6 +104,8 @@ std::vector<double> Individual::develop(const Genome &genome,
         assert(expression >= -1.0);
         assert(expression <= 1.0);
 
+        genexp[locus] = expression; // record gene expression
+
         // Determine the encoded trait
         const size_t trait = genome.traits[locus];
 
