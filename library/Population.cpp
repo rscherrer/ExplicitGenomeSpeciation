@@ -117,6 +117,8 @@ void Population::reproduce(const double &birth, const double &strength,
     for (auto mom : females) {
 
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
+        if (!nOffspring) break;
+        const Diplotype dna = mom->getSequence();
 
         size_t time = 0u;
 
@@ -129,7 +131,7 @@ void Population::reproduce(const double &birth, const double &strength,
             auto dad = males[encounter];
 
             if (mom->acceptMate(dad->getEcoTrait(), strength)) {
-                offspring.push_back(new Individual(genome, networks));
+                offspring.push_back(new Individual(genome, networks, dna));
                 --nOffspring;
             }
 

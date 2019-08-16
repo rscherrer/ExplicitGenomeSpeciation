@@ -35,6 +35,7 @@ public:
     double getMatePref() const { return matePref; }
     double getFitness() const { return fitness; }
     std::vector<double> getFeedingRates() const { return feedingRates; }
+    Diplotype getSequence() const { return sequence; }
 
     // Actions
     void feed(const std::vector<double>&);
