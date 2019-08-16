@@ -6,8 +6,8 @@
 #include <cassert>
 #include <iostream>
 
-struct Locus;
 
+struct Locus;
 
 /// Function to calculate feeding rates
 std::vector<double> calcFeedingRates(const double &sel, const double &trait,
@@ -74,7 +74,7 @@ Individual::Individual(const Genome &genome,
 
 
 /// Generate a diploid allele sequence
-std::vector<std::vector<bool> > Individual::makeSequence(const size_t &nloci)
+Diplotype Individual::makeSequence(const size_t &nloci)
 {
 
     std::vector<std::vector<bool> > sequences;
