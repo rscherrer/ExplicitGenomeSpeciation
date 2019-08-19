@@ -251,10 +251,15 @@ Haplotype Individual::recombine()
     const size_t nloci = sequence[0u].size();
     size_t locus = 0u;
 
+    size_t hap = 0u;
+
     while (locus < nloci) {
-        const size_t hap = rnd::random(2u);
+
+        hap = 1u;
         gamete.push_back(sequence[hap][locus]);
+
         ++locus;
+
     }
 
     assert(locus == nloci);
