@@ -81,7 +81,14 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[1u]), genome.nloci);
     }
 
-
+    BOOST_AUTO_TEST_CASE(checkNoMutation)
+    {
+        std::cout << "Testing absence of mutations...\n";
+        Individual ind = Individual(genome, networks, 0.0);
+        Haplotype gamete = ind.recombine(genome.locations, genome.chromosomes);
+        ind.mutate(gamete, 0.0);
+        BOOST_CHECK_EQUAL(sumbool(gamete), 0u);
+    }
 
 BOOST_AUTO_TEST_SUITE_END()
 
