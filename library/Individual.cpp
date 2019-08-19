@@ -249,15 +249,18 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
     // But wait, there is free recombination between the chromosomes!
 
     const size_t nloci = sequence[0u].size();
+
     size_t locus = 0u;
-    double cross = 0.5;
+    double crossover = rnd::exponential(3.0);
+
+
 
     size_t hap = 0u;
 
     while (locus < nloci) {
 
         const double position = locations[locus];
-        if (position > cross) hap = 1u;
+        if (position > crossover) hap = 1u;
 
         gamete.push_back(sequence[hap][locus]);
         ++locus;
