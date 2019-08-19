@@ -48,7 +48,7 @@ public:
     bool acceptMate(const double&, const double&) const;
     Haplotype recombine(const std::vector<double>&, const std::vector<double>&,
      const double& = 3.0);
-    void mutate(Haplotype&);
+    void mutate(Haplotype&, const double& = 1.0e-5);
 
     // Setters
     void setEcoTrait(const double &value, const double &sel) {

@@ -299,7 +299,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
 
 
 /// Mutation
-void Individual::mutate(Haplotype &gamete)
+void Individual::mutate(Haplotype &gamete, const double &rate)
 {
 
     // Sample a number of mutations from a poisson
@@ -308,8 +308,7 @@ void Individual::mutate(Haplotype &gamete)
 
     const size_t nloci = gamete.size();
 
-    size_t nmut = rnd::poisson(0.0001 * gamete.size());
-    //std::cout << nmut << '\n';
+    size_t nmut = rnd::poisson(rate * gamete.size());
 
     while (nmut) {
 
