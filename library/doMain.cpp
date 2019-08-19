@@ -18,7 +18,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
     // Loop through time...
     for (; t < tmax; ++t) {
 
-        // Dispersion
+        // Dispersal
 
         // Resource acquisition
         pop.consume();

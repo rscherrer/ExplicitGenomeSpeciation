@@ -54,7 +54,7 @@ private:
     friend class Population;
 
     // Makers
-    Diplotype makeSequence(const size_t&);
+    Diplotype makeSequence(const size_t&, const double& = 0.5);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
     std::vector<double> develop(const Genome&, const MultiNet&);
 
