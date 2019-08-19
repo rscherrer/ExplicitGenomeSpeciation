@@ -261,27 +261,28 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
 
     while (locus < nloci) {
 
-        std::vector<double> closest = { crossover, position, chromend };
-        double next = argmin(closest);
+        std::vector<double> closest = { crossover, chromend, position };
+        size_t next = argmin(closest);
 
-        if (next == 0u) {
+        switch (next) {
 
+        case 0u:
             hap = hap ? 0u : 1u;
             crossover += rnd::exponential(3.0);
+            break;
 
-        }
-        else if (next == 1u) {
-
-            gamete.push_back(sequence[hap][locus]);
-            ++locus;
-            position = locations[locus];
-
-        }
-        else if (next == 2u) {
-
+        case 1u:
             hap = rnd::random(2u);
             ++chrom;
             chromend = chromosomes[chrom];
+            break;
+
+        default:
+            gamete.push_back(sequence[hap][locus]);
+            ++locus;
+            position = locations[locus];
+            break;
+
         }
     }
 
