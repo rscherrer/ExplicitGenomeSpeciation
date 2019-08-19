@@ -261,22 +261,26 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
 
     while (locus < nloci) {
 
+        // What is the next thing coming up next?
         std::vector<double> closest = { crossover, chromend, position };
         size_t next = argmin(closest);
 
         switch (next) {
 
+        // Crossover point
         case 0u:
             hap = hap ? 0u : 1u;
             crossover += rnd::exponential(3.0);
             break;
 
+        // Free recombination point
         case 1u:
             hap = rnd::random(2u);
             ++chrom;
             chromend = chromosomes[chrom];
             break;
 
+        // Gene
         default:
             gamete.push_back(sequence[hap][locus]);
             ++locus;
