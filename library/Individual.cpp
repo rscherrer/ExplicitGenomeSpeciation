@@ -297,6 +297,32 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
     return gamete;
 }
 
+
+/// Mutation
+void Individual::mutate(Haplotype &gamete)
+{
+
+    // Sample a number of mutations from a poisson
+    // Sample the mutated targets
+    // Flip the alleles
+
+    const size_t nloci = gamete.size();
+
+    size_t nmut = rnd::poisson(0.0001 * gamete.size());
+    //std::cout << nmut << '\n';
+
+    while (nmut) {
+
+        size_t target = rnd::random(gamete.size());
+        gamete[target] = gamete[target] ? 0u : 1u;
+
+        --nmut;
+    }
+
+    assert(gamete.size() == nloci);
+
+}
+
 /*
 // Accessory functions
 double calcAssortProb(const double &matePreference, const double &matingTrait,
