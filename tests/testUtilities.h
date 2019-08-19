@@ -6,7 +6,7 @@
 
 
 /// Function to compare vectors of doubles to their expectedectations
-void checkVectorOfDoubles(std::vector<double> expected,
+void compareVectors(std::vector<double> expected,
  std::vector<double> realized, const double &factor = 1.0e6)
 {
     for (size_t i = 0u; i < realized.size(); ++i) {
