@@ -32,5 +32,3 @@ CONFIG(debug, debug|release) {
 
 # Boost.Test
 LIBS += -lboost_unit_test_framework
-
-SOURCES +=
