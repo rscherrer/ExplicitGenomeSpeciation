@@ -249,8 +249,14 @@ Haplotype Individual::recombine()
     // But wait, there is free recombination between the chromosomes!
 
     const size_t nloci = sequence[0u].size();
-    gamete = sequence[0u];
+    size_t locus = 0u;
 
+    while (locus < nloci) {
+        gamete.push_back(sequence[0u][locus]);
+        ++locus;
+    }
+
+    assert(locus == nloci);
     assert(gamete.size() == nloci);
 
     return gamete;
