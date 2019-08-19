@@ -254,14 +254,13 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
 
     double crossover = rnd::exponential(3.0);
     double position = locations[0u];
+    double chromend = 0.5;
 
     size_t hap = 0u;
 
     while (locus < nloci) {
 
-        //std::vector<double> next = {crossover, position};
-
-        std::vector<double> closest = { crossover, position };
+        std::vector<double> closest = { crossover, position, chromend };
         double next = argmin(closest);
 
         if (next == 0u) {
@@ -270,12 +269,17 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
             crossover += rnd::exponential(3.0);
 
         }
-        else {
+        else if (next == 1u) {
 
             gamete.push_back(sequence[hap][locus]);
             ++locus;
             position = locations[locus];
 
+        }
+        else if (next == 2u) {
+
+            hap = rnd::random(2u);
+            chromend = 1.0;
         }
 
     }
