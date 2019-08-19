@@ -261,7 +261,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
 
         if (crossover < position) {
 
-            hap = 1u;
+            hap = hap ? 0u : 1u;
             crossover += rnd::exponential(3.0);
 
         }
