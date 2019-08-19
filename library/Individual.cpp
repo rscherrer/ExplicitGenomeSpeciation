@@ -265,11 +265,13 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
             crossover += rnd::exponential(3.0);
 
         }
+        else {
 
-        gamete.push_back(sequence[hap][locus]);
+            gamete.push_back(sequence[hap][locus]);
+            ++locus;
+            position = locations[locus];
 
-        ++locus;
-        position = locations[locus];
+        }
 
     }
 
