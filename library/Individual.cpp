@@ -42,7 +42,7 @@ void assertIndividual(const Diplotype& seq,
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks) :
-    sequence(makeSequence(genome.effects.size())),
+    sequence(makeSequence(genome.nloci)),
     genexp(zeros(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome, networks)),
@@ -231,7 +231,7 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 /// Meiosis to produce a gamete
 Haplotype Individual::recombine(const std::vector<double> &locations,
- const std::vector<double> &chromosomes)
+ const std::vector<double> &chromosomes, const double &rate)
 {
     Haplotype gamete;
 
@@ -253,7 +253,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
     size_t locus = 0u;
     size_t chrom = 0u;
 
-    double crossover = rnd::exponential(3.0);
+    double crossover = rnd::exponential(rate);
     double position = locations[0u];
     double chromend = chromosomes[0u];
 
@@ -270,7 +270,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
         // Crossover point
         case 0u:
             hap = hap ? 0u : 1u;
-            crossover += rnd::exponential(3.0);
+            crossover += rnd::exponential(rate);
             break;
 
         // Free recombination point
