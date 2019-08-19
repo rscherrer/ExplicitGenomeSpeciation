@@ -259,7 +259,12 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
 
     while (locus < nloci) {
 
-        if (crossover < position) {
+        //std::vector<double> next = {crossover, position};
+
+        std::vector<double> closest = { crossover, position };
+        double next = argmin(closest);
+
+        if (next == 0u) {
 
             hap = hap ? 0u : 1u;
             crossover += rnd::exponential(3.0);

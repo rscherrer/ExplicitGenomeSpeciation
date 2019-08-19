@@ -34,5 +34,5 @@ double sum(std::vector<double> &v)
 
 size_t argmin(std::vector<double> &v)
 {
-    return v.begin() - std::min_element(v.begin(), v.end());
+    return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
 }
