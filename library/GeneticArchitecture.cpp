@@ -11,6 +11,9 @@
 
 typedef std::vector<Network> MultiNet;
 
+class Network;
+class Genome;
+
 /// Constructor of genetic architecture
 GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     nChromosomes(pars.getNChromosomes()),

@@ -25,16 +25,6 @@ public:
      const Haplotype&);
     ~Individual() {}
 
-    // For now individuals are made with a randomly generated genome
-    // They should inherit their genome from their parents
-    // Implement inheritance from one parent first
-    // Yeah but one strain comes from the dad and the other from the mom!
-    // What strain comes from the dad and which comes from the mom is random
-    // Yeah but the gametes have to go through meiosis first
-
-    // How to make a gamete?
-    //
-
     // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
