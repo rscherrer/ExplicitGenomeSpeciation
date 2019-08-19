@@ -230,7 +230,7 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 
 /// Meiosis to produce a gamete
-Haplotype Individual::recombine()
+Haplotype Individual::recombine(const std::vector<double> &locations)
 {
     Haplotype gamete;
 
@@ -250,14 +250,16 @@ Haplotype Individual::recombine()
 
     const size_t nloci = sequence[0u].size();
     size_t locus = 0u;
+    double cross = 0.5;
 
     size_t hap = 0u;
 
     while (locus < nloci) {
 
-        if (locus == 10u) hap = 1u;
-        gamete.push_back(sequence[hap][locus]);
+        const double position = locations[locus];
+        if (position > cross) hap = 1u;
 
+        gamete.push_back(sequence[hap][locus]);
         ++locus;
 
     }
