@@ -230,11 +230,11 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 
 /// Meiosis to produce a gamete
-Haplotype Individual::recombine(const std::vector<double> &locations)
+Haplotype Individual::recombine(const std::vector<double> &locations,
+ const std::vector<double> &chromosomes)
 {
     Haplotype gamete;
 
-    //const std::vector<double> &locations,const std::vector<double> &chromosomes, const double &rate
     // Choose a random haplotype
     // Loop through loci along this haplotype
     // Add this locus to the inherited gamete
@@ -251,10 +251,11 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
     const size_t nloci = sequence[0u].size();
 
     size_t locus = 0u;
+    size_t chrom = 0u;
 
     double crossover = rnd::exponential(3.0);
     double position = locations[0u];
-    double chromend = 0.5;
+    double chromend = chromosomes[0u];
 
     size_t hap = 0u;
 
@@ -279,7 +280,8 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
         else if (next == 2u) {
 
             hap = rnd::random(2u);
-            chromend = 1.0;
+            ++chrom;
+            chromend = chromosomes[chrom];
         }
 
     }
