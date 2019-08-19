@@ -90,6 +90,15 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         BOOST_CHECK_EQUAL(sumbool(gamete), 0u);
     }
 
+    BOOST_AUTO_TEST_CASE(checkHighMutation)
+    {
+        std::cout << "Testing high mutation rate...\n";
+        Individual ind = Individual(genome, networks, 0.0);
+        Haplotype gamete = ind.recombine(genome.locations, genome.chromosomes);
+        ind.mutate(gamete, 100.0);
+        BOOST_CHECK(sumbool(gamete) != 0u);
+    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // Check the absence of recombination
