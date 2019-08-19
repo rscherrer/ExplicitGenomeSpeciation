@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 
 
 struct Locus;
@@ -229,11 +230,11 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 
 /// Meiosis to produce a gamete
-Haplotype Individual::recombine(const std::vector<double> &locations,
- const std::vector<double> &chromosomes, const double &rate)
+Haplotype Individual::recombine()
 {
     Haplotype gamete;
 
+    //const std::vector<double> &locations,const std::vector<double> &chromosomes, const double &rate
     // Choose a random haplotype
     // Loop through loci along this haplotype
     // Add this locus to the inherited gamete
@@ -247,30 +248,7 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
     // 1cM = 1% change recombination
     // But wait, there is free recombination between the chromosomes!
 
-    const size_t nloci = sequence[0u].size();
-
-    size_t strain = rnd::random(2u); // start with random haplotype
-
-    double crossover = 0.0;
-
-    double chromend = chromosomes[0u]; // end of the chromosome
-
-    for (size_t locus = 0u; locus < nloci; ++locus) {
-
-        if (locations[locus] > chromend)
-            strain = rnd::random(2u);
-
-        if (locations[locus] > crossover) {
-            strain = strain == 0u ? 1u : 0u; // switch
-            crossover += rnd::exponential(rate); // next crossover
-            crossover = crossover > 1.0 ? 1.0 : crossover;
-        }
-        gamete.push_back(sequence[strain][locus]);
-    }
-
-    assert(crossover > locations.back());
-    assert(crossover <= 1.0);
-    assert(gamete.size() == nloci);
+    gamete = sequence[0u];
 
     return gamete;
 }

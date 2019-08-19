@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <numeric>
+#include <algorithm>
 
 double sqr(const double &number)
 {
@@ -28,4 +29,10 @@ std::vector<size_t> uzeros(const size_t &n)
 double sum(std::vector<double> &v)
 {
     return std::accumulate(v.begin(), v.end(), 0);
+}
+
+
+size_t argmin(std::vector<double> &v)
+{
+    return v.begin() - std::min_element(v.begin(), v.end());
 }
