@@ -255,7 +255,7 @@ Haplotype Individual::recombine()
 
     while (locus < nloci) {
 
-        hap = 1u;
+        if (locus == 10u) hap = 1u;
         gamete.push_back(sequence[hap][locus]);
 
         ++locus;
