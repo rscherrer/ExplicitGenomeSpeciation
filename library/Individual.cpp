@@ -251,19 +251,25 @@ Haplotype Individual::recombine(const std::vector<double> &locations)
     const size_t nloci = sequence[0u].size();
 
     size_t locus = 0u;
+
     double crossover = rnd::exponential(3.0);
-
-
+    double position = locations[0u];
 
     size_t hap = 0u;
 
     while (locus < nloci) {
 
-        const double position = locations[locus];
-        if (position > crossover) hap = 1u;
+        if (crossover < position) {
+
+            hap = 1u;
+            crossover += rnd::exponential(3.0);
+
+        }
 
         gamete.push_back(sequence[hap][locus]);
+
         ++locus;
+        position = locations[locus];
 
     }
 
