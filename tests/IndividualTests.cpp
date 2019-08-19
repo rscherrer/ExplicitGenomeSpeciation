@@ -81,4 +81,24 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[1u]), genome.nloci);
     }
 
+
+
 BOOST_AUTO_TEST_SUITE_END()
+
+// Check the absence of recombination
+BOOST_AUTO_TEST_CASE(checkNoRecombination)
+{
+    std::cout << "Testing meiosis without recombination...\n";
+    ParameterSet pars;
+    pars.setNChromosomes(1u); // to avoid free recombination
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Individual mom = Individual(genome, networks, 0.0);
+    Individual dad = Individual(genome, networks, 1.0);
+    Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
+    Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
+    Individual baby = Individual(genome, networks, egg, sperm);
+    Haplotype gam = baby.recombine(genome.locations, genome.chromosomes, 0.0);
+    BOOST_CHECK_EQUAL(sumbool(gam) / genome.nloci, gam[0u]);
+}
