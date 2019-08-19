@@ -7,13 +7,23 @@
 BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
 
     // Check the genome generation function
-    BOOST_AUTO_TEST_CASE(checkGenomeGenerator)
+    BOOST_AUTO_TEST_CASE(checkOnlyAllelesZero)
     {
-        std::cout << "Testing generating a random genome sequence...\n";
+        std::cout << "Testing generating a sequence of only zeros...\n";
         Individual ind = Individual(genome, networks, 0.0);
         Diplotype seq = ind.getSequence();
         BOOST_CHECK_EQUAL(sumbool(seq[0u]), 0u);
         BOOST_CHECK_EQUAL(sumbool(seq[1u]), 0u);
+    }
+
+    // Check the genome generation function
+    BOOST_AUTO_TEST_CASE(checkOnlyAllelesOne)
+    {
+        std::cout << "Testing generating a sequence of only ones...\n";
+        Individual ind = Individual(genome, networks, 1.0);
+        Diplotype seq = ind.getSequence();
+        BOOST_CHECK_EQUAL(sumbool(seq[0u]), seq[0u].size());
+        BOOST_CHECK_EQUAL(sumbool(seq[1u]), seq[1u].size());
     }
 
     // Check that a fully homogamous female will always accept identical mate
