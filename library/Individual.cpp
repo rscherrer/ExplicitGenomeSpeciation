@@ -248,7 +248,10 @@ Haplotype Individual::recombine()
     // 1cM = 1% change recombination
     // But wait, there is free recombination between the chromosomes!
 
+    const size_t nloci = sequence[0u].size();
     gamete = sequence[0u];
+
+    assert(gamete.size() == nloci);
 
     return gamete;
 }
