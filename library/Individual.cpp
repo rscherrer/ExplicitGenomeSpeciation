@@ -41,8 +41,8 @@ void assertIndividual(const Diplotype& seq,
 
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome,
- const MultiNet &networks) :
-    sequence(makeSequence(genome.nloci)),
+ const MultiNet &networks, const double &snpfreq) :
+    sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     isFemale(rnd::bernoulli(0.5)),
     traits(develop(genome, networks)),
@@ -75,7 +75,7 @@ Individual::Individual(const Genome &genome,
 
 
 /// Generate a diploid allele sequence
-Diplotype Individual::makeSequence(const size_t &nloci)
+Diplotype Individual::makeSequence(const size_t &nloci, const double &prob)
 {
 
     std::vector<std::vector<bool> > sequences;
@@ -85,7 +85,7 @@ Diplotype Individual::makeSequence(const size_t &nloci)
         // Generate a random genetic sequence of alleles
         std::vector<bool> haplotype;
         for (size_t locus = 0u; locus < nloci; ++locus)
-            haplotype.push_back(rnd::bernoulli(0.5));
+            haplotype.push_back(rnd::bernoulli(prob));
         sequences.push_back(haplotype);
 
     }

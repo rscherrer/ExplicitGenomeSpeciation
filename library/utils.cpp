@@ -36,3 +36,10 @@ size_t argmin(std::vector<double> &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
 }
+
+size_t sumbool(std::vector<bool> &v) {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < v.size(); ++i)
+        sum += v[i];
+    return sum;
+}

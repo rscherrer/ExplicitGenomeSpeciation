@@ -20,7 +20,7 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const Genome&, const MultiNet&);
+    Individual(const Genome&, const MultiNet&, const double& = 0.5);
     Individual(const Genome&, const MultiNet&, const Haplotype&,
      const Haplotype&);
     ~Individual() {}

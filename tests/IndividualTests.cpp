@@ -1,9 +1,20 @@
 #include "library/Individual.h"
+#include "library/utils.h"
 #include "tests/GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
 BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
+
+    // Check the genome generation function
+    BOOST_AUTO_TEST_CASE(checkGenomeGenerator)
+    {
+        std::cout << "Testing generating a random genome sequence...\n";
+        Individual ind = Individual(genome, networks, 0.0);
+        Diplotype seq = ind.getSequence();
+        BOOST_CHECK_EQUAL(sumbool(seq[0u]), 0u);
+        BOOST_CHECK_EQUAL(sumbool(seq[1u]), 0u);
+    }
 
     // Check that a fully homogamous female will always accept identical mate
     BOOST_AUTO_TEST_CASE(checkAssortative)
