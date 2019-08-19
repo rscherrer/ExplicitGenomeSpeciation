@@ -99,6 +99,20 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         BOOST_CHECK(sumbool(gamete) != 0u);
     }
 
+    BOOST_AUTO_TEST_CASE(checkHighRecombination)
+    {
+        std::cout << "Testing high recombination rate...\n";
+        Individual mom = Individual(genome, networks, 0.0);
+        Individual dad = Individual(genome, networks, 1.0);
+        Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
+        Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
+        Individual baby = Individual(genome, networks, egg, sperm);
+        Haplotype gamete = baby.recombine(genome.locations, genome.chromosomes,
+         10.0);
+        BOOST_CHECK(sumbool(gamete) != 0u);
+        BOOST_CHECK(sumbool(gamete) != genome.nloci);
+    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // Check the absence of recombination
