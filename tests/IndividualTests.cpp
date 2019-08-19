@@ -22,8 +22,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         std::cout << "Testing generating a sequence of only ones...\n";
         Individual ind = Individual(genome, networks, 1.0);
         Diplotype seq = ind.getSequence();
-        BOOST_CHECK_EQUAL(sumbool(seq[0u]), seq[0u].size());
-        BOOST_CHECK_EQUAL(sumbool(seq[1u]), seq[1u].size());
+        BOOST_CHECK_EQUAL(sumbool(seq[0u]), genome.nloci);
+        BOOST_CHECK_EQUAL(sumbool(seq[1u]), genome.nloci);
     }
 
     // Check that a fully homogamous female will always accept identical mate
@@ -66,6 +66,19 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         ind.setEcoTrait(-1.0, 1.0);
         ind.feed({ 100.0, 100.0 });
         BOOST_CHECK(ind.getFitness() == 0.04 + 0.0004 * exp(-4.0) * 100);
+    }
+
+    // Check that fecundation fuses the two gametes
+    BOOST_AUTO_TEST_CASE(checkFecundation)
+    {
+        std::cout << "Testing that fecundation fuses two gametes...\n";
+        Individual mom = Individual(genome, networks, 0.0);
+        Individual dad = Individual(genome, networks, 1.0);
+        Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
+        Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
+        Individual baby = Individual(genome, networks, egg, sperm);
+        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[0u]), 0u);
+        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[1u]), genome.nloci);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
