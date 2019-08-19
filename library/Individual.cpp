@@ -283,10 +283,10 @@ Haplotype Individual::recombine(const std::vector<double> &locations,
             ++chrom;
             chromend = chromosomes[chrom];
         }
-
     }
 
     assert(locus == nloci);
+    assert(chrom == chromosomes.size() - 1u);
     assert(gamete.size() == nloci);
 
     return gamete;
