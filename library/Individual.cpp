@@ -102,6 +102,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
     Diplotype zygote(2u);
     zygote[0u] = egg;
     zygote[1u] = sperm;
+    assert(zygote[0u].size() == zygote[1u].size());
     return zygote;
 }
 
