@@ -1,6 +1,8 @@
 #include "GeneticArchitecture.h"
 #include "ParameterSet.h"
 #include "Random.h"
+#include "Network.h"
+#include "Genome.h"
 #include "utils.h"
 #include <vector>
 #include <iostream>
