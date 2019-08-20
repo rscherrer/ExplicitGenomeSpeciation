@@ -48,6 +48,15 @@ std::vector<double> GeneticArchitecture::makeChromosomes()
 }
 
 
+/// Function from architecture to call the Genome constructor
+Genome GeneticArchitecture::makeGenome()
+{
+    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
+     effectSizeShape, effectSizeScale, dominanceVariance);
+    return gen;
+}
+
+
 /// Function to make a vector of interacting partner loci for each trait
 MultiNet GeneticArchitecture::makeNetworks()
 {
@@ -82,10 +91,4 @@ MultiNet GeneticArchitecture::makeNetworks()
 }
 
 
-/// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome()
-{
-    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale, dominanceVariance);
-    return gen;
-}
+

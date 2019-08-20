@@ -1,7 +1,10 @@
 #include <vector>
 #include <cstddef>
+#include <string>
 
-// Add utils here
+typedef std::vector<double> Vector;
+typedef std::vector<size_t> Uector;
+typedef std::vector<bool> Haplotype;
 
 double sqr(const double&);
 
@@ -14,3 +17,11 @@ double sum(std::vector<double>&);
 size_t argmin(std::vector<double>&);
 
 size_t sumbool(std::vector<bool>&);
+
+size_t sumu(Uector&);
+
+void printvec(Vector, std::string = "");
+
+void printuec(Uector, std::string = "");
+
+void printbvec(Haplotype, std::string = "");

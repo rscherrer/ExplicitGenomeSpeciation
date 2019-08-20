@@ -2,6 +2,7 @@
 #include "utils.h"
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 /// Genome constructor
 Genome::Genome(const std::vector<size_t> &nLociPerTrait,

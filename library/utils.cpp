@@ -1,6 +1,8 @@
 #include "utils.h"
 #include <numeric>
 #include <algorithm>
+#include <string>
+#include <iostream>
 
 double sqr(const double &number)
 {
@@ -42,4 +44,29 @@ size_t sumbool(std::vector<bool> &v) {
     for (size_t i = 0u; i < v.size(); ++i)
         sum += v[i];
     return sum;
+}
+
+size_t sumu(Uector &v) {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < v.size(); ++i)
+        sum += v[i];
+    return sum;
+}
+
+void printvec(Vector v, std::string sep)
+{
+    for (size_t i = 0u; i < v.size(); ++i)
+        std::cout << v[i] << sep;
+}
+
+void printuec(Uector v, std::string sep)
+{
+    for (size_t i = 0u; i < v.size(); ++i)
+        std::cout << v[i] << sep;
+}
+
+void printbvec(Haplotype v, std::string sep)
+{
+    for (size_t i = 0u; i < v.size(); ++i)
+        std::cout << v[i] << sep;
 }

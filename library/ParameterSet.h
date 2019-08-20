@@ -9,7 +9,7 @@ class ParameterSet {
 public:
 
     /// Constructor
-    ParameterSet() {}
+    ParameterSet();
 
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }
@@ -33,14 +33,19 @@ public:
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
     void setNTraits(const size_t &ntraits) { nTraits = ntraits; }
-    void setNLociPerTrait(const std::vector<size_t> &locipertrait) {
-        nLociPerTrait = locipertrait; }
+    void setNLociPerTrait(const std::vector<size_t> &locipertrait)
+    {
+        nLociPerTrait = locipertrait;
+        nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
+        capEdges();
+    }
     void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) {
         nEdgesPerTrait = edgespertrait; }
     void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
     void setDominanceVariance(const double &x) { dominanceVariance = x; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
+    void capEdges();
 
 
 private:
@@ -61,6 +66,7 @@ private:
     size_t nEcoLoci         = 400u;
     size_t nMatLoci         = 200u;
     size_t nNtrLoci         = 400u;
+    // nloci must be at least 2 for each trait
     size_t nEcoInteractions = 1000u;
     size_t nMatInteractions = 500u;
     size_t nNtrInteractions = 0u;
