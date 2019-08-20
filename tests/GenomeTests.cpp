@@ -34,3 +34,13 @@ BOOST_AUTO_TEST_CASE(checkEffectSizes)
     Genome genome = arch.getGenome();
     BOOST_CHECK_EQUAL(sum(genome.effects), 0.0);
 }
+
+BOOST_AUTO_TEST_CASE(checkDominances)
+{
+    std::cout << "Testing gene dominance coefficients...\n";
+    ParameterSet pars;
+    pars.setDominanceVariance(0.0);
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    BOOST_CHECK_EQUAL(sum(genome.dominances), 0.0);
+}
