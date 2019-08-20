@@ -31,4 +31,15 @@ BOOST_AUTO_TEST_CASE(checkSmallNetworks)
 
 }
 
-
+BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
+{
+    std::cout << "Testing that network size is capped...\n";
+    ParameterSet pars;
+    pars.setNLociPerTrait({ 10u, 5u, 2u });
+    pars.setNEdgesPerTrait({ 1000u, 1000u, 1000u });
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    MultiNet networks = arch.getNetworks();
+    BOOST_CHECK_EQUAL(networks[0u].map.size(), 45u);
+    BOOST_CHECK_EQUAL(networks[1u].map.size(), 10u);
+    BOOST_CHECK_EQUAL(networks[2u].map.size(), 1u);
+}
