@@ -91,6 +91,9 @@ Vector Genome::makeLocations()
 
 Vector Genome::makeEffects(const double &shape, const double &scale)
 {
+
+    if (shape == 0.0 || scale == 0.0) return zeros(nloci);
+
     Vector effectsizes;
     Vector sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
 

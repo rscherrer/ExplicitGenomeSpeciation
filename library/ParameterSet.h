@@ -46,6 +46,7 @@ public:
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
     void capEdges();
+    void setEffectSizeScale(const double &x) { effectSizeScale = x; }
 
 
 private:

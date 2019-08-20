@@ -17,10 +17,20 @@ BOOST_AUTO_TEST_CASE(checkChromosomes)
 
 BOOST_AUTO_TEST_CASE(checkEncodedTraits)
 {
-    std::cout << "Testing a genome encoding just one trait...\n";
+    std::cout << "Testing genes underlying traits...\n";
     ParameterSet pars;
     pars.setNLociPerTrait({10u, 2u, 2u});
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
-    BOOST_CHECK(sumu(genome.traits) == 6u);
+    BOOST_CHECK_EQUAL(sumu(genome.traits), 6u);
+}
+
+BOOST_AUTO_TEST_CASE(checkEffectSizes)
+{
+    std::cout << "Testing gene effect sizes...\n";
+    ParameterSet pars;
+    pars.setEffectSizeScale(0.0);
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    BOOST_CHECK_EQUAL(sum(genome.effects), 0.0);
 }
