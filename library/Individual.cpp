@@ -123,13 +123,12 @@ std::vector<double> Individual::develop(const Genome &genome,
 
     std::vector<double> phenotypes {0.0, 0.0, 0.0};
 
-    for (size_t locus = 0u; locus < sequence[0u].size(); ++locus) {
+    for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
         // Determine genotype
         size_t genotype = 0u;
-        for (size_t strain = 0u; strain < 2u; ++strain)
-            if (sequence[strain][locus])
-                ++genotype;
+        for (size_t hap = 0u; hap < 2u; ++hap)
+            genotype += sequence[hap][locus];
 
         // Determine gene expression
         double expression;
@@ -177,6 +176,8 @@ std::vector<double> Individual::develop(const Genome &genome,
 
         }
     }
+
+    // Normalize!
 
     return phenotypes;
 }

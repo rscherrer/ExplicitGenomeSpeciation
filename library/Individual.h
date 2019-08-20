@@ -29,9 +29,11 @@ public:
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
     double getMatePref() const { return matePref; }
+    double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
     std::vector<double> getFeedingRates() const { return feedingRates; }
     Diplotype getSequence() const { return sequence; }
+    std::vector<double> getExpression() const { return genexp; }
 
     // Actions
     void feed(const std::vector<double>&);

@@ -113,6 +113,17 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         BOOST_CHECK(sumbool(gamete) != genome.nloci);
     }
 
+    BOOST_AUTO_TEST_CASE(checkExpression)
+    {
+        std::cout << "Testing gene expression...\n";
+        Individual ind1 = Individual(genome, networks, 0.0);
+        std::vector<double> expression1 = ind1.getExpression();
+        BOOST_CHECK_EQUAL(sum(expression1), -1.0 * genome.nloci);
+        Individual ind2 = Individual(genome, networks, 1.0);
+        std::vector<double> expression2 = ind2.getExpression();
+        BOOST_CHECK_EQUAL(sum(expression2), genome.nloci);
+    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // Check the absence of recombination
