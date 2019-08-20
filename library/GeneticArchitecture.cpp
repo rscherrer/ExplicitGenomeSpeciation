@@ -25,6 +25,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     effectSizeScale(pars.getEffectSizeScale()),
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
+    dominanceVariance(pars.getDominanceVariance()),
     genome(makeGenome()),
     networks(makeNetworks())
 {
@@ -85,6 +86,6 @@ MultiNet GeneticArchitecture::makeNetworks()
 Genome GeneticArchitecture::makeGenome()
 {
     const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale);
+     effectSizeShape, effectSizeScale, dominanceVariance);
     return gen;
 }

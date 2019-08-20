@@ -22,6 +22,7 @@ public:
     double getEffectSizeScale() const { return effectSizeScale; }
     double getInteractionWeightShape() const { return interactionWeightShape; }
     double getInteractionWeightScale() const { return interactionWeightScale; }
+    double getDominanceVariance() const { return dominanceVariance; }
     size_t getSeed() const { return seed; }
     size_t getTEndSim() const { return tEndSim; }
     size_t getInitialPopSize() const { return initialPopSize; }
@@ -37,6 +38,7 @@ public:
     void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) {
         nEdgesPerTrait = edgespertrait; }
     void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
+    void setDominanceVariance(const double &x) { dominanceVariance = x; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
 
@@ -93,6 +95,7 @@ private:
     double effectSizeScale = 1.0;
     double interactionWeightShape = 5.0;
     double interactionWeightScale = 1.0;
+    double dominanceVariance = 1.0;
 
     // Simulation parameters
     int  tBurnIn                 = 1;

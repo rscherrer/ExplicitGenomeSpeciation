@@ -34,6 +34,7 @@ private:
     double effectSizeScale;
     double interactionWeightShape;
     double interactionWeightScale;
+    double dominanceVariance;
 
     Genome genome;
     std::vector<Network> networks;

@@ -20,6 +20,7 @@ namespace rnd
     size_t random(const size_t&);
     double uniform(const double&);
     double normal(const double&, const double&);
+    double hnormal(const double&);
     double exponential(const double&);
     size_t sample(const std::vector<double>&);
     double flip(const double&, const double&);

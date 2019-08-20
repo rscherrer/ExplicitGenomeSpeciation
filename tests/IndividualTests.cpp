@@ -143,3 +143,28 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     Haplotype gam = baby.recombine(genome.locations, genome.chromosomes, 0.0);
     BOOST_CHECK_EQUAL(sumbool(gam) / genome.nloci, gam[0u]);
 }
+
+BOOST_AUTO_TEST_CASE(checkDevelopment)
+{
+    std::cout << "Testing developing individual...\n";
+    ParameterSet pars;
+    pars.setDominanceVariance(0.0);
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Individual mom = Individual(genome, networks, 0.0);
+    Individual dad = Individual(genome, networks, 1.0);
+    Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
+    Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
+    Individual baby = Individual(genome, networks, egg, sperm);
+    BOOST_CHECK_EQUAL(baby.getEcoTrait(), 0.0);
+    BOOST_CHECK_EQUAL(baby.getMatePref(), 0.0);
+    BOOST_CHECK_EQUAL(baby.getNeutral(), 0.0);
+}
+
+
+
+
+
+
+
