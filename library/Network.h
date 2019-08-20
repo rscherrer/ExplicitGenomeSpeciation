@@ -1,7 +1,10 @@
 #ifndef EXPLICITGENOMESPECIATION_NETWORK_H
 #define EXPLICITGENOMESPECIATION_NETWORK_H
 
+#include <vector>
+
 typedef std::pair<size_t, size_t> Edge;
+class Genome;
 
 /// A container for a gene regulatory network
 struct Network

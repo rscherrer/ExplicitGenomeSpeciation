@@ -39,8 +39,11 @@ public:
         nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
         capEdges();
     }
-    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait) {
-        nEdgesPerTrait = edgespertrait; }
+    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait)
+    {
+        nEdgesPerTrait = edgespertrait;
+        capEdges();
+    }
     void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
     void setDominanceVariance(const double &x) { dominanceVariance = x; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }

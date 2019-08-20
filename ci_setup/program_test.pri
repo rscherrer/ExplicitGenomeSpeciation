@@ -4,5 +4,6 @@ SOURCES += tests/GeneticArchitectureTests.cpp
 SOURCES += tests/PopulationTests.cpp
 SOURCES += tests/IndividualTests.cpp
 SOURCES += tests/GenomeTests.cpp
+SOURCES += tests/NetworkTests.cpp
 HEADERS += tests/testUtilities.h
 HEADERS += tests/GenFixture.h

@@ -1,0 +1,34 @@
+#include "library/Network.h"
+#include "library/utils.h"
+#include "tests/GenFixture.h"
+#include <boost/test/unit_test.hpp>
+#include <iostream>
+
+BOOST_AUTO_TEST_CASE(checkNoNetworks)
+{
+    std::cout << "Testing empty networks...\n";
+    ParameterSet pars;
+    pars.setNLociPerTrait({ 100u, 100u, 100u });
+    pars.setNEdgesPerTrait({ 0u, 0u, 0u });
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    MultiNet networks = arch.getNetworks();
+    for (auto net : networks)
+        BOOST_CHECK_EQUAL(net.map.size(), 0u);
+
+}
+
+BOOST_AUTO_TEST_CASE(checkSmallNetworks)
+{
+    std::cout << "Testing small networks...\n";
+    ParameterSet pars;
+    pars.setNLociPerTrait({ 100u, 100u, 100u });
+    pars.setNEdgesPerTrait({ 1u, 0u, 0u });
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    MultiNet networks = arch.getNetworks();
+    BOOST_CHECK_EQUAL(networks[0u].map.size(), 1u);
+    BOOST_CHECK_EQUAL(networks[0u].map[0u].first, 0u);
+    BOOST_CHECK_EQUAL(networks[0u].map[0u].second, 1u);
+
+}
+
+
