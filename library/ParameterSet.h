@@ -50,6 +50,10 @@ public:
     void setSeed(const size_t &number) { seed = number; }
     void capEdges();
     void setEffectSizeScale(const double &x) { effectSizeScale = x; }
+    void setInteractionWeightScale(const double &x)
+    {
+        interactionWeightScale = x;
+    }
 
 
 private:

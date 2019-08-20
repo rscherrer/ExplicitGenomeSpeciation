@@ -43,3 +43,15 @@ BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
     BOOST_CHECK_EQUAL(networks[1u].map.size(), 10u);
     BOOST_CHECK_EQUAL(networks[2u].map.size(), 1u);
 }
+
+BOOST_AUTO_TEST_CASE(checkInteractionWeights)
+{
+    std::cout << "Testing interaction weights...\n";
+    ParameterSet pars;
+    pars.setInteractionWeightScale(0.0);
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    MultiNet networks = arch.getNetworks();
+    BOOST_CHECK_EQUAL(sum(networks[0u].weights), 0.0);
+    BOOST_CHECK_EQUAL(sum(networks[1u].weights), 0.0);
+    BOOST_CHECK_EQUAL(sum(networks[2u].weights), 0.0);
+}

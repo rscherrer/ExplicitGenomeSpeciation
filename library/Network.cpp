@@ -82,7 +82,6 @@ std::vector<Edge> Network::makeMap()
             assert(degrees[vertex] < nedges);
             assert(degrees[partner] < nedges);
             --nleft;
-
         }
     }
 
@@ -152,9 +151,10 @@ std::vector<Edge> Network::makeEdges()
 std::vector<double> Network::makeWeights(const double &shape,
  const double &scale)
 {
-    std::vector<double> intweights;
+    if (shape == 0.0 || scale == 0.0) return zeros(nedges);
 
-    double sqrtsumsq = 0.0; // square-rooted sum of squares
+    std::vector<double> intweights;
+    double sss = 0.0; // square rooted sum of squares
 
     // For each edge in the network...
     for (size_t edge = 0u; edge < nedges; ++edge) {
@@ -162,13 +162,13 @@ std::vector<double> Network::makeWeights(const double &shape,
         // Two-sided Gamma distribution
         const double weight = rnd::bigamma(shape, scale);
         intweights.push_back(weight);
-        sqrtsumsq += sqr(weight);
+        sss += sqr(weight);
     }
 
     // Normalize
-    sqrtsumsq = sqrtsumsq > 0.0 ? sqrt(sqrtsumsq) : 1.0;
+    sss = sss > 0.0 ? sqrt(sss) : 1.0;
     for (size_t edge = 0u; edge < nedges; ++edge)
-        intweights[edge] /= sqrtsumsq;
+        intweights[edge] /= sss;
 
     return intweights;
 }
