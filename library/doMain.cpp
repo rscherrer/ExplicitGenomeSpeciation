@@ -9,10 +9,9 @@
 #include <chrono>
 #include <cassert>
 
-typedef std::vector<Population> MetaPop;
 
 /// Function to run a simulation
-void runSimulation(size_t &t, Population &pop, const size_t &tmax,
+void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
  const double &survival, const double &birth, const double &strength,
   const Genome &genome, const MultiNet &networks)
 {
@@ -21,14 +20,18 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
 
         // Dispersal
 
+
+
         // Resource acquisition
-        pop.consume();
+        pops[0u].consume();
+        pops[1u].consume();
 
         // Reproduction
-        pop.reproduce(birth, strength, genome, networks);
+        pops[0u].reproduce(birth, strength, genome, networks);
+        pops[1u].reproduce(birth, strength, genome, networks);
 
         // Survival
-        if (!pop.survive(survival)) {
+        if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
             std::cout << "The population went extinct at t = " << t << '\n';
             break;
         }
@@ -64,8 +67,7 @@ int doMain(const sVector &args)
 
         Population pop1 = Population(n0, genome, networks);
         Population pop2 = Population(n0, genome, networks);
-
-        MetaPop {pop1, pop2};
+        MetaPop metapop = {pop1, pop2};
 
         std::cout << "Simulation started\n";
 
@@ -76,7 +78,7 @@ int doMain(const sVector &args)
         const double birth = pars.getBirthRate();
         const double strength = pars.getMatePreferenceStrength();
 
-        runSimulation(t, pop1, tmax, survival, birth, strength, genome,
+        runSimulation(t, metapop, tmax, survival, birth, strength, genome,
          networks);
 
         std::cout << "Simulation ended\n";

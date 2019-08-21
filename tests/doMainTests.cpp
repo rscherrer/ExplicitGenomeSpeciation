@@ -40,12 +40,16 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop = Population(initPopSize, genome, networks);
+    Population pop1 = Population(initPopSize, genome, networks);
+    Population pop2 = Population(initPopSize, genome, networks);
+    MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);
+    runSimulation(t, metapop, tmax, survival, birth, strength, genome,
+     networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
-    BOOST_CHECK(pop.getPopSize() > 0u);
+    BOOST_CHECK(metapop[0u].getPopSize() > 0u);
+    BOOST_CHECK(metapop[1u].getPopSize() > 0u);
 }
 
 
@@ -66,10 +70,14 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop = Population(initPopSize, genome, networks);
+    Population pop1 = Population(initPopSize, genome, networks);
+    Population pop2 = Population(initPopSize, genome, networks);
+    MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, pop, tmax, survival, birth, strength, genome, networks);
+    runSimulation(t, metapop, tmax, survival, birth, strength, genome,
+     networks);
 
     BOOST_CHECK(t < tmax);
-    BOOST_CHECK(pop.getPopSize() == 0u);
+    BOOST_CHECK(metapop[0u].getPopSize() == 0u);
+    BOOST_CHECK(metapop[1u].getPopSize() == 0u);
 }
