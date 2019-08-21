@@ -10,6 +10,15 @@ double sqr(const double &number)
 }
 
 
+dVector ones(const size_t &n)
+{
+    dVector ones;
+    for (size_t i = 0u; i < n; ++i)
+        ones.push_back(1.0);
+    return ones;
+}
+
+
 dVector zeros(const size_t &n)
 {
     dVector zeros;
@@ -25,6 +34,15 @@ uVector uzeros(const size_t &n)
     for (size_t i = 0u; i < n; ++i)
         zeros.push_back(0u);
     return zeros;
+}
+
+
+Haplotype falses(const size_t &n)
+{
+    Haplotype falses;
+    for (size_t i = 0u; i < n; ++i)
+        falses.push_back(false);
+    return falses;
 }
 
 

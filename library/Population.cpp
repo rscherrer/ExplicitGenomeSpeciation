@@ -47,11 +47,23 @@ Crowd Population::emigrate(const double &rate)
     Crowd migrants;
     Crowd residents;
 
-    for (auto ind : individuals)
-        if (rnd::bernoulli(rate))
-            migrants.push_back(ind);
+    size_t nmigrants = rnd::binomial(individuals.size(), rate);
+    dVector probs = ones(nmigrants);
+    Haplotype whom = falses(individuals.size());
+
+    while (nmigrants) {
+        const size_t mig = rnd::sample(probs);
+        whom[mig] = true;
+        probs[mig] = 0.0;
+        --nmigrants;
+    }
+
+    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
+        if(whom[ind])
+            migrants.push_back(individuals[ind]);
         else
-            residents.push_back(ind);
+            residents.push_back(individuals[ind]);
+    }
 
     assert(residents.size() + migrants.size() == individuals.size());
     assert(migrants.size() <= individuals.size());

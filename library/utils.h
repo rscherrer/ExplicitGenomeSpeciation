@@ -8,9 +8,13 @@ typedef std::vector<bool> Haplotype;
 
 double sqr(const double&);
 
+dVector ones(const size_t &n);
+
 dVector zeros(const size_t&);
 
 uVector uzeros(const size_t&); // unsigned zeros
+
+Haplotype falses(const size_t&);
 
 double sum(dVector&);
 
