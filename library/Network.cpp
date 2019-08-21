@@ -40,9 +40,9 @@ std::vector<Edge> Network::makeMap()
 
     assert(nvertices > 1u);
 
-    std::vector<Edge> connexions;
+    pVector connexions;
     if (!nedges) return connexions;
-    std::vector<size_t> degrees = uzeros(nvertices);
+    uVector degrees = uzeros(nvertices);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
@@ -63,7 +63,7 @@ std::vector<Edge> Network::makeMap()
             npartners = rnd::binomial(nleft, prob);
 
         // Assign attachment probabilities
-        std::vector<double> probs(vertex);
+        dVector probs(vertex);
         for (size_t node = 0u; node < vertex; ++node)
             probs[node] = pow(degrees[node], skewness);
 
@@ -108,9 +108,9 @@ std::vector<Edge> Network::makeMap()
 
 
 /// Function to detect the loci underlying a trait
-std::vector<size_t> Network::makeLoci(const Genome& genome)
+uVector Network::makeLoci(const Genome& genome)
 {
-    std::vector<size_t> underlying;
+    uVector underlying;
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
@@ -127,10 +127,10 @@ std::vector<size_t> Network::makeLoci(const Genome& genome)
 
 
 /// Function to map the network to the genome
-std::vector<Edge> Network::makeEdges()
+pVector Network::makeEdges()
 {
 
-    std::vector<Edge> mapped;
+    pVector mapped;
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
@@ -148,12 +148,12 @@ std::vector<Edge> Network::makeEdges()
 
 
 /// Sample interaction weights
-std::vector<double> Network::makeWeights(const double &shape,
+dVector Network::makeWeights(const double &shape,
  const double &scale)
 {
     if (shape == 0.0 || scale == 0.0) return zeros(nedges);
 
-    std::vector<double> intweights;
+    dVector intweights;
     double sss = 0.0; // square rooted sum of squares
 
     // For each edge in the network...
