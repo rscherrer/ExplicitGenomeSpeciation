@@ -9,9 +9,10 @@
 
 typedef std::vector<bool> Haplotype;
 typedef std::vector<Haplotype > Diplotype;
+typedef std::vector<double> dVector;
 
 /// Function to calculate feeding rates
-std::vector<double> calcFeedingRates(const double&, const double&,
+dVector calcFeedingRates(const double&, const double&,
  const double& = 0.0004);
 
 class Individual {
@@ -31,14 +32,14 @@ public:
     double getMatePref() const { return matePref; }
     double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
-    std::vector<double> getFeedingRates() const { return feedingRates; }
+    dVector getFeedingRates() const { return feedingRates; }
     Diplotype getSequence() const { return sequence; }
-    std::vector<double> getExpression() const { return genexp; }
+    dVector getExpression() const { return genexp; }
 
     // Actions
-    void feed(const std::vector<double>&);
+    void feed(const dVector&);
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const std::vector<double>&, const std::vector<double>&,
+    Haplotype recombine(const dVector&, const dVector&,
      const double& = 3.0);
     void mutate(Haplotype&, const double& = 1.0e-5);
 
@@ -58,18 +59,18 @@ private:
     // Makers
     Diplotype makeSequence(const size_t&, const double& = 0.5);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
-    std::vector<double> develop(const Genome&, const MultiNet&);
+    dVector develop(const Genome&, const MultiNet&);
 
     // Fields
     Diplotype sequence;
-    std::vector<double> genexp;
+    dVector genexp;
     bool isFemale;
-    std::vector<double> traits;
+    dVector traits;
     double ecoTrait;
     double matePref;
     double neutral;
     double fitness;
-    std::vector<double> feedingRates;
+    dVector feedingRates;
 
 
 };
