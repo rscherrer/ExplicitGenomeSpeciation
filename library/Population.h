@@ -9,6 +9,8 @@
 class Individual;
 class LocusVariables;
 typedef Individual * PInd;
+typedef std::vector<PInd> Crowd;
+typedef std::vector<double> dVector;
 
 class Population {
 
@@ -20,7 +22,7 @@ public:
     // Getters
     size_t getPopSize() const { return individuals.size(); }
     size_t getNOffspring() const { return offspring.size(); }
-    std::vector<double> getResources() const { return resources; }
+    dVector getResources() const { return resources; }
 
     // Life cycle
     void consume();
@@ -73,19 +75,19 @@ public:
 private:
 
     // Makers
-    std::vector<PInd> populate(const size_t&, const Genome&,
+    Crowd populate(const size_t&, const Genome&,
      const MultiNet&);
 
     // The population
-    std::vector<PInd> individuals;
-    std::vector<PInd> females;
-    std::vector<PInd> males;
-    std::vector<PInd> offspring;
-    std::vector<PInd> survivors;
+    Crowd individuals;
+    Crowd females;
+    Crowd males;
+    Crowd offspring;
+    Crowd survivors;
 
-    std::vector<double> capacity;
-    std::vector<double> replenish;
-    std::vector<double> resources;
+    dVector capacity;
+    dVector replenish;
+    dVector resources;
 
     // Census
     //size_t popSize;
