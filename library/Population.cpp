@@ -39,7 +39,7 @@ Crowd Population::populate(const size_t &popsize,
 }
 
 
-Crowd Population::emigrate()
+Crowd Population::emigrate(const double &rate)
 {
     // Loop through individuals in the pop
     // Everyone has a change to migrate
@@ -47,7 +47,7 @@ Crowd Population::emigrate()
     Crowd migrants;
 
     for (auto ind : individuals)
-        if (rnd::bernoulli(0.5))
+        if (rnd::bernoulli(rate))
             migrants.push_back(ind);
 
     return migrants;
