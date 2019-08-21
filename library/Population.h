@@ -25,6 +25,7 @@ public:
     dVector getResources() const { return resources; }
 
     // Life cycle
+    Crowd emigrate();
     void consume();
     void reproduce(const double&, const double&, const Genome&,
      const MultiNet&, const double& = 0.01);

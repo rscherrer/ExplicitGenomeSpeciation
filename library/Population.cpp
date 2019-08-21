@@ -39,6 +39,22 @@ Crowd Population::populate(const size_t &popsize,
 }
 
 
+Crowd Population::emigrate()
+{
+    // Loop through individuals in the pop
+    // Everyone has a change to migrate
+
+    Crowd migrants;
+
+    for (auto ind : individuals)
+        if (rnd::bernoulli(0.5))
+            migrants.push_back(ind);
+
+    return migrants;
+
+}
+
+
 /// Resource consumption
 void Population::consume()
 {
