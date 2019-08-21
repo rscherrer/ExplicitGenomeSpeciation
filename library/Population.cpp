@@ -54,6 +54,8 @@ Crowd Population::emigrate(const double &rate)
             residents.push_back(ind);
 
     assert(residents.size() + migrants.size() == individuals.size());
+    assert(migrants.size() <= individuals.size());
+    assert(residents.size() <= individuals.size());
 
     individuals.clear();
     individuals = residents;
