@@ -56,4 +56,4 @@ private:
 };
 
 
-#endif //EXPLICITGENOMESPECIATION_POPULATION_H
+#endif
