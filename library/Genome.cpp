@@ -69,9 +69,9 @@ std::vector<size_t> Genome::makeEncodedTraits(const std::vector<size_t>
 }
 
 
-Vector Genome::makeLocations()
+dVector Genome::makeLocations()
 {
-    Vector positions;
+    dVector positions;
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
         const double pos = rnd::uniform(1.0);
@@ -89,13 +89,13 @@ Vector Genome::makeLocations()
 }
 
 
-Vector Genome::makeEffects(const double &shape, const double &scale)
+dVector Genome::makeEffects(const double &shape, const double &scale)
 {
 
     if (shape == 0.0 || scale == 0.0) return zeros(nloci);
 
-    Vector effectsizes;
-    Vector sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
+    dVector effectsizes;
+    dVector sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
 
@@ -114,13 +114,13 @@ Vector Genome::makeEffects(const double &shape, const double &scale)
 }
 
 
-Vector Genome::makeDominances(const double &var)
+dVector Genome::makeDominances(const double &var)
 {
 
     if (var == 0.0) return zeros(nloci);
 
-    Vector coefficients;
-    Vector sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
+    dVector coefficients;
+    dVector sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
         const double dom = rnd::hnormal(var);

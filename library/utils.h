@@ -2,26 +2,20 @@
 #include <cstddef>
 #include <string>
 
-typedef std::vector<double> Vector;
-typedef std::vector<size_t> Uector;
+typedef std::vector<double> dVector;
+typedef std::vector<size_t> uVector;
 typedef std::vector<bool> Haplotype;
 
 double sqr(const double&);
 
-std::vector<double> zeros(const size_t&);
+dVector zeros(const size_t&);
 
-std::vector<size_t> uzeros(const size_t&); // unsigned zeros
+uVector uzeros(const size_t&); // unsigned zeros
 
-double sum(std::vector<double>&);
+double sum(dVector&);
 
-size_t argmin(std::vector<double>&);
+size_t argmin(dVector&);
 
-size_t sumbool(std::vector<bool>&);
+size_t sumbool(Haplotype&);
 
-size_t sumu(Uector&);
-
-void printvec(Vector, std::string = "");
-
-void printuec(Uector, std::string = "");
-
-void printbvec(Haplotype, std::string = "");
+size_t sumu(uVector&);
