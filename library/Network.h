@@ -4,6 +4,9 @@
 #include <vector>
 
 typedef std::pair<size_t, size_t> Edge;
+typedef std::vector<Edge> pVector; // vector of pairs
+typedef std::vector<size_t> uVector;
+typedef std::vector<double> dVector;
 class Genome;
 
 /// A container for a gene regulatory network
@@ -18,19 +21,19 @@ struct Network
     size_t nedges;
     double skewness;
 
-    std::vector<Edge> map;
-    std::vector<size_t> loci;
-    std::vector<Edge> edges;
-    std::vector<double> weights;
+    pVector map;
+    uVector loci;
+    pVector edges;
+    dVector weights;
 
     // Makers
-    std::vector<Edge> makeMap();
-    std::vector<size_t> makeLoci(const Genome&);
-    std::vector<Edge> makeEdges();
-    std::vector<double> makeWeights(const double&, const double&);
+    pVector makeMap();
+    uVector makeLoci(const Genome&);
+    pVector makeEdges();
+    dVector makeWeights(const double&, const double&);
 
     // Builders
-    void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&) const
+    void sortNetwork(pVector&, const uVector&) const
      noexcept;
 
 };
