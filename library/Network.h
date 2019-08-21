@@ -32,10 +32,6 @@ struct Network
     pVector makeEdges();
     dVector makeWeights(const double&, const double&);
 
-    // Builders
-    void sortNetwork(pVector&, const uVector&) const
-     noexcept;
-
 };
 
 
