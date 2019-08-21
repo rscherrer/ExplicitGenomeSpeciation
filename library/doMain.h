@@ -16,4 +16,4 @@ void runSimulation(size_t&, Population&, const size_t&, const double&,
 int doMain(const sVector&);
 
 
-#endif //EXPLICITGENOMESPECIATION_DOMAIN_H
+#endif
