@@ -89,9 +89,6 @@ private:
      nNtrInteractions };
     size_t nBits = 2u * nLoci;
 
-    //std::string strInitialSequence = "";
-    //std::vector<bool> initialSequence {};
-
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
     double  genomeLength            = 300.0;
