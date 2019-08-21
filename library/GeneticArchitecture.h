@@ -11,6 +11,8 @@
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
+typedef std::vector<size_t> uVector;
+typedef std::vector<double> dVector;
 
 /// A container for all constant genetic features
 class GeneticArchitecture {
@@ -27,9 +29,9 @@ private:
 
     size_t nChromosomes;
     size_t nLoci;
-    std::vector<size_t> nLociPerTrait;
-    std::vector<size_t> nEdgesPerTrait;
-    std::vector<double> skewnesses;
+    uVector nLociPerTrait;
+    uVector nEdgesPerTrait;
+    dVector skewnesses;
     double effectSizeShape;
     double effectSizeScale;
     double interactionWeightShape;
@@ -37,15 +39,15 @@ private:
     double dominanceVariance;
 
     Genome genome;
-    std::vector<Network> networks;
+    MultiNet networks;
 
     // A set of vectors of loci underlying each trait
     //std::vector<std::vector<size_t> > traitUnderlyingLoci;
 
     /// Makers
-    std::vector<double> makeChromosomes();
+    dVector makeChromosomes();
     Genome makeGenome();
-    std::vector<Network> makeNetworks();
+    MultiNet makeNetworks();
 
 };
 
