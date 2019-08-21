@@ -12,15 +12,15 @@
 
 /// Function to run a simulation
 void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
- const double &survival, const double &birth, const double &strength,
-  const Genome &genome, const MultiNet &networks)
+ const double &dispersal, const double &survival, const double &birth,
+  const double &strength, const Genome &genome, const MultiNet &networks)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
 
         // Dispersal
-        Crowd migrants1 = pops[0u].emigrate();
-        Crowd migrants2 = pops[1u].emigrate();
+        Crowd migrants1 = pops[0u].emigrate(dispersal);
+        Crowd migrants2 = pops[1u].emigrate(dispersal);
 
 
         // Resource acquisition
@@ -75,12 +75,13 @@ int doMain(const sVector &args)
         // Run the simulation
         size_t t = 0u;
         size_t tmax = pars.getTEndSim();
+        const double dispersal = pars.getDispersalRate();
         const double survival = pars.getSurvivalProb();
         const double birth = pars.getBirthRate();
         const double strength = pars.getMatePreferenceStrength();
 
-        runSimulation(t, metapop, tmax, survival, birth, strength, genome,
-         networks);
+        runSimulation(t, metapop, tmax, dispersal, survival, birth, strength,
+         genome, networks);
 
         std::cout << "Simulation ended\n";
 
