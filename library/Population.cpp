@@ -25,11 +25,11 @@ Population::Population(const size_t &popsize,
 
 
 /// Function to initialize a population of individuals
-std::vector<PInd> Population::populate(const size_t &popsize,
+Crowd Population::populate(const size_t &popsize,
  const Genome &genome, const MultiNet &networks)
 {
 
-    std::vector<PInd> indivs;
+    Crowd indivs;
 
     for (size_t ind = 0u; ind < popsize; ++ind)
         indivs.push_back(new Individual(genome, networks));
@@ -49,9 +49,9 @@ void Population::consume()
     // dR/dt = r (1 - R / K) - C R, where C is the consumption
 
     // Calculate the total amount of food consumed
-    std::vector<double> consumed{0.0, 0.0};
+    dVector consumed{0.0, 0.0};
     for (auto ind : individuals) {
-        std::vector<double> rates = ind->getFeedingRates();
+        dVector rates = ind->getFeedingRates();
         for (size_t res = 0u; res < 2u; ++res)
             consumed[res] += rates[res];
     }
@@ -103,7 +103,7 @@ void Population::reproduce(const double &birth, const double &strength,
             males.push_back(ind);
 
     // Prepare a weighted lottery based on male mating successes
-    std::vector<double> successes;
+    dVector successes;
     for (auto male : males)
         successes.push_back(male->getFitness());
 
