@@ -45,10 +45,18 @@ Crowd Population::emigrate(const double &rate)
     // Everyone has a change to migrate
 
     Crowd migrants;
+    Crowd residents;
 
     for (auto ind : individuals)
         if (rnd::bernoulli(rate))
             migrants.push_back(ind);
+        else
+            residents.push_back(ind);
+
+    assert(residents.size() + migrants.size() == individuals.size());
+
+    individuals.clear();
+    individuals = residents;
 
     return migrants;
 
