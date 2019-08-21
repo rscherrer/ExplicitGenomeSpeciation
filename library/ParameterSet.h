@@ -4,6 +4,9 @@
 #include <vector>
 #include <fstream>
 
+typedef std::vector<size_t> uVector;
+typedef std::vector<double> dVector;
+
 class ParameterSet {
 
 public:
@@ -15,9 +18,9 @@ public:
     size_t getNChromosomes() const { return nChromosomes; }
     size_t getNTraits() const { return nTraits; }
     size_t getNLoci() const { return nLoci; }
-    std::vector<size_t> getNLociPerTrait() const { return nLociPerTrait; }
-    std::vector<size_t> getNEdgesPerTrait() const { return nEdgesPerTrait; }
-    std::vector<double> getSkewnesses() const { return skewnesses; }
+    uVector getNLociPerTrait() const { return nLociPerTrait; }
+    uVector getNEdgesPerTrait() const { return nEdgesPerTrait; }
+    dVector getSkewnesses() const { return skewnesses; }
     double getEffectSizeShape() const { return effectSizeShape; }
     double getEffectSizeScale() const { return effectSizeScale; }
     double getInteractionWeightShape() const { return interactionWeightShape; }
@@ -33,18 +36,18 @@ public:
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
     void setNTraits(const size_t &ntraits) { nTraits = ntraits; }
-    void setNLociPerTrait(const std::vector<size_t> &locipertrait)
+    void setNLociPerTrait(const uVector &locipertrait)
     {
         nLociPerTrait = locipertrait;
         nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
         capEdges();
     }
-    void setNEdgesPerTrait(const std::vector<size_t> &edgespertrait)
+    void setNEdgesPerTrait(const uVector &edgespertrait)
     {
         nEdgesPerTrait = edgespertrait;
         capEdges();
     }
-    void setSkewnesses(const std::vector<double> &skews) { skewnesses = skews; }
+    void setSkewnesses(const dVector &skews) { skewnesses = skews; }
     void setDominanceVariance(const double &x) { dominanceVariance = x; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
@@ -81,8 +84,8 @@ private:
     size_t nChromosomes     = 3u;
 
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
-    std::vector<size_t> nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
-    std::vector<size_t> nEdgesPerTrait = { nEcoInteractions, nMatInteractions,
+    uVector nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
+    uVector nEdgesPerTrait = { nEcoInteractions, nMatInteractions,
      nNtrInteractions };
     size_t nBits = 2u * nLoci;
 
@@ -98,12 +101,12 @@ private:
     // Genotype-phenotype map
     bool isGenerateArchitecture = true;
     std::string architectureFileName = "";
-    std::vector<double> skewnesses = { 1.0, 1.0, 1.0 };
-    std::vector<double> scaleA {1.0, 1.0, 1.0};
-    std::vector<double> scaleD {0.0, 0.0, 0.0};
-    std::vector<double> scaleI {0.0, 0.0, 0.0};
-    std::vector<double> scaleE {0.0, 0.0, 0.0};
-    std::vector<double> locusVarE { scaleE[0u] / nEcoLoci,
+    dVector skewnesses = { 1.0, 1.0, 1.0 };
+    dVector scaleA {1.0, 1.0, 1.0};
+    dVector scaleD {0.0, 0.0, 0.0};
+    dVector scaleI {0.0, 0.0, 0.0};
+    dVector scaleE {0.0, 0.0, 0.0};
+    dVector locusVarE { scaleE[0u] / nEcoLoci,
      scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
