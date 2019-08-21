@@ -60,7 +60,7 @@ int doMain(const sVector &args)
         Genome genome = arch.getGenome();
         MultiNet networks = arch.getNetworks();
         const size_t n0 = pars.getInitialPopSize();
-        Population pop = Population(n0, genome, networks);
+        Population pop1 = Population(n0, genome, networks);
         Population pop2 = Population(n0, genome, networks);
 
         std::cout << "Simulation started\n";
@@ -72,7 +72,7 @@ int doMain(const sVector &args)
         const double birth = pars.getBirthRate();
         const double strength = pars.getMatePreferenceStrength();
 
-        runSimulation(t, pop, tmax, survival, birth, strength, genome,
+        runSimulation(t, pop1, tmax, survival, birth, strength, genome,
          networks);
 
         std::cout << "Simulation ended\n";
