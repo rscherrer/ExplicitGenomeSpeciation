@@ -9,6 +9,7 @@
 #include <chrono>
 #include <cassert>
 
+typedef std::vector<Population> MetaPop;
 
 /// Function to run a simulation
 void runSimulation(size_t &t, Population &pop, const size_t &tmax,
@@ -60,8 +61,11 @@ int doMain(const sVector &args)
         Genome genome = arch.getGenome();
         MultiNet networks = arch.getNetworks();
         const size_t n0 = pars.getInitialPopSize();
+
         Population pop1 = Population(n0, genome, networks);
         Population pop2 = Population(n0, genome, networks);
+
+        MetaPop {pop1, pop2};
 
         std::cout << "Simulation started\n";
 
