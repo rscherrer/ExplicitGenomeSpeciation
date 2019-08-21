@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <cassert>
 
-typedef std::vector<Network> MultiNet;
-
 class Network;
 class Genome;
 
@@ -34,10 +32,10 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomes()
+dVector GeneticArchitecture::makeChromosomes()
 {
 
-    std::vector<double> chromsizes;
+    dVector chromsizes;
 
     // Chromosomes all have the same size
     for (size_t i = 0u; i < nChromosomes; ++i)
