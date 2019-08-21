@@ -13,7 +13,7 @@
 /// Function to run a simulation
 void runSimulation(size_t &t, Population &pop, const size_t &tmax,
  const double &survival, const double &birth, const double &strength,
-  const Genome &genome, const std::vector<Network> &networks)
+  const Genome &genome, const MultiNet &networks)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
@@ -38,7 +38,7 @@ void runSimulation(size_t &t, Population &pop, const size_t &tmax,
 
 
 /// Program to run the main function
-int doMain(const std::vector<std::string> &args)
+int doMain(const sVector &args)
 {
 
     try
