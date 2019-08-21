@@ -65,6 +65,13 @@ Crowd Population::emigrate(const double &rate)
 }
 
 
+void Population::immigrate(const Crowd &newcomers)
+{
+    for (auto ind : newcomers)
+        individuals.push_back(ind);
+}
+
+
 /// Resource consumption
 void Population::consume()
 {

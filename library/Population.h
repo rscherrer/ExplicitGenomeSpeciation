@@ -26,6 +26,7 @@ public:
 
     // Life cycle
     Crowd emigrate(const double& = 0.01);
+    void immigrate(const Crowd&);
     void consume();
     void reproduce(const double&, const double&, const Genome&,
      const MultiNet&, const double& = 0.01);

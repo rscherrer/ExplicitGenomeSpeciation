@@ -21,6 +21,8 @@ void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
         // Dispersal
         Crowd migrants1 = pops[0u].emigrate(dispersal);
         Crowd migrants2 = pops[1u].emigrate(dispersal);
+        pops[0u].immigrate(migrants2);
+        pops[1u].immigrate(migrants1);
 
 
         // Resource acquisition
