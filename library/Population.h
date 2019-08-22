@@ -16,7 +16,8 @@ class Population {
 
 public:
 
-    Population(const size_t&, const Genome&, const MultiNet&);
+    Population(const size_t&, const Genome&, const MultiNet&,
+     const dVector& = {100.0, 100.0}, const dVector& = {1.0, 1.0});
     ~Population() {};
 
     // Getters

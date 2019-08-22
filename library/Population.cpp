@@ -11,14 +11,15 @@ typedef std::discrete_distribution<size_t> Discrete;
 
 /// Constructor
 Population::Population(const size_t &popsize,
- const Genome &genome, const MultiNet &networks) :
+ const Genome &genome, const MultiNet &networks, const dVector &foodmax,
+  const dVector &foodrates) :
     individuals(populate(popsize, genome, networks)),
     females({ }),
     males({ }),
     offspring({ }),
     survivors({ }),
-    capacity({100.0, 100.0}),
-    replenish({1.0, 1.0}),
+    capacity(foodmax),
+    replenish(foodrates),
     resources(capacity)
 {
 }
