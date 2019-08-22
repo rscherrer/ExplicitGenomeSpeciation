@@ -68,8 +68,11 @@ int doMain(const sVector &args)
         MultiNet networks = arch.getNetworks();
         const size_t n0 = pars.getInitialPopSize();
 
-        Population pop1 = Population(n0, genome, networks);
-        Population pop2 = Population(n0, genome, networks);
+        const dVector foodmax = {100.0, 100.0};
+        const dVector foodgrowth = {1.0, 1.0};
+
+        Population pop1 = Population(n0, genome, networks, foodmax, foodgrowth);
+        Population pop2 = Population(n0, genome, networks, foodmax, foodgrowth);
         MetaPop metapop = {pop1, pop2};
 
         std::cout << "Simulation started\n";
