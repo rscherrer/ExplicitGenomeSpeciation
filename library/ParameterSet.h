@@ -33,6 +33,9 @@ public:
     double getSurvivalProb() const { return survivalProb; }
     double getBirthRate() const { return birthRate; }
     double getMatePreferenceStrength() const { return matePreferenceStrength; }
+    double getMaxResourceCapacity() const { return maxResourceCapacity; }
+    double getMaxResourceGrowth() const { return maxResourceGrowth; }
+    double getHabitatSymmetry() const { return habitatSymmetry; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
@@ -66,12 +69,12 @@ private:
     size_t  initialPopSize          = 100u;
     double  dispersalRate           = 1.0e-3;
     double  birthRate               = 4.0;
-    double  habitatAsymmetry        = 0.5;
+    double  habitatSymmetry         = 1.0;
     double  survivalProb            = 0.8;
     double  ecoSelCoeff             = 1.0;
     double  matePreferenceStrength  = 10.0;
     double  mateEvaluationCost      = 0.01;
-    double  maxResourceCapacity     = 5000.0;
+    double  maxResourceCapacity     = 100.0;
     double  maxResourceGrowth       = 1.0;
 
     // Genetic parameters
