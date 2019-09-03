@@ -28,6 +28,7 @@ public:
     double getDominanceVariance() const { return dominanceVariance; }
     size_t getSeed() const { return seed; }
     size_t getTEndSim() const { return tEndSim; }
+    size_t getTSave() const { return tSave; }
     size_t getInitialPopSize() const { return initialPopSize; }
     double getDispersalRate() const { return dispersalRate; }
     double getSurvivalProb() const { return survivalProb; }
@@ -116,8 +117,7 @@ private:
     // Simulation parameters
     size_t  tBurnIn                 = 1;
     size_t  tEndSim                 = 5;
-    size_t  tGetDat                 = 1;
-    size_t  tSavDat                 = 1;
+    size_t  tSave                   = 1;
     double tiny                  = 1.0e-12;
     size_t seed;
 

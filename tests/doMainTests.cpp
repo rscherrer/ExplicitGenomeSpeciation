@@ -30,6 +30,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     std::cout << "Testing an immortal population...\n";
 
     const size_t tmax = 100u;
+    const size_t tsave = 1u;
     const size_t initPopSize = 10u;
     const double dispersal = 0.0;
     const double survival = 1.0;
@@ -40,12 +41,14 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
+
+
     Population pop1 = Population(initPopSize, genome, networks);
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    size_t t = runSimulation(metapop, tmax, dispersal, survival, birth, mating,
-     genome, networks);
+    size_t t = runSimulation(metapop, tmax, tsave, dispersal, survival, birth,
+     mating, genome, networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
     BOOST_CHECK(metapop[0u].getPopSize() > 0u);
@@ -60,6 +63,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     std::cout << "Testing progressive extinction...\n";
 
     const size_t tmax = 100u;
+    const size_t tsave = 1u;
     const size_t initPopSize = 10u;
     const double dispersal = 0.0;
     const double survival = 0.1;
@@ -70,12 +74,14 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
+
+
     Population pop1 = Population(initPopSize, genome, networks);
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    size_t t = runSimulation(metapop, tmax, dispersal, survival, birth, mating,
-     genome, networks);
+    size_t t = runSimulation(metapop, tmax, tsave, dispersal, survival, birth,
+     mating, genome, networks);
 
     BOOST_CHECK(t < tmax);
     BOOST_CHECK(metapop[0u].getPopSize() == 0u);

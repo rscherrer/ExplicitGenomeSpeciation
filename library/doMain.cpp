@@ -11,7 +11,7 @@
 
 
 /// Function to run a simulation
-size_t runSimulation(MetaPop &pops, const size_t &tmax,
+size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
  const double &dispersal, const double &survival, const double &birth,
   const double &mating, const Genome &genome, const MultiNet &networks)
 {
@@ -19,6 +19,11 @@ size_t runSimulation(MetaPop &pops, const size_t &tmax,
 
     // Loop through time...
     for (; t < tmax; ++t) {
+
+        // Do something every so times steps
+        if (!t % tsave) {
+            std::cout << "t = " << t << '\n';
+        }
 
         // Dispersal
         Crowd migrants1 = pops[0u].emigrate(dispersal);
@@ -79,24 +84,23 @@ int doMain(const vecStr &args)
         const double symmetry = pars.getHabitatSymmetry();
         const vecDbl foodmax1 = {foodmax, symmetry * foodmax};
         const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
-        const vecDbl foodgrowths = {foodgrowth, foodgrowth};
+        const vecDbl foodgrows = {foodgrowth, foodgrowth};
 
-        Population pop1 = Population(n0, genome, networks, foodmax1,
-         foodgrowths);
-        Population pop2 = Population(n0, genome, networks, foodmax2,
-         foodgrowths);
+        Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
+        Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
         MetaPop metapop = {pop1, pop2};
 
         std::cout << "Simulation started\n";
 
         // Run the simulation
         size_t tmax = pars.getTEndSim();
+        size_t tsave = pars.getTSave();
         const double dispersal = pars.getDispersalRate();
         const double survival = pars.getSurvivalProb();
         const double birth = pars.getBirthRate();
         const double mating = pars.getMatePreferenceStrength();
 
-        runSimulation(metapop, tmax, dispersal, survival, birth, mating,
+        runSimulation(metapop, tmax, tsave, dispersal, survival, birth, mating,
          genome, networks);
 
         std::cout << "Simulation ended\n";
