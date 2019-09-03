@@ -82,16 +82,14 @@ private:
     size_t nEcoLoci         = 400u;
     size_t nMatLoci         = 200u;
     size_t nNtrLoci         = 400u;
-    size_t nEcoInteractions = 1000u;
-    size_t nMatInteractions = 500u;
-    size_t nNtrInteractions = 0u;
+    size_t nEcoEdges = 1000u;
+    size_t nMatEdges = 500u;
+    size_t nNtrEdges = 0u;
     size_t nChromosomes     = 3u; //
 
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
-    vecUns nEdgesPerTrait = { nEcoInteractions, nMatInteractions,
-     nNtrInteractions };
-    size_t nBits = 2u * nLoci;
+    vecUns nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
 
     double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
@@ -107,8 +105,7 @@ private:
     vecDbl scaleD {0.0, 0.0, 0.0};
     vecDbl scaleI {0.0, 0.0, 0.0};
     vecDbl scaleE {0.0, 0.0, 0.0};
-    vecDbl locusVarE { scaleE[0u] / nEcoLoci,
-     scaleE[1u] / nMatLoci, scaleE[2u] / nNtrLoci };
+
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
     double interactionWeightShape = 5.0;
@@ -122,8 +119,6 @@ private:
     size_t  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed = makeDefaultSeed();
-    size_t  nHabitats               = 2u;
-    size_t  nTraits                 = 3u;
 
     /// Makers
     size_t makeDefaultSeed();
