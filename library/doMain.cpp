@@ -62,7 +62,7 @@ int doMain(const vecStr &args)
         ParameterSet pars;
 
         // Create and seed a random number generator
-        rnd::rng.seed(42u);
+        rnd::rng.seed(pars.getSeed());
 
         // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
@@ -75,6 +75,7 @@ int doMain(const vecStr &args)
         const double foodmax = pars.getMaxResourceCapacity();
         const double foodgrowth = pars.getMaxResourceGrowth();
 
+        // Symmetry in resource partitioning
         const double symmetry = pars.getHabitatSymmetry();
         const vecDbl foodmax1 = {foodmax, symmetry * foodmax};
         const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
@@ -93,9 +94,9 @@ int doMain(const vecStr &args)
         const double dispersal = pars.getDispersalRate();
         const double survival = pars.getSurvivalProb();
         const double birth = pars.getBirthRate();
-        const double strength = pars.getMatePreferenceStrength();
+        const double mating = pars.getMatePreferenceStrength();
 
-        runSimulation(metapop, tmax, dispersal, survival, birth, strength,
+        runSimulation(metapop, tmax, dispersal, survival, birth, mating,
          genome, networks);
 
         std::cout << "Simulation ended\n";
