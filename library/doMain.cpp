@@ -13,7 +13,7 @@
 /// Function to run a simulation
 void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
  const double &dispersal, const double &survival, const double &birth,
-  const double &strength, const Genome &genome, const MultiNet &networks)
+  const double &mating, const Genome &genome, const MultiNet &networks)
 {
     // Loop through time...
     for (; t < tmax; ++t) {
@@ -30,8 +30,8 @@ void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
         pops[1u].consume();
 
         // Reproduction
-        pops[0u].reproduce(birth, strength, genome, networks);
-        pops[1u].reproduce(birth, strength, genome, networks);
+        pops[0u].reproduce(birth, mating, genome, networks);
+        pops[1u].reproduce(birth, mating, genome, networks);
 
         // Survival
         if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
