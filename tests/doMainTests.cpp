@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     const double dispersal = 0.0;
     const double survival = 1.0;
     const double birth = 0.0;
-    const double strength = 0.0;
+    const double mating = 0.0;
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, metapop, tmax, dispersal, survival, birth, strength,
+    runSimulation(t, metapop, tmax, dispersal, survival, birth, mating,
      genome, networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     const double dispersal = 0.0;
     const double survival = 0.1;
     const double birth = 0.0;
-    const double strength = 0.0;
+    const double mating = 0.0;
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, metapop, tmax, dispersal, survival, birth, strength,
+    runSimulation(t, metapop, tmax, dispersal, survival, birth, mating,
      genome, networks);
 
     BOOST_CHECK(t < tmax);
