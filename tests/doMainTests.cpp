@@ -29,7 +29,6 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     std::cout << "Testing an immortal population...\n";
 
-    size_t t = 0u;
     const size_t tmax = 100u;
     const size_t initPopSize = 10u;
     const double dispersal = 0.0;
@@ -45,7 +44,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, metapop, tmax, dispersal, survival, birth, mating,
+    size_t t = runSimulation(metapop, tmax, dispersal, survival, birth, mating,
      genome, networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
@@ -60,7 +59,6 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     std::cout << "Testing progressive extinction...\n";
 
-    size_t t = 0u;
     const size_t tmax = 100u;
     const size_t initPopSize = 10u;
     const double dispersal = 0.0;
@@ -76,7 +74,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     Population pop2 = Population(initPopSize, genome, networks);
     MetaPop metapop = {pop1, pop2};
 
-    runSimulation(t, metapop, tmax, dispersal, survival, birth, mating,
+    size_t t = runSimulation(metapop, tmax, dispersal, survival, birth, mating,
      genome, networks);
 
     BOOST_CHECK(t < tmax);

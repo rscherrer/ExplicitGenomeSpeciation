@@ -11,10 +11,12 @@
 
 
 /// Function to run a simulation
-void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
+size_t runSimulation(MetaPop &pops, const size_t &tmax,
  const double &dispersal, const double &survival, const double &birth,
   const double &mating, const Genome &genome, const MultiNet &networks)
 {
+    size_t t = 0u;
+
     // Loop through time...
     for (; t < tmax; ++t) {
 
@@ -40,6 +42,8 @@ void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
         }
 
     }
+
+    return t;
 
 }
 
@@ -85,14 +89,13 @@ int doMain(const vecStr &args)
         std::cout << "Simulation started\n";
 
         // Run the simulation
-        size_t t = 0u;
         size_t tmax = pars.getTEndSim();
         const double dispersal = pars.getDispersalRate();
         const double survival = pars.getSurvivalProb();
         const double birth = pars.getBirthRate();
         const double strength = pars.getMatePreferenceStrength();
 
-        runSimulation(t, metapop, tmax, dispersal, survival, birth, strength,
+        runSimulation(metapop, tmax, dispersal, survival, birth, strength,
          genome, networks);
 
         std::cout << "Simulation ended\n";
