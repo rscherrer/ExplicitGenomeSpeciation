@@ -1,4 +1,5 @@
 #include "GeneticArchitecture.h"
+#include "Genome.h"
 #include "utils.h"
 #include <cassert>
 #include <algorithm>
