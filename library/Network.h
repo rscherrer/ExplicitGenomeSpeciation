@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_NETWORK_H
 
 #include <vector>
+#include <stddef.h>
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Edge> pVector; // vector of pairs

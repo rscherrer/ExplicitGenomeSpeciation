@@ -1,6 +1,7 @@
 #include <vector>
 #include <cstddef>
 #include <string>
+#include <stddef.h>
 
 typedef std::vector<double> dVector;
 typedef std::vector<size_t> uVector;

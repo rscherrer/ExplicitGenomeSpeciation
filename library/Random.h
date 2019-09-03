@@ -1,9 +1,9 @@
 #ifndef EXPLICITGENOMESPECIATION_RANDOM_H
 #define EXPLICITGENOMESPECIATION_RANDOM_H
 
-
 #include <random>
 #include <vector>
+#include <stddef.h>
 
 typedef std::vector<double> dVector;
 

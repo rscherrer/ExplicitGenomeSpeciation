@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <fstream>
+#include <stddef.h>
 
 typedef std::vector<size_t> uVector;
 typedef std::vector<double> dVector;

@@ -4,6 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Random.h"
+#include <stddef.h>
 
 
 class Individual;
