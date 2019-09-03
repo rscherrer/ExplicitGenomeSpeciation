@@ -5,9 +5,9 @@
 #include <stddef.h>
 
 typedef std::pair<size_t, size_t> Edge;
-typedef std::vector<Edge> pVector; // vector of pairs
-typedef std::vector<size_t> uVector;
-typedef std::vector<double> dVector;
+typedef std::vector<Edge> vecEdg; // vector of pairs
+typedef std::vector<size_t> vecUns;
+typedef std::vector<double> vecDbl;
 class Genome;
 
 /// A container for a gene regulatory network
@@ -22,16 +22,16 @@ struct Network
     size_t nedges;
     double skewness;
 
-    pVector map;
-    uVector loci;
-    pVector edges;
-    dVector weights;
+    vecEdg map;
+    vecUns loci;
+    vecEdg edges;
+    vecDbl weights;
 
     // Makers
-    pVector makeMap();
-    uVector makeLoci(const Genome&);
-    pVector makeEdges();
-    dVector makeWeights(const double&, const double&);
+    vecEdg makeMap();
+    vecUns makeLoci(const Genome&);
+    vecEdg makeEdges();
+    vecDbl makeWeights(const double&, const double&);
 
 };
 

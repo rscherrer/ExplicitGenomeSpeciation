@@ -10,27 +10,27 @@ double sqr(const double &number)
 }
 
 
-dVector ones(const size_t &n)
+vecDbl ones(const size_t &n)
 {
-    dVector ones;
+    vecDbl ones;
     for (size_t i = 0u; i < n; ++i)
         ones.push_back(1.0);
     return ones;
 }
 
 
-dVector zeros(const size_t &n)
+vecDbl zeros(const size_t &n)
 {
-    dVector zeros;
+    vecDbl zeros;
     for (size_t i = 0u; i < n; ++i)
         zeros.push_back(0.0);
     return zeros;
 }
 
 
-uVector uzeros(const size_t &n)
+vecUns uzeros(const size_t &n)
 {
-    uVector zeros;
+    vecUns zeros;
     for (size_t i = 0u; i < n; ++i)
         zeros.push_back(0u);
     return zeros;
@@ -46,13 +46,13 @@ Haplotype falses(const size_t &n)
 }
 
 
-double sum(dVector &v)
+double sum(vecDbl &v)
 {
     return std::accumulate(v.begin(), v.end(), 0);
 }
 
 
-size_t argmin(dVector &v)
+size_t argmin(vecDbl &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
 }
@@ -64,7 +64,7 @@ size_t sumbool(Haplotype &v) {
     return sum;
 }
 
-size_t sumu(uVector &v) {
+size_t sumu(vecUns &v) {
     size_t sum = 0u;
     for (size_t i = 0u; i < v.size(); ++i)
         sum += v[i];

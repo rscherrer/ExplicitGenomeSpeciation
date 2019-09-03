@@ -5,7 +5,7 @@
 #include <vector>
 #include <stddef.h>
 
-typedef std::vector<double> dVector;
+typedef std::vector<double> vecDbl;
 
 namespace rnd
 {
@@ -23,7 +23,7 @@ namespace rnd
     double normal(const double&, const double&);
     double hnormal(const double&);
     double exponential(const double&);
-    size_t sample(const dVector&);
+    size_t sample(const vecDbl&);
     double flip(const double&, const double&);
     double gamma(const double&, const double&);
     double bigamma(const double&, const double&);

@@ -11,8 +11,8 @@ typedef std::discrete_distribution<size_t> Discrete;
 
 /// Constructor
 Population::Population(const size_t &popsize,
- const Genome &genome, const MultiNet &networks, const dVector &foodmax,
-  const dVector &foodgrowth) :
+ const Genome &genome, const MultiNet &networks, const vecDbl &foodmax,
+  const vecDbl &foodgrowth) :
     individuals(populate(popsize, genome, networks)),
     females({ }),
     males({ }),
@@ -49,7 +49,7 @@ Crowd Population::emigrate(const double &rate)
     Crowd residents;
 
     size_t nmigrants = rnd::binomial(individuals.size(), rate);
-    dVector probs = ones(nmigrants);
+    vecDbl probs = ones(nmigrants);
     Haplotype whom = falses(individuals.size());
 
     while (nmigrants) {
@@ -95,9 +95,9 @@ void Population::consume()
     // dR/dt = r (1 - R / K) - C R, where C is the consumption
 
     // Calculate the total amount of food consumed
-    dVector consumed{0.0, 0.0};
+    vecDbl consumed{0.0, 0.0};
     for (auto ind : individuals) {
-        dVector rates = ind->getFeedingRates();
+        vecDbl rates = ind->getFeedingRates();
         for (size_t res = 0u; res < 2u; ++res)
             consumed[res] += rates[res];
     }
@@ -149,7 +149,7 @@ void Population::reproduce(const double &birth, const double &strength,
             males.push_back(ind);
 
     // Prepare a weighted lottery based on male mating successes
-    dVector successes;
+    vecDbl successes;
     for (auto male : males)
         successes.push_back(male->getFitness());
 

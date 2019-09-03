@@ -32,10 +32,10 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
 
 
 /// Function to make a vector of chromosome sizes
-dVector GeneticArchitecture::makeChromosomes()
+vecDbl GeneticArchitecture::makeChromosomes()
 {
 
-    dVector chromsizes;
+    vecDbl chromsizes;
 
     // Chromosomes all have the same size
     for (size_t i = 0u; i < nChromosomes; ++i)

@@ -45,7 +45,7 @@ void runSimulation(size_t &t, MetaPop &pops, const size_t &tmax,
 
 
 /// Program to run the main function
-int doMain(const sVector &args)
+int doMain(const vecStr &args)
 {
 
     try
@@ -72,9 +72,9 @@ int doMain(const sVector &args)
         const double foodgrowth = pars.getMaxResourceGrowth();
 
         const double symmetry = pars.getHabitatSymmetry();
-        const dVector foodmax1 = {foodmax, symmetry * foodmax};
-        const dVector foodmax2 = {symmetry * foodmax, foodmax};
-        const dVector foodgrowths = {foodgrowth, foodgrowth};
+        const vecDbl foodmax1 = {foodmax, symmetry * foodmax};
+        const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
+        const vecDbl foodgrowths = {foodgrowth, foodgrowth};
 
         Population pop1 = Population(n0, genome, networks, foodmax1,
          foodgrowths);

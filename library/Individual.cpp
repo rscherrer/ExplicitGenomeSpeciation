@@ -24,9 +24,9 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Assert fields of individual upon creation
 void assertIndividual(const Diplotype& seq,
- const dVector &xp, const Genome& genome,
-  const dVector &traits, const double &fitness,
-   const dVector &rates)
+ const vecDbl &xp, const Genome& genome,
+  const vecDbl &traits, const double &fitness,
+   const vecDbl &rates)
 {
     assert(seq.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -121,7 +121,7 @@ std::vector<double> Individual::develop(const Genome &genome,
     // And there are multiple traits
     // And there is epistasis...
 
-    dVector phenotypes {0.0, 0.0, 0.0};
+    vecDbl phenotypes {0.0, 0.0, 0.0};
 
     for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
@@ -184,7 +184,7 @@ std::vector<double> Individual::develop(const Genome &genome,
 
 
 /// Feed and get a fitness value
-void Individual::feed(const dVector &food)
+void Individual::feed(const vecDbl &food)
 {
     fitness = feedingRates[0u] * food[0u] + feedingRates[1u] * food[1u];
     assert(fitness >= 0.0);
@@ -232,8 +232,8 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
 
 /// Meiosis to produce a gamete
-Haplotype Individual::recombine(const dVector &locations,
- const dVector &chromosomes, const double &rate)
+Haplotype Individual::recombine(const vecDbl &locations,
+ const vecDbl &chromosomes, const double &rate)
 {
     Haplotype gamete;
 
@@ -264,7 +264,7 @@ Haplotype Individual::recombine(const dVector &locations,
     while (locus < nloci) {
 
         // What is the next thing coming up next?
-        dVector closest = { crossover, chromend, position };
+        vecDbl closest = { crossover, chromend, position };
         size_t next = argmin(closest);
 
         switch (next) {
