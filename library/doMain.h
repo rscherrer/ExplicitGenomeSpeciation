@@ -4,6 +4,7 @@
 #include "Population.h"
 #include <vector>
 #include <string>
+#include <stddef.h>
 
 
 typedef std::vector<Population> MetaPop;

@@ -5,6 +5,7 @@
 #include "GeneticArchitecture.h"
 #include <vector>
 #include <random>
+#include <stddef.h>
 
 
 typedef std::vector<bool> Haplotype;

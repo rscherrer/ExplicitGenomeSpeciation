@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_GENOME_H
 
 #include <vector>
+#include <stddef.h>
 
 typedef std::vector<double> dVector;
 typedef std::vector<size_t> uVector;

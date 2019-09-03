@@ -7,6 +7,7 @@
 #include "Network.h"
 #include <vector>
 #include <cstddef>
+#include <stddef.h>
 
 
 typedef std::pair<size_t, size_t> Edge;
