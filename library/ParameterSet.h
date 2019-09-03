@@ -82,11 +82,10 @@ private:
     size_t nEcoLoci         = 400u;
     size_t nMatLoci         = 200u;
     size_t nNtrLoci         = 400u;
-    // nloci must be at least 2 for each trait
     size_t nEcoInteractions = 1000u;
     size_t nMatInteractions = 500u;
     size_t nNtrInteractions = 0u;
-    size_t nChromosomes     = 3u;
+    size_t nChromosomes     = 3u; //
 
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
@@ -117,10 +116,10 @@ private:
     double dominanceVariance = 1.0;
 
     // Simulation parameters
-    int  tBurnIn                 = 1;
-    int  tEndSim                 = 5;
-    int  tGetDat                 = 1;
-    int  tSavDat                 = 1;
+    size_t  tBurnIn                 = 1;
+    size_t  tEndSim                 = 5;
+    size_t  tGetDat                 = 1;
+    size_t  tSavDat                 = 1;
     double tiny                  = 1.0e-12;    // for clipping towards zero
     size_t seed = makeDefaultSeed();
     size_t  nHabitats               = 2u;
