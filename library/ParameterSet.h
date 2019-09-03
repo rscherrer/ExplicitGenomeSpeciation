@@ -17,7 +17,6 @@ public:
 
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }
-    size_t getNTraits() const { return nTraits; }
     size_t getNLoci() const { return nLoci; }
     vecUns getNLociPerTrait() const { return nLociPerTrait; }
     vecUns getNEdgesPerTrait() const { return nEdgesPerTrait; }
@@ -40,7 +39,6 @@ public:
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
-    void setNTraits(const size_t &ntraits) { nTraits = ntraits; }
     void setNLociPerTrait(const vecUns &locipertrait)
     {
         nLociPerTrait = locipertrait;
@@ -63,6 +61,9 @@ public:
         interactionWeightScale = x;
     }
 
+    /// Makers
+    size_t makeDefaultSeed();
+
 
 private:
 
@@ -79,13 +80,13 @@ private:
     double  maxResourceGrowth       = 1.0;
 
     // Genetic parameters
-    size_t nEcoLoci         = 400u;
-    size_t nMatLoci         = 200u;
-    size_t nNtrLoci         = 400u;
+    size_t nEcoLoci = 400u;
+    size_t nMatLoci = 200u;
+    size_t nNtrLoci = 400u;
     size_t nEcoEdges = 1000u;
     size_t nMatEdges = 500u;
     size_t nNtrEdges = 0u;
-    size_t nChromosomes     = 3u; //
+    size_t nChromosomes = 3u;
 
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
@@ -101,10 +102,10 @@ private:
     bool isGenerateArchitecture = true;
     std::string architectureFileName = "";
     vecDbl skewnesses = { 1.0, 1.0, 1.0 };
-    vecDbl scaleA {1.0, 1.0, 1.0};
-    vecDbl scaleD {0.0, 0.0, 0.0};
-    vecDbl scaleI {0.0, 0.0, 0.0};
-    vecDbl scaleE {0.0, 0.0, 0.0};
+    vecDbl scaleA = {1.0, 1.0, 1.0};
+    vecDbl scaleD = {0.0, 0.0, 0.0};
+    vecDbl scaleI = {0.0, 0.0, 0.0};
+    vecDbl scaleE = {0.0, 0.0, 0.0};
 
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
@@ -117,11 +118,8 @@ private:
     size_t  tEndSim                 = 5;
     size_t  tGetDat                 = 1;
     size_t  tSavDat                 = 1;
-    double tiny                  = 1.0e-12;    // for clipping towards zero
-    size_t seed = makeDefaultSeed();
-
-    /// Makers
-    size_t makeDefaultSeed();
+    double tiny                  = 1.0e-12;
+    size_t seed;
 
 };
 

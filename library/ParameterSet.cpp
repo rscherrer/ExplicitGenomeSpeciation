@@ -17,7 +17,7 @@ void ParameterSet::capEdges()
     }
 }
 
-ParameterSet::ParameterSet()
+ParameterSet::ParameterSet() : seed(makeDefaultSeed())
 {
 
     capEdges();
