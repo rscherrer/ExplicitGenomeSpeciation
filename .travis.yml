@@ -34,7 +34,7 @@ install:
 script: 
 
  # Build and run the tests
- - qmake EGS_test.pro
+ - qmake ci_setup/EGS_test.pro
  - make --silent debug
  - ./EGS_test
   
