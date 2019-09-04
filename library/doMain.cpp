@@ -3,6 +3,7 @@
 #include "GeneticArchitecture.h"
 #include "Random.h"
 #include "Population.h"
+#include "MetaPop.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -89,6 +90,8 @@ int doMain(const vecStr &args)
         Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
         Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
         vecPop metapop = {pop1, pop2};
+
+        MetaPop meta;
 
         // Open a data file
         std::ofstream out;
