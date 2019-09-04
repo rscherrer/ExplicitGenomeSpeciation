@@ -20,6 +20,8 @@ public:
     {}
     ~MetaPop() {}
 
+    vecPop getPops() const { return pops; }
+
     size_t evolve(const Genome&, const MultiNet&);
 
 private:
