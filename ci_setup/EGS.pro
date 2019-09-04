@@ -1,5 +1,5 @@
 # Files
-include(program.pri)
+include(EGS.pri)
 SOURCES += main.cpp
 
 # C++14

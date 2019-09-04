@@ -1,6 +1,6 @@
 # Files
-include(program.pri)
-include(program_test.pri)
+include(EGS.pri)
+include(EGS_test.pri)
 
 # C++14
 CONFIG += c++14
