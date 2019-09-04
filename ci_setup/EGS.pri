@@ -18,3 +18,9 @@ HEADERS += $$PWD/../library/Population.h
 
 SOURCES += $$PWD/../library/Individual.cpp
 HEADERS += $$PWD/../library/Individual.h
+
+SOURCES += $$PWD/../library/Genome.cpp
+HEADERS += $$PWD/../library/Genome.h
+
+SOURCES += $$PWD/../library/Network.cpp
+HEADERS += $$PWD/../library/Network.h
