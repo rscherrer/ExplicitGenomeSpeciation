@@ -42,3 +42,4 @@ debug/
 Makefile
 Makefile.Debug
 Makefile.Release
+EGS_test
