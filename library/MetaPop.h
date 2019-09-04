@@ -20,6 +20,8 @@ public:
     {}
     ~MetaPop() {}
 
+    size_t evolve();
+
 private:
 
     vecPop pops;

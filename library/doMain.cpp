@@ -87,11 +87,16 @@ int doMain(const vecStr &args)
         const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
         const vecDbl foodgrows = {foodgrowth, foodgrowth};
 
+        // Create populations
         Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
         Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
         vecPop metapop = {pop1, pop2};
 
+        // Create a metapopulation
         MetaPop meta = MetaPop(metapop, pars);
+
+        // Launch simulation
+        meta.evolve();
 
         // Open a data file
         std::ofstream out;
