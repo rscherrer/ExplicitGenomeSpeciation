@@ -91,7 +91,7 @@ int doMain(const vecStr &args)
         Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
         vecPop metapop = {pop1, pop2};
 
-        MetaPop meta;
+        MetaPop meta = MetaPop(metapop, pars);
 
         // Open a data file
         std::ofstream out;
