@@ -11,49 +11,6 @@
 #include <cassert>
 
 
-/// Function to run a simulation
-size_t runSimulation(vecPop &pops, const size_t &tmax, const size_t &tsave,
- const double &dispersal, const double &survival, const double &birth,
-  const double &mating, const Genome &genome, const MultiNet &networks,
-   const bool &record)
-{
-    size_t t = 0u;
-
-    // Loop through time...
-    for (; t < tmax; ++t) {
-
-        // Time to save?
-        if (record && t % tsave == 0u) {
-            std::cout << "t = " << t << '\n';
-        }
-
-        // Dispersal
-        Crowd migrants1 = pops[0u].emigrate(dispersal);
-        Crowd migrants2 = pops[1u].emigrate(dispersal);
-        pops[0u].immigrate(migrants2);
-        pops[1u].immigrate(migrants1);
-
-        // Resource acquisition
-        pops[0u].consume();
-        pops[1u].consume();
-
-        // Reproduction
-        pops[0u].reproduce(birth, mating, genome, networks);
-        pops[1u].reproduce(birth, mating, genome, networks);
-
-        // Survival
-        if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
-            std::cout << "The population went extinct at t = " << t << '\n';
-            break;
-        }
-
-    }
-
-    return t;
-
-}
-
-
 /// Program to run the main function
 int doMain(const vecStr &args)
 {
@@ -95,16 +52,16 @@ int doMain(const vecStr &args)
         // Create a metapopulation
         MetaPop meta = MetaPop(metapop, pars);
 
-        // Launch simulation
-        std::cout << "Simulation started\n";
-        meta.evolve(genome, networks);
-        std::cout << "Simulation ended\n";
-
         // Open a data file
         std::ofstream out;
         out.open("output.dat");
         if (!out.is_open())
             throw std::runtime_error("Unable to open output file");
+
+        // Launch simulation
+        std::cout << "Simulation started\n";
+        meta.evolve(genome, networks);
+        std::cout << "Simulation ended\n";
 
         out.close();
 
