@@ -20,7 +20,7 @@ public:
     {}
     ~MetaPop() {}
 
-    size_t evolve();
+    size_t evolve(const Genome&, const MultiNet&);
 
 private:
 

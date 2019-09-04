@@ -96,7 +96,7 @@ int doMain(const vecStr &args)
         MetaPop meta = MetaPop(metapop, pars);
 
         // Launch simulation
-        meta.evolve();
+        meta.evolve(genome, networks);
 
         // Open a data file
         std::ofstream out;
