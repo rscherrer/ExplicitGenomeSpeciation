@@ -37,6 +37,7 @@ public:
     double getMaxResourceCapacity() const { return maxResourceCapacity; }
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
+    bool getRecord() const { return record; }
 
     /// Setters
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
@@ -120,6 +121,7 @@ private:
     size_t  tSave                   = 1;
     double tiny                  = 1.0e-12;
     size_t seed;
+    bool record = true;
 
 };
 

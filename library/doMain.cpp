@@ -100,9 +100,10 @@ int doMain(const vecStr &args)
         const double survival = pars.getSurvivalProb();
         const double birth = pars.getBirthRate();
         const double mating = pars.getMatePreferenceStrength();
+        const bool record = pars.getRecord();
 
         runSimulation(metapop, tmax, tsave, dispersal, survival, birth, mating,
-         genome, networks);
+         genome, networks, record);
 
         std::cout << "Simulation ended\n";
 
