@@ -13,15 +13,16 @@
 /// Function to run a simulation
 size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
  const double &dispersal, const double &survival, const double &birth,
-  const double &mating, const Genome &genome, const MultiNet &networks)
+  const double &mating, const Genome &genome, const MultiNet &networks,
+   const bool &record)
 {
     size_t t = 0u;
 
     // Loop through time...
     for (; t < tmax; ++t) {
 
-        // Do something every so times steps
-        if (!t % tsave) {
+        // Time to save?
+        if (record && t % tsave == 0u) {
             std::cout << "t = " << t << '\n';
         }
 
