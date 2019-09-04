@@ -96,7 +96,9 @@ int doMain(const vecStr &args)
         MetaPop meta = MetaPop(metapop, pars);
 
         // Launch simulation
+        std::cout << "Simulation started\n";
         meta.evolve(genome, networks);
+        std::cout << "Simulation ended\n";
 
         // Open a data file
         std::ofstream out;
@@ -104,7 +106,7 @@ int doMain(const vecStr &args)
         if (!out.is_open())
             throw std::runtime_error("Unable to open output file");
 
-        std::cout << "Simulation started\n";
+
 
         // Run the simulation
         size_t tmax = pars.getTEndSim();
@@ -118,7 +120,7 @@ int doMain(const vecStr &args)
         runSimulation(metapop, tmax, tsave, dispersal, survival, birth, mating,
          genome, networks, record);
 
-        std::cout << "Simulation ended\n";
+
 
         out.close();
 

@@ -38,6 +38,13 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     const double mating = 0.0;
 
     ParameterSet pars;
+    pars.setTEndSim(100u);
+    pars.setTSave(1u);
+    pars.setInitialPopSize(10u);
+    pars.setDispersalRate(0.0);
+    pars.setSurvivalProb(1.0);
+    pars.setBirthRate(0.0);
+    pars.setMatePreferenceStrength(0.0);
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();

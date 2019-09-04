@@ -40,6 +40,16 @@ public:
     bool getRecord() const { return record; }
 
     /// Setters
+    void setTEndSim(const size_t &t) { tEndSim = t; }
+    void setTSave(const size_t &t) { tSave = t; }
+    void setInitialPopSize(const size_t &n) { initialPopSize = n; }
+    void setDispersalRate(const double &d) { dispersalRate = d; }
+    void setSurvivalProb(const double &p) { survivalProb = p; }
+    void setBirthRate(const double &b) { birthRate = b; }
+    void setMatePreferenceStrength(const double &alpha)
+    {
+        matePreferenceStrength = alpha;
+    }
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
     void setNLociPerTrait(const vecUns &locipertrait)
     {
