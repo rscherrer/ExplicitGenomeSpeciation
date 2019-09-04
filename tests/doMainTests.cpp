@@ -2,6 +2,7 @@
 
 #include "library/doMain.h"
 #include "library/Population.h"
+#include "library/MetaPop.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
@@ -45,6 +46,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     pars.setSurvivalProb(1.0);
     pars.setBirthRate(0.0);
     pars.setMatePreferenceStrength(0.0);
+
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
@@ -54,8 +56,13 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     Population pop2 = Population(initPopSize, genome, networks);
     vecPop metapop = {pop1, pop2};
 
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+
+
     size_t t = runSimulation(metapop, tmax, tsave, dispersal, survival, birth,
      mating, genome, networks);
+
+    t = meta.evolve(genome, networks);
 
     BOOST_CHECK_EQUAL(t, tmax);
     BOOST_CHECK(metapop[0u].getPopSize() > 0u);
