@@ -106,22 +106,6 @@ int doMain(const vecStr &args)
         if (!out.is_open())
             throw std::runtime_error("Unable to open output file");
 
-
-
-        // Run the simulation
-        size_t tmax = pars.getTEndSim();
-        size_t tsave = pars.getTSave();
-        const double dispersal = pars.getDispersalRate();
-        const double survival = pars.getSurvivalProb();
-        const double birth = pars.getBirthRate();
-        const double mating = pars.getMatePreferenceStrength();
-        const bool record = pars.getRecord();
-
-        runSimulation(metapop, tmax, tsave, dispersal, survival, birth, mating,
-         genome, networks, record);
-
-
-
         out.close();
 
     }
