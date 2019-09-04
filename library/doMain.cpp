@@ -76,8 +76,8 @@ int doMain(const vecStr &args)
         // Create a population of individuals
         Genome genome = arch.getGenome();
         MultiNet networks = arch.getNetworks();
-        const size_t n0 = pars.getInitialPopSize();
 
+        const size_t n0 = pars.getInitialPopSize();
         const double foodmax = pars.getMaxResourceCapacity();
         const double foodgrowth = pars.getMaxResourceGrowth();
 

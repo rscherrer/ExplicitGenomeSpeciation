@@ -24,3 +24,6 @@ HEADERS += library/Population.h
 
 SOURCES += library/Individual.cpp
 HEADERS += library/Individual.h
+
+SOURCES += library/MetaPop.cpp
+HEADERS += library/MetaPop.h
