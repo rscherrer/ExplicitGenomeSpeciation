@@ -24,7 +24,6 @@ size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
         // Time to save?
         if (record && t % tsave == 0u) {
             std::cout << "t = " << t << '\n';
-
         }
 
         // Dispersal
@@ -92,6 +91,12 @@ int doMain(const vecStr &args)
         Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
         MetaPop metapop = {pop1, pop2};
 
+        // Open a data file
+        std::ofstream out;
+        out.open("output.dat");
+        if (!out.is_open())
+            throw std::runtime_error("Unable to open output file");
+
         std::cout << "Simulation started\n";
 
         // Run the simulation
@@ -107,6 +112,8 @@ int doMain(const vecStr &args)
          genome, networks, record);
 
         std::cout << "Simulation ended\n";
+
+        out.close();
 
     }
     catch (const std::runtime_error &err)
