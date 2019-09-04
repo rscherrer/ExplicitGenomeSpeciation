@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     Population pop1 = Population(initPopSize, genome, networks);
     Population pop2 = Population(initPopSize, genome, networks);
-    MetaPop metapop = {pop1, pop2};
+    vecPop metapop = {pop1, pop2};
 
     size_t t = runSimulation(metapop, tmax, tsave, dispersal, survival, birth,
      mating, genome, networks);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     Population pop1 = Population(initPopSize, genome, networks);
     Population pop2 = Population(initPopSize, genome, networks);
-    MetaPop metapop = {pop1, pop2};
+    vecPop metapop = {pop1, pop2};
 
     size_t t = runSimulation(metapop, tmax, tsave, dispersal, survival, birth,
      mating, genome, networks);

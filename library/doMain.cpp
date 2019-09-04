@@ -11,7 +11,7 @@
 
 
 /// Function to run a simulation
-size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
+size_t runSimulation(vecPop &pops, const size_t &tmax, const size_t &tsave,
  const double &dispersal, const double &survival, const double &birth,
   const double &mating, const Genome &genome, const MultiNet &networks,
    const bool &record)
@@ -31,7 +31,6 @@ size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
         Crowd migrants2 = pops[1u].emigrate(dispersal);
         pops[0u].immigrate(migrants2);
         pops[1u].immigrate(migrants1);
-
 
         // Resource acquisition
         pops[0u].consume();
@@ -89,7 +88,7 @@ int doMain(const vecStr &args)
 
         Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
         Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
-        MetaPop metapop = {pop1, pop2};
+        vecPop metapop = {pop1, pop2};
 
         // Open a data file
         std::ofstream out;
