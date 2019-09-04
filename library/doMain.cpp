@@ -24,6 +24,7 @@ size_t runSimulation(MetaPop &pops, const size_t &tmax, const size_t &tsave,
         // Time to save?
         if (record && t % tsave == 0u) {
             std::cout << "t = " << t << '\n';
+
         }
 
         // Dispersal
