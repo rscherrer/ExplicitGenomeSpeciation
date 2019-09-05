@@ -12,6 +12,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
     for (; t < tmax; ++t) {
 
+        output << "t = " << t << '\n';
+
         // Dispersal
         Crowd migrants1 = pops[0u].emigrate(dispersal);
         Crowd migrants2 = pops[1u].emigrate(dispersal);
