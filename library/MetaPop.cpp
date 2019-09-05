@@ -5,6 +5,11 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
     size_t t = 0u;
 
+    std::ofstream output;
+    output.open("record.dat");
+    if (!output.is_open())
+        throw std::runtime_error("Unable to open file record.dat\n");
+
     for (; t < tmax; ++t) {
 
         // Dispersal
@@ -27,6 +32,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             break;
         }
     }
+
+    output.close();
 
     return t;
 }
