@@ -307,10 +307,6 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
     // Sample the mutated targets
     // Flip the alleles
 
-    #if DEBUG
-    const size_t nloci = gamete.size();
-    #endif
-
     size_t nmut = rnd::poisson(rate * gamete.size());
 
     while (nmut) {
@@ -320,8 +316,6 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 
         --nmut;
     }
-
-    assert(gamete.size() == nloci);
 
 }
 
