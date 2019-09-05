@@ -7,33 +7,12 @@ HEADERS += $$PWD/../library/GeneticArchitecture.h
 SOURCES += $$PWD/../library/ParameterSet.cpp
 HEADERS += $$PWD/../library/ParameterSet.h
 
-<<<<<<< HEAD
-SOURCES += library/Random.cpp
-HEADERS += library/Random.h
-=======
-SOURCES += $$PWD/../library/random.cpp
-HEADERS += $$PWD/../library/random.h
->>>>>>> develop
+SOURCES += $$PWD/../library/Random.cpp
+HEADERS += $$PWD/../library/Random.h
 
 SOURCES += $$PWD/../library/utils.cpp
 HEADERS += $$PWD/../library/utils.h
 
-<<<<<<< HEAD
-SOURCES += library/Network.cpp
-HEADERS += library/Network.h
-
-SOURCES += library/Genome.cpp
-HEADERS += library/Genome.h
-
-SOURCES += library/Population.cpp
-HEADERS += library/Population.h
-
-SOURCES += library/Individual.cpp
-HEADERS += library/Individual.h
-
-SOURCES += library/MetaPop.cpp
-HEADERS += library/MetaPop.h
-=======
 SOURCES += $$PWD/../library/Population.cpp
 HEADERS += $$PWD/../library/Population.h
 
@@ -45,4 +24,6 @@ HEADERS += $$PWD/../library/Genome.h
 
 SOURCES += $$PWD/../library/Network.cpp
 HEADERS += $$PWD/../library/Network.h
->>>>>>> develop
+
+SOURCES += $$PWD/../library/MetaPop.cpp
+HEADERS += $$PWD/../library/MetaPop.h
