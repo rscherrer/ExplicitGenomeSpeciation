@@ -1,6 +1,6 @@
 # Files
-include(EGS.pri)
-include(EGS_test.pri)
+include(ci_setup/EGS.pri)
+include(ci_setup/EGS_test.pri)
 
 # C++14
 CONFIG += c++14
