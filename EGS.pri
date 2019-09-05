@@ -22,13 +22,8 @@ HEADERS += $$PWD/library/Genome.h
 SOURCES += $$PWD/library/Population.cpp
 HEADERS += $$PWD/library/Population.h
 
-<<<<<<< HEAD
-SOURCES += library/Individual.cpp
-HEADERS += library/Individual.h
-
-SOURCES += library/MetaPop.cpp
-HEADERS += library/MetaPop.h
-=======
 SOURCES += $$PWD/library/Individual.cpp
 HEADERS += $$PWD/library/Individual.h
->>>>>>> develop
+
+SOURCES += $$PWD/library/MetaPop.cpp
+HEADERS += $$PWD/library/MetaPop.h

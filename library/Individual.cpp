@@ -286,7 +286,7 @@ Haplotype Individual::recombine(const vecDbl &locations,
         default:
             gamete.push_back(sequence[hap][locus]);
             ++locus;
-            assert(locus < locations.size());
+            //assert(locus < locations.size());
             position = locations[locus];
             break;
 
