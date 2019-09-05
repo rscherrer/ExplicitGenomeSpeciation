@@ -1,10 +1,6 @@
 # Files
 include(EGS.pri)
-
-# Commented out: files cannot be found (sure, that's easy to fix..)
-# include(EGS_test.pri)
-
-include(EGS_test.pri)
+include(EGS_test.pri) # did not really understand what richel did here
 
 # C++14
 CONFIG += c++14

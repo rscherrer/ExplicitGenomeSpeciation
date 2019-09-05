@@ -34,7 +34,7 @@ install:
 script: 
 
  # Build and run the tests
- - qmake ci_setup/EGS_test.pro
+ - qmake ./EGS_test.pro
  - make --silent debug
  - ./EGS_test
   
@@ -47,7 +47,7 @@ script:
  - cat memcheck.log
   
  # Build and run and profile normal program
- - qmake ci_setup/EGS.pro
+ - qmake ./EGS.pro
  - make --silent release
  - time ./EGS
  - gprof ./EGS > gprof.log
