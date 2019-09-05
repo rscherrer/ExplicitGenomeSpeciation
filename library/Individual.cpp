@@ -22,23 +22,6 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 }
 
 
-/// Assert fields of individual upon creation
-void assertIndividual(const Diplotype& seq,
- const vecDbl &xp, const Genome& genome,
-  const vecDbl &traits, const double &fitness,
-   const vecDbl &rates)
-{
-    assert(seq.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(seq[strain].size() == genome.nloci);
-    assert(xp.size() == genome.nloci);
-    assert(traits.size() == 3u);
-    assert(fitness > 0.0);
-    for (size_t res = 0u; res < 2u; ++res)
-        assert(rates[res] > 0.0);
-}
-
-
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const double &snpfreq) :
@@ -52,8 +35,14 @@ Individual::Individual(const Genome &genome,
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
-
-    assertIndividual(sequence, genexp, genome, traits, fitness, feedingRates);
+    assert(sequence.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(sequence[strain].size() == genome.nloci);
+    assert(genexp.size() == genome.nloci);
+    assert(traits.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(feedingRates[res] > 0.0);
 }
 
 
@@ -70,7 +59,16 @@ Individual::Individual(const Genome &genome,
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait))
 {
-    assertIndividual(sequence, genexp, genome, traits, fitness, feedingRates);
+
+    assert(sequence.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(sequence[strain].size() == genome.nloci);
+    assert(genexp.size() == genome.nloci);
+    assert(traits.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(feedingRates[res] > 0.0);
+
 }
 
 
@@ -309,7 +307,9 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
     // Sample the mutated targets
     // Flip the alleles
 
+    #if DEBUG
     const size_t nloci = gamete.size();
+    #endif
 
     size_t nmut = rnd::poisson(rate * gamete.size());
 
