@@ -1,5 +1,7 @@
 #include "MetaPop.h"
 #include <iostream>
+#include <fstream>
+
 
 size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
@@ -12,8 +14,12 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
     for (; t < tmax; ++t) {
 
-        if (t % tsave == 0u)
-            output << "t = " << t << '\n';
+        if (t % tsave == 0u) {
+
+            loadBuffer(t);
+            buffer.write(output);
+
+        }
 
         // Dispersal
         Crowd migrants1 = pops[0u].emigrate(dispersal);
@@ -39,4 +45,19 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     output.close();
 
     return t;
+}
+
+
+void MetaPop::loadBuffer(const size_t &t)
+{
+    sprintf(buffer.time, "%lu", t);
+    sprintf(buffer.popsize0, "%lu", pops[0u].getPopSize());
+    sprintf(buffer.popsize1, "%lu", pops[1u].getPopSize());
+}
+
+void Buffer::write(std::ofstream &out)
+{
+    out.write((char *) &time, sizeof(time));
+    out.write((char *) &popsize0, sizeof(popsize0));
+    out.write((char *) &popsize1, sizeof(popsize1));
 }

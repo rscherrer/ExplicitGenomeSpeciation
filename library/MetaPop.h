@@ -5,6 +5,23 @@
 
 typedef std::vector<Population> vecPop;
 
+class Buffer
+{
+
+    friend class MetaPop;
+
+private:
+    char time[25];
+    char popsize0[25];
+    char popsize1[25];
+
+public:
+    Buffer() {}
+    ~Buffer() {}
+    void load(const size_t&);
+    void write(std::ofstream&);
+};
+
 class MetaPop
 {
 
@@ -16,13 +33,15 @@ public:
         birth(pars.getBirthRate()),
         mating(pars.getMatePreferenceStrength()),
         tmax(pars.getTEndSim()),
-        tsave(pars.getTSave())
+        tsave(pars.getTSave()),
+        buffer(Buffer())
     {}
     ~MetaPop() {}
 
     vecPop getPops() const { return pops; }
 
     size_t evolve(const Genome&, const MultiNet&);
+    void loadBuffer(const size_t &t);
 
 private:
 
@@ -33,6 +52,7 @@ private:
     double mating;
     size_t tmax;
     size_t tsave;
+    Buffer buffer;
 
 };
 
