@@ -91,53 +91,66 @@ void ParameterSet::readParams(std::ifstream file)
     // Here goes several rounds of input reading
     // Evaluate input
     // Update the corresponding parameter with the next value
-    // Use while input >> string to keep going through the parameters
+    // Use while file >> string to keep going through the parameters
 
     std::string input;
     while (file >> input) {
 
         switch (_(input)) {
 
-        case _("maxResourceCapacity"): break;
-        case _("maxResourceGrowth"): break;
-        case _("habitatSymmetry"): break;
-        case _("ecoSelCoeff"): break;
-        case _("initialPopSize"): break;
-        case _("dispersalRate"): break;
-        case _("birthRate"): break;
-        case _("survivalProb"): break;
-        case _("matePreferenceStrength"): break;
-        case _("mateEvalutationCost"): break;
-        case _("nEcoLoci"): break;
-        case _("nMatLoci"): break;
-        case _("nNtrLoci"): break;
-        case _("nEcoEdges"): break;
-        case _("nMatEdges"): break;
-        case _("nNtrEdges"): break;
-        case _("nChromosomes"): break;
-        case _("mutationRate"): break;
-        case _("recombinationRate"): break;
-        case _("genomeLength"): break;
-        case _("freqSNP"): break;
-        case _("isFemaleHeterogamy"): break;
-        case _("isGeneticArchitecture"): break;
-        case _("architectureFileName"): break;
-        case _("scaleA"): break;
-        case _("scaleD"): break;
-        case _("scaleI"): break;
-        case _("scaleE"): break;
-        case _("skewnesses"): break;
-        case _("effectSizeShape"): break;
-        case _("effectSizeScale"): break;
-        case _("interactionWeightShape"): break;
-        case _("interactionWeightScale"): break;
-        case _("dominanceVariance"): break;
-        case _("tBurnIn"): break;
-        case _("tEndSim"): break;
-        case _("tSave"): break;
-        case _("tiny"): break;
-        case _("seed"): break;
-        case _("record"): break;
+        case _("maxResourceCapacity"): file >> maxResourceCapacity; break;
+        case _("maxResourceGrowth"): file >> maxResourceGrowth; break;
+        case _("habitatSymmetry"): file >> habitatSymmetry; break;
+        case _("ecoSelCoeff"): file >> ecoSelCoeff; break;
+        case _("initialPopSize"): file >> initialPopSize; break;
+        case _("dispersalRate"): file >> dispersalRate; break;
+        case _("birthRate"): file >> birthRate; break;
+        case _("survivalProb"): file >> survivalProb; break;
+        case _("matePreferenceStrength"):
+            file >> matePreferenceStrength; break;
+        case _("mateEvalutationCost"): file >> mateEvaluationCost; break;
+        case _("nEcoLoci"): file >> nEcoLoci; break;
+        case _("nMatLoci"): file >> nMatLoci; break;
+        case _("nNtrLoci"): file >> nNtrLoci; break;
+        case _("nEcoEdges"): file >> nEcoEdges; break;
+        case _("nMatEdges"): file >> nMatEdges; break;
+        case _("nNtrEdges"): file >> nNtrEdges; break;
+        case _("nChromosomes"): file >> nChromosomes; break;
+        case _("mutationRate"): file >> mutationRate; break;
+        case _("recombinationRate"): file >> recombinationRate; break;
+        case _("genomeLength"): file >> genomeLength; break;
+        case _("freqSNP"): file >> freqSNP; break;
+        case _("isFemaleHeterogamy"): file >> isFemaleHeterogamy; break;
+        case _("isGeneticArchitecture"): file >> isGenerateArchitecture; break;
+        case _("architectureFileName"): file >> architectureFileName; break;
+        case _("scaleA"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
+            break;
+        case _("scaleD"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
+            break;
+        case _("scaleI"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleI[i];
+            break;
+        case _("scaleE"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleE[i];
+            break;
+        case _("skewnesses"):
+            for (size_t i = 0u; i < 3u; ++i) file >> skewnesses[i];
+            break;
+        case _("effectSizeShape"): file >> effectSizeShape; break;
+        case _("effectSizeScale"): file >> effectSizeScale; break;
+        case _("interactionWeightShape"):
+            file >> interactionWeightShape; break;
+        case _("interactionWeightScale"):
+            file >> interactionWeightScale; break;
+        case _("dominanceVariance"): file >> dominanceVariance; break;
+        case _("tBurnIn"): file >> tBurnIn; break;
+        case _("tEndSim"): file >> tEndSim; break;
+        case _("tSave"): file >> tSave; break;
+        case _("tiny"): file >> tiny; break;
+        case _("seed"): file >> seed; break;
+        case _("record"): file >> record; break;
 
         default:
             throw std::runtime_error("Invalid parameter name"); break;
