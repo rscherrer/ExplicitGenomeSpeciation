@@ -36,7 +36,7 @@ public:
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         buffer(Buffer()),
-        record(true)
+        record(pars.getRecord())
     {}
     ~MetaPop() {}
 
