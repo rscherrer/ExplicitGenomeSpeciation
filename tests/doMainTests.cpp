@@ -79,14 +79,11 @@ void makeInvalidParamValue()
     out << "maxResourceCapacity" << '\t' << -1.0 << '\n'
         << "maxResourceGrowth" << '\t' << -1.0 << '\n'
         << "habitatSymmetry" << '\t' << -1.0 << '\n'
-        << "habitatSymmetry" << '\t' << 2.0 << '\n'
         << "ecoSelCoeff" << '\t' << -1.0 << '\n'
         << "initialPopSize" << '\t' << -100 << '\n'
-        << "dispersalRate" << '\t' << -1.0e-3 << '\n'
         << "dispersalRate" << '\t' << 10 << '\n'
         << "birthRate" << '\t' << -4.0 << '\n'
         << "survivalProb" << '\t' << -0.8 << '\n'
-        << "survivalProb" << '\t' << 2.0 << '\n'
         << "matePreferenceStrength" << '\t' << -10.0 << '\n'
         << "mateEvalutationCost" << '\t' << -0.01 << '\n'
         << "nEcoLoci" << '\t' << 1 << '\n'
@@ -94,11 +91,9 @@ void makeInvalidParamValue()
         << "nNtrLoci" << '\t' << 1 << '\n'
         << "nChromosomes" << '\t' << 0 << '\n'
         << "mutationRate" << '\t' << -1.0e-5 << '\n'
-        << "mutationRate" << '\t' << 10 << '\n'
         << "recombinationRate" << '\t' << -0.01 << '\n'
         << "genomeLength" << '\t' << -300.0 << '\n'
         << "freqSNP" << '\t' << -0.02 << '\n'
-        << "freqSNP" << '\t' << 10 << '\n'
         << "scaleA" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
         << "scaleD" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
         << "scaleI" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
@@ -110,6 +105,22 @@ void makeInvalidParamValue()
         << "interactionWeightScale" << '\t' << -1.0 << '\n'
         << "dominanceVariance" << '\t' << -1.0 << '\n'
         << "tiny" << '\t' << -1.0e-12 << '\n';
+
+    out.close();
+}
+
+void makeInvalidParamValue2()
+{
+    std::ofstream out;
+    out.open("invalid_paramvalue_test.txt");
+    if (!out.is_open())
+        std::cout << "Unable to open invalid parameter value test file.\n";
+
+    out << "dispersalRate" << '\t' << -1.0e-3 << '\n'
+        << "survivalProb" << '\t' << 2.0 << '\n'
+        << "mutationRate" << '\t' << 10 << '\n'
+        << "habitatSymmetry" << '\t' << 2.0 << '\n'
+        << "freqSNP" << '\t' << 10 << '\n';
 
     out.close();
 }
@@ -155,6 +166,8 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
 {
     std::cout << "Testing invalid parameter value...\n";
     makeInvalidParamValue();
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramvalue_test.txt" }), 1);
+    makeInvalidParamValue2();
     BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramvalue_test.txt" }), 1);
 }
 
