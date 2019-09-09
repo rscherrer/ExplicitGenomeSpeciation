@@ -19,7 +19,7 @@ int doMain(const vecStr &args)
     {
         // Return an error if there are more than one argument
         if (args.size() > 2u)
-            throw std::runtime_error("More than one argument was supplied");
+            throw std::runtime_error("More than one argument were supplied");
 
         // Create a default parameter set
         ParameterSet pars;
@@ -30,8 +30,10 @@ int doMain(const vecStr &args)
             std::string filename = args[1u];
             std::ifstream inputfile;
             inputfile.open(filename);
-            if (!inputfile.is_open())
-                throw std::runtime_error("Unable to open parameter file");
+            if (!inputfile.is_open()) {
+                std::string msg = "Unable to open parameter file ";
+                throw std::runtime_error(msg + filename);
+            }
 
             pars.readParams(inputfile);
 

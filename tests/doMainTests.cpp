@@ -22,8 +22,18 @@ void makeInvalidParamName()
     std::ofstream out;
     out.open("invalid_paramname_test.txt");
     if (!out.is_open())
-        std::cout << "Unable to open valid parameter test file.\n";
+        std::cout << "Unable to open invalid parameter name test file.\n";
     out << "nonsense" << '\t' << 3.0 << '\n';
+    out.close();
+}
+
+void makeInvalidParamValue()
+{
+    std::ofstream out;
+    out.open("invalid_paramvalue_test.txt");
+    if (!out.is_open())
+        std::cout << "Unable to open invalid parameter value test file.\n";
+    out << "ecoSelCoeff" << '\t' << -3.0 << '\n';
     out.close();
 }
 
@@ -62,6 +72,13 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
     std::cout << "Testing invalid parameter name...\n";
     makeInvalidParamName();
     BOOST_CHECK_EQUAL(doMain({ "program", "invalid_paramname_test.txt" }), 1);
+}
+
+BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
+{
+    std::cout << "Testing invalid parameter value...\n";
+    makeInvalidParamValue();
+    BOOST_CHECK_EQUAL(doMain({ "program", "invalid_paramvalue_test.txt" }), 1);
 }
 
 

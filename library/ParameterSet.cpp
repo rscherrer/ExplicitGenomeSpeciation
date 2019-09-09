@@ -117,7 +117,7 @@ void ParameterSet::readParams(std::ifstream &file)
         case _("record"): file >> record; break;
 
         default:
-            throw std::runtime_error("Invalid parameter name " + input); break;
+            throw std::runtime_error("Invalid parameter name: " + input); break;
 
         }
     }
