@@ -11,9 +11,19 @@ typedef std::vector<Network> MultiNet;
 void makeValidParamFile()
 {
     std::ofstream out;
-    out.open("valid_param_test.txt");
+    out.open("valid_paramfile_test.txt");
     if (!out.is_open())
         std::cout << "Unable to open valid parameter test file.\n";
+    out.close();
+}
+
+void makeInvalidParamName()
+{
+    std::ofstream out;
+    out.open("invalid_paramname_test.txt");
+    if (!out.is_open())
+        std::cout << "Unable to open valid parameter test file.\n";
+    out << "nonsense" << '\t' << 3.0 << '\n';
     out.close();
 }
 
@@ -43,7 +53,15 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
 BOOST_AUTO_TEST_CASE(testUseValidFilename)
 {
     std::cout << "Testing valid parameter file name...\n";
-    BOOST_CHECK_EQUAL(doMain({ "program", "valid_param_test.txt" }), 0);
+    BOOST_CHECK_EQUAL(doMain({ "program", "valid_paramfile_test.txt" }), 0);
+}
+
+
+BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
+{
+    std::cout << "Testing invalid parameter name...\n";
+    makeInvalidParamName();
+    BOOST_CHECK_EQUAL(doMain({ "program", "invalid_paramname_test.txt" }), 1);
 }
 
 

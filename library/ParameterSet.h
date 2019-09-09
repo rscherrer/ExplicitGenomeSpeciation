@@ -40,7 +40,7 @@ public:
     bool getRecord() const { return record; }
 
     /// Setters
-    void readParams(std::ifstream);
+    void readParams(std::ifstream&);
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
     void setInitialPopSize(const size_t &n) { initialPopSize = n; }

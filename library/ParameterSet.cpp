@@ -52,7 +52,7 @@ uint64_t _(const std::string& s)
   return fnv::_(14695981039346656037ull, s.data());
 }
 
-void ParameterSet::readParams(std::ifstream file)
+void ParameterSet::readParams(std::ifstream &file)
 {
 
     std::string input;

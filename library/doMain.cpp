@@ -33,7 +33,7 @@ int doMain(const vecStr &args)
             if (!inputfile.is_open())
                 throw std::runtime_error("Unable to open parameter file");
 
-            //pars.readParams(inputfile);
+            pars.readParams(inputfile);
 
             inputfile.close();
 
