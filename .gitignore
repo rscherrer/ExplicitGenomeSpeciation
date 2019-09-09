@@ -35,3 +35,13 @@
 .idea
 cmake-build-debug/
 cmake-build-release/
+*.pro.user
+*.pro.user.*
+.qmake.stash
+debug/
+release/
+Makefile
+Makefile.Debug
+Makefile.Release
+EGS_test
+EGS

@@ -1,6 +1,6 @@
 # Files
-include(program.pri)
-include(program_test.pri)
+include(EGS.pri)
+include(EGS_test.pri) # did not really understand what richel did here
 
 # C++14
 CONFIG += c++14
@@ -11,6 +11,8 @@ QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++ -
 
 # Allow debug and release mode
 CONFIG += debug_and_release
+
+INCLUDEPATH += /usr/lib/x86_64-linux-gnu
 
 # In debug mode, turn on gcov, memcache and UBSAN
 CONFIG(debug, debug|release) {

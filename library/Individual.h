@@ -5,13 +5,15 @@
 #include "GeneticArchitecture.h"
 #include <vector>
 #include <random>
+#include <stddef.h>
 
 
 typedef std::vector<bool> Haplotype;
 typedef std::vector<Haplotype > Diplotype;
+typedef std::vector<double> vecDbl;
 
 /// Function to calculate feeding rates
-std::vector<double> calcFeedingRates(const double&, const double&,
+vecDbl calcFeedingRates(const double&, const double&,
  const double& = 0.0004);
 
 class Individual {
@@ -20,35 +22,27 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const Genome&, const MultiNet&);
+    Individual(const Genome&, const MultiNet&, const double& = 0.5);
     Individual(const Genome&, const MultiNet&, const Haplotype&,
      const Haplotype&);
     ~Individual() {}
-
-    // For now individuals are made with a randomly generated genome
-    // They should inherit their genome from their parents
-    // Implement inheritance from one parent first
-    // Yeah but one strain comes from the dad and the other from the mom!
-    // What strain comes from the dad and which comes from the mom is random
-    // Yeah but the gametes have to go through meiosis first
-
-    // How to make a gamete?
-    //
 
     // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecoTrait; }
     double getMatePref() const { return matePref; }
+    double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
-    std::vector<double> getFeedingRates() const { return feedingRates; }
+    vecDbl getFeedingRates() const { return feedingRates; }
     Diplotype getSequence() const { return sequence; }
+    vecDbl getExpression() const { return genexp; }
 
     // Actions
-    void feed(const std::vector<double>&);
+    void feed(const vecDbl&);
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const std::vector<double>&, const std::vector<double>&);
-
-    //const std::vector<double>&, const std::vector<double>&,const double& = 3.0
+    Haplotype recombine(const vecDbl&, const vecDbl&,
+     const double& = 3.0);
+    void mutate(Haplotype&, const double& = 1.0e-5);
 
     // Setters
     void setEcoTrait(const double &value, const double &sel) {
@@ -64,115 +58,24 @@ private:
     friend class Population;
 
     // Makers
-    Diplotype makeSequence(const size_t&);
+    Diplotype makeSequence(const size_t&, const double& = 0.5);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
-    std::vector<double> develop(const Genome&, const MultiNet&);
+    vecDbl develop(const Genome&, const MultiNet&);
 
     // Fields
     Diplotype sequence;
-    std::vector<double> genexp;
+    vecDbl genexp;
     bool isFemale;
-    std::vector<double> traits;
+    vecDbl traits;
     double ecoTrait;
     double matePref;
     double neutral;
     double fitness;
-    std::vector<double> feedingRates;
+    vecDbl feedingRates;
 
 
 };
 
 #endif
 
-/*
-struct Locus
-{
-    size_t alleleCount;
-    double expression;
-    double locusGeneticValue;
-};
-*/
 
-// Constructors
-// Individual(const ParameterSet&, const GeneticArchitecture&);
-// Individual(const std::vector<bool>&, const ParameterSet&,
-//  const GeneticArchitecture&);
-// Individual(Individual const * const, Individual const * const,
-//  const ParameterSet&, const GeneticArchitecture&);
-
-// Getters
-// bool isFemale(const bool&) const;
-// double getFitness() const { return fitness;}
-// size_t getHabitat() const { return habitat; }
-// size_t getEcotype() const { return ecotype; }
-// std::pair<double, double> getAttackRates() const { return attackRates; }
-// std::vector<size_t> getMates() const { return mates; }
-// std::vector<bool> getGenomeSequence() const { return genomeSequence; }
-// std::vector<double> getPhenotypes() const { return phenotypes; }
-// std::vector<double> getGeneticValues() const { return geneticValues; }
-// std::vector<double> getEnvirValues() const { return envirValues; }
-// Locus getLocus(const size_t&) const;
-
-// Function to reset one's habitat
-// void resetHabitat(const size_t&) const;
-
-
-// Ecological attributes
-// mutable size_t habitat;
-// mutable size_t ecotype;
-// mutable double fitness;
-// mutable double nOffspring;
-// mutable std::vector<size_t> mates;
-// double matePreference;
-// std::pair<double, double> attackRates;
-
-// Genetic attributes
-
-// bool isHeterogamous;
-// std::vector<bool> genomeSequence;
-// std::vector<Locus> genotypes;
-// std::vector<double> phenotypes;
-// std::vector<double> geneticValues;
-// std::vector<double> envirValues;
-
-// Initialize container sizes
-// void initializeSizeGenotypeVector(const size_t&);
-// void initializeSizeIndivTraitSpecificMetrics(const size_t&);
-
-// Ecology
-// void disperse(const size_t& nHabitat) const;
-// void setFitness(const std::pair<double, double>&) const;
-// void setBurninFitness(const std::pair<double, double>&, const double&)
-//  const;
-// void setAttackRates(const double&);
-// void setMatePreference(const double&);
-// void chooseMates(const double&, std::discrete_distribution<size_t>&,
-//  const std::vector<PInd>&, const ParameterSet&) const;
-// double assessMatingProb(const double&, const double&) const;
-// bool acceptMate(Individual const * const, const ParameterSet&) const;
-// size_t sampleClutchSize(const double&) const;
-// bool survive(const double&) const;
-// void setEcotype(const std::pair<double, double>&) const;
-
-// Genetics
-// void mutate(const ParameterSet&);
-// void develop(const ParameterSet&, const GeneticArchitecture&);
-// void expressGene(const size_t&, const size_t&, const double&,
-//  const double&);
-// void setAdditiveValue(const size_t&, const double&, const double&);
-// void setEpistaticValue(const size_t&, const double&,
-//  const std::list<std::pair<size_t, double> >&);
-// void setPhenotype(const size_t&);
-// void setEnvirValue(const size_t&, const double&);
-// void setGeneticValue(const size_t&, const GeneticArchitecture&);
-// void setLocusGeneticValue(const size_t&, const GeneticArchitecture&,
-//  const ParameterSet&);
-// void setGenomeSequence(const size_t&, const double&);
-// void recombineFreely(size_t&, size_t&, const size_t&, const double&,
-//  double&) const;
-// void crossOver(size_t&, const double&, const double&, double&) const;
-// void inheritLocus(Individual const * const, const bool&, const size_t&,
-//  const size_t&);
-// void determineSex(const bool&, const bool&, const size_t&);
-// void inheritGamete(Individual const * const, const ParameterSet&,
-//  const GeneticArchitecture&);

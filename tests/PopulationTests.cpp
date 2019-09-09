@@ -6,6 +6,35 @@
 
 BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
 
+
+    BOOST_AUTO_TEST_CASE(checkNoDispersal)
+    {
+        std::cout << "Testing no emmigration...\n";
+        Population pop = Population(10u, genome, networks);
+        Crowd migrants = pop.emigrate(0.0);
+        BOOST_CHECK_EQUAL(migrants.size(), 0u);
+        BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
+    }
+
+    BOOST_AUTO_TEST_CASE(checkExodus)
+    {
+        std::cout << "Testing everybody leaves...\n";
+        Population pop = Population(10u, genome, networks);
+        Crowd migrants = pop.emigrate(1.0);
+        BOOST_CHECK_EQUAL(migrants.size(), 10u);
+        BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
+    }
+
+    BOOST_AUTO_TEST_CASE(checkBorderControl)
+    {
+        std::cout << "Testing immigration...\n";
+        Population pop = Population(10u, genome, networks);
+        Crowd migrants = pop.emigrate(1.0);
+        pop.immigrate(migrants);
+        BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
+
+    }
+
     // Check that zero survival leaves no survivors in the population
     BOOST_AUTO_TEST_CASE(checkNoSurvivors)
     {

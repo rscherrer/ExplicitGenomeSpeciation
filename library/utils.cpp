@@ -1,6 +1,8 @@
 #include "utils.h"
 #include <numeric>
 #include <algorithm>
+#include <string>
+#include <iostream>
 
 double sqr(const double &number)
 {
@@ -8,31 +10,63 @@ double sqr(const double &number)
 }
 
 
-std::vector<double> zeros(const size_t &n)
+vecDbl ones(const size_t &n)
 {
-    std::vector<double> zeros;
+    vecDbl ones;
+    for (size_t i = 0u; i < n; ++i)
+        ones.push_back(1.0);
+    return ones;
+}
+
+
+vecDbl zeros(const size_t &n)
+{
+    vecDbl zeros;
     for (size_t i = 0u; i < n; ++i)
         zeros.push_back(0.0);
     return zeros;
 }
 
 
-std::vector<size_t> uzeros(const size_t &n)
+vecUns uzeros(const size_t &n)
 {
-    std::vector<size_t> zeros;
+    vecUns zeros;
     for (size_t i = 0u; i < n; ++i)
         zeros.push_back(0u);
     return zeros;
 }
 
 
-double sum(std::vector<double> &v)
+Haplotype falses(const size_t &n)
+{
+    Haplotype falses;
+    for (size_t i = 0u; i < n; ++i)
+        falses.push_back(false);
+    return falses;
+}
+
+
+double sum(vecDbl &v)
 {
     return std::accumulate(v.begin(), v.end(), 0);
 }
 
 
-size_t argmin(std::vector<double> &v)
+size_t argmin(vecDbl &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
+}
+
+size_t sumbool(Haplotype &v) {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < v.size(); ++i)
+        sum += v[i];
+    return sum;
+}
+
+size_t sumu(vecUns &v) {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < v.size(); ++i)
+        sum += v[i];
+    return sum;
 }

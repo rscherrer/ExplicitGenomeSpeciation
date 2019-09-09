@@ -1,13 +1,16 @@
 #include "GeneticArchitecture.h"
 #include "ParameterSet.h"
 #include "Random.h"
+#include "Network.h"
+#include "Genome.h"
 #include "utils.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <cassert>
 
-typedef std::vector<Network> MultiNet;
+class Network;
+class Genome;
 
 /// Constructor of genetic architecture
 GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
@@ -20,6 +23,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     effectSizeScale(pars.getEffectSizeScale()),
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
+    dominanceVariance(pars.getDominanceVariance()),
     genome(makeGenome()),
     networks(makeNetworks())
 {
@@ -28,10 +32,10 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
 
 
 /// Function to make a vector of chromosome sizes
-std::vector<double> GeneticArchitecture::makeChromosomes()
+vecDbl GeneticArchitecture::makeChromosomes()
 {
 
-    std::vector<double> chromsizes;
+    vecDbl chromsizes;
 
     // Chromosomes all have the same size
     for (size_t i = 0u; i < nChromosomes; ++i)
@@ -39,6 +43,15 @@ std::vector<double> GeneticArchitecture::makeChromosomes()
 
     return chromsizes;
 
+}
+
+
+/// Function from architecture to call the Genome constructor
+Genome GeneticArchitecture::makeGenome()
+{
+    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
+     effectSizeShape, effectSizeScale, dominanceVariance);
+    return gen;
 }
 
 
@@ -76,10 +89,4 @@ MultiNet GeneticArchitecture::makeNetworks()
 }
 
 
-/// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome()
-{
-    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale);
-    return gen;
-}
+

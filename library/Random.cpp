@@ -47,10 +47,18 @@ double rnd::uniform(const double &max)
 
 
 /// Function to sample from a normal distribution
-double rnd::normal(const double &mean, const double &stdev)
+double rnd::normal(const double &mean, const double &sdev)
 {
-    return stdev == 0.0 ? 0.0 : std::normal_distribution<double>(mean, stdev)(
+    return sdev == 0.0 ? 0.0 : std::normal_distribution<double>(mean, sdev)(
      rng);
+}
+
+
+/// Half-normal distribution
+double rnd::hnormal(const double &sdev)
+{
+    double x = rnd::normal(0.0, sdev);
+    return x > 0.0 ? x : -1.0 * x;
 }
 
 
@@ -62,7 +70,7 @@ double rnd::exponential(const double &lambda)
 
 
 /// Discrete distribution from vector of probabilities
-size_t rnd::sample(const std::vector<double> &probs)
+size_t rnd::sample(const vecDbl &probs)
 {
     return std::discrete_distribution<size_t>(probs.begin(), probs.end())(rng);
 }

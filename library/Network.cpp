@@ -27,7 +27,7 @@ Network::Network(const size_t &character, const size_t &nVertices,
 
 
 /// Make a map of pairwise connexions
-std::vector<Edge> Network::makeMap()
+vecEdg Network::makeMap()
 {
 
     // There is a total number of vertices
@@ -40,9 +40,9 @@ std::vector<Edge> Network::makeMap()
 
     assert(nvertices > 1u);
 
-    std::vector<Edge> connexions;
+    vecEdg connexions;
     if (!nedges) return connexions;
-    std::vector<size_t> degrees = uzeros(nvertices);
+    vecUns degrees = uzeros(nvertices);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
@@ -63,7 +63,7 @@ std::vector<Edge> Network::makeMap()
             npartners = rnd::binomial(nleft, prob);
 
         // Assign attachment probabilities
-        std::vector<double> probs(vertex);
+        vecDbl probs(vertex);
         for (size_t node = 0u; node < vertex; ++node)
             probs[node] = pow(degrees[node], skewness);
 
@@ -82,7 +82,6 @@ std::vector<Edge> Network::makeMap()
             assert(degrees[vertex] < nedges);
             assert(degrees[partner] < nedges);
             --nleft;
-
         }
     }
 
@@ -91,27 +90,13 @@ std::vector<Edge> Network::makeMap()
 
     return connexions;
 
-    //assert(nvertices > 1u);
-
-    //if (n_edges == 0u) return pairs;
-
-    // Start the network
-    //std::vector<size_t> degrees(nvertices, 0u);
-    //initializeNetwork(network, n_edges, degrees);
-
-    // Grow network by linking preferentially to well-connected nodes
-    //growNetwork(network, n_edges, degrees);
-
-    // Relabel node indices after sorting with respect to degree
-    //sortNetwork(network, degrees);
-
 }
 
 
 /// Function to detect the loci underlying a trait
-std::vector<size_t> Network::makeLoci(const Genome& genome)
+vecUns Network::makeLoci(const Genome& genome)
 {
-    std::vector<size_t> underlying;
+    vecUns underlying;
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
@@ -128,10 +113,10 @@ std::vector<size_t> Network::makeLoci(const Genome& genome)
 
 
 /// Function to map the network to the genome
-std::vector<Edge> Network::makeEdges()
+vecEdg Network::makeEdges()
 {
 
-    std::vector<Edge> mapped;
+    vecEdg mapped;
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
@@ -149,12 +134,13 @@ std::vector<Edge> Network::makeEdges()
 
 
 /// Sample interaction weights
-std::vector<double> Network::makeWeights(const double &shape,
+vecDbl Network::makeWeights(const double &shape,
  const double &scale)
 {
-    std::vector<double> intweights;
+    if (shape == 0.0 || scale == 0.0) return zeros(nedges);
 
-    double sqrtsumsq = 0.0; // square-rooted sum of squares
+    vecDbl intweights;
+    double sss = 0.0; // square rooted sum of squares
 
     // For each edge in the network...
     for (size_t edge = 0u; edge < nedges; ++edge) {
@@ -162,65 +148,15 @@ std::vector<double> Network::makeWeights(const double &shape,
         // Two-sided Gamma distribution
         const double weight = rnd::bigamma(shape, scale);
         intweights.push_back(weight);
-        sqrtsumsq += sqr(weight);
+        sss += sqr(weight);
     }
 
     // Normalize
-    sqrtsumsq = sqrtsumsq > 0.0 ? sqrt(sqrtsumsq) : 1.0;
+    sss = sss > 0.0 ? sqrt(sss) : 1.0;
     for (size_t edge = 0u; edge < nedges; ++edge)
-        intweights[edge] /= sqrtsumsq;
+        intweights[edge] /= sss;
 
     return intweights;
 }
 
 
-//-------------
-
-/// Function to compare edges in a network with respect to their degrees
-bool edgeCompare(const Edge &x, const Edge &y) noexcept
-{
-    if (x.first == y.first) {
-        return (x.second < y.second);
-    }
-    else {
-        return (x.first < y.first);
-    }
-}
-
-/// Function to sort the edges in the network by degree
-void Network::sortNetwork(std::vector<Edge> &network,
- const std::vector<size_t> &degrees) const noexcept
-{
-
-    // Compute the ranks of all vertices with respect to their degrees
-    std::vector<size_t> ranks(nvertices, 0u);
-    for (size_t vertex = 0u; vertex < nvertices - 1u; ++vertex) {
-        for (size_t othervertex = vertex + 1u; othervertex < nvertices;
-             ++othervertex)
-        {
-            if (degrees[othervertex] > degrees[vertex])
-            {
-                ++ranks[vertex];
-            }
-            else
-            {
-                ++ranks[othervertex];
-            }
-        }
-    }
-
-    // For each edge, swap partners to make sure the first partner always have
-    // the lower rank
-    for (Edge &edge : network) {
-        edge.first = ranks[edge.first];
-        edge.second = ranks[edge.second];
-        if (edge.first > edge.second)
-        {
-            std::swap(edge.first, edge.second);
-        }
-    }
-
-    // Sort the edges
-    std::sort(network.begin(), network.end(), edgeCompare);
-
-}

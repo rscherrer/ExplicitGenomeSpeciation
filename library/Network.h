@@ -1,7 +1,14 @@
 #ifndef EXPLICITGENOMESPECIATION_NETWORK_H
 #define EXPLICITGENOMESPECIATION_NETWORK_H
 
+#include <vector>
+#include <stddef.h>
+
 typedef std::pair<size_t, size_t> Edge;
+typedef std::vector<Edge> vecEdg; // vector of pairs
+typedef std::vector<size_t> vecUns;
+typedef std::vector<double> vecDbl;
+class Genome;
 
 /// A container for a gene regulatory network
 struct Network
@@ -15,20 +22,16 @@ struct Network
     size_t nedges;
     double skewness;
 
-    std::vector<Edge> map;
-    std::vector<size_t> loci;
-    std::vector<Edge> edges;
-    std::vector<double> weights;
+    vecEdg map;
+    vecUns loci;
+    vecEdg edges;
+    vecDbl weights;
 
     // Makers
-    std::vector<Edge> makeMap();
-    std::vector<size_t> makeLoci(const Genome&);
-    std::vector<Edge> makeEdges();
-    std::vector<double> makeWeights(const double&, const double&);
-
-    // Builders
-    void sortNetwork(std::vector<Edge>&, const std::vector<size_t>&) const
-     noexcept;
+    vecEdg makeMap();
+    vecUns makeLoci(const Genome&);
+    vecEdg makeEdges();
+    vecDbl makeWeights(const double&, const double&);
 
 };
 

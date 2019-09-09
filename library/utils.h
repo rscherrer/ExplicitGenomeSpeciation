@@ -1,13 +1,26 @@
 #include <vector>
+#include <cstddef>
+#include <string>
+#include <stddef.h>
 
-// Add utils here
+typedef std::vector<double> vecDbl;
+typedef std::vector<size_t> vecUns;
+typedef std::vector<bool> Haplotype;
 
 double sqr(const double&);
 
-std::vector<double> zeros(const size_t&);
+vecDbl ones(const size_t &n);
 
-std::vector<size_t> uzeros(const size_t&); // unsigned zeros
+vecDbl zeros(const size_t&);
 
-double sum(std::vector<double>&);
+vecUns uzeros(const size_t&); // unsigned zeros
 
-size_t argmin(std::vector<double>&);
+Haplotype falses(const size_t&);
+
+double sum(vecDbl&);
+
+size_t argmin(vecDbl&);
+
+size_t sumbool(Haplotype&);
+
+size_t sumu(vecUns&);

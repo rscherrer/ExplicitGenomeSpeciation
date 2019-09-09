@@ -1,21 +1,21 @@
 #include "GeneticArchitecture.h"
+#include "Genome.h"
 #include "utils.h"
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 /// Genome constructor
 Genome::Genome(const std::vector<size_t> &nLociPerTrait,
  const size_t &nLoci, const size_t &nchrom, const double &shape,
-  const double &scale) :
+  const double &scale, const double &domvar) :
     nloci(nLoci),
     chromosomes(makeChromosomes(nchrom)),
     traits(makeEncodedTraits(nLociPerTrait)),
-    locations(std::vector<double> { }),
-    effects(std::vector<double> { }),
-    dominances(std::vector<double> { })
+    locations(makeLocations()),
+    effects(makeEffects(shape, scale)),
+    dominances(makeDominances(domvar))
 {
-
-    setLocationsEffectSizesAndDominance(nLoci, shape, scale);
     assert(chromosomes.size() == nchrom);
     assert(traits.size() == nloci);
     assert(effects.size() == nloci);
@@ -69,66 +69,71 @@ std::vector<size_t> Genome::makeEncodedTraits(const std::vector<size_t>
 
 }
 
-/// Function to sample locations, effect sizes and dominance across the genome
-void Genome::setLocationsEffectSizesAndDominance(const size_t &nLoci,
- const double &shape, const double &scale)
+
+vecDbl Genome::makeLocations()
+{
+    vecDbl positions;
+
+    for (size_t locus = 0u; locus < nloci; ++locus) {
+        const double pos = rnd::uniform(1.0);
+        positions.push_back(pos);
+        assert(pos >= 0.0);
+        assert(pos <= 1.0);
+    }
+
+    std::sort(positions.begin(), positions.end());
+
+    for (size_t locus = 1u; locus < nloci; ++locus)
+        assert(positions[locus] > positions[locus - 1u]);
+
+    return positions;
+}
+
+
+vecDbl Genome::makeEffects(const double &shape, const double &scale)
 {
 
-    // Prepare squared roots of sums of squared effect sizes and dominance
-    // coefficients
-    std::vector<double> sqrtsumsqEffectSizes {0.0, 0.0, 0.0};
-    std::vector<double> sqrtsumsqDominanceCoeffs {0.0, 0.0, 0.0};
+    if (shape == 0.0 || scale == 0.0) return zeros(nloci);
 
-    // Sample locations, effect sizes and dominance coefficients
-    for (size_t locus = 0u; locus < nLoci; ++locus)
-    {
+    vecDbl effectsizes;
+    vecDbl sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
 
-        // Locations are sampled uniformly
-        locations.push_back(rnd::uniform(1.0));
+    for (size_t locus = 0u; locus < nloci; ++locus) {
 
-        assert(locations.back() > 0.0);
-        assert(locations.back() < 1.0);
-
-        // Effect sizes are sampled from a two-sided Gamma distribution
-        double effectsize = std::gamma_distribution<double>(shape, scale)(
-         rnd::rng);
-        effectsize = rnd::bernoulli(0.5) ? effectsize * -1.0 : effectsize;
-        effects.push_back(effectsize);
-
-        // Squared effect sizes are accumulated for normalizing
-        sqrtsumsqEffectSizes[traits[locus]] += sqr(effectsize);
-
-        // Dominance coefficients are sampled from a one-sided normal
-        // distribution
-        const double dominance = fabs(rnd::normal(0.0, 1.0));
-        assert(dominance > 0.0);
-        dominances.push_back(dominance);
-
-        // Squared dominance coefficients are accumulated for normalizing
-        sqrtsumsqDominanceCoeffs[traits[locus]] += sqr(dominance);
-
+        const double effect = rnd::bigamma(shape, scale);
+        effectsizes.push_back(effect);
+        sss[traits[locus]] += sqr(effect);
     }
 
-    // Sort gene locations by increasing order
-    std::sort(locations.begin(), locations.end());
-
-    for (size_t locus = 1u; locus < nLoci; ++locus)
-        assert(locations[locus] > locations[locus - 1u]);
-
-    // Take the square roots of the sums of squares for normalization
     for (size_t trait = 0u; trait < 3u; ++trait)
-    {
-        sqrtsumsqEffectSizes[trait] = sqrt(sqrtsumsqEffectSizes[trait]);
-        sqrtsumsqDominanceCoeffs[trait] = sqrt(sqrtsumsqDominanceCoeffs[trait]);
+        sss[trait] = sqrt(sss[trait]);
 
-        assert(sqrtsumsqEffectSizes[trait] > 0.0);
-        assert(sqrtsumsqDominanceCoeffs[trait] > 0.0);
+    for (size_t locus = 0u; locus < nloci; ++locus)
+        effectsizes[locus] /= sss[traits[locus]];
+
+    return effectsizes;
+}
+
+
+vecDbl Genome::makeDominances(const double &var)
+{
+
+    if (var == 0.0) return zeros(nloci);
+
+    vecDbl coefficients;
+    vecDbl sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
+
+    for (size_t locus = 0u; locus < nloci; ++locus) {
+        const double dom = rnd::hnormal(var);
+        coefficients.push_back(dom);
+        sss[traits[locus]] += sqr(dom);
     }
 
-    // Normalize effect sizes and dominance coefficients across the genome
-    for (size_t locus = 0u; locus < nLoci; ++locus)
-    {
-        effects[locus] /= sqrtsumsqEffectSizes[traits[locus]];
-        dominances[locus] /= sqrtsumsqDominanceCoeffs[traits[locus]];
-    }
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        sss[trait] = sqrt(sss[trait]);
+
+    for (size_t locus = 0u; locus < nloci; ++locus)
+        coefficients[locus] /= sss[traits[locus]];
+
+    return coefficients;
 }
