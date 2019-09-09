@@ -8,6 +8,15 @@
 
 typedef std::vector<Network> MultiNet;
 
+void makeValidParamFile()
+{
+    std::ofstream out;
+    out.open("valid_param_test.txt");
+    if (!out.is_open())
+        std::cout << "Unable to open valid parameter test file.\n";
+    out.close();
+}
+
 // Check that the program can run without arguments
 BOOST_AUTO_TEST_CASE(testUseNoArgs)
 {
@@ -26,7 +35,15 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
 {
     std::cout << "Testing invalid parameter file name...\n";
+    makeValidParamFile();
     BOOST_CHECK_EQUAL(doMain({ "program", "nonsense.txt" }), 1);
+}
+
+
+BOOST_AUTO_TEST_CASE(testUseValidFilename)
+{
+    std::cout << "Testing valid parameter file name...\n";
+    BOOST_CHECK_EQUAL(doMain({ "program", "valid_param_test.txt" }), 0);
 }
 
 
