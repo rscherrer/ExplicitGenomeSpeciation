@@ -23,6 +23,12 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
     BOOST_CHECK_EQUAL(doMain({ "program", "arg1", "arg2" }), 1);
 }
 
+BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
+{
+    std::cout << "Testing invalid parameter file name...\n";
+    BOOST_CHECK_EQUAL(doMain({ "program", "nonsense.txt" }), 1);
+}
+
 
 // Simulation should reach tmax in the absence of mortality
 BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
