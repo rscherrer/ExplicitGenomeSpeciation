@@ -3,6 +3,7 @@
 #include <chrono>
 #include <sstream>
 #include <cassert>
+#include <cstdint>
 
 void ParameterSet::capEdges()
 {
@@ -65,6 +66,88 @@ size_t ParameterSet::makeDefaultSeed()
      time_since_epoch().count());
 }
 
+namespace fnv
+{
+  constexpr uint64_t _(uint64_t h, const char* s)
+  {
+    return (*s == 0) ? h :
+      _((h * 1099511628211ull) ^ static_cast<uint64_t>(*s), s+1);
+  }
+}
+
+constexpr uint64_t _(const char* s)
+{
+  return fnv::_(14695981039346656037ull, s);
+}
+
+uint64_t _(const std::string& s)
+{
+  return fnv::_(14695981039346656037ull, s.data());
+}
+
+void ParameterSet::readParams(std::ifstream file)
+{
+
+    // Here goes several rounds of input reading
+    // Evaluate input
+    // Update the corresponding parameter with the next value
+    // Use while input >> string to keep going through the parameters
+
+    std::string input;
+    while (file >> input) {
+
+        switch (_(input)) {
+
+        case _("maxResourceCapacity"): break;
+        case _("maxResourceGrowth"): break;
+        case _("habitatSymmetry"): break;
+        case _("ecoSelCoeff"): break;
+        case _("initialPopSize"): break;
+        case _("dispersalRate"): break;
+        case _("birthRate"): break;
+        case _("survivalProb"): break;
+        case _("matePreferenceStrength"): break;
+        case _("mateEvalutationCost"): break;
+        case _("nEcoLoci"): break;
+        case _("nMatLoci"): break;
+        case _("nNtrLoci"): break;
+        case _("nEcoEdges"): break;
+        case _("nMatEdges"): break;
+        case _("nNtrEdges"): break;
+        case _("nChromosomes"): break;
+        case _("mutationRate"): break;
+        case _("recombinationRate"): break;
+        case _("genomeLength"): break;
+        case _("freqSNP"): break;
+        case _("isFemaleHeterogamy"): break;
+        case _("isGeneticArchitecture"): break;
+        case _("architectureFileName"): break;
+        case _("scaleA"): break;
+        case _("scaleD"): break;
+        case _("scaleI"): break;
+        case _("scaleE"): break;
+        case _("skewnesses"): break;
+        case _("effectSizeShape"): break;
+        case _("effectSizeScale"): break;
+        case _("interactionWeightShape"): break;
+        case _("interactionWeightScale"): break;
+        case _("dominanceVariance"): break;
+        case _("tBurnIn"): break;
+        case _("tEndSim"): break;
+        case _("tSave"): break;
+        case _("tiny"): break;
+        case _("seed"): break;
+        case _("record"): break;
+
+        default:
+            throw std::runtime_error("Invalid parameter name"); break;
+
+
+        }
+
+    }
+
+}
 
 
 

@@ -24,6 +24,21 @@ int doMain(const vecStr &args)
         // Create a default parameter set
         ParameterSet pars;
 
+        // Now is the time to update parameters if some are provided
+        if (args.size() == 2u) {
+
+            std::string filename = args[1u];
+            std::ifstream inputfile;
+            inputfile.open(filename);
+            if (!inputfile.is_open())
+                throw std::runtime_error("Unable to open parameter file");
+
+            //pars.readParams(inputfile);
+
+            inputfile.close();
+
+        }
+
         // Create and seed a random number generator
         rnd::rng.seed(pars.getSeed());
 

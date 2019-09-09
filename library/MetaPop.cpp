@@ -8,7 +8,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     size_t t = 0u;
 
     std::ofstream output;
-    output.open("record.dat");
+    output.open("record.txt", std::ios::binary);
     if (!output.is_open())
         throw std::runtime_error("Unable to open file record.dat\n");
 
@@ -43,6 +43,26 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     }
 
     output.close();
+
+    /* // Turn the following into a test
+    std::ifstream input;
+    int size = 0;
+    char elt0[25];
+    char elt1[25];
+    char elt2[25];
+    input.open("record.txt", std::ios::binary);
+    input.seekg(0, std::ios::end);
+    size = (int) input.tellg();
+    input.seekg(0, std::ios::beg);
+    while(input.tellg() < size)
+    {
+        input.read((char *) elt0, sizeof(elt0));
+        input.read((char *) elt1, sizeof(elt1));
+        input.read((char *) elt2, sizeof(elt2));
+    }
+    input.close();
+    std::cout << elt0 << '\t' << elt1 << '\t' << elt2 << '\n';
+    */
 
     return t;
 }

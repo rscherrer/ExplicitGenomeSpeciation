@@ -40,6 +40,7 @@ public:
     bool getRecord() const { return record; }
 
     /// Setters
+    void readParams(std::ifstream);
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
     void setInitialPopSize(const size_t &n) { initialPopSize = n; }
@@ -80,16 +81,16 @@ public:
 private:
 
     // Ecological parameters
+    double  maxResourceCapacity     = 100.0;
+    double  maxResourceGrowth       = 1.0;
+    double  habitatSymmetry         = 1.0;
+    double  ecoSelCoeff             = 1.0;
     size_t  initialPopSize          = 100u;
     double  dispersalRate           = 1.0e-3;
     double  birthRate               = 4.0;
-    double  habitatSymmetry         = 1.0;
     double  survivalProb            = 0.8;
-    double  ecoSelCoeff             = 1.0;
     double  matePreferenceStrength  = 10.0;
     double  mateEvaluationCost      = 0.01;
-    double  maxResourceCapacity     = 100.0;
-    double  maxResourceGrowth       = 1.0;
 
     // Genetic parameters
     size_t nEcoLoci = 400u;
@@ -100,25 +101,25 @@ private:
     size_t nNtrEdges = 0u;
     size_t nChromosomes = 3u;
 
+    // These guys are problematic...
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
     vecUns nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
 
-    double  freqSNP                 = 0.02;
     double  mutationRate            = 1.0e-5;
-    double  genomeLength            = 300.0;
-    bool    isFemaleHeterogamy      = false;
     double  recombinationRate       = 0.01;
+    double  genomeLength            = 300.0;
+    double  freqSNP                 = 0.02;
+    bool    isFemaleHeterogamy      = false;
 
     // Genotype-phenotype map
     bool isGenerateArchitecture = true;
     std::string architectureFileName = "";
-    vecDbl skewnesses = { 1.0, 1.0, 1.0 };
     vecDbl scaleA = {1.0, 1.0, 1.0};
     vecDbl scaleD = {0.0, 0.0, 0.0};
     vecDbl scaleI = {0.0, 0.0, 0.0};
     vecDbl scaleE = {0.0, 0.0, 0.0};
-
+    vecDbl skewnesses = { 1.0, 1.0, 1.0 };
     double effectSizeShape = 2.0;
     double effectSizeScale = 1.0;
     double interactionWeightShape = 5.0;
@@ -132,6 +133,8 @@ private:
     double tiny                  = 1.0e-12;
     size_t seed;
     bool record = true;
+
+
 
 };
 

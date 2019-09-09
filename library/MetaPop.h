@@ -26,6 +26,7 @@ class MetaPop
 {
 
 public:
+
     MetaPop(const vecPop &populations, const ParameterSet &pars) :
         pops(populations),
         dispersal(pars.getDispersalRate()),
