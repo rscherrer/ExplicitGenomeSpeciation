@@ -10,7 +10,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     std::ofstream output;
 
     if (record) {
-        output.open("record.txt", std::ios::binary);
+        output.open("record.dat", std::ios::binary);
         if (!output.is_open())
             throw std::runtime_error("Unable to open file record.dat\n");
     }
