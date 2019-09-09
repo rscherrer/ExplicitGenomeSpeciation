@@ -141,70 +141,74 @@ void ParameterSet::checkParams()
 
     if (dispersalRate < 0.0)
         msg = "Dispersal rate should be positive";
-    else if(birthRate < 0.0)
+    if (dispersalRate > 1.0)
+        msg = "Dispersal rate should be at most one";
+    if (birthRate < 0.0)
         msg = "Birth rate should be positive";
-    else if(habitatSymmetry < 0.0)
+    if (habitatSymmetry < 0.0)
         msg = "Habitat symmetry should be positive";
-    else if(habitatSymmetry > 1.0)
+    if (habitatSymmetry > 1.0)
         msg = "Habitat symmetry should be at most one";
-    else if(survivalProb < 0.0)
+    if (survivalProb < 0.0)
         msg = "Survival probability should be positive";
-    else if(survivalProb > 1.0)
+    if (survivalProb > 1.0)
         msg = "Survival probability should be at most one";
-    else if(ecoSelCoeff < 0.0)
+    if (ecoSelCoeff < 0.0)
         msg = "Selection coefficient should be positive";
-    else if(matePreferenceStrength < 0.0)
+    if (matePreferenceStrength < 0.0)
         msg = "Mate preference strength should be positive";
-    else if(mateEvaluationCost < 0.0)
-        msg = "Mate evaluation cost shoudl be positive";
-    else if(maxResourceCapacity < 0.0)
+    if (mateEvaluationCost < 0.0)
+        msg = "Mate evaluation cost should be positive";
+    if (maxResourceCapacity < 0.0)
         msg = "Maximum resource capacity should be positive";
-    else if(maxResourceGrowth < 0.0)
+    if (maxResourceGrowth < 0.0)
         msg = "Maximum resource growth should be positive";
-    else if(nEcoLoci <= 1u)
+    if (nEcoLoci <= 1u)
         msg = "Numer of ecological loci should be at least two";
-    else if(nMatLoci <= 1u)
+    if (nMatLoci <= 1u)
         msg = "Number of mating loci should be at least two";
-    else if(nNtrLoci <= 1u)
+    if (nNtrLoci <= 1u)
         msg = "Number of neutral loci should be at least two";
-    else if(nChromosomes == 0u)
+    if (nChromosomes == 0u)
         msg = "Number of chromosomes should be at least one";
-    else if(nLoci <= 5u)
+    if (nLoci <= 5u)
         msg = "Total number of loci should be at least six";
-    else if(freqSNP < 0.0)
+    if (freqSNP < 0.0)
         msg = "Frequency of SNPs should be positive";
-    else if(freqSNP > 1.0)
+    if (freqSNP > 1.0)
         msg = "Frequency of SNPs should be at most one";
-    else if(mutationRate < 0.0)
+    if (mutationRate < 0.0)
         msg = "Mutation rate should be positive";
-    else if(mutationRate > 1.0)
+    if (mutationRate > 1.0)
         msg = "Mutation rate should be at most one";
-    else if(genomeLength < 0.0)
+    if (genomeLength < 0.0)
         msg = "Genome length should be positive";
-    else if(recombinationRate < 0.0)
+    if (recombinationRate < 0.0)
         msg = "Recombination rate should be positive";
-    else for (size_t i = 0u; i < 3u; ++i) {
-        if(skewnesses[i] < 0.0)
+    for (size_t i = 0u; i < 3u; ++i) {
+        if (skewnesses[i] < 0.0)
             msg = "Skewness should be positive";
-        else if(scaleA[i] < 0.0)
+        if (scaleA[i] < 0.0)
             msg = "Additive scaling should be positive";
-        else if(scaleD[i] < 0.0)
+        if (scaleD[i] < 0.0)
             msg = "Dominance scaling should be positive";
-        else if(scaleI[i] < 0.0)
+        if (scaleI[i] < 0.0)
             msg = "Interaction scaling should be positive";
-        else if(scaleE[i] < 0.0)
+        if (scaleE[i] < 0.0)
             msg = "Environmental scaling should be positive";
     }
-    if(effectSizeShape < 0.0)
+    if (effectSizeShape < 0.0)
         msg = "Effect size shape should be positive";
-    else if(effectSizeScale < 0.0)
+    if (effectSizeScale < 0.0)
         msg = "Effect size scale should be positive";
-    else if(interactionWeightShape < 0.0)
+    if (interactionWeightShape < 0.0)
         msg = "Interaction weight shape should be positive";
-    else if(interactionWeightScale < 0.0)
+    if (interactionWeightScale < 0.0)
         msg = "Interaction weight scale should be positive";
-    else if(dominanceVariance < 0.0)
+    if (dominanceVariance < 0.0)
         msg = "Dominance variance should be positive";
+    if (tiny < 0.0)
+        msg = "Tiny should be positive";
 
     if(msg != "No error detected")
         throw std::runtime_error(msg);

@@ -75,7 +75,42 @@ void makeInvalidParamValue()
     out.open("invalid_paramvalue_test.txt");
     if (!out.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
-    out << "ecoSelCoeff" << '\t' << -3.0 << '\n';
+
+    out << "maxResourceCapacity" << '\t' << -1.0 << '\n'
+        << "maxResourceGrowth" << '\t' << -1.0 << '\n'
+        << "habitatSymmetry" << '\t' << -1.0 << '\n'
+        << "habitatSymmetry" << '\t' << 2.0 << '\n'
+        << "ecoSelCoeff" << '\t' << -1.0 << '\n'
+        << "initialPopSize" << '\t' << -100 << '\n'
+        << "dispersalRate" << '\t' << -1.0e-3 << '\n'
+        << "dispersalRate" << '\t' << 10 << '\n'
+        << "birthRate" << '\t' << -4.0 << '\n'
+        << "survivalProb" << '\t' << -0.8 << '\n'
+        << "survivalProb" << '\t' << 2.0 << '\n'
+        << "matePreferenceStrength" << '\t' << -10.0 << '\n'
+        << "mateEvalutationCost" << '\t' << -0.01 << '\n'
+        << "nEcoLoci" << '\t' << 1 << '\n'
+        << "nMatLoci" << '\t' << 1 << '\n'
+        << "nNtrLoci" << '\t' << 1 << '\n'
+        << "nChromosomes" << '\t' << 0 << '\n'
+        << "mutationRate" << '\t' << -1.0e-5 << '\n'
+        << "mutationRate" << '\t' << 10 << '\n'
+        << "recombinationRate" << '\t' << -0.01 << '\n'
+        << "genomeLength" << '\t' << -300.0 << '\n'
+        << "freqSNP" << '\t' << -0.02 << '\n'
+        << "freqSNP" << '\t' << 10 << '\n'
+        << "scaleA" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+        << "scaleD" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+        << "scaleI" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+        << "scaleE" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+        << "skewnesses" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+        << "effectSizeShape" << '\t' << -2.0 << '\n'
+        << "effectSizeScale" << '\t' << -1.0 << '\n'
+        << "interactionWeightShape" << '\t' << -5.0 << '\n'
+        << "interactionWeightScale" << '\t' << -1.0 << '\n'
+        << "dominanceVariance" << '\t' << -1.0 << '\n'
+        << "tiny" << '\t' << -1.0e-12 << '\n';
+
     out.close();
 }
 
