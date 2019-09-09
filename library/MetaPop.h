@@ -35,7 +35,8 @@ public:
         mating(pars.getMatePreferenceStrength()),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
-        buffer(Buffer())
+        buffer(Buffer()),
+        record(true)
     {}
     ~MetaPop() {}
 
@@ -54,6 +55,7 @@ private:
     size_t tmax;
     size_t tsave;
     Buffer buffer;
+    bool record;
 
 };
 
