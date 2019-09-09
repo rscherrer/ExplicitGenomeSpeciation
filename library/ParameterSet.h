@@ -77,6 +77,9 @@ public:
     /// Makers
     size_t makeDefaultSeed();
 
+    /// Checkers
+    void checkParams();
+
 
 private:
 
@@ -101,7 +104,6 @@ private:
     size_t nNtrEdges = 0u;
     size_t nChromosomes = 3u;
 
-    // These guys are problematic...
     size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
     vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
     vecUns nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };

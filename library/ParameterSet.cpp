@@ -22,40 +22,7 @@ ParameterSet::ParameterSet() : seed(makeDefaultSeed())
 {
 
     capEdges();
-
-    assert(dispersalRate >= 0.0);
-    assert(birthRate >= 0.0);
-    assert(habitatSymmetry >= 0.0);
-    assert(habitatSymmetry <= 1.0);
-    assert(survivalProb >= 0.0);
-    assert(survivalProb <= 1.0);
-    assert(ecoSelCoeff >= 0.0);
-    assert(matePreferenceStrength >= 0.0);
-    assert(mateEvaluationCost >= 0.0);
-    assert(maxResourceCapacity >= 0.0);
-    assert(maxResourceGrowth >= 0.0);
-    assert(nEcoLoci > 1u);
-    assert(nMatLoci > 1u);
-    assert(nNtrLoci > 1u);
-    assert(nChromosomes > 0u);
-    assert(nLoci > 5u);
-    assert(freqSNP >= 0.0);
-    assert(freqSNP <= 1.0);
-    assert(mutationRate >= 0.0);
-    assert(genomeLength >= 0.0);
-    assert(recombinationRate >= 0.0);
-    for (size_t i = 0u; i < 3u; ++i) {
-        assert(skewnesses[i] >= 0.0);
-        assert(scaleA[i] >= 0.0);
-        assert(scaleD[i] >= 0.0);
-        assert(scaleI[i] >= 0.0);
-        assert(scaleE[i] >= 0.0);
-    }
-    assert(effectSizeShape >= 0.0);
-    assert(effectSizeScale >= 0.0);
-    assert(interactionWeightShape >= 0.0);
-    assert(interactionWeightScale >= 0.0);
-    assert(dominanceVariance >= 0.0);
+    checkParams();
 
 }
 
@@ -87,11 +54,6 @@ uint64_t _(const std::string& s)
 
 void ParameterSet::readParams(std::ifstream file)
 {
-
-    // Here goes several rounds of input reading
-    // Evaluate input
-    // Update the corresponding parameter with the next value
-    // Use while file >> string to keep going through the parameters
 
     std::string input;
     while (file >> input) {
@@ -126,7 +88,9 @@ void ParameterSet::readParams(std::ifstream file)
         case _("scaleA"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
             break;
-        case _("scaleD"):
+        case
+
+        _("scaleD"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
             break;
         case _("scaleI"):
@@ -153,15 +117,99 @@ void ParameterSet::readParams(std::ifstream file)
         case _("record"): file >> record; break;
 
         default:
-            throw std::runtime_error("Invalid parameter name"); break;
-
+            throw std::runtime_error("Invalid parameter name " + input); break;
 
         }
-
     }
+
+    // Now update interactive parameters
+    nLoci = nEcoLoci + nMatLoci + nNtrLoci;
+    nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
+    nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
+
+    capEdges();
+
+    checkParams();
+
+    std::cout << "Parameters were read in succesfully.\n";
 
 }
 
+void ParameterSet::checkParams()
+{
+    std::string msg = "No error detected";
+
+    if (dispersalRate < 0.0)
+        msg = "Dispersal rate should be positive";
+    else if(birthRate < 0.0)
+        msg = "Birth rate should be positive";
+    else if(habitatSymmetry < 0.0)
+        msg = "Habitat symmetry should be positive";
+    else if(habitatSymmetry > 1.0)
+        msg = "Habitat symmetry should be at most one";
+    else if(survivalProb < 0.0)
+        msg = "Survival probability should be positive";
+    else if(survivalProb > 1.0)
+        msg = "Survival probability should be at most one";
+    else if(ecoSelCoeff < 0.0)
+        msg = "Selection coefficient should be positive";
+    else if(matePreferenceStrength < 0.0)
+        msg = "Mate preference strength should be positive";
+    else if(mateEvaluationCost < 0.0)
+        msg = "Mate evaluation cost shoudl be positive";
+    else if(maxResourceCapacity < 0.0)
+        msg = "Maximum resource capacity should be positive";
+    else if(maxResourceGrowth < 0.0)
+        msg = "Maximum resource growth should be positive";
+    else if(nEcoLoci <= 1u)
+        msg = "Numer of ecological loci should be at least two";
+    else if(nMatLoci <= 1u)
+        msg = "Number of mating loci should be at least two";
+    else if(nNtrLoci <= 1u)
+        msg = "Number of neutral loci should be at least two";
+    else if(nChromosomes == 0u)
+        msg = "Number of chromosomes should be at least one";
+    else if(nLoci <= 5u)
+        msg = "Total number of loci should be at least six";
+    else if(freqSNP < 0.0)
+        msg = "Frequency of SNPs should be positive";
+    else if(freqSNP > 1.0)
+        msg = "Frequency of SNPs should be at most one";
+    else if(mutationRate < 0.0)
+        msg = "Mutation rate should be positive";
+    else if(mutationRate > 1.0)
+        msg = "Mutation rate should be at most one";
+    else if(genomeLength < 0.0)
+        msg = "Genome length should be positive";
+    else if(recombinationRate < 0.0)
+        msg = "Recombination rate should be positive";
+    else for (size_t i = 0u; i < 3u; ++i) {
+        if(skewnesses[i] < 0.0)
+            msg = "Skewness should be positive";
+        else if(scaleA[i] < 0.0)
+            msg = "Additive scaling should be positive";
+        else if(scaleD[i] < 0.0)
+            msg = "Dominance scaling should be positive";
+        else if(scaleI[i] < 0.0)
+            msg = "Interaction scaling should be positive";
+        else if(scaleE[i] < 0.0)
+            msg = "Environmental scaling should be positive";
+    }
+    if(effectSizeShape < 0.0)
+        msg = "Effect size shape should be positive";
+    else if(effectSizeScale < 0.0)
+        msg = "Effect size scale should be positive";
+    else if(interactionWeightShape < 0.0)
+        msg = "Interaction weight shape should be positive";
+    else if(interactionWeightScale < 0.0)
+        msg = "Interaction weight scale should be positive";
+    else if(dominanceVariance < 0.0)
+        msg = "Dominance variance should be positive";
+
+    if(msg != "No error detected")
+        throw std::runtime_error(msg);
+
+}
 
 
 
