@@ -118,7 +118,7 @@ void makeInvalidParamValue()
 BOOST_AUTO_TEST_CASE(testUseNoArgs)
 {
     std::cout << "Testing that the main runs without arguments...\n";
-    BOOST_CHECK_EQUAL(doMain({ "program" }), 0);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test" }), 0);
 }
 
 
@@ -126,21 +126,21 @@ BOOST_AUTO_TEST_CASE(testUseNoArgs)
 BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 {
     std::cout << "Testing providing too many arguments to the main...\n";
-    BOOST_CHECK_EQUAL(doMain({ "program", "arg1", "arg2" }), 1);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "arg1", "arg2" }), 1);
 }
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
 {
     std::cout << "Testing invalid parameter file name...\n";
     makeValidParamFile();
-    BOOST_CHECK_EQUAL(doMain({ "program", "nonsense.txt" }), 1);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "nonsense.txt" }), 1);
 }
 
 
 BOOST_AUTO_TEST_CASE(testUseValidFilename)
 {
     std::cout << "Testing valid parameter file name...\n";
-    BOOST_CHECK_EQUAL(doMain({ "program", "valid_paramfile_test.txt" }), 0);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "valid_paramfile_test.txt" }), 0);
 }
 
 
@@ -148,14 +148,14 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
 {
     std::cout << "Testing invalid parameter name...\n";
     makeInvalidParamName();
-    BOOST_CHECK_EQUAL(doMain({ "program", "invalid_paramname_test.txt" }), 1);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramname_test.txt" }), 1);
 }
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
 {
     std::cout << "Testing invalid parameter value...\n";
     makeInvalidParamValue();
-    BOOST_CHECK_EQUAL(doMain({ "program", "invalid_paramvalue_test.txt" }), 1);
+    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramvalue_test.txt" }), 1);
 }
 
 

@@ -36,7 +36,6 @@ int doMain(const vecStr &args)
             }
 
             pars.readParams(inputfile);
-
             inputfile.close();
 
         }

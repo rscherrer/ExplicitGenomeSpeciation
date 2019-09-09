@@ -88,9 +88,7 @@ void ParameterSet::readParams(std::ifstream &file)
         case _("scaleA"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
             break;
-        case
-
-        _("scaleD"):
+        case _("scaleD"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
             break;
         case _("scaleI"):
