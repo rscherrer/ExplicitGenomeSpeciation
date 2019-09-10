@@ -5,12 +5,22 @@
 
 typedef std::vector<Population> vecPop;
 
-struct StreamBag
+class StreamBag
 {
+
+    friend class MetaPop;
+    friend class Buffer;
+
+private:
 
     std::ofstream outTime = std::ofstream();
     std::ofstream outPopSize0 = std::ofstream();
     std::ofstream outPopSize1 = std::ofstream();
+
+public:
+
+    StreamBag() {}
+    ~StreamBag() {}
 
     void openAll();
     void checkAll();
