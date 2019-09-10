@@ -11,13 +11,16 @@ class Buffer
     friend class MetaPop;
 
 private:
-    char time[25];
-    char popsize0[25];
-    char popsize1[25];
+
+    double time = 0.0;
+    double popsize0 = 0.0;
+    double popsize1 = 0.0;
 
 public:
+
     Buffer() {}
     ~Buffer() {}
+
     void load(const size_t&);
     void write(std::ofstream&);
 };

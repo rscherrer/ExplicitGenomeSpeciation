@@ -47,35 +47,15 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
     if (record) output.close();
 
-    /* // Turn the following into a test
-    std::ifstream input;
-    int size = 0;
-    char elt0[25];
-    char elt1[25];
-    char elt2[25];
-    input.open("record.txt", std::ios::binary);
-    input.seekg(0, std::ios::end);
-    size = (int) input.tellg();
-    input.seekg(0, std::ios::beg);
-    while(input.tellg() < size)
-    {
-        input.read((char *) elt0, sizeof(elt0));
-        input.read((char *) elt1, sizeof(elt1));
-        input.read((char *) elt2, sizeof(elt2));
-    }
-    input.close();
-    std::cout << elt0 << '\t' << elt1 << '\t' << elt2 << '\n';
-    */
-
     return t;
 }
 
 
 void MetaPop::loadBuffer(const size_t &t)
 {
-    sprintf(buffer.time, "%lu", t);
-    sprintf(buffer.popsize0, "%lu", pops[0u].getPopSize());
-    sprintf(buffer.popsize1, "%lu", pops[1u].getPopSize());
+    buffer.time = static_cast<double>(t);
+    buffer.popsize0 = static_cast<double>(pops[0u].getPopSize());
+    buffer.popsize1 = static_cast<double>(pops[1u].getPopSize());
 }
 
 void Buffer::write(std::ofstream &out)
@@ -83,4 +63,7 @@ void Buffer::write(std::ofstream &out)
     out.write((char *) &time, sizeof(time));
     out.write((char *) &popsize0, sizeof(popsize0));
     out.write((char *) &popsize1, sizeof(popsize1));
+    char endline = '\n';
+    out.write((char *) &endline, sizeof(endline));
+    std::cout << time << '\t' << popsize0 << '\t' << popsize1 << '\n';
 }
