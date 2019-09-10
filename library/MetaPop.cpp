@@ -7,12 +7,25 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
     size_t t = 0u;
 
-    std::ofstream output;
+    std::ofstream outTime;
+    std::ofstream outPopSize0;
+    std::ofstream outPopSize1;
 
+    // There should not be one but many records, one per variable
     if (record) {
-        output.open("record.dat", std::ios::binary);
-        if (!output.is_open())
-            throw std::runtime_error("Unable to open file record.dat\n");
+
+        outTime.open("time.dat", std::ios::binary);
+        outPopSize0.open("popsize0.dat", std::ios::binary);
+        outPopSize1.open("popsize1.dat", std::ios::binary);
+
+        if (!outPopSize0.is_open())
+            throw std::runtime_error("Unable to open file popsize0.dat\n");
+
+        if (!outPopSize1.is_open())
+            throw std::runtime_error("Unable to open file popsize1.dat\n");
+
+        if (!outTime.is_open())
+            throw std::runtime_error("Unable to open file time.dat\n");
     }
 
     for (; t < tmax; ++t) {
@@ -20,7 +33,9 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         if (record && t % tsave == 0u) {
 
             loadBuffer(t);
-            buffer.write(output);
+            buffer.write(outTime, buffer.time);
+            buffer.write(outPopSize0, buffer.popsize0);
+            buffer.write(outPopSize1, buffer.popsize1);
 
         }
 
@@ -45,7 +60,11 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         }
     }
 
-    if (record) output.close();
+    if (record) {
+        outTime.close();
+        outPopSize0.close();
+        outPopSize1.close();
+    }
 
     return t;
 }
@@ -58,9 +77,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.popsize1 = static_cast<double>(pops[1u].getPopSize());
 }
 
-void Buffer::write(std::ofstream &out)
+void Buffer::write(std::ofstream &out, const double &value)
 {
-    out.write((char *) &time, sizeof(time));
-    out.write((char *) &popsize0, sizeof(popsize0));
-    out.write((char *) &popsize1, sizeof(popsize1));
+    out.write((char *) &value, sizeof(value));
 }

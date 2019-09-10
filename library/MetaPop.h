@@ -22,7 +22,7 @@ public:
     ~Buffer() {}
 
     void load(const size_t&);
-    void write(std::ofstream&);
+    void write(std::ofstream&, const double&);
 };
 
 class MetaPop
