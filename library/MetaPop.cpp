@@ -7,25 +7,12 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
     size_t t = 0u;
 
-    std::ofstream outTime;
-    std::ofstream outPopSize0;
-    std::ofstream outPopSize1;
+    StreamBag outfiles;
 
-    // There should not be one but many records, one per variable
     if (record) {
 
-        outTime.open("time.dat", std::ios::binary);
-        outPopSize0.open("popsize0.dat", std::ios::binary);
-        outPopSize1.open("popsize1.dat", std::ios::binary);
-
-        if (!outPopSize0.is_open())
-            throw std::runtime_error("Unable to open file popsize0.dat\n");
-
-        if (!outPopSize1.is_open())
-            throw std::runtime_error("Unable to open file popsize1.dat\n");
-
-        if (!outTime.is_open())
-            throw std::runtime_error("Unable to open file time.dat\n");
+        outfiles.openAll();
+        outfiles.checkAll();
     }
 
     for (; t < tmax; ++t) {
@@ -33,9 +20,9 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         if (record && t % tsave == 0u) {
 
             loadBuffer(t);
-            buffer.write(outTime, buffer.time);
-            buffer.write(outPopSize0, buffer.popsize0);
-            buffer.write(outPopSize1, buffer.popsize1);
+            buffer.write(outfiles.outTime, buffer.time);
+            buffer.write(outfiles.outPopSize0, buffer.popsize0);
+            buffer.write(outfiles.outPopSize1, buffer.popsize1);
 
         }
 
@@ -61,9 +48,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     }
 
     if (record) {
-        outTime.close();
-        outPopSize0.close();
-        outPopSize1.close();
+        outfiles.closeAll();
     }
 
     return t;
@@ -80,4 +65,33 @@ void MetaPop::loadBuffer(const size_t &t)
 void Buffer::write(std::ofstream &out, const double &value)
 {
     out.write((char *) &value, sizeof(value));
+}
+
+void StreamBag::openAll()
+{
+    outTime.open("time.dat", std::ios::binary);
+    outPopSize0.open("popsize0.dat", std::ios::binary);
+    outPopSize1.open("popsize1.dat", std::ios::binary);
+}
+
+void checkOpen(std::ofstream &out, std::string var)
+{
+    if (!out.is_open()) {
+        std::string msg = "Unable to open file " + var + ".dat";
+        throw std::runtime_error(msg);
+    }
+}
+
+void StreamBag::checkAll()
+{
+    checkOpen(outTime, "time");
+    checkOpen(outPopSize0, "popsize0");
+    checkOpen(outPopSize1, "popsize1");
+}
+
+void StreamBag::closeAll()
+{
+    outTime.close();
+    outPopSize0.close();
+    outPopSize1.close();
 }

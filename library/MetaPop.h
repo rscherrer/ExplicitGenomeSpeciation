@@ -5,6 +5,20 @@
 
 typedef std::vector<Population> vecPop;
 
+struct StreamBag
+{
+
+    std::ofstream outTime = std::ofstream();
+    std::ofstream outPopSize0 = std::ofstream();
+    std::ofstream outPopSize1 = std::ofstream();
+
+    void openAll();
+    void checkAll();
+    void closeAll();
+
+
+};
+
 class Buffer
 {
 
