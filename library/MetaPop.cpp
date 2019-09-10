@@ -63,7 +63,4 @@ void Buffer::write(std::ofstream &out)
     out.write((char *) &time, sizeof(time));
     out.write((char *) &popsize0, sizeof(popsize0));
     out.write((char *) &popsize1, sizeof(popsize1));
-    char endline = '\n';
-    out.write((char *) &endline, sizeof(endline));
-    std::cout << time << '\t' << popsize0 << '\t' << popsize1 << '\n';
 }
