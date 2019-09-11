@@ -16,6 +16,10 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
     for (; t < tmax; ++t) {
 
+        // Sort out the sexes
+        pops[0u].sortSexes();
+        pops[1u].sortSexes();
+
         if (record && t % tsave == 0u) {
 
             loadBuffer(t);
@@ -54,16 +58,23 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 }
 
 
+double size2dbl(const size_t &x)
+{
+    return static_cast<double>(x);
+}
+
 void MetaPop::loadBuffer(const size_t &t)
 {
     buffer.fields.clear();
-    buffer.fields.push_back(static_cast<double>(t));
-    buffer.fields.push_back(static_cast<double>(pops[0u].getPopSize()));
-    buffer.fields.push_back(static_cast<double>(pops[1u].getPopSize()));
-    buffer.fields.push_back(static_cast<double>(pops[0u].getResources()[0u]));
-    buffer.fields.push_back(static_cast<double>(pops[0u].getResources()[1u]));
-    buffer.fields.push_back(static_cast<double>(pops[1u].getResources()[0u]));
-    buffer.fields.push_back(static_cast<double>(pops[1u].getResources()[1u]));
+    buffer.fields.push_back(size2dbl(t));
+    buffer.fields.push_back(size2dbl(pops[0u].getPopSize()));
+    buffer.fields.push_back(size2dbl(pops[1u].getPopSize()));
+    buffer.fields.push_back(size2dbl(pops[0u].getNFemales()));
+    buffer.fields.push_back(size2dbl(pops[1u].getNFemales()));
+    buffer.fields.push_back(pops[0u].getResources()[0u]);
+    buffer.fields.push_back(pops[0u].getResources()[1u]);
+    buffer.fields.push_back(pops[1u].getResources()[0u]);
+    buffer.fields.push_back(pops[1u].getResources()[1u]);
 }
 
 void Buffer::write(std::ofstream * &out, const double &value)

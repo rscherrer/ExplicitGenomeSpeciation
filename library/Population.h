@@ -24,9 +24,11 @@ public:
     // Getters
     size_t getPopSize() const { return individuals.size(); }
     size_t getNOffspring() const { return offspring.size(); }
+    size_t getNFemales() const { return females.size(); }
     vecDbl getResources() const { return resources; }
 
     // Life cycle
+    void sortSexes();
     Crowd emigrate(const double& = 0.01);
     void immigrate(const Crowd&);
     void consume();

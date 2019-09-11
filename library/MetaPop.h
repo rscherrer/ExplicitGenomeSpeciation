@@ -26,12 +26,12 @@ public:
               "time",
               "popsize0",
               "popsize1",
+              "nfemales0",
+              "nfemales1",
               "resource00",
               "resource01",
               "resource10",
-              "resource11",
-              "nfemales0",
-              "nfemales1"
+              "resource11"
         })
     {}
     ~StreamBag() {}

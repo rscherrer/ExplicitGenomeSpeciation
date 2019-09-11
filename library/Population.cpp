@@ -22,6 +22,8 @@ Population::Population(const size_t &popsize,
     replenish(foodgrowth),
     resources(capacity)
 {
+    // Sexes should be sorted out upon creation of the population
+    sortSexes();
 }
 
 
@@ -136,10 +138,11 @@ void Population::reproduceAsexual(const double &birth,
 }
 
 
-/// Sexual reproduction function
-void Population::reproduce(const double &birth, const double &strength,
- const Genome &genome, const MultiNet &networks, const double &cost)
+void Population::sortSexes()
 {
+
+    females.clear();
+    males.clear();
 
     // Sort out moms and dads
     for (auto ind : individuals)
@@ -147,6 +150,12 @@ void Population::reproduce(const double &birth, const double &strength,
             females.push_back(ind);
         else
             males.push_back(ind);
+}
+
+/// Sexual reproduction function
+void Population::reproduce(const double &birth, const double &strength,
+ const Genome &genome, const MultiNet &networks, const double &cost)
+{
 
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
@@ -192,9 +201,6 @@ void Population::reproduce(const double &birth, const double &strength,
         }
 
     }
-
-    females.clear();
-    males.clear();
 }
 
 
