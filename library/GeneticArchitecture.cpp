@@ -24,6 +24,7 @@ GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
     interactionWeightShape(pars.getInteractionWeightShape()),
     interactionWeightScale(pars.getInteractionWeightScale()),
     dominanceVariance(pars.getDominanceVariance()),
+    femHeterogamy(pars.getIsFemaleHeterogamy()),
     genome(makeGenome()),
     networks(makeNetworks())
 {
@@ -50,7 +51,7 @@ vecDbl GeneticArchitecture::makeChromosomes()
 Genome GeneticArchitecture::makeGenome()
 {
     const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale, dominanceVariance);
+     effectSizeShape, effectSizeScale, dominanceVariance, femHeterogamy);
     return gen;
 }
 

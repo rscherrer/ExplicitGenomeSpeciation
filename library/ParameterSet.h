@@ -37,6 +37,7 @@ public:
     double getMaxResourceCapacity() const { return maxResourceCapacity; }
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
+    bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }
 
     /// Setters

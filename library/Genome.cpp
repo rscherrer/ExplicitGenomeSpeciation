@@ -8,13 +8,14 @@
 /// Genome constructor
 Genome::Genome(const std::vector<size_t> &nLociPerTrait,
  const size_t &nLoci, const size_t &nchrom, const double &shape,
-  const double &scale, const double &domvar) :
+  const double &scale, const double &domvar, const bool &heterogamy) :
     nloci(nLoci),
     chromosomes(makeChromosomes(nchrom)),
     traits(makeEncodedTraits(nLociPerTrait)),
     locations(makeLocations()),
     effects(makeEffects(shape, scale)),
-    dominances(makeDominances(domvar))
+    dominances(makeDominances(domvar)),
+    femgamy(heterogamy)
 {
     assert(chromosomes.size() == nchrom);
     assert(traits.size() == nloci);

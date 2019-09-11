@@ -9,10 +9,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
     StreamBag out;
 
-    if (record) {
-
+    if (record)
         out.openAll();
-    }
 
     for (; t < tmax; ++t) {
 
@@ -50,9 +48,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         }
     }
 
-    if (record) {
+    if (record)
         out.closeAll();
-    }
 
     return t;
 }

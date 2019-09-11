@@ -27,7 +27,7 @@ Individual::Individual(const Genome &genome,
  const MultiNet &networks, const double &snpfreq) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
-    isFemale(rnd::bernoulli(0.5)),
+    isFemale(determineSex(genome.femgamy)),
     traits(develop(genome, networks)),
     ecoTrait(traits[0u]),
     matePref(traits[1u]),
@@ -51,7 +51,7 @@ Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
-    isFemale(rnd::bernoulli(0.5)),
+    isFemale(determineSex(genome.femgamy)),
     traits(develop(genome, networks)),
     ecoTrait(traits[0u]),
     matePref(traits[1u]),
@@ -69,6 +69,16 @@ Individual::Individual(const Genome &genome,
     for (size_t res = 0u; res < 2u; ++res)
         assert(feedingRates[res] > 0.0);
 
+}
+
+
+bool Individual::determineSex(const bool &femheterogamy)
+{
+    const bool hetero = sequence[0u][0u] != sequence[1u][0u];
+    const bool isZW = hetero && femheterogamy;
+    const bool isXX = !hetero && !femheterogamy;
+    const bool isfemale = isZW || isXX;
+    return isfemale;
 }
 
 

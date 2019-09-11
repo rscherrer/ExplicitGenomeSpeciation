@@ -12,7 +12,7 @@ struct Genome
 {
 
     Genome(const vecUns&, const size_t&, const size_t&,
-     const double&, const double&, const double&);
+     const double&, const double&, const double&, const bool&);
 
     size_t nloci;
     vecDbl chromosomes;
@@ -21,6 +21,8 @@ struct Genome
     vecDbl locations;
     vecDbl effects;
     vecDbl dominances;
+
+    bool femgamy;
 
     // A vector of locus epistatic interaction partners and weights
     // std::vector<std::vector<std::pair<size_t, double> > > interactions;

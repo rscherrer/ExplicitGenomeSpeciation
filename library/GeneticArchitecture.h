@@ -38,6 +38,7 @@ private:
     double interactionWeightShape;
     double interactionWeightScale;
     double dominanceVariance;
+    bool femHeterogamy;
 
     Genome genome;
     MultiNet networks;
