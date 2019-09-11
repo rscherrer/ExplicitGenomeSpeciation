@@ -60,18 +60,34 @@ double size2dbl(const size_t &x)
     return static_cast<double>(x);
 }
 
+void Buffer::flush()
+{
+    fields.clear();
+}
+
+void Buffer::add(const double &x)
+{
+    fields.push_back(x);
+}
+
 void MetaPop::loadBuffer(const size_t &t)
 {
-    buffer.fields.clear();
-    buffer.fields.push_back(size2dbl(t));
-    buffer.fields.push_back(size2dbl(pops[0u].getPopSize()));
-    buffer.fields.push_back(size2dbl(pops[1u].getPopSize()));
-    buffer.fields.push_back(size2dbl(pops[0u].getNFemales()));
-    buffer.fields.push_back(size2dbl(pops[1u].getNFemales()));
-    buffer.fields.push_back(pops[0u].getResources()[0u]);
-    buffer.fields.push_back(pops[0u].getResources()[1u]);
-    buffer.fields.push_back(pops[1u].getResources()[0u]);
-    buffer.fields.push_back(pops[1u].getResources()[1u]);
+    buffer.flush();
+    buffer.add(size2dbl(t));
+    buffer.add(size2dbl(pops[0u].getPopSize()));
+    buffer.add(size2dbl(pops[1u].getPopSize()));
+    buffer.add(size2dbl(pops[0u].getNFemales()));
+    buffer.add(size2dbl(pops[1u].getNFemales()));
+    buffer.add(pops[0u].getResources()[0u]);
+    buffer.add(pops[0u].getResources()[1u]);
+    buffer.add(pops[1u].getResources()[0u]);
+    buffer.add(pops[1u].getResources()[1u]);
+    buffer.add(pops[0u].getMeanEcoTrait());
+    buffer.add(pops[1u].getMeanEcoTrait());
+    buffer.add(pops[0u].getMeanMatePref());
+    buffer.add(pops[1u].getMeanMatePref());
+    buffer.add(pops[0u].getMeanNtrTrait());
+    buffer.add(pops[1u].getMeanNtrTrait());
 }
 
 void Buffer::write(std::ofstream * &out, const double &value)

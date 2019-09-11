@@ -31,7 +31,13 @@ public:
               "resource00",
               "resource01",
               "resource10",
-              "resource11"
+              "resource11",
+              "meanx0",
+              "meanx1",
+              "meany0",
+              "meany1",
+              "meanz0",
+              "meanz1"
         })
     {}
     ~StreamBag() {}
@@ -56,7 +62,8 @@ public:
     Buffer() : fields({ }) {}
     ~Buffer() {}
 
-    void load(const size_t&);
+    void flush();
+    void add(const double&);
     void write(std::ofstream *&, const double&);
 };
 

@@ -26,6 +26,9 @@ public:
     size_t getNOffspring() const { return offspring.size(); }
     size_t getNFemales() const { return females.size(); }
     vecDbl getResources() const { return resources; }
+    double getMeanEcoTrait();
+    double getMeanMatePref();
+    double getMeanNtrTrait();
 
     // Life cycle
     void sortSexes();
