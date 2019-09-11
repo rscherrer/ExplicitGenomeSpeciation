@@ -37,7 +37,10 @@ public:
               "meany0",
               "meany1",
               "meanz0",
-              "meanz1"
+              "meanz1",
+              "ecoliso",
+              "spatialiso",
+              "matingiso"
         })
     {}
     ~StreamBag() {}
@@ -89,6 +92,10 @@ public:
 
     size_t evolve(const Genome&, const MultiNet&);
     void loadBuffer(const size_t &t);
+
+    double getEcoIsolation();
+    double getSpatialIsolation();
+    double getMatingIsolation();
 
 private:
 

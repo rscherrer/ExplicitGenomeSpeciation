@@ -1,4 +1,6 @@
 #include "MetaPop.h"
+#include "Individual.h"
+#include "utils.h"
 #include <iostream>
 #include <fstream>
 
@@ -19,6 +21,13 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         pops[1u].sortSexes();
 
         if (record && t % tsave == 0u) {
+
+            for (size_t p = 0u; p < 2u; ++p) {
+                // The means are used multiple times
+                pops[p].calcMeanEcoTrait();
+                pops[p].calcMeanMatePref();
+                pops[p].calcMeanNtrTrait();
+            }
 
             loadBuffer(t);
 
@@ -52,6 +61,33 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         out.closeAll();
 
     return t;
+}
+
+double MetaPop::getEcoIsolation()
+{
+    // Ecological isolation is the standard deviation in ecological trait value
+
+    double ei = 0.0;
+
+    for (size_t p = 0u; p < 2u; ++p) {
+        auto pop = pops[p];
+        for (size_t i = 0u; i < pop.getPopSize(); ++i) {
+            auto ind = pop.individuals[i];
+            ei += sqr(ind->getEcoTrait());
+        }
+    }
+
+    const size_t n0 = pops[0u].getPopSize();
+    const size_t n1 = pops[1u].getPopSize();
+
+    ei /= (n0 + n1);
+
+    const double x0 = pops[0u].getMeanEcoTrait();
+    const double x1 = pops[1u].getMeanEcoTrait();
+
+    ei -= sqr((x0 * n0 + x1 * n1)); // minus the square of the mean
+
+    return sqrt(ei); // return standard deviation
 }
 
 
@@ -88,6 +124,9 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(pops[1u].getMeanMatePref());
     buffer.add(pops[0u].getMeanNtrTrait());
     buffer.add(pops[1u].getMeanNtrTrait());
+    buffer.add(getEcoIsolation());
+    // buffer.add(getSpatialIsolation());
+    // buffer.add(getMatingIsolation());
 }
 
 void Buffer::write(std::ofstream * &out, const double &value)

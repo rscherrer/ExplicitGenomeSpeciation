@@ -15,6 +15,8 @@ typedef std::vector<double> vecDbl;
 
 class Population {
 
+    friend class MetaPop;
+
 public:
 
     Population(const size_t&, const Genome&, const MultiNet&,
@@ -26,9 +28,9 @@ public:
     size_t getNOffspring() const { return offspring.size(); }
     size_t getNFemales() const { return females.size(); }
     vecDbl getResources() const { return resources; }
-    double getMeanEcoTrait();
-    double getMeanMatePref();
-    double getMeanNtrTrait();
+    double getMeanEcoTrait() const { return meanEcoTrait; }
+    double getMeanMatePref() const { return meanMatePref; }
+    double getMeanNtrTrait() const { return meanNtrTrait; }
 
     // Life cycle
     void sortSexes();
@@ -41,6 +43,10 @@ public:
      const MultiNet&);
     bool survive(const double&);
 
+    // Setters
+    void calcMeanEcoTrait();
+    void calcMeanMatePref();
+    void calcMeanNtrTrait();
 
 
 private:
@@ -60,6 +66,9 @@ private:
     vecDbl replenish;
     vecDbl resources;
 
+    double meanEcoTrait = 0.0;
+    double meanMatePref = 0.0;
+    double meanNtrTrait = 0.0;
 
 
 };

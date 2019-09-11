@@ -241,47 +241,26 @@ bool Population::survive(const double &survival)
     return isAlive;
 }
 
-double Population::getMeanEcoTrait()
+void Population::calcMeanEcoTrait()
 {
-
-    double mean = 0.0;
-
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        mean += individuals[ind]->getEcoTrait();
-    }
-
-    mean /= individuals.size();
-
-    return mean;
-
+    meanEcoTrait = 0.0;
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        meanEcoTrait += individuals[ind]->getEcoTrait();
+    meanEcoTrait /= individuals.size();
 }
 
-double Population::getMeanMatePref()
+void Population::calcMeanMatePref()
 {
-
-    double mean = 0.0;
-
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        mean += individuals[ind]->getMatePref();
-    }
-
-    mean /= individuals.size();
-
-    return mean;
-
+    meanMatePref = 0.0;
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        meanMatePref += individuals[ind]->getMatePref();
+    meanMatePref /= individuals.size();
 }
 
-double Population::getMeanNtrTrait()
+void Population::calcMeanNtrTrait()
 {
-
-    double mean = 0.0;
-
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        mean += individuals[ind]->getNeutral();
-    }
-
-    mean /= individuals.size();
-
-    return mean;
-
+    meanNtrTrait = 0.0;
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        meanNtrTrait += individuals[ind]->getNeutral();
+    meanNtrTrait /= individuals.size();
 }
