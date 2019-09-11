@@ -7,12 +7,11 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
     size_t t = 0u;
 
-    StreamBag outfiles;
+    StreamBag out;
 
     if (record) {
 
-        outfiles.openAll();
-        outfiles.checkAll();
+        out.openAll();
     }
 
     for (; t < tmax; ++t) {
@@ -20,9 +19,9 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         if (record && t % tsave == 0u) {
 
             loadBuffer(t);
-            buffer.write(outfiles.outTime, buffer.time);
-            buffer.write(outfiles.outPopSize0, buffer.popsize0);
-            buffer.write(outfiles.outPopSize1, buffer.popsize1);
+
+            for (size_t f = 0u; f < out.names.size(); ++f)
+                buffer.write(out.files[f], buffer.fields[f]);
 
         }
 
@@ -48,7 +47,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     }
 
     if (record) {
-        outfiles.closeAll();
+        out.closeAll();
     }
 
     return t;
@@ -57,41 +56,37 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
 void MetaPop::loadBuffer(const size_t &t)
 {
-    buffer.time = static_cast<double>(t);
-    buffer.popsize0 = static_cast<double>(pops[0u].getPopSize());
-    buffer.popsize1 = static_cast<double>(pops[1u].getPopSize());
+    buffer.fields.clear();
+    buffer.fields.push_back(static_cast<double>(t));
+    buffer.fields.push_back(static_cast<double>(pops[0u].getPopSize()));
+    buffer.fields.push_back(static_cast<double>(pops[1u].getPopSize()));
+    buffer.fields.push_back(static_cast<double>(pops[0u].getResources()[0u]));
+    buffer.fields.push_back(static_cast<double>(pops[0u].getResources()[1u]));
+    buffer.fields.push_back(static_cast<double>(pops[1u].getResources()[0u]));
+    buffer.fields.push_back(static_cast<double>(pops[1u].getResources()[1u]));
 }
 
-void Buffer::write(std::ofstream &out, const double &value)
+void Buffer::write(std::ofstream * &out, const double &value)
 {
-    out.write((char *) &value, sizeof(value));
+    out->write((char *) &value, sizeof(value));
 }
 
 void StreamBag::openAll()
 {
-    outTime.open("time.dat", std::ios::binary);
-    outPopSize0.open("popsize0.dat", std::ios::binary);
-    outPopSize1.open("popsize1.dat", std::ios::binary);
-}
-
-void checkOpen(std::ofstream &out, std::string var)
-{
-    if (!out.is_open()) {
-        std::string msg = "Unable to open file " + var + ".dat";
-        throw std::runtime_error(msg);
+    for (size_t f = 0u; f < names.size(); ++f) {
+        std::string filename = names[f] + ".dat";
+        files.push_back(new std::ofstream());
+        files.back()->open(filename, std::ios::binary);
+        if (!files.back()->is_open()) {
+            std::string msg = "Unable to open output file " + filename;
+            throw std::runtime_error(msg);
+        }
     }
-}
-
-void StreamBag::checkAll()
-{
-    checkOpen(outTime, "time");
-    checkOpen(outPopSize0, "popsize0");
-    checkOpen(outPopSize1, "popsize1");
 }
 
 void StreamBag::closeAll()
 {
-    outTime.close();
-    outPopSize0.close();
-    outPopSize1.close();
+    for (size_t f = 0u; f < names.size(); ++f) {
+        files[f]->close();
+    }
 }

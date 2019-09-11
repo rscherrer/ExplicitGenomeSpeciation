@@ -4,6 +4,8 @@
 #include "Population.h"
 
 typedef std::vector<Population> vecPop;
+typedef std::vector<std::ofstream *> vecStreams;
+typedef std::vector<std::string> vecStrings;
 
 class StreamBag
 {
@@ -13,17 +15,28 @@ class StreamBag
 
 private:
 
-    std::ofstream outTime = std::ofstream();
-    std::ofstream outPopSize0 = std::ofstream();
-    std::ofstream outPopSize1 = std::ofstream();
+    vecStreams files;
+    vecStrings names;
 
 public:
 
-    StreamBag() {}
+    StreamBag() :
+        files({ }),
+        names({
+              "time",
+              "popsize0",
+              "popsize1",
+              "resource00",
+              "resource01",
+              "resource10",
+              "resource11",
+              "nfemales0",
+              "nfemales1"
+        })
+    {}
     ~StreamBag() {}
 
     void openAll();
-    void checkAll();
     void closeAll();
 
 
@@ -36,17 +49,15 @@ class Buffer
 
 private:
 
-    double time = 0.0;
-    double popsize0 = 0.0;
-    double popsize1 = 0.0;
+    vecDbl fields;
 
 public:
 
-    Buffer() {}
+    Buffer() : fields({ }) {}
     ~Buffer() {}
 
     void load(const size_t&);
-    void write(std::ofstream&, const double&);
+    void write(std::ofstream *&, const double&);
 };
 
 class MetaPop
