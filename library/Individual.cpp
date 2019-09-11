@@ -330,6 +330,11 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 }
 
 
+size_t Individual::getEcotype(const double &mean)
+{
 
+    return ecoTrait > mean;
+
+}
 
 

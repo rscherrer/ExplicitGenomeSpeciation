@@ -36,6 +36,7 @@ public:
     vecDbl getFeedingRates() const { return feedingRates; }
     Diplotype getSequence() const { return sequence; }
     vecDbl getExpression() const { return genexp; }
+    size_t getEcotype(const double&);
 
     // Actions
     void feed(const vecDbl&);

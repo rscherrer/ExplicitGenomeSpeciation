@@ -90,6 +90,39 @@ double MetaPop::getEcoIsolation()
     return sqrt(ei); // return standard deviation
 }
 
+double MetaPop::getSpatialIsolation()
+{
+
+    // Calculated as some non-overlap between ecotypes
+
+    // Ecotype-by-habitat clusters
+    std::vector<vecUns> n = { uzeros(2u), uzeros(2u) };
+
+    const size_t n0 = pops[0u].getPopSize();
+    const size_t n1 = pops[1u].getPopSize();
+    const double x0 = pops[0u].getMeanEcoTrait();
+    const double x1 = pops[1u].getMeanEcoTrait();
+
+    const double ecomean = n0 * x0 + n1 * x1; // mean ecological trait value
+
+    for (size_t p = 0u; p < 2u; ++p) {
+        auto pop = pops[p];
+        for (size_t i = 0u; i < pop.getPopSize(); ++i) {
+            auto ind = pop.individuals[i];
+            size_t ecotype = ind->getEcotype(ecomean);
+            ++n[p][ecotype];
+        }
+    }
+
+    double si = n[0u][0u] * n[1u][1u] - n[0u][1u] * n[1u][0u];
+    si /= sqrt(n[0u][0u] + n[0u][1u]);
+    si /= sqrt(n[1u][0u] + n[1u][1u]);
+    si /= sqrt(n[0u][0u] + n[1u][0u]);
+    si /= sqrt(n[0u][1u] + n[1u][1u]);
+
+    return si;
+}
+
 
 double size2dbl(const size_t &x)
 {
@@ -125,7 +158,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(pops[0u].getMeanNtrTrait());
     buffer.add(pops[1u].getMeanNtrTrait());
     buffer.add(getEcoIsolation());
-    // buffer.add(getSpatialIsolation());
+    buffer.add(getSpatialIsolation());
     // buffer.add(getMatingIsolation());
 }
 
