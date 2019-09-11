@@ -38,9 +38,9 @@ public:
               "meany1",
               "meanz0",
               "meanz1",
-              "ecoliso",
-              "spatialiso",
-              "matingiso"
+              "ecological_iso",
+              "spatial_iso",
+              "mating_iso"
         })
     {}
     ~StreamBag() {}
