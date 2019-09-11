@@ -36,7 +36,7 @@ public:
     vecDbl getFeedingRates() const { return feedingRates; }
     Diplotype getSequence() const { return sequence; }
     vecDbl getExpression() const { return genexp; }
-    size_t getEcotype(const double&);
+    size_t getEcotype() const { return ecotype; };
 
     // Actions
     void feed(const vecDbl&);
@@ -51,6 +51,7 @@ public:
         feedingRates = calcFeedingRates(sel, value);
     }
     void setMatePref(const double &value) { matePref = value; }
+    void setEcotype(const double&);
 
 
 
@@ -74,6 +75,7 @@ private:
     double neutral;
     double fitness;
     vecDbl feedingRates;
+    size_t ecotype;
 
 
 };

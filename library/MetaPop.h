@@ -80,11 +80,13 @@ public:
         dispersal(pars.getDispersalRate()),
         survival(pars.getSurvivalProb()),
         birth(pars.getBirthRate()),
-        mating(pars.getMatePreferenceStrength()),
+        matingcost(pars.getMateEvaluationCost()),
+        sexsel(pars.getMatePreferenceStrength()),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         buffer(Buffer()),
-        record(pars.getRecord())
+        record(pars.getRecord()),
+        ecomean(0.0)
     {}
     ~MetaPop() {}
 
@@ -103,11 +105,13 @@ private:
     double dispersal;
     double survival;
     double birth;
-    double mating;
+    double matingcost;
+    double sexsel;
     size_t tmax;
     size_t tsave;
     Buffer buffer;
     bool record;
+    double ecomean;
 
 };
 

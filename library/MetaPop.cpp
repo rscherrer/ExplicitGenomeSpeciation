@@ -22,12 +22,22 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
         if (record && t % tsave == 0u) {
 
+            ecomean = 0.0; // global mean trait value
+
             for (size_t p = 0u; p < 2u; ++p) {
+
                 // The means are used multiple times
                 pops[p].calcMeanEcoTrait();
                 pops[p].calcMeanMatePref();
                 pops[p].calcMeanNtrTrait();
+
+                ecomean += pops[p].getPopSize() * pops[p].getMeanEcoTrait();
+
             }
+
+            // Assign ecotypes
+            for (size_t p = 0u; p < 2u; ++p)
+                pops[p].assignEcotypes(ecomean);
 
             loadBuffer(t);
 
@@ -47,8 +57,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         pops[1u].consume();
 
         // Reproduction
-        pops[0u].reproduce(birth, mating, genome, networks);
-        pops[1u].reproduce(birth, mating, genome, networks);
+        pops[0u].reproduce(birth, sexsel, genome, networks);
+        pops[1u].reproduce(birth, sexsel, genome, networks);
 
         // Survival
         if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
@@ -81,12 +91,7 @@ double MetaPop::getEcoIsolation()
     const size_t n1 = pops[1u].getPopSize();
 
     ei /= (n0 + n1);
-
-    const double x0 = pops[0u].getMeanEcoTrait();
-    const double x1 = pops[1u].getMeanEcoTrait();
-
-    ei -= sqr((x0 * n0 + x1 * n1)); // minus the square of the mean
-
+    ei -= sqr(ecomean); // minus the square of the mean
     return sqrt(ei); // return standard deviation
 }
 
@@ -95,21 +100,14 @@ double MetaPop::getSpatialIsolation()
 
     // Calculated as some non-overlap between ecotypes
 
-    // Ecotype-by-habitat clusters
+    // Ecotype-by-habitat table
     std::vector<vecUns> n = { uzeros(2u), uzeros(2u) };
-
-    const size_t n0 = pops[0u].getPopSize();
-    const size_t n1 = pops[1u].getPopSize();
-    const double x0 = pops[0u].getMeanEcoTrait();
-    const double x1 = pops[1u].getMeanEcoTrait();
-
-    const double ecomean = n0 * x0 + n1 * x1; // mean ecological trait value
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];
         for (size_t i = 0u; i < pop.getPopSize(); ++i) {
             auto ind = pop.individuals[i];
-            size_t ecotype = ind->getEcotype(ecomean);
+            size_t ecotype = ind->getEcotype();
             ++n[p][ecotype];
         }
     }
@@ -121,6 +119,45 @@ double MetaPop::getSpatialIsolation()
     si /= sqrt(n[0u][1u] + n[1u][1u]);
 
     return si;
+}
+
+
+double MetaPop::getMatingIsolation()
+{
+
+    // Count homogamic and heterogamic crossings
+
+    // For each of them sample a number of males to encounter, from the metapop
+    // Evaluate each male by a yes or no
+    // Update the table of matings accordingly by looking at ecotypes
+
+    // Table of crossings
+    std::vector<vecUns> m = { uzeros(2u), uzeros(2u) };
+
+    // Make a vector with all males of the metapop
+    Crowd allMales;
+    for (size_t p = 0u; p < 2u; ++p)
+        for (size_t i = 0u; i < pops[p].males.size(); ++i)
+            allMales.push_back(pops[p].individuals[i]);
+
+    // Loop through the females of the metapop and test their preference
+    for (size_t p = 0u; p < 2u; ++p) {
+        for (size_t i = 0u; i < pops[p].getNFemales(); ++i) {
+            auto fem = pops[p].females[i];
+            size_t nencounters = rnd::poisson(1.0 / matingcost);
+            while (nencounters) {
+                auto candidate = allMales[rnd::random(allMales.size())];
+                if (fem->acceptMate(candidate->getEcoTrait(), sexsel))
+                    ++m[fem->getEcotype()][candidate->getEcotype()];
+                --nencounters;
+            }
+        }
+    }
+
+    double ri = m[0u][0u] * m[1u][1u] - m[0u][1u] * m[1u][0u];
+    ri /= sqrt(m[0u][0u] * m[1u][1u] * m[0u][1u] * m[1u][0u]);
+    return ri;
+
 }
 
 
@@ -159,7 +196,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(pops[1u].getMeanNtrTrait());
     buffer.add(getEcoIsolation());
     buffer.add(getSpatialIsolation());
-    // buffer.add(getMatingIsolation());
+    buffer.add(getMatingIsolation());
 }
 
 void Buffer::write(std::ofstream * &out, const double &value)

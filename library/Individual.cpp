@@ -33,7 +33,8 @@ Individual::Individual(const Genome &genome,
     matePref(traits[1u]),
     neutral(traits[2u]),
     fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecoTrait))
+    feedingRates(calcFeedingRates(1.0, ecoTrait)),
+    ecotype(0u)
 {
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -57,7 +58,8 @@ Individual::Individual(const Genome &genome,
     matePref(traits[1u]),
     neutral(traits[2u]),
     fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecoTrait))
+    feedingRates(calcFeedingRates(1.0, ecoTrait)),
+    ecotype(0u)
 {
 
     assert(sequence.size() == 2u);
@@ -330,10 +332,10 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 }
 
 
-size_t Individual::getEcotype(const double &mean)
+void Individual::setEcotype(const double &mean)
 {
 
-    return ecoTrait > mean;
+    ecotype = ecoTrait > mean;
 
 }
 

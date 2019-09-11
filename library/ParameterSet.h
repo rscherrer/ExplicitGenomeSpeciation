@@ -34,6 +34,7 @@ public:
     double getSurvivalProb() const { return survivalProb; }
     double getBirthRate() const { return birthRate; }
     double getMatePreferenceStrength() const { return matePreferenceStrength; }
+    double getMateEvaluationCost() const { return mateEvaluationCost; }
     double getMaxResourceCapacity() const { return maxResourceCapacity; }
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
