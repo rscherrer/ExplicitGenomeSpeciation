@@ -80,15 +80,21 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 for (auto ind : pops[p].individuals) {
                     size_t group = ind->getEcoTrait() < meanPhenotypes[0u][2u];
                     vecDbl traitValues = ind->getTraits();
-                    for (size_t trait = 0u; trait < 3u; ++trait)
+                    for (size_t trait = 0u; trait < 3u; ++trait) {
                         meanPhenotypes[trait][group] += traitValues[trait];
+                        pheVariances[trait][group] += sqr(traitValues[trait]);
+                    }
                     ecotypes[group].push_back(ind);
                 }
             }
 
-            for (size_t trait = 0u; trait < 2u; ++trait)
-                for (size_t eco = 0u; eco < 2u; ++eco)
+            for (size_t trait = 0u; trait < 2u; ++trait) {
+                for (size_t eco = 0u; eco < 2u; ++eco) {
                     meanPhenotypes[trait][eco] /= ecotypes[eco].size();
+                    pheVariances[trait][eco] /= ecotypes[eco].size();
+                    pheVariances[trait][eco] -= meanPhenotypes[trait][eco];
+                }
+            }
 
             // Locus-specific variance decomposition
             for (size_t locus = 0u; locus < genome.nloci; ++locus) {
