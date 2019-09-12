@@ -49,9 +49,6 @@ public:
     void calcMeanMatePref();
     void calcMeanNtrTrait();
 
-    // Modifiers
-    void assignEcotypes(const double&);
-
 
 private:
 

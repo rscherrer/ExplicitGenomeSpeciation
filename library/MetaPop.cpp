@@ -17,33 +17,49 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         pops[0u].sortSexes();
         pops[1u].sortSexes();
 
+
+        // Analyze and record
         if (record && t % tsave == 0u) {
 
             // Prepare analysis for output
 
-            ecomean = 0.0; // global mean trait value
+            // Analysis step
 
+            // Classify ecotypes
+            // Calculate global statistics
+            // Calculate ecotype statistics
+            // Calculate divergence statistics
+            // Write to output
+
+            //classifyEcotypes();
+
+
+            // Assign individuals to a group based on trait value
+
+            meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
+
+
+            // Mean phenotypes at the scale of the metapopulation
+            size_t metapopsize = 0u;
             for (size_t p = 0u; p < 2u; ++p) {
-
-                // The means are used multiple times
-                pops[p].calcMeanEcoTrait();
-                pops[p].calcMeanMatePref();
-                pops[p].calcMeanNtrTrait();
-
-                ecomean += pops[p].getPopSize() * pops[p].getMeanEcoTrait();
-
+                for (auto ind : pops[p].individuals) {
+                    meanPhenotypes[0u][2u] += ind->getEcoTrait();
+                    meanPhenotypes[1u][2u] += ind->getMatePref();
+                    meanPhenotypes[2u][2u] += ind->getNeutral();
+                }
+                metapopsize += pops[p].getPopSize();
             }
 
-            // Assign ecotypes
-            for (size_t p = 0u; p < 2u; ++p)
-                pops[p].assignEcotypes(ecomean);
+            for (size_t trait = 0u; trait < 2u; ++trait)
+                meanPhenotypes[trait][2u] /= metapopsize;
+
 
             // Load output to buffer
             loadBuffer(t);
 
             // Write to files
-            for (size_t f = 0u; f < out.names.size(); ++f)
-                buffer.write(out.files[f], buffer.fields[f]);
+            // for (size_t f = 0u; f < out.names.size(); ++f)
+                // buffer.write(out.files[f], buffer.fields[f]);
 
         }
 
@@ -74,7 +90,36 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
     return t;
 }
 
-double MetaPop::getEcoIsolation()
+void MetaPop::loadBuffer(const size_t &t)
+{
+    buffer.flush();
+    buffer.add(size2dbl(t));
+
+    // Census
+    buffer.add(size2dbl(ecotypes[0u].size()));
+    buffer.add(size2dbl(ecotypes[1u].size()));
+    buffer.add(size2dbl(pops[0u].getPopSize()));
+    buffer.add(size2dbl(pops[1u].getPopSize()));
+    buffer.add(size2dbl(pops[0u].getNFemales()));
+    buffer.add(size2dbl(pops[1u].getNFemales()));
+
+    // Resources in each habitat
+    buffer.add(pops[0u].getResources()[0u]);
+    buffer.add(pops[1u].getResources()[0u]);
+    buffer.add(pops[0u].getResources()[1u]);
+    buffer.add(pops[1u].getResources()[1u]);
+
+    // Phenotypes
+    buffer.add(meanPhenotypes[0u][2u]);
+    buffer.add(meanPhenotypes[1u][2u]);
+    buffer.add(meanPhenotypes[2u][2u]);
+
+    // buffer.add(getEcoIsolation());
+    // buffer.add(getSpatialIsolation());
+    // buffer.add(getMatingIsolation());
+}
+
+double MetaPop::getEcoIsolation(const double &ecomean)
 {
     // Ecological isolation is the standard deviation in ecological trait value
 
@@ -177,28 +222,7 @@ double MetaPop::getMatingIsolation()
 
 
 
-void MetaPop::loadBuffer(const size_t &t)
-{
-    buffer.flush();
-    buffer.add(size2dbl(t));
-    buffer.add(size2dbl(pops[0u].getPopSize()));
-    buffer.add(size2dbl(pops[1u].getPopSize()));
-    buffer.add(size2dbl(pops[0u].getNFemales()));
-    buffer.add(size2dbl(pops[1u].getNFemales()));
-    buffer.add(pops[0u].getResources()[0u]);
-    buffer.add(pops[0u].getResources()[1u]);
-    buffer.add(pops[1u].getResources()[0u]);
-    buffer.add(pops[1u].getResources()[1u]);
-    buffer.add(pops[0u].getMeanEcoTrait());
-    buffer.add(pops[1u].getMeanEcoTrait());
-    buffer.add(pops[0u].getMeanMatePref());
-    buffer.add(pops[1u].getMeanMatePref());
-    buffer.add(pops[0u].getMeanNtrTrait());
-    buffer.add(pops[1u].getMeanNtrTrait());
-    buffer.add(getEcoIsolation());
-    buffer.add(getSpatialIsolation());
-    buffer.add(getMatingIsolation());
-}
+
 
 
 

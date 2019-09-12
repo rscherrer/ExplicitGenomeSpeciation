@@ -265,9 +265,3 @@ void Population::calcMeanNtrTrait()
         meanNtrTrait += individuals[ind]->getNeutral();
     meanNtrTrait /= individuals.size();
 }
-
-void Population::assignEcotypes(const double &mean)
-{
-    for (size_t i = 0u; i < getPopSize(); ++i)
-        individuals[i]->setEcotype(mean);
-}

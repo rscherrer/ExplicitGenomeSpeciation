@@ -28,6 +28,8 @@ public:
         files({ }),
         names({
               "time",
+              "ecotype0",
+              "ecotype1",
               "popsize0",
               "popsize1",
               "nfemales0",

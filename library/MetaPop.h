@@ -27,7 +27,8 @@ public:
         tsave(pars.getTSave()),
         buffer(Buffer()),
         record(pars.getRecord()),
-        ecomean(0.0)
+        ecotypes({ { }, { } }),
+        meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) })
     {}
     ~MetaPop() {}
 
@@ -36,7 +37,7 @@ public:
     size_t evolve(const Genome&, const MultiNet&);
     void loadBuffer(const size_t &t);
 
-    double getEcoIsolation();
+    double getEcoIsolation(const double&);
     double getSpatialIsolation();
     double getMatingIsolation();
 
@@ -52,7 +53,10 @@ private:
     size_t tsave;
     Buffer buffer;
     bool record;
-    double ecomean;
+
+    // Variables for analysis
+    std::vector<Crowd> ecotypes;
+    std::vector<vecDbl> meanPhenotypes;
 
 };
 
