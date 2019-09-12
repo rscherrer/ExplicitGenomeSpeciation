@@ -37,13 +37,16 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             // Assign individuals to a group based on trait value
 
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
-            meanGenValues = { 0.0, 0.0, 0.0 };
-            pheVariances = { 0.0, 0.0, 0.0 };
+            meanGenValues = zeros(3u);
+            pheVariances = zeros(3u);
+            genVariances = zeros(3u);
+            addVariances = zeros(3u);
 
             // Mean phenotypes at the scale of the metapopulation
             size_t metapopsize = 0u;
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
+
                     const vecDbl traitValues = ind->getTraits();
                     const vecDbl geneticValues = ind->getGeneticValues();
                     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -80,7 +83,42 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 for (size_t eco = 0u; eco < 2u; ++eco)
                     meanPhenotypes[trait][eco] /= ecotypes[eco].size();
 
+            // Locus-specific variance decomposition
 
+            for (size_t locus = 0u; locus < genome.nloci; ++locus) {
+
+                double meanAlleleCount = 0.0;
+                double varAlleleCount = 0.0;
+                double meanLocusGenValue = 0.0;
+                double covGenValueAlleleCount = 0.0;
+
+                for (size_t eco = 0u; eco < 2u; ++eco) {
+                    for (auto ind : ecotypes[eco]) {
+
+                        size_t zyg = ind->getZygosity(locus);
+                        meanAlleleCount += zyg;
+                        varAlleleCount += sqr(zyg);
+
+                        double genvalue = ind->getLocusGenValue(locus);
+                        meanLocusGenValue += genvalue;
+                        covGenValueAlleleCount += zyg * genvalue;
+                    }
+                }
+
+                meanAlleleCount /= metapopsize;
+                varAlleleCount /= metapopsize;
+                varAlleleCount -= meanAlleleCount;
+                meanLocusGenValue /= metapopsize;
+                covGenValueAlleleCount /= metapopsize;
+                covGenValueAlleleCount -= meanAlleleCount * meanLocusGenValue;
+
+                // VarA = avgMutEffect^2 / var(allelecount)
+                // where avgMutEffect = cov / varAlleleCount
+
+                double locusVarA = sqr(covGenValueAlleleCount) / varAlleleCount;
+                addVariances[genome.traits[locus]] += locusVarA;
+
+            }
 
 
 
@@ -145,6 +183,7 @@ void MetaPop::loadBuffer(const size_t &t)
             buffer.add(meanPhenotypes[trait][group]);
         buffer.add(pheVariances[trait]);
         buffer.add(genVariances[trait]);
+        buffer.add(addVariances[trait]);
     }
 
     // buffer.add(getEcoIsolation());

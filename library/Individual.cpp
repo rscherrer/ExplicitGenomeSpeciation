@@ -27,6 +27,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
  const double &snpfreq, const double &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
+    locusGeneticValues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     geneticValues(develop(genome, networks)),
     ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
@@ -54,6 +55,7 @@ Individual::Individual(const Genome &genome,
   const double &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
+    locusGeneticValues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     geneticValues(develop(genome, networks)),
     ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
@@ -161,7 +163,8 @@ std::vector<double> Individual::develop(const Genome &genome,
         const size_t trait = genome.traits[locus];
 
         // Contribute to trait
-        phenotypes[trait] += genome.effects[locus] * expression;
+        locusGeneticValues[locus] = genome.effects[locus] * expression;
+        phenotypes[trait] += locusGeneticValues[locus];
 
     }
 
@@ -185,7 +188,10 @@ std::vector<double> Individual::develop(const Genome &genome,
             assert(intexp >= -1.0);
             assert(intexp <= 1.0);
 
-            phenotypes[trait] += intexp * networks[trait].weights[e];
+            const double interaction = intexp * networks[trait].weights[e];
+            locusGeneticValues[edge.first] += 0.5 * interaction;
+            locusGeneticValues[edge.second] += 0.5 * interaction;
+            phenotypes[trait] += interaction;
 
         }
     }
@@ -342,4 +348,13 @@ void Individual::setEcotype(const double &mean)
 
 }
 
+size_t Individual::getZygosity(const size_t &locus)
+{
+    return sequence[0u][locus] + sequence[1u][locus];
+}
+
+double Individual::getLocusGenValue(const size_t &locus)
+{
+    return locusGeneticValues[locus];
+}
 

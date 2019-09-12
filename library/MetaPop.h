@@ -29,9 +29,10 @@ public:
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
-        meanGenValues({ 0.0, 0.0, 0.0 }),
-        pheVariances({ 0.0, 0.0, 0.0 }),
-        genVariances({ 0.0, 0.0, 0.0 })
+        meanGenValues(zeros(3u)),
+        pheVariances(zeros(3u)),
+        genVariances(zeros(3u)),
+        addVariances(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -63,6 +64,7 @@ private:
     vecDbl meanGenValues;
     vecDbl pheVariances;
     vecDbl genVariances;
+    vecDbl addVariances;
 
 };
 
