@@ -53,6 +53,17 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t trait = 0u; trait < 2u; ++trait)
                 meanPhenotypes[trait][2u] /= metapopsize;
 
+            // Assign ecotypes
+            for (size_t eco = 0u; eco < 2u; ++eco)
+                ecotypes[eco].clear();
+
+            for (size_t p = 0u; p < 2u; ++p) {
+                for (auto ind : pops[p].individuals) {
+                    size_t group = ind->getEcoTrait() < meanPhenotypes[0u][2u];
+                    ecotypes[group].push_back(ind);
+                }
+            }
+
 
             // Load output to buffer
             loadBuffer(t);
