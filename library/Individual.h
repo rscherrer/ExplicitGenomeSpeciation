@@ -22,9 +22,10 @@ public:
 
     typedef Individual const * PInd;
 
-    Individual(const Genome&, const MultiNet&, const double& = 0.5);
+    Individual(const Genome&, const MultiNet&, const double& = 0.5,
+     const double& = 0.0);
     Individual(const Genome&, const MultiNet&, const Haplotype&,
-     const Haplotype&);
+     const Haplotype&, const double& = 0.0);
     ~Individual() {}
 
     // Getters
@@ -73,10 +74,10 @@ private:
     vecDbl genexp;
     bool isFemale;
     vecDbl geneticValues;
-    vecDbl traits;
     double ecoTrait;
     double matePref;
     double neutral;
+    vecDbl traits;
     double fitness;
     vecDbl feedingRates;
     size_t ecotype;

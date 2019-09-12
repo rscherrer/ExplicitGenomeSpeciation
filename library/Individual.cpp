@@ -23,16 +23,16 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 
 /// Constructor with randomly generated genome
-Individual::Individual(const Genome &genome,
- const MultiNet &networks, const double &snpfreq) :
+Individual::Individual(const Genome &genome, const MultiNet &networks,
+ const double &snpfreq, const double &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     geneticValues(develop(genome, networks)),
-    traits(develop(genome, networks)),
-    ecoTrait(traits[0u]),
-    matePref(traits[1u]),
-    neutral(traits[2u]),
+    ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
+    matePref(geneticValues[1u] + rnd::normal(0.0, scaleE)),
+    neutral(geneticValues[2u] + rnd::normal(0.0, scaleE)),
+    traits({ ecoTrait, matePref, neutral }),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
@@ -50,15 +50,16 @@ Individual::Individual(const Genome &genome,
 
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
- const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm) :
+ const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
+  const double &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     geneticValues(develop(genome, networks)),
-    traits(develop(genome, networks)),
-    ecoTrait(traits[0u]),
-    matePref(traits[1u]),
-    neutral(traits[2u]),
+    ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
+    matePref(geneticValues[1u] + rnd::normal(0.0, scaleE)),
+    neutral(geneticValues[2u] + rnd::normal(0.0, scaleE)),
+    traits({ ecoTrait, matePref, neutral }),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
