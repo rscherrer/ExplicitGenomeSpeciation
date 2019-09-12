@@ -42,6 +42,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             genVariances = zeros(3u);
             addVariances = zeros(3u);
             domVariances = zeros(3u);
+            intVariances = zeros(3u);
 
             // Mean phenotypes at the scale of the metapopulation
             size_t metapopsize = 0u;
@@ -110,6 +111,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                         meanLocusGenValue += genvalue;
                         covGenValueAlleleCount += zyg * genvalue;
+
+
                     }
                 }
 
@@ -140,6 +143,20 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 }
                 locusVarD /= metapopsize;
                 domVariances[trait] += locusVarD;
+
+                double locusVarI = 0.0;
+                for (size_t eco = 0u; eco < 2u; ++eco) {
+                    for (auto ind : ecotypes[eco]) {
+                        double intDeviation = ind->getLocusGenValue(locus);
+                        const size_t zyg = ind->getZygosity(locus);
+                        intDeviation -= meanGenotypeGenValues[zyg];
+                        locusVarI += sqr(intDeviation);
+                    }
+                }
+                locusVarI /= metapopsize;
+                locusVarI *= 2.0;
+
+                intVariances[trait] += locusVarI;
 
             }
 
