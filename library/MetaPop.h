@@ -32,7 +32,8 @@ public:
         meanGenValues(zeros(3u)),
         pheVariances(zeros(3u)),
         genVariances(zeros(3u)),
-        addVariances(zeros(3u))
+        addVariances(zeros(3u)),
+        domVariances(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -65,6 +66,7 @@ private:
     vecDbl pheVariances;
     vecDbl genVariances;
     vecDbl addVariances;
+    vecDbl domVariances;
 
 };
 

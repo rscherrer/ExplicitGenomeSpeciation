@@ -184,6 +184,7 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(pheVariances[trait]);
         buffer.add(genVariances[trait]);
         buffer.add(addVariances[trait]);
+        buffer.add(domVariances[trait]);
     }
 
     // buffer.add(getEcoIsolation());
