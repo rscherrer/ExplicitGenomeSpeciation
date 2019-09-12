@@ -43,18 +43,13 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             size_t metapopsize = 0u;
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
-                    const double x = ind->getEcoTrait();
-                    const double y = ind->getMatePref();
-                    const double z = ind->getNeutral();
-                    vecDbl geneticValues = ind->getGeneticValues();
-                    meanPhenotypes[0u][2u] += x;
-                    meanPhenotypes[1u][2u] += y;
-                    meanPhenotypes[2u][2u] += z;
-                    pheVariances[0u] += sqr(x);
-                    pheVariances[1u] += sqr(y);
-                    pheVariances[2u] += sqr(z);
-                    for (size_t trait = 0u; trait < 3u; ++trait)
+                    const vecDbl traitValues = ind->getTraits();
+                    const vecDbl geneticValues = ind->getGeneticValues();
+                    for (size_t trait = 0u; trait < 3u; ++trait) {
+                        meanPhenotypes[trait][2u] += traitValues[trait];
+                        pheVariances[trait] += sqr(traitValues[trait]);
                         genVariances[trait] += sqr(geneticValues[trait]);
+                    }
                 }
                 metapopsize += pops[p].getPopSize();
             }

@@ -33,6 +33,7 @@ public:
     double getMatePref() const { return matePref; }
     double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
+    vecDbl getTraits() const { return traits; }
     vecDbl getFeedingRates() const { return feedingRates; }
     vecDbl getGeneticValues() const { return geneticValues; }
     Diplotype getSequence() const { return sequence; }
