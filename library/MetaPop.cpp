@@ -86,7 +86,6 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     meanPhenotypes[trait][eco] /= ecotypes[eco].size();
 
             // Locus-specific variance decomposition
-
             for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
                 double meanAlleleCount = 0.0;
@@ -226,6 +225,7 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(addVariances[trait]);
         buffer.add(domVariances[trait]);
         buffer.add(intVariances[trait]);
+        buffer.add(Pst[trait]);
     }
 
     // buffer.add(getEcoIsolation());

@@ -46,6 +46,7 @@ public:
               "varA_eco",
               "varD_eco",
               "varI_eco",
+              "Pst_eco",
               "mean_mat0",
               "mean_mat1",
               "mean_mat",
@@ -54,6 +55,7 @@ public:
               "varA_mat",
               "varD_mat",
               "varI_mat",
+              "Pst_mat",
               "mean_ntr0",
               "mean_ntr1",
               "mean_ntr",
@@ -62,6 +64,7 @@ public:
               "varA_ntr",
               "varD_ntr",
               "varI_ntr",
+              "Pst_ntr",
               "ecological_iso",
               "spatial_iso",
               "mating_iso"
