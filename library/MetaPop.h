@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_METAPOP_H
 
 #include "Population.h"
+#include "Buffer.h"
 
 typedef std::vector<Population> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
@@ -49,25 +50,6 @@ public:
     void closeAll();
 
 
-};
-
-class Buffer
-{
-
-    friend class MetaPop;
-
-private:
-
-    vecDbl fields;
-
-public:
-
-    Buffer() : fields({ }) {}
-    ~Buffer() {}
-
-    void flush();
-    void add(const double&);
-    void write(std::ofstream *&, const double&);
 };
 
 class MetaPop

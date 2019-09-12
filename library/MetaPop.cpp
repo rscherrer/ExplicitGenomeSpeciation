@@ -1,5 +1,6 @@
 #include "MetaPop.h"
 #include "Individual.h"
+#include "Buffer.h"
 #include "utils.h"
 #include <iostream>
 #include <fstream>
@@ -166,15 +167,6 @@ double size2dbl(const size_t &x)
     return static_cast<double>(x);
 }
 
-void Buffer::flush()
-{
-    fields.clear();
-}
-
-void Buffer::add(const double &x)
-{
-    fields.push_back(x);
-}
 
 void MetaPop::loadBuffer(const size_t &t)
 {
@@ -199,10 +191,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(getMatingIsolation());
 }
 
-void Buffer::write(std::ofstream * &out, const double &value)
-{
-    out->write((char *) &value, sizeof(value));
-}
+
 
 void StreamBag::openAll()
 {

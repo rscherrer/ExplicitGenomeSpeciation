@@ -27,3 +27,9 @@ HEADERS += $$PWD/library/Individual.h
 
 SOURCES += $$PWD/library/MetaPop.cpp
 HEADERS += $$PWD/library/MetaPop.h
+
+SOURCES += $$PWD/library/StreamBag.cpp
+HEADERS += $$PWD/library/StreamBag.h
+
+SOURCES += $$PWD/library/Buffer.cpp
+HEADERS += $$PWD/library/Buffer.h
