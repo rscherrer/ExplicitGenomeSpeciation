@@ -37,6 +37,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             // Assign individuals to a group based on trait value
 
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
+            meanGenValues = { 0.0, 0.0, 0.0 };
             pheVariances = { 0.0, 0.0, 0.0 };
 
             // Mean phenotypes at the scale of the metapopulation
@@ -47,6 +48,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     const vecDbl geneticValues = ind->getGeneticValues();
                     for (size_t trait = 0u; trait < 3u; ++trait) {
                         meanPhenotypes[trait][2u] += traitValues[trait];
+                        meanGenValues[trait] += geneticValues[trait];
                         pheVariances[trait] += sqr(traitValues[trait]);
                         genVariances[trait] += sqr(geneticValues[trait]);
                     }
