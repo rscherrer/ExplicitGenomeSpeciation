@@ -37,20 +37,29 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             // Assign individuals to a group based on trait value
 
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
-
+            pheVariances = { 0.0, 0.0, 0.0 };
 
             // Mean phenotypes at the scale of the metapopulation
             size_t metapopsize = 0u;
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
-                    meanPhenotypes[0u][2u] += ind->getEcoTrait();
-                    meanPhenotypes[1u][2u] += ind->getMatePref();
-                    meanPhenotypes[2u][2u] += ind->getNeutral();
+                    const double x = ind->getEcoTrait();
+                    const double y = ind->getMatePref();
+                    const double z = ind->getNeutral();
+                    meanPhenotypes[0u][2u] += x;
+                    meanPhenotypes[1u][2u] += y;
+                    meanPhenotypes[2u][2u] += z;
+                    pheVariances[0u] += sqr(x);
+                    pheVariances[1u] += sqr(y);
+                    pheVariances[2u] += sqr(z);
                 }
                 metapopsize += pops[p].getPopSize();
             }
-            for (size_t trait = 0u; trait < 2u; ++trait)
+            for (size_t trait = 0u; trait < 2u; ++trait) {
                 meanPhenotypes[trait][2u] /= metapopsize;
+                pheVariances[trait] /= metapopsize;
+                pheVariances[trait] -= sqr(meanPhenotypes[trait][2u]);
+            }
 
             // Assign ecotypes and calculate ecotype-wise means
             for (size_t eco = 0u; eco < 2u; ++eco)
@@ -68,6 +77,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t trait = 0u; trait < 2u; ++trait)
                 for (size_t eco = 0u; eco < 2u; ++eco)
                     meanPhenotypes[trait][eco] /= ecotypes[eco].size();
+
 
 
 

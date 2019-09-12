@@ -28,7 +28,8 @@ public:
         buffer(Buffer()),
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
-        meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) })
+        meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
+        pheVariances({ 0.0, 0.0, 0.0 })
     {}
     ~MetaPop() {}
 
@@ -57,6 +58,8 @@ private:
     // Variables for analysis
     std::vector<Crowd> ecotypes;
     std::vector<vecDbl> meanPhenotypes;
+    vecDbl pheVariances;
+
 
 };
 
