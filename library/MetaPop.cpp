@@ -41,6 +41,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             pheVariances = zeros(3u);
             genVariances = zeros(3u);
             addVariances = zeros(3u);
+            domVariances = zeros(3u);
 
             // Mean phenotypes at the scale of the metapopulation
             size_t metapopsize = 0u;
@@ -92,14 +93,21 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 double meanLocusGenValue = 0.0;
                 double covGenValueAlleleCount = 0.0;
 
+                vecUns genotypeCounts = uzeros(3u);
+                vecDbl meanGenotypeGenValues = zeros(3u);
+
                 for (size_t eco = 0u; eco < 2u; ++eco) {
                     for (auto ind : ecotypes[eco]) {
 
                         size_t zyg = ind->getZygosity(locus);
+                        double genvalue = ind->getLocusGenValue(locus);
+
                         meanAlleleCount += zyg;
                         varAlleleCount += sqr(zyg);
 
-                        double genvalue = ind->getLocusGenValue(locus);
+                        ++genotypeCounts[zyg];
+                        meanGenotypeGenValues[zyg] += genvalue;
+
                         meanLocusGenValue += genvalue;
                         covGenValueAlleleCount += zyg * genvalue;
                     }
@@ -111,12 +119,27 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 meanLocusGenValue /= metapopsize;
                 covGenValueAlleleCount /= metapopsize;
                 covGenValueAlleleCount -= meanAlleleCount * meanLocusGenValue;
+                for (size_t zyg = 0u; zyg < 3u; ++zyg)
+                    meanGenotypeGenValues[zyg] /= genotypeCounts[zyg];
 
-                // VarA = avgMutEffect^2 / var(allelecount)
-                // where avgMutEffect = cov / varAlleleCount
+                const size_t trait = genome.traits[locus];
 
-                double locusVarA = sqr(covGenValueAlleleCount) / varAlleleCount;
-                addVariances[genome.traits[locus]] += locusVarA;
+                double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
+                double locusVarA = sqr(avgMutEffect) * varAlleleCount;
+                addVariances[trait] += locusVarA;
+
+                vecDbl domDeviations = zeros(3u);
+                double locusVarD = 0.0;
+                for (size_t zyg = 0u; zyg < 3u; ++zyg) {
+                    double breedingValue = avgMutEffect;
+                    breedingValue *= (zyg - meanAlleleCount);
+                    double addExpectation = meanLocusGenValue - breedingValue;
+                    domDeviations[zyg] = meanGenotypeGenValues[zyg];
+                    domDeviations[zyg] -= addExpectation;
+                    locusVarD += genotypeCounts[zyg] * sqr(domDeviations[zyg]);
+                }
+                locusVarD /= metapopsize;
+                domVariances[trait] += locusVarD;
 
             }
 
