@@ -34,9 +34,11 @@ public:
     double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
     vecDbl getFeedingRates() const { return feedingRates; }
+    vecDbl getGeneticValues() const { return geneticValues; }
     Diplotype getSequence() const { return sequence; }
     vecDbl getExpression() const { return genexp; }
     size_t getEcotype() const { return ecotype; };
+
 
     // Actions
     void feed(const vecDbl&);
@@ -69,6 +71,7 @@ private:
     Diplotype sequence;
     vecDbl genexp;
     bool isFemale;
+    vecDbl geneticValues;
     vecDbl traits;
     double ecoTrait;
     double matePref;

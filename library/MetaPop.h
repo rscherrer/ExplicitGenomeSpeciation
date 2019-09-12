@@ -29,6 +29,7 @@ public:
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
+        meanGenValues({ 0.0, 0.0, 0.0 }),
         pheVariances({ 0.0, 0.0, 0.0 }),
         genVariances({ 0.0, 0.0, 0.0 })
     {}
@@ -59,6 +60,7 @@ private:
     // Variables for analysis
     std::vector<Crowd> ecotypes;
     std::vector<vecDbl> meanPhenotypes;
+    vecDbl meanGenValues;
     vecDbl pheVariances;
     vecDbl genVariances;
 

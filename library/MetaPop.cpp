@@ -46,12 +46,15 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     const double x = ind->getEcoTrait();
                     const double y = ind->getMatePref();
                     const double z = ind->getNeutral();
+                    vecDbl geneticValues = ind->getGeneticValues();
                     meanPhenotypes[0u][2u] += x;
                     meanPhenotypes[1u][2u] += y;
                     meanPhenotypes[2u][2u] += z;
                     pheVariances[0u] += sqr(x);
                     pheVariances[1u] += sqr(y);
                     pheVariances[2u] += sqr(z);
+                    for (size_t trait = 0u; trait < 3u; ++trait)
+                        genVariances[trait] += sqr(geneticValues[trait]);
                 }
                 metapopsize += pops[p].getPopSize();
             }
@@ -59,6 +62,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 meanPhenotypes[trait][2u] /= metapopsize;
                 pheVariances[trait] /= metapopsize;
                 pheVariances[trait] -= sqr(meanPhenotypes[trait][2u]);
+                genVariances[trait] /= metapopsize;
+                genVariances[trait] -= sqr(meanGenValues[trait]);
             }
 
             // Assign ecotypes and calculate ecotype-wise means
