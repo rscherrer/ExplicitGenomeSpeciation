@@ -1,5 +1,7 @@
 #include "MetaPop.h"
 
+typedef std::vector<vecDbl> Matrix;
+
 double Xst(const vecDbl &v, const vecUns &n)
 {
     return 1.0 - (n[0u] * v[0u] - n[1u] * v[1u]) / (n[2u] * v[2u]);
@@ -41,13 +43,14 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
             // Reset statistics
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
-            meanGenValues = zeros(3u);
             pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
-            genVariances = zeros(3u);
+            genVariances = { zeros(3u), zeros(3u), zeros(3u) };
             addVariances = zeros(3u);
             domVariances = zeros(3u);
             intVariances = zeros(3u);
             Pst = zeros(3u);
+
+            Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
             // Mean phenotypes at the scale of the metapopulation
             size_t metapopsize = 0u;
@@ -58,9 +61,9 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     const vecDbl geneticValues = ind->getGeneticValues();
                     for (size_t trait = 0u; trait < 3u; ++trait) {
                         meanPhenotypes[trait][2u] += traitValues[trait];
-                        meanGenValues[trait] += geneticValues[trait];
+                        meanGenValues[trait][2u] += geneticValues[trait];
                         pheVariances[trait][2u] += sqr(traitValues[trait]);
-                        genVariances[trait] += sqr(geneticValues[trait]);
+                        genVariances[trait][2u] += sqr(geneticValues[trait]);
                     }
                 }
                 metapopsize += pops[p].getPopSize();
@@ -69,20 +72,24 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 meanPhenotypes[trait][2u] /= metapopsize;
                 pheVariances[trait][2u] /= metapopsize;
                 pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);
-                genVariances[trait] /= metapopsize;
-                genVariances[trait] -= sqr(meanGenValues[trait]);
+                genVariances[trait][2u] /= metapopsize;
+                genVariances[trait][2u] -= sqr(meanGenValues[trait][2u]);
             }
 
             // Assign ecotypes and calculate ecotype-specific means
             for (size_t eco = 0u; eco < 2u; ++eco)
                 ecotypes[eco].clear();
+
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
                     size_t group = ind->getEcoTrait() < meanPhenotypes[0u][2u];
                     vecDbl traitValues = ind->getTraits();
+                    vecDbl geneticValues = ind->getGeneticValues();
                     for (size_t trait = 0u; trait < 3u; ++trait) {
                         meanPhenotypes[trait][group] += traitValues[trait];
+                        meanGenValues[trait][group] += geneticValues[trait];
                         pheVariances[trait][group] += sqr(traitValues[trait]);
+                        genVariances[trait][group] += sqr(geneticValues[trait]);
                     }
                     ecotypes[group].push_back(ind);
                 }
@@ -91,8 +98,11 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t trait = 0u; trait < 2u; ++trait) {
                 for (size_t eco = 0u; eco < 2u; ++eco) {
                     meanPhenotypes[trait][eco] /= ecotypes[eco].size();
+                    meanGenValues[trait][eco] /= ecotypes[eco].size();
                     pheVariances[trait][eco] /= ecotypes[eco].size();
                     pheVariances[trait][eco] -= meanPhenotypes[trait][eco];
+                    genVariances[trait][eco] /= ecotypes[eco].size();
+                    genVariances[trait][eco] -= meanGenValues[trait][eco];
                 }
             }
 
@@ -175,6 +185,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             const vecUns census = { n0, n1, metapopsize };
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 Pst[trait] = Xst(pheVariances[trait], census);
+                Gst[trait] = Xst(genVariances[trait], census);
             }
 
             // Load output to buffer
@@ -237,11 +248,12 @@ void MetaPop::loadBuffer(const size_t &t)
         for (size_t group = 0u; group < 3u; ++group)
             buffer.add(meanPhenotypes[trait][group]);
         buffer.add(pheVariances[trait][2u]);
-        buffer.add(genVariances[trait]);
+        buffer.add(genVariances[trait][2u]);
         buffer.add(addVariances[trait]);
         buffer.add(domVariances[trait]);
         buffer.add(intVariances[trait]);
         buffer.add(Pst[trait]);
+        buffer.add(Gst[trait]);
     }
 
     // buffer.add(getEcoIsolation());

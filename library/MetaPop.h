@@ -29,13 +29,13 @@ public:
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
-        meanGenValues(zeros(3u)),
         pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
-        genVariances(zeros(3u)),
+        genVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         addVariances(zeros(3u)),
         domVariances(zeros(3u)),
         intVariances(zeros(3u)),
-        Pst(zeros(3u))
+        Pst(zeros(3u)),
+        Gst(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -64,13 +64,13 @@ private:
     // Variables for analysis
     std::vector<Crowd> ecotypes;
     std::vector<vecDbl> meanPhenotypes;
-    vecDbl meanGenValues;
     std::vector<vecDbl> pheVariances;
-    vecDbl genVariances;
+    std::vector<vecDbl> genVariances;
     vecDbl addVariances;
     vecDbl domVariances;
     vecDbl intVariances;
     vecDbl Pst;
+    vecDbl Gst;
 
 };
 
