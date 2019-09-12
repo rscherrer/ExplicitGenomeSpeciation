@@ -70,3 +70,8 @@ size_t sumu(vecUns &v) {
         sum += v[i];
     return sum;
 }
+
+double size2dbl(const size_t &x)
+{
+    return static_cast<double>(x);
+}

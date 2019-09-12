@@ -174,10 +174,7 @@ double MetaPop::getMatingIsolation()
 }
 
 
-double size2dbl(const size_t &x)
-{
-    return static_cast<double>(x);
-}
+
 
 
 void MetaPop::loadBuffer(const size_t &t)

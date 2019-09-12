@@ -24,3 +24,5 @@ size_t argmin(vecDbl&);
 size_t sumbool(Haplotype&);
 
 size_t sumu(vecUns&);
+
+double size2dbl(const size_t&);
