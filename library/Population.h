@@ -27,6 +27,7 @@ public:
     size_t getPopSize() const { return individuals.size(); }
     size_t getNOffspring() const { return offspring.size(); }
     size_t getNFemales() const { return females.size(); }
+    size_t getNMales() const { return males.size(); }
     vecDbl getResources() const { return resources; }
     double getMeanEcoTrait() const { return meanEcoTrait; }
     double getMeanMatePref() const { return meanMatePref; }

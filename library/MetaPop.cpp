@@ -19,6 +19,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
         if (record && t % tsave == 0u) {
 
+            // Prepare analysis for output
+
             ecomean = 0.0; // global mean trait value
 
             for (size_t p = 0u; p < 2u; ++p) {
@@ -36,8 +38,10 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t p = 0u; p < 2u; ++p)
                 pops[p].assignEcotypes(ecomean);
 
+            // Load output to buffer
             loadBuffer(t);
 
+            // Write to files
             for (size_t f = 0u; f < out.names.size(); ++f)
                 buffer.write(out.files[f], buffer.fields[f]);
 
@@ -127,6 +131,18 @@ double MetaPop::getMatingIsolation()
     // For each of them sample a number of males to encounter, from the metapop
     // Evaluate each male by a yes or no
     // Update the table of matings accordingly by looking at ecotypes
+    // RI = 0 is mating tests are not possible
+
+    size_t nfemales = 0u;
+    size_t nmales = 0u;
+
+    for (size_t p = 0u; p < 2u; ++p) {
+        nfemales += pops[p].getNFemales();
+        nmales += pops[p].getNMales();
+    }
+
+    if (nfemales == 0u || nmales == 0u)
+        return 0.0;
 
     // Table of crossings
     std::vector<vecUns> m = { uzeros(2u), uzeros(2u) };
@@ -134,7 +150,7 @@ double MetaPop::getMatingIsolation()
     // Make a vector with all males of the metapop
     Crowd allMales;
     for (size_t p = 0u; p < 2u; ++p)
-        for (size_t i = 0u; i < pops[p].males.size(); ++i)
+        for (size_t i = 0u; i < pops[p].getNMales(); ++i)
             allMales.push_back(pops[p].individuals[i]);
 
     // Loop through the females of the metapop and test their preference
