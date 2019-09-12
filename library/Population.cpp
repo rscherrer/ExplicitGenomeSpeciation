@@ -157,6 +157,8 @@ void Population::reproduce(const double &birth, const double &strength,
  const Genome &genome, const MultiNet &networks, const double &cost)
 {
 
+    if (!(females.size() > 0u) || !(males.size() > 0u)) return;
+
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
     for (auto male : males)
@@ -199,7 +201,6 @@ void Population::reproduce(const double &birth, const double &strength,
 
             ++time;
         }
-
     }
 }
 
