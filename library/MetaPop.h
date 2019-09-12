@@ -35,7 +35,8 @@ public:
         domVariances(zeros(3u)),
         intVariances(zeros(3u)),
         Pst(zeros(3u)),
-        Gst(zeros(3u))
+        Gst(zeros(3u)),
+        Qst(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -71,6 +72,7 @@ private:
     vecDbl intVariances;
     vecDbl Pst;
     vecDbl Gst;
+    vecDbl Qst;
 
 };
 

@@ -49,6 +49,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             domVariances = zeros(3u);
             intVariances = zeros(3u);
             Pst = zeros(3u);
+            Gst = zeros(3u);
+            Qst = zeros(3u);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
@@ -254,6 +256,7 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(intVariances[trait]);
         buffer.add(Pst[trait]);
         buffer.add(Gst[trait]);
+        buffer.add(Qst[trait]);
     }
 
     // buffer.add(getEcoIsolation());
