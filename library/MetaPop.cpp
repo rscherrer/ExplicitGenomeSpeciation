@@ -45,7 +45,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
             pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
             genVariances = { zeros(3u), zeros(3u), zeros(3u) };
-            addVariances = zeros(3u);
+            addVariances = { zeros(3u), zeros(3u), zeros(3u) };
             domVariances = zeros(3u);
             intVariances = zeros(3u);
             Pst = zeros(3u);
@@ -151,7 +151,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                 double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
                 double locusVarA = sqr(avgMutEffect) * varAlleleCount;
-                addVariances[trait] += locusVarA;
+                addVariances[trait][2u] += locusVarA;
 
                 vecDbl domDeviations = zeros(3u);
                 double locusVarD = 0.0;
@@ -188,6 +188,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 Pst[trait] = Xst(pheVariances[trait], census);
                 Gst[trait] = Xst(genVariances[trait], census);
+                Qst[trait] = Xst(addVariances[trait], census);
             }
 
             // Load output to buffer
@@ -251,7 +252,7 @@ void MetaPop::loadBuffer(const size_t &t)
             buffer.add(meanPhenotypes[trait][group]);
         buffer.add(pheVariances[trait][2u]);
         buffer.add(genVariances[trait][2u]);
-        buffer.add(addVariances[trait]);
+        buffer.add(addVariances[trait][2u]);
         buffer.add(domVariances[trait]);
         buffer.add(intVariances[trait]);
         buffer.add(Pst[trait]);

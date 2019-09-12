@@ -10,6 +10,7 @@
 typedef std::vector<Population> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
 typedef std::vector<std::string> vecStrings;
+typedef std::vector<vecDbl> Matrix;
 
 class MetaPop
 {
@@ -31,7 +32,7 @@ public:
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
         pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         genVariances({ zeros(3u), zeros(3u), zeros(3u) }),
-        addVariances(zeros(3u)),
+        addVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         domVariances(zeros(3u)),
         intVariances(zeros(3u)),
         Pst(zeros(3u)),
@@ -64,10 +65,10 @@ private:
 
     // Variables for analysis
     std::vector<Crowd> ecotypes;
-    std::vector<vecDbl> meanPhenotypes;
-    std::vector<vecDbl> pheVariances;
-    std::vector<vecDbl> genVariances;
-    vecDbl addVariances;
+    Matrix meanPhenotypes;
+    Matrix pheVariances;
+    Matrix genVariances;
+    Matrix addVariances;
     vecDbl domVariances;
     vecDbl intVariances;
     vecDbl Pst;
