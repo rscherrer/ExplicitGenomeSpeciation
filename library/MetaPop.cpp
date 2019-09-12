@@ -138,9 +138,11 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(pops[1u].getResources()[1u]);
 
     // Phenotypes
-    for (size_t trait = 0u; trait < 2u; ++trait)
-        for (size_t group = 0u; group < 2u; ++group)
+    for (size_t trait = 0u; trait < 2u; ++trait) {
+        for (size_t group = 0u; group < 3u; ++group)
             buffer.add(meanPhenotypes[trait][group]);
+        buffer.add(pheVariances[trait]);
+    }
 
     // buffer.add(getEcoIsolation());
     // buffer.add(getSpatialIsolation());
