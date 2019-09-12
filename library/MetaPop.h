@@ -30,7 +30,7 @@ public:
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
         meanGenValues(zeros(3u)),
-        pheVariances(zeros(3u)),
+        pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         genVariances(zeros(3u)),
         addVariances(zeros(3u)),
         domVariances(zeros(3u)),
@@ -65,7 +65,7 @@ private:
     std::vector<Crowd> ecotypes;
     std::vector<vecDbl> meanPhenotypes;
     vecDbl meanGenValues;
-    vecDbl pheVariances;
+    std::vector<vecDbl> pheVariances;
     vecDbl genVariances;
     vecDbl addVariances;
     vecDbl domVariances;
