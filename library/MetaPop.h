@@ -29,7 +29,8 @@ public:
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
-        pheVariances({ 0.0, 0.0, 0.0 })
+        pheVariances({ 0.0, 0.0, 0.0 }),
+        genVariances({ 0.0, 0.0, 0.0 })
     {}
     ~MetaPop() {}
 
@@ -59,7 +60,7 @@ private:
     std::vector<Crowd> ecotypes;
     std::vector<vecDbl> meanPhenotypes;
     vecDbl pheVariances;
-
+    vecDbl genVariances;
 
 };
 
