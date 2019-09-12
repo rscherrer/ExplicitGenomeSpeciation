@@ -49,20 +49,20 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 }
                 metapopsize += pops[p].getPopSize();
             }
-
             for (size_t trait = 0u; trait < 2u; ++trait)
                 meanPhenotypes[trait][2u] /= metapopsize;
 
             // Assign ecotypes
             for (size_t eco = 0u; eco < 2u; ++eco)
                 ecotypes[eco].clear();
-
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
                     size_t group = ind->getEcoTrait() < meanPhenotypes[0u][2u];
                     ecotypes[group].push_back(ind);
                 }
             }
+
+            // Mean phenotypes per ecotype
 
 
             // Load output to buffer
@@ -121,9 +121,9 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add(pops[1u].getResources()[1u]);
 
     // Phenotypes
-    buffer.add(meanPhenotypes[0u][2u]);
-    buffer.add(meanPhenotypes[1u][2u]);
-    buffer.add(meanPhenotypes[2u][2u]);
+    for (size_t trait = 0u; trait < 2u; ++trait)
+        for (size_t group = 0u; group < 2u; ++group)
+            buffer.add(meanPhenotypes[trait][group]);
 
     // buffer.add(getEcoIsolation());
     // buffer.add(getSpatialIsolation());
