@@ -293,16 +293,17 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(Cst[trait]);
     }
 
-    // buffer.add(getEcoIsolation());
-    // buffer.add(getSpatialIsolation());
-    // buffer.add(getMatingIsolation());
+    buffer.add(getEcoIsolation());
+    buffer.add(getSpatialIsolation());
+    buffer.add(getMatingIsolation());
 }
 
-double MetaPop::getEcoIsolation(const double &ecomean)
+double MetaPop::getEcoIsolation()
 {
     // Ecological isolation is the standard deviation in ecological trait value
 
     double ei = 0.0;
+    const double ecomean = meanPhenotypes[0u][2u];
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];

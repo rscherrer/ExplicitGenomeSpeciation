@@ -48,7 +48,7 @@ public:
     size_t evolve(const Genome&, const MultiNet&);
     void loadBuffer(const size_t &t);
 
-    double getEcoIsolation(const double&);
+    double getEcoIsolation();
     double getSpatialIsolation();
     double getMatingIsolation();
 
