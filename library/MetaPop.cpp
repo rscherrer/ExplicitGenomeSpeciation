@@ -47,6 +47,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
             genVariances = { zeros(3u), zeros(3u), zeros(3u) };
             addVariances = { zeros(3u), zeros(3u), zeros(3u) };
+            nadVariances = { zeros(3u), zeros(3u), zeros(3u) };
             domVariances = zeros(3u);
             intVariances = zeros(3u);
             Pst = zeros(3u);
@@ -196,6 +197,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 locusVarI /= metapopsize;
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
+
+                nadVariances[trait][2u] += locusVarD + 0.5 * locusVarI;
 
             }
 
