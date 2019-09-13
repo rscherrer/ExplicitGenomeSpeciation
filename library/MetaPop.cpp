@@ -1,6 +1,7 @@
 #include "MetaPop.h"
 
 typedef std::vector<vecDbl> Matrix;
+typedef std::vector<vecUns> MatUns;
 
 double Xst(const vecDbl &v, const vecUns &n)
 {
@@ -116,7 +117,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 double meanLocusGenValue = 0.0;
                 double covGenValueAlleleCount = 0.0;
 
-                std::vector<vecUns> genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
+                MatUns genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
                 vecDbl meanGenotypeGenValues = zeros(3u);
 
                 for (size_t eco = 0u; eco < 2u; ++eco) {
