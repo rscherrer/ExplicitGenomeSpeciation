@@ -227,8 +227,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             loadBuffer(t);
 
             // Write to files
-            // for (size_t f = 0u; f < out.names.size(); ++f)
-                // buffer.write(out.files[f], buffer.fields[f]);
+            for (size_t f = 0u; f < out.names.size(); ++f)
+                buffer.write(out.files[f], buffer.fields[f]);
 
         }
 
