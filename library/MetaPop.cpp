@@ -129,6 +129,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         varAlleleCount += sqr(zyg);
 
                         ++genotypeCounts[2u][zyg];
+                        ++genotypeCounts[eco][zyg];
                         meanGenotypeGenValues[zyg] += genvalue;
 
                         meanLocusGenValue += genvalue;
