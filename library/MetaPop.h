@@ -62,7 +62,7 @@ private:
     double matingcost;
     double sexsel;
     int tmax;
-    size_t tsave;
+    int tsave;
     int tburnin;
     Buffer buffer;
     bool record;

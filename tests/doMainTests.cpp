@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
-    size_t t = meta.evolve(genome, networks);
+    int t = meta.evolve(genome, networks);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
     BOOST_CHECK(meta.getPops()[0u].getPopSize() > 0u);
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
-    size_t t = meta.evolve(genome, networks);
+    int t = meta.evolve(genome, networks);
 
     BOOST_CHECK(t < pars.getTEndSim());
     BOOST_CHECK(meta.getPops()[0u].getPopSize() == 0u);

@@ -27,9 +27,9 @@ public:
     double getInteractionWeightScale() const { return interactionWeightScale; }
     double getDominanceVariance() const { return dominanceVariance; }
     size_t getSeed() const { return seed; }
-    size_t getTEndSim() const { return tEndSim; }
-    size_t getTSave() const { return tSave; }
-    size_t getTBurnIn() const { return tBurnIn; }
+    int getTEndSim() const { return tEndSim; }
+    int getTSave() const { return tSave; }
+    int getTBurnIn() const { return tBurnIn; }
     size_t getInitialPopSize() const { return initialPopSize; }
     double getDispersalRate() const { return dispersalRate; }
     double getSurvivalProb() const { return survivalProb; }
@@ -132,9 +132,9 @@ private:
     double dominanceVariance = 1.0;
 
     // Simulation parameters
-    size_t  tBurnIn                 = 1;
-    size_t  tEndSim                 = 100;
-    size_t  tSave                   = 1;
+    int  tBurnIn                 = 10;
+    int  tEndSim                 = 100;
+    int  tSave                   = 1;
     double tiny                  = 1.0e-12;
     size_t seed;
     bool record = true;
