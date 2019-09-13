@@ -158,14 +158,15 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                 vecDbl domDeviations = zeros(3u);
                 vecDbl breedingValues = zeros(3u);
+                vecDbl addExpectations = zeros(3u);
                 double locusVarD = 0.0;
                 for (size_t zyg = 0u; zyg < 3u; ++zyg) {
                     breedingValues[zyg] = avgMutEffect;
                     breedingValues[zyg] *= (zyg - meanAlleleCount);
-                    double addExpectation = meanLocusGenValue;
-                    addExpectation -= breedingValues[zyg];
+                    addExpectations[zyg] = meanLocusGenValue;
+                    addExpectations[zyg] -= breedingValues[zyg];
                     domDeviations[zyg] = meanGenotypeGenValues[zyg];
-                    domDeviations[zyg] -= addExpectation;
+                    domDeviations[zyg] -= addExpectations[zyg];
                     double genotypeSSDeviation = genotypeCounts[2u][zyg];
                     genotypeSSDeviation += sqr(domDeviations[zyg]);
                     locusVarD += genotypeSSDeviation;
@@ -176,11 +177,20 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 double locusVarI = 0.0;
                 for (size_t eco = 0u; eco < 2u; ++eco) {
                     for (auto ind : ecotypes[eco]) {
-                        double intDeviation = ind->getLocusGenValue(locus);
+
                         const size_t zyg = ind->getZygosity(locus);
+                        const double genvalue = ind->getLocusGenValue(locus);
+
+                        double intDeviation = genvalue;
                         intDeviation -= meanGenotypeGenValues[zyg];
                         locusVarI += sqr(intDeviation);
+
+                        double totDeviation = genvalue - addExpectations[zyg];
+                        nadVariances[trait][eco] += sqr(totDeviation);
+
                     }
+
+                    nadVariances[trait][eco] /= ecotypes[eco].size();
 
                     double meanBreed = 0.0;
                     double meanBreedSq = 0.0;
@@ -197,6 +207,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 locusVarI /= metapopsize;
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
+
 
                 nadVariances[trait][2u] += locusVarD + 0.5 * locusVarI;
 
