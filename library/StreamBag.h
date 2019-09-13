@@ -49,6 +49,7 @@ public:
               "Pst_eco",
               "Gst_eco",
               "Qst_eco",
+              "Cst_eco",
               "mean_mat0",
               "mean_mat1",
               "mean_mat",
@@ -60,6 +61,7 @@ public:
               "Pst_mat",
               "Gst_mat",
               "Qst_mat",
+              "Cst_mat",
               "mean_ntr0",
               "mean_ntr1",
               "mean_ntr",
@@ -71,6 +73,7 @@ public:
               "Pst_ntr",
               "Gst_ntr",
               "Qst_ntr",
+              "Cst_ntr",
               "ecological_iso",
               "spatial_iso",
               "mating_iso"

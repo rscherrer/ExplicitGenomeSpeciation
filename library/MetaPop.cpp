@@ -197,8 +197,6 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
 
-
-
             }
 
             const size_t n0 = ecotypes[0u].size();
@@ -208,6 +206,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 Pst[trait] = Xst(pheVariances[trait], census);
                 Gst[trait] = Xst(genVariances[trait], census);
                 Qst[trait] = Xst(addVariances[trait], census);
+                Cst[trait] = Xst(nadVariances[trait], census);
             }
 
             // Load output to buffer
@@ -277,6 +276,7 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(Pst[trait]);
         buffer.add(Gst[trait]);
         buffer.add(Qst[trait]);
+        buffer.add(Cst[trait]);
     }
 
     // buffer.add(getEcoIsolation());

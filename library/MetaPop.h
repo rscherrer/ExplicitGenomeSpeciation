@@ -33,11 +33,13 @@ public:
         pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         genVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         addVariances({ zeros(3u), zeros(3u), zeros(3u) }),
+        nadVariances({ zeros(3u), zeros(3u), zeros(3u) }),
         domVariances(zeros(3u)),
         intVariances(zeros(3u)),
         Pst(zeros(3u)),
         Gst(zeros(3u)),
-        Qst(zeros(3u))
+        Qst(zeros(3u)),
+        Cst(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -69,11 +71,13 @@ private:
     Matrix pheVariances;
     Matrix genVariances;
     Matrix addVariances;
+    Matrix nadVariances;
     vecDbl domVariances;
     vecDbl intVariances;
     vecDbl Pst;
     vecDbl Gst;
     vecDbl Qst;
+    vecDbl Cst;
 
 };
 
