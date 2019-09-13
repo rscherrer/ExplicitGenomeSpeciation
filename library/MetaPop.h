@@ -26,6 +26,7 @@ public:
         sexsel(pars.getMatePreferenceStrength()),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
+        tburnin(pars.getTBurnIn()),
         buffer(Buffer()),
         record(pars.getRecord()),
         ecotypes({ { }, { } }),
@@ -45,7 +46,7 @@ public:
 
     vecPop getPops() const { return pops; }
 
-    size_t evolve(const Genome&, const MultiNet&);
+    int evolve(const Genome&, const MultiNet&);
     void loadBuffer(const size_t &t);
 
     double getEcoIsolation();
@@ -60,8 +61,9 @@ private:
     double birth;
     double matingcost;
     double sexsel;
-    size_t tmax;
+    int tmax;
     size_t tsave;
+    int tburnin;
     Buffer buffer;
     bool record;
 

@@ -29,6 +29,7 @@ public:
     size_t getSeed() const { return seed; }
     size_t getTEndSim() const { return tEndSim; }
     size_t getTSave() const { return tSave; }
+    size_t getTBurnIn() const { return tBurnIn; }
     size_t getInitialPopSize() const { return initialPopSize; }
     double getDispersalRate() const { return dispersalRate; }
     double getSurvivalProb() const { return survivalProb; }

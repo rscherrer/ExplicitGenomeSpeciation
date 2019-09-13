@@ -8,10 +8,9 @@ double Xst(const vecDbl &v, const vecUns &n)
     return 1.0 - (n[0u] * v[0u] - n[1u] * v[1u]) / (n[2u] * v[2u]);
 }
 
-size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
+int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
-    size_t t = 0u;
-
+    int t = - tburnin;
     StreamBag out;
 
     if (record)
@@ -25,7 +24,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
 
         // Analyze and record
-        if (record && t % tsave == 0u) {
+        if (record && t % tsave == 0u && t > 0) {
 
             // Prepare analysis for output
 
