@@ -116,7 +116,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 double meanLocusGenValue = 0.0;
                 double covGenValueAlleleCount = 0.0;
 
-                vecUns genotypeCounts = uzeros(3u);
+                std::vector<vecUns> genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
                 vecDbl meanGenotypeGenValues = zeros(3u);
 
                 for (size_t eco = 0u; eco < 2u; ++eco) {
@@ -128,7 +128,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         meanAlleleCount += zyg;
                         varAlleleCount += sqr(zyg);
 
-                        ++genotypeCounts[zyg];
+                        ++genotypeCounts[2u][zyg];
                         meanGenotypeGenValues[zyg] += genvalue;
 
                         meanLocusGenValue += genvalue;
@@ -145,7 +145,7 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 covGenValueAlleleCount /= metapopsize;
                 covGenValueAlleleCount -= meanAlleleCount * meanLocusGenValue;
                 for (size_t zyg = 0u; zyg < 3u; ++zyg)
-                    meanGenotypeGenValues[zyg] /= genotypeCounts[zyg];
+                    meanGenotypeGenValues[zyg] /= genotypeCounts[2u][zyg];
 
                 const size_t trait = genome.traits[locus];
 
@@ -163,7 +163,9 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     addExpectation -= breedingValues[zyg];
                     domDeviations[zyg] = meanGenotypeGenValues[zyg];
                     domDeviations[zyg] -= addExpectation;
-                    locusVarD += genotypeCounts[zyg] * sqr(domDeviations[zyg]);
+                    double genotypeSSDeviation = genotypeCounts[2u][zyg];
+                    genotypeSSDeviation += sqr(domDeviations[zyg]);
+                    locusVarD += genotypeSSDeviation;
                 }
                 locusVarD /= metapopsize;
                 domVariances[trait] += locusVarD;
@@ -189,7 +191,8 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 // ss = (naa * brvaa^2 + nAa * brvAa^2 + nAA * brvAA^2) / n
                 // E(brv) = (naa * brvaa + nAa * brvAa + nAA * brvAA) / n
 
-                // First calculate breeding values for each genotype
+                // First calculate breeding values for each genotype--check
+                // Then count genotypes within each ecotype
 
 
             }
