@@ -154,11 +154,13 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 addVariances[trait][2u] += locusVarA;
 
                 vecDbl domDeviations = zeros(3u);
+                vecDbl breedingValues = zeros(3u);
                 double locusVarD = 0.0;
                 for (size_t zyg = 0u; zyg < 3u; ++zyg) {
-                    double breedingValue = avgMutEffect;
-                    breedingValue *= (zyg - meanAlleleCount);
-                    double addExpectation = meanLocusGenValue - breedingValue;
+                    breedingValues[zyg] = avgMutEffect;
+                    breedingValues[zyg] *= (zyg - meanAlleleCount);
+                    double addExpectation = meanLocusGenValue;
+                    addExpectation -= breedingValues[zyg];
                     domDeviations[zyg] = meanGenotypeGenValues[zyg];
                     domDeviations[zyg] -= addExpectation;
                     locusVarD += genotypeCounts[zyg] * sqr(domDeviations[zyg]);
@@ -177,8 +179,18 @@ size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 }
                 locusVarI /= metapopsize;
                 locusVarI *= 2.0;
-
                 intVariances[trait] += locusVarI;
+
+                // Within-ecotype additive variance
+                // as the sum of the locus-specific within-ecotype add var
+                // themselves as the variance in whole-population breeding values
+                // located within that ecotype
+                // varAi = E(brv^2) - E(brv)^2
+                // ss = (naa * brvaa^2 + nAa * brvAa^2 + nAA * brvAA^2) / n
+                // E(brv) = (naa * brvaa + nAa * brvAa + nAA * brvAA) / n
+
+                // First calculate breeding values for each genotype
+
 
             }
 
