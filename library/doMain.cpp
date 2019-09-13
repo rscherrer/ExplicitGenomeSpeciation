@@ -62,7 +62,7 @@ int doMain(const vecStr &args)
 
         // Create populations
         Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
-        Population pop2 = Population(n0, genome, networks, foodmax2, foodgrows);
+        Population pop2 = Population(0u, genome, networks, foodmax2, foodgrows);
         vecPop metapop = {pop1, pop2};
 
         // Create a metapopulation
