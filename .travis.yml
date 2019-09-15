@@ -36,7 +36,7 @@ script:
  # Build and run the tests
  - qmake ./EGS_test.pro
  - make --silent debug
- - ./EGS_test
+ - travis_wait 60 ./EGS_test
   
  # helgrind
  - valgrind --tool=helgrind --log-file=helgrind.log -v ./EGS_test
