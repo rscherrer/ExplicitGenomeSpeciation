@@ -56,6 +56,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             vecDbl varS = zeros(3u);
             vecDbl varT = zeros(3u);
 
+            FstScan = zeros(genome.nloci);
+
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
             // Mean phenotypes at the scale of the metapopulation
@@ -215,6 +217,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                 // Calculate VarS and VarT for genome-wide Fst
                 // Go check in a pop gen textbook what these mean
+                double Hwithin = 0.0;
                 for (size_t eco = 0u; eco < 2u; ++eco) {
 
                     // Within-ecotype allele frequencies
@@ -222,8 +225,11 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     alleleFreq += 0.5 * genotypeCounts[eco][1u];
                     alleleFreq /= ecotypes[eco].size();
                     varS[trait] += ecotypes[eco].size() * sqr(alleleFreq);
+                    double heterozFreq = 2.0 * alleleFreq * (1.0 - alleleFreq);
+                    Hwithin += ecotypes[eco].size() * heterozFreq;
                 }
                 varS[trait] /= metapopsize;
+                Hwithin /= metapopsize;
 
                 // Global allele frequency
                 double alleleFreq = genotypeCounts[2u][0u];
@@ -231,6 +237,10 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 alleleFreq /= metapopsize;
                 varS[trait] -= sqr(alleleFreq);
                 varT[trait] += alleleFreq * (1.0 - alleleFreq);
+
+                // Fst genome scan
+                double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
+                FstScan[locus] = 1.0 - Hwithin / Htotal;
 
             }
 
