@@ -57,6 +57,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             vecDbl varT = zeros(3u);
 
             PstScan = zeros(genome.nloci);
+            GstScan = zeros(genome.nloci);
             FstScan = zeros(genome.nloci);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
@@ -259,6 +260,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     locusVarP[eco] = locusVarG[eco] + locusVarE;
 
                 PstScan[locus] = Xst(locusVarP, census);
+                GstScan[locus] = Xst(locusVarG, census);
 
                 // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
