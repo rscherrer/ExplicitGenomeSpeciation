@@ -228,6 +228,64 @@ void Population::reproduce(const double &birth, const double &strength,
 }
 
 
+void Population::burninReproduce(const double &birth, const double &strength,
+ const Genome &genome, const MultiNet &networks, const double &cost,
+  const double &ecosel)
+{
+    if (!(females.size() > 0u) || !(males.size() > 0u)) return;
+
+    // Prepare a weighted lottery based on male mating successes
+    vecDbl successes;
+    for (auto male : males) {
+        double burninFactor = exp(- ecosel * sqr(male->getMatePref()));
+        double success = male->getFitness() * burninFactor;
+        successes.push_back(success);
+    }
+
+    assert(successes.size() == males.size());
+
+    Discrete maleMarket(successes.begin(), successes.end());
+
+    // Sample the duration of the mating season this year
+    const size_t seasonEnd = rnd::geometric(cost);
+
+    // Every mom gets a chance to produce babies
+    for (auto mom : females) {
+
+        double burninFactor = - ecosel * sqr(mom->getMatePref());
+        double success = mom->getFitness() * burninFactor;
+        size_t nOffspring = rnd::poisson(birth * success);
+
+        Haplotype egg = mom->recombine(genome.locations, genome.chromosomes);
+        mom->mutate(egg);
+
+        size_t time = 0u;
+
+        // The mating season begins...
+        while (nOffspring && time < seasonEnd) {
+
+            // Sample a male
+            const size_t encounter = maleMarket(rnd::rng);
+            assert(encounter < males.size());
+            auto dad = males[encounter];
+
+            Haplotype sperm = dad->recombine(genome.locations,
+             genome.chromosomes);
+            dad->mutate(sperm);
+
+            if (mom->acceptMate(dad->getEcoTrait(), strength)) {
+                offspring.push_back(new Individual(genome, networks, egg,
+                 sperm));
+                --nOffspring;
+            }
+
+            ++time;
+        }
+    }
+}
+
+
+
 /// Function to make it to the next generation
 bool Population::survive(const double &survival)
 {

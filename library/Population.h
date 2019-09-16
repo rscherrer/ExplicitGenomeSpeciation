@@ -41,6 +41,8 @@ public:
     void burninConsume();
     void reproduce(const double&, const double&, const Genome&,
      const MultiNet&, const double& = 0.01);
+    void burninReproduce(const double&, const double&, const Genome&,
+     const MultiNet&, const double& = 0.01, const double& = 0.0);
     void reproduceAsexual(const double&, const Genome&,
      const MultiNet&);
     bool survive(const double&);

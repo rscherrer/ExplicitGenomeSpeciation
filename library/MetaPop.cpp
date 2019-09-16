@@ -250,8 +250,14 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
 
         // Reproduction
-        pops[0u].reproduce(birth, sexsel, genome, networks);
-        pops[1u].reproduce(birth, sexsel, genome, networks);
+        if (t > 0) {
+            pops[0u].reproduce(birth, sexsel, genome, networks);
+            pops[1u].reproduce(birth, sexsel, genome, networks);
+        } else {
+            pops[0u].burninReproduce(birth, sexsel, genome, networks);
+            pops[1u].burninReproduce(birth, sexsel, genome, networks);
+        }
+
 
         // Survival
         if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
