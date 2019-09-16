@@ -403,6 +403,16 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add({ getSpatialIsolation() });
     buffer.add({ getMatingIsolation() });
 
+    buffer.add(varPScan);
+    buffer.add(varGScan);
+    buffer.add(varAScan);
+    buffer.add(varNScan);
+    buffer.add(PstScan);
+    buffer.add(GstScan);
+    buffer.add(QstScan);
+    buffer.add(CstScan);
+    buffer.add(FstScan);
+
 }
 
 double MetaPop::getEcoIsolation()
