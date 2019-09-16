@@ -124,8 +124,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                 double meanAlleleCount = 0.0;
                 double varAlleleCount = 0.0;
-                double meanLocusGenValue = 0.0;
-                double locusGenVar = 0.0;
+                vecDbl locusMeanG = zeros(3u);
+                vecDbl locusVarG = zeros(3u);
                 double covGenValueAlleleCount = 0.0;
 
                 MatUns genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
@@ -144,8 +144,10 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         ++genotypeCounts[eco][zyg];
                         meanGenotypeGenValues[zyg] += genvalue;
 
-                        meanLocusGenValue += genvalue;
-                        locusGenVar += sqr(genvalue);
+                        locusMeanG[eco] += genvalue;
+                        locusMeanG[2u] += genvalue;
+                        locusVarG[eco] += sqr(genvalue);
+                        locusVarG[2u] += sqr(genvalue);
                         covGenValueAlleleCount += zyg * genvalue;
 
                     }
@@ -154,11 +156,16 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 meanAlleleCount /= metapopsize;
                 varAlleleCount /= metapopsize;
                 varAlleleCount -= meanAlleleCount;
-                meanLocusGenValue /= metapopsize;
-                locusGenVar /= metapopsize;
-                locusGenVar -= sqr(meanLocusGenValue);
+
+                for (size_t eco = 0u; eco < 3u; ++eco) {
+                    locusMeanG[eco] /= census[eco];
+                    locusVarG[eco] /= census[eco];
+                    locusVarG[eco] -= sqr(locusMeanG[eco]);
+                }
+
+
                 covGenValueAlleleCount /= metapopsize;
-                covGenValueAlleleCount -= meanAlleleCount * meanLocusGenValue;
+                covGenValueAlleleCount -= meanAlleleCount * locusMeanG[2u];
                 for (size_t zyg = 0u; zyg < 3u; ++zyg)
                     meanGenotypeGenValues[zyg] /= genotypeCounts[2u][zyg];
 
@@ -175,7 +182,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 for (size_t zyg = 0u; zyg < 3u; ++zyg) {
                     breedingValues[zyg] = avgMutEffect;
                     breedingValues[zyg] *= (zyg - meanAlleleCount);
-                    addExpectations[zyg] = meanLocusGenValue;
+                    addExpectations[zyg] = locusMeanG[2u];
                     addExpectations[zyg] -= breedingValues[zyg];
                     domDeviations[zyg] = meanGenotypeGenValues[zyg];
                     domDeviations[zyg] -= addExpectations[zyg];
@@ -246,11 +253,12 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 varS[trait] -= sqr(alleleFreq);
                 varT[trait] += alleleFreq * (1.0 - alleleFreq);
 
-                vecDbl locusPheVar = { 1.0, 1.0, 1.0 };
-                double locusEnvVar = 1.0;
-                locusPheVar[2u] = locusGenVar + locusEnvVar;
+                vecDbl locusVarP = zeros(3u);
+                double locusVarE = 1.0;
+                for (size_t eco = 0u; eco < 3u; ++eco)
+                    locusVarP[eco] = locusVarG[eco] + locusVarE;
 
-                PstScan[locus] = Xst(locusPheVar, census);
+                PstScan[locus] = Xst(locusVarP, census);
 
                 // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
