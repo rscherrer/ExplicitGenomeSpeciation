@@ -240,8 +240,14 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         }
 
         // Feeding
-        pops[0u].consume();
-        pops[1u].consume();
+        if (t > 0) {
+            pops[0u].consume();
+            pops[1u].consume();
+        } else {
+            pops[0u].burninConsume();
+            pops[1u].burninConsume();
+        }
+
 
         // Reproduction
         pops[0u].reproduce(birth, sexsel, genome, networks);

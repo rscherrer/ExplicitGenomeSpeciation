@@ -121,6 +121,29 @@ void Population::consume()
 }
 
 
+void Population::burninConsume()
+{
+    // Calculate the total amount of food consumed
+    double consumed = 0.0;
+    for (auto ind : individuals) {
+        double rate = ind->getFeedingRates()[0u];
+        consumed += rate;
+    }
+
+    assert(consumed >= 0.0);
+
+    // Update the resource equilibrium state
+    resources[0u] = capacity[0u] * (1.0 - consumed / replenish[0u]);
+    resources[1u] = 0.0;
+
+    assert(resources[0u] >= 0.0);
+
+    // Split the resource among the individuals
+    for (auto ind : individuals)
+        ind->feed(resources);
+}
+
+
 /// Asexual reproduction function
 void Population::reproduceAsexual(const double &birth,
  const Genome &genome, const MultiNet &networks)
