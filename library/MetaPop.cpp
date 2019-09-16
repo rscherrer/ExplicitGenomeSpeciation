@@ -295,6 +295,12 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
     }
 }
 
+void MetaPop::save(StreamBag &out)
+{
+    for (size_t f = 0u; f < out.names.size(); ++f)
+        buffer.write(out.files[f], buffer.fields[f]);
+}
+
 int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 {
     int t = - tburnin;
@@ -312,16 +318,9 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
-
             analyze(genome.nloci, genome.traits);
-
-            // Load output to buffer
             loadBuffer(t);
-
-            // Write to files
-            for (size_t f = 0u; f < out.names.size(); ++f)
-                buffer.write(out.files[f], buffer.fields[f]);
-
+            save(out);
         }
 
         // Dispersal (if not burnin)
