@@ -42,7 +42,8 @@ public:
         Gst(zeros(3u)),
         Qst(zeros(3u)),
         Cst(zeros(3u)),
-        Fst(zeros(3u))
+        Fst(zeros(3u)),
+        FstScan(zeros(pars.getNLoci()))
     {}
     ~MetaPop() {}
 
@@ -84,6 +85,13 @@ private:
     vecDbl Qst;
     vecDbl Cst;
     vecDbl Fst;
+
+    //vecDbl PstScan;
+    //vecDbl GstScan;
+    //vecDbl QstScan;
+    //vecDbl CstScan;
+    vecDbl FstScan;
+
 
 };
 

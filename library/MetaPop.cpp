@@ -253,6 +253,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             for (size_t f = 0u; f < out.names.size(); ++f)
                 buffer.write(out.files[f], buffer.fields[f]);
 
+
         }
 
         // Dispersal (if not burnin)
