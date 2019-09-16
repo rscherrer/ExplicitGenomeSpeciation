@@ -34,6 +34,7 @@ public:
     double getDispersalRate() const { return dispersalRate; }
     double getSurvivalProb() const { return survivalProb; }
     double getBirthRate() const { return birthRate; }
+    double getEcoSelCoeff() const { return ecoSelCoeff; }
     double getMatePreferenceStrength() const { return matePreferenceStrength; }
     double getMateEvaluationCost() const { return mateEvaluationCost; }
     double getMaxResourceCapacity() const { return maxResourceCapacity; }

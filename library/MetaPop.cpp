@@ -52,6 +52,9 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             Pst = zeros(3u);
             Gst = zeros(3u);
             Qst = zeros(3u);
+            Fst = zeros(3u);
+            vecDbl varS = zeros(3u);
+            vecDbl varT = zeros(3u);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
@@ -207,8 +210,27 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
 
-
                 nadVariances[trait][2u] += locusVarD + 0.5 * locusVarI;
+
+
+                // Calculate VarS and VarT for genome-wide Fst
+                // Go check in a pop gen textbook what these mean
+                for (size_t eco = 0u; eco < 2u; ++eco) {
+
+                    // Within-ecotype allele frequencies
+                    double alleleFreq = genotypeCounts[eco][0u];
+                    alleleFreq += 0.5 * genotypeCounts[eco][1u];
+                    alleleFreq /= ecotypes[eco].size();
+                    varS[trait] += ecotypes[eco].size() * sqr(alleleFreq);
+                }
+                varS[trait] /= metapopsize;
+
+                // Global allele frequency
+                double alleleFreq = genotypeCounts[2u][0u];
+                alleleFreq += 0.5 * genotypeCounts[2u][1u];
+                alleleFreq /= metapopsize;
+                varS[trait] -= sqr(alleleFreq);
+                varT[trait] += alleleFreq * (1.0 - alleleFreq);
 
             }
 
@@ -220,6 +242,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 Gst[trait] = Xst(genVariances[trait], census);
                 Qst[trait] = Xst(addVariances[trait], census);
                 Cst[trait] = Xst(nadVariances[trait], census);
+
+                Fst[trait] = varS[trait] / varT[trait];
             }
 
             // Load output to buffer
@@ -254,8 +278,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             pops[0u].reproduce(birth, sexsel, genome, networks);
             pops[1u].reproduce(birth, sexsel, genome, networks);
         } else {
-            pops[0u].burninReproduce(birth, sexsel, genome, networks);
-            pops[1u].burninReproduce(birth, sexsel, genome, networks);
+            pops[0u].burninReproduce(birth, sexsel, genome, networks, ecosel);
+            pops[1u].burninReproduce(birth, sexsel, genome, networks, ecosel);
         }
 
 
@@ -304,6 +328,7 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add(Gst[trait]);
         buffer.add(Qst[trait]);
         buffer.add(Cst[trait]);
+        buffer.add(Fst[trait]);
     }
 
     buffer.add(getEcoIsolation());

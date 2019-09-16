@@ -24,6 +24,7 @@ public:
         birth(pars.getBirthRate()),
         matingcost(pars.getMateEvaluationCost()),
         sexsel(pars.getMatePreferenceStrength()),
+        ecosel(pars.getEcoSelCoeff()),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
@@ -40,7 +41,8 @@ public:
         Pst(zeros(3u)),
         Gst(zeros(3u)),
         Qst(zeros(3u)),
-        Cst(zeros(3u))
+        Cst(zeros(3u)),
+        Fst(zeros(3u))
     {}
     ~MetaPop() {}
 
@@ -61,6 +63,7 @@ private:
     double birth;
     double matingcost;
     double sexsel;
+    double ecosel;
     int tmax;
     int tsave;
     int tburnin;
@@ -80,6 +83,7 @@ private:
     vecDbl Gst;
     vecDbl Qst;
     vecDbl Cst;
+    vecDbl Fst;
 
 };
 
