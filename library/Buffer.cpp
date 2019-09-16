@@ -5,12 +5,13 @@ void Buffer::flush()
     fields.clear();
 }
 
-void Buffer::add(const double &x)
+void Buffer::add(const vecDbl &vec)
 {
-    fields.push_back(x);
+    fields.push_back(vec);
 }
 
-void Buffer::write(std::ofstream * &out, const double &value)
+void Buffer::write(const vecDbl &vec, std::ofstream * &out)
 {
-    out->write((char *) &value, sizeof(value));
+    for (auto x : vec)
+        out->write((char *) &x, sizeof(x));
 }

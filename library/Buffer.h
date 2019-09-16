@@ -14,7 +14,7 @@ class Buffer
 
 private:
 
-    vecDbl fields;
+    std::vector<vecDbl> fields;
 
 public:
 
@@ -22,8 +22,8 @@ public:
     ~Buffer() {}
 
     void flush();
-    void add(const double&);
-    void write(std::ofstream *&, const double&);
+    void add(const vecDbl&);
+    void write(const vecDbl&, std::ofstream *&);
 };
 
 #endif

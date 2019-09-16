@@ -79,7 +79,16 @@ public:
               "Fst_ntr",
               "ecological_iso",
               "spatial_iso",
-              "mating_iso"
+              "mating_iso",
+              "varP_scan",
+              "varG_scan",
+              "varA_scan",
+              "varN_scan",
+              "Pst_scan",
+              "Gst_scan",
+              "Qst_scan",
+              "Cst_scan",
+              "Fst_scan"
         })
     {}
     ~StreamBag() {}

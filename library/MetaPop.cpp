@@ -298,7 +298,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
 void MetaPop::save(StreamBag &out)
 {
     for (size_t f = 0u; f < out.names.size(); ++f)
-        buffer.write(out.files[f], buffer.fields[f]);
+        buffer.write(buffer.fields[f], out.files[f]);
 }
 
 int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
@@ -367,41 +367,42 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 void MetaPop::loadBuffer(const size_t &t)
 {
     buffer.flush();
-    buffer.add(size2dbl(t));
+    buffer.add({ size2dbl(t) });
 
     // Census
-    buffer.add(size2dbl(ecotypes[0u].size()));
-    buffer.add(size2dbl(ecotypes[1u].size()));
-    buffer.add(size2dbl(pops[0u].getPopSize()));
-    buffer.add(size2dbl(pops[1u].getPopSize()));
-    buffer.add(size2dbl(pops[0u].getNFemales()));
-    buffer.add(size2dbl(pops[1u].getNFemales()));
+    buffer.add({ size2dbl(ecotypes[0u].size()) });
+    buffer.add({ size2dbl(ecotypes[1u].size()) });
+    buffer.add({ size2dbl(pops[0u].getPopSize()) });
+    buffer.add({ size2dbl(pops[1u].getPopSize()) });
+    buffer.add({ size2dbl(pops[0u].getNFemales()) });
+    buffer.add({ size2dbl(pops[1u].getNFemales()) });
 
     // Resources in each habitat
-    buffer.add(pops[0u].getResources()[0u]);
-    buffer.add(pops[1u].getResources()[0u]);
-    buffer.add(pops[0u].getResources()[1u]);
-    buffer.add(pops[1u].getResources()[1u]);
+    buffer.add({ pops[0u].getResources()[0u] });
+    buffer.add({ pops[1u].getResources()[0u] });
+    buffer.add({ pops[0u].getResources()[1u] });
+    buffer.add({ pops[1u].getResources()[1u] });
 
     // Phenotypes
     for (size_t trait = 0u; trait < 2u; ++trait) {
         for (size_t group = 0u; group < 3u; ++group)
-            buffer.add(meanPhenotypes[trait][group]);
-        buffer.add(pheVariances[trait][2u]);
-        buffer.add(genVariances[trait][2u]);
-        buffer.add(addVariances[trait][2u]);
-        buffer.add(domVariances[trait]);
-        buffer.add(intVariances[trait]);
-        buffer.add(Pst[trait]);
-        buffer.add(Gst[trait]);
-        buffer.add(Qst[trait]);
-        buffer.add(Cst[trait]);
-        buffer.add(Fst[trait]);
+            buffer.add({ meanPhenotypes[trait][group] });
+        buffer.add({ pheVariances[trait][2u] });
+        buffer.add({ genVariances[trait][2u] });
+        buffer.add({ addVariances[trait][2u] });
+        buffer.add({ domVariances[trait] });
+        buffer.add({ intVariances[trait] });
+        buffer.add({ Pst[trait] });
+        buffer.add({ Gst[trait] });
+        buffer.add({ Qst[trait] });
+        buffer.add({ Cst[trait] });
+        buffer.add({ Fst[trait] });
     }
 
-    buffer.add(getEcoIsolation());
-    buffer.add(getSpatialIsolation());
-    buffer.add(getMatingIsolation());
+    buffer.add({ getEcoIsolation() });
+    buffer.add({ getSpatialIsolation() });
+    buffer.add({ getMatingIsolation() });
+
 }
 
 double MetaPop::getEcoIsolation()
