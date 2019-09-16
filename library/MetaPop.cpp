@@ -56,6 +56,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             vecDbl varS = zeros(3u);
             vecDbl varT = zeros(3u);
 
+            PstScan = zeros(genome.nloci);
             FstScan = zeros(genome.nloci);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
@@ -114,12 +115,17 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 }
             }
 
+            const size_t n0 = ecotypes[0u].size();
+            const size_t n1 = ecotypes[1u].size();
+            const vecUns census = { n0, n1, metapopsize };
+
             // Locus-specific variance decomposition
             for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
                 double meanAlleleCount = 0.0;
                 double varAlleleCount = 0.0;
                 double meanLocusGenValue = 0.0;
+                double locusGenVar = 0.0;
                 double covGenValueAlleleCount = 0.0;
 
                 MatUns genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
@@ -139,8 +145,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         meanGenotypeGenValues[zyg] += genvalue;
 
                         meanLocusGenValue += genvalue;
+                        locusGenVar += sqr(genvalue);
                         covGenValueAlleleCount += zyg * genvalue;
-
 
                     }
                 }
@@ -149,6 +155,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 varAlleleCount /= metapopsize;
                 varAlleleCount -= meanAlleleCount;
                 meanLocusGenValue /= metapopsize;
+                locusGenVar /= metapopsize;
+                locusGenVar -= sqr(meanLocusGenValue);
                 covGenValueAlleleCount /= metapopsize;
                 covGenValueAlleleCount -= meanAlleleCount * meanLocusGenValue;
                 for (size_t zyg = 0u; zyg < 3u; ++zyg)
@@ -238,15 +246,19 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 varS[trait] -= sqr(alleleFreq);
                 varT[trait] += alleleFreq * (1.0 - alleleFreq);
 
+                vecDbl locusPheVar = { 1.0, 1.0, 1.0 };
+                double locusEnvVar = 1.0;
+                locusPheVar[2u] = locusGenVar + locusEnvVar;
+
+                PstScan[locus] = Xst(locusPheVar, census);
+
                 // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
                 FstScan[locus] = 1.0 - Hwithin / Htotal;
 
             }
 
-            const size_t n0 = ecotypes[0u].size();
-            const size_t n1 = ecotypes[1u].size();
-            const vecUns census = { n0, n1, metapopsize };
+
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 Pst[trait] = Xst(pheVariances[trait], census);
                 Gst[trait] = Xst(genVariances[trait], census);
