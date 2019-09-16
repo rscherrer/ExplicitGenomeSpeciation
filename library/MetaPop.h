@@ -58,6 +58,7 @@ public:
     vecPop getPops() const { return pops; }
 
     int evolve(const Genome&, const MultiNet&);
+    void analyze(const size_t&, const vecUns&);
     void loadBuffer(const size_t &t);
 
     double getEcoIsolation();
