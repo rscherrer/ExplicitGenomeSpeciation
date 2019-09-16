@@ -58,6 +58,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
             PstScan = zeros(genome.nloci);
             GstScan = zeros(genome.nloci);
+            QstScan = zeros(genome.nloci);
             FstScan = zeros(genome.nloci);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
@@ -164,7 +165,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     locusVarG[eco] -= sqr(locusMeanG[eco]);
                 }
 
-
                 covGenValueAlleleCount /= metapopsize;
                 covGenValueAlleleCount -= meanAlleleCount * locusMeanG[2u];
                 for (size_t zyg = 0u; zyg < 3u; ++zyg)
@@ -173,8 +173,10 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 const size_t trait = genome.traits[locus];
 
                 double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
-                double locusVarA = sqr(avgMutEffect) * varAlleleCount;
-                addVariances[trait][2u] += locusVarA;
+                vecDbl locusVarA = zeros(3u);
+                vecDbl locusMeanBreed = zeros(2u); // 3rd is zero
+                locusVarA[2u] = sqr(avgMutEffect) * varAlleleCount;
+                addVariances[trait][2u] += locusVarA[2u];
 
                 vecDbl domDeviations = zeros(3u);
                 vecDbl breedingValues = zeros(3u);
@@ -190,6 +192,16 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     double genotypeSSDeviation = genotypeCounts[2u][zyg];
                     genotypeSSDeviation += sqr(domDeviations[zyg]);
                     locusVarD += genotypeSSDeviation;
+                    for (size_t eco = 0u; eco < 2u; ++eco) {
+                        size_t n = genotypeCounts[eco][zyg];
+                        locusVarA[eco] += n * sqr(breedingValues[zyg]);
+                        locusMeanBreed[eco] += n * breedingValues[zyg];
+                    }
+                }
+                for (size_t eco = 0u; eco < 2u; ++eco) {
+                    locusMeanBreed[eco] /= census[eco];
+                    locusVarA[eco] /= census[eco];
+                    locusVarA[eco] -= locusMeanBreed[eco];
                 }
                 locusVarD /= metapopsize;
                 domVariances[trait] += locusVarD;
@@ -261,6 +273,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
                 PstScan[locus] = Xst(locusVarP, census);
                 GstScan[locus] = Xst(locusVarG, census);
+                QstScan[locus] = Xst(locusVarA, census);
 
                 // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
