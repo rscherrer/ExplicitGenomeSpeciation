@@ -43,6 +43,10 @@ public:
         Qst(zeros(3u)),
         Cst(zeros(3u)),
         Fst(zeros(3u)),
+        varPScan(zeros(pars.getNLoci())),
+        varGScan(zeros(pars.getNLoci())),
+        varAScan(zeros(pars.getNLoci())),
+        varNScan(zeros(pars.getNLoci())),
         PstScan(zeros(pars.getNLoci())),
         GstScan(zeros(pars.getNLoci())),
         QstScan(zeros(pars.getNLoci())),
@@ -89,6 +93,11 @@ private:
     vecDbl Qst;
     vecDbl Cst;
     vecDbl Fst;
+
+    vecDbl varPScan;
+    vecDbl varGScan;
+    vecDbl varAScan;
+    vecDbl varNScan;
 
     vecDbl PstScan;
     vecDbl GstScan;

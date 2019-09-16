@@ -26,21 +26,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
 
-            // Prepare analysis for output
-
-            // Analysis step
-
-            // Classify ecotypes
-            // Calculate global statistics
-            // Calculate ecotype statistics
-            // Calculate divergence statistics
-            // Write to output
-
-            //classifyEcotypes();
-
-
-            // Assign individuals to a group based on trait value
-
             // Reset statistics
             meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
             pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
@@ -56,6 +41,11 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             vecDbl varS = zeros(3u);
             vecDbl varT = zeros(3u);
 
+            varPScan = zeros(genome.nloci);
+            varGScan = zeros(genome.nloci);
+            varAScan = zeros(genome.nloci);
+            varNScan = zeros(genome.nloci);
+
             PstScan = zeros(genome.nloci);
             GstScan = zeros(genome.nloci);
             QstScan = zeros(genome.nloci);
@@ -64,73 +54,88 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
-            // Mean phenotypes at the scale of the metapopulation
+            // Reset ecotypes
+            for (size_t eco = 0u; eco < 2u; ++eco)
+                ecotypes[eco].clear();
+
+            // Metapopulation size, sum and SS phenotypes and genetic values
             size_t metapopsize = 0u;
             for (size_t p = 0u; p < 2u; ++p) {
+                metapopsize += pops[p].getPopSize();
                 for (auto ind : pops[p].individuals) {
-
-                    const vecDbl traitValues = ind->getTraits();
-                    const vecDbl geneticValues = ind->getGeneticValues();
+                    const vecDbl traitvalues = ind->getTraits();
+                    const vecDbl genvalues = ind->getGeneticValues();
                     for (size_t trait = 0u; trait < 3u; ++trait) {
-                        meanPhenotypes[trait][2u] += traitValues[trait];
-                        meanGenValues[trait][2u] += geneticValues[trait];
-                        pheVariances[trait][2u] += sqr(traitValues[trait]);
-                        genVariances[trait][2u] += sqr(geneticValues[trait]);
+                        meanPhenotypes[trait][2u] += traitvalues[trait];
+                        meanGenValues[trait][2u] += traitvalues[trait];
+                        pheVariances[trait][2u] += sqr(traitvalues[trait]);
+                        genVariances[trait][2u] += sqr(traitvalues[trait]);
                     }
                 }
-                metapopsize += pops[p].getPopSize();
             }
+
+            // Mean and variance in phenotypes and genetic values
+            // The mean ecological trait will serve to classify ecotypes
             for (size_t trait = 0u; trait < 2u; ++trait) {
                 meanPhenotypes[trait][2u] /= metapopsize;
+                meanGenValues[trait][2u] /= metapopsize;
                 pheVariances[trait][2u] /= metapopsize;
                 pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);
                 genVariances[trait][2u] /= metapopsize;
                 genVariances[trait][2u] -= sqr(meanGenValues[trait][2u]);
             }
 
-            // Assign ecotypes and calculate ecotype-specific means
-            for (size_t eco = 0u; eco < 2u; ++eco)
-                ecotypes[eco].clear();
+            // Census per ecotype and whole population
+            vecUns census = { 0u, 0u, metapopsize };
 
+            // Within-ecotype sum and SS in phenotype and genetic values
+            // Do I need two ecotype vectors?
+            // Can I reduce the number of for loops?
             for (size_t p = 0u; p < 2u; ++p) {
                 for (auto ind : pops[p].individuals) {
-                    size_t group = ind->getEcoTrait() < meanPhenotypes[0u][2u];
-                    vecDbl traitValues = ind->getTraits();
-                    vecDbl geneticValues = ind->getGeneticValues();
+
+                    vecDbl traitvalues = ind->getTraits();
+                    vecDbl genvalues = ind->getGeneticValues();
+
+                    size_t eco = ind->getEcoTrait() < meanPhenotypes[0u][2u];
+
+                    ++census[eco];
+
                     for (size_t trait = 0u; trait < 3u; ++trait) {
-                        meanPhenotypes[trait][group] += traitValues[trait];
-                        meanGenValues[trait][group] += geneticValues[trait];
-                        pheVariances[trait][group] += sqr(traitValues[trait]);
-                        genVariances[trait][group] += sqr(geneticValues[trait]);
+                        meanPhenotypes[trait][eco] += traitvalues[trait];
+                        meanGenValues[trait][eco] += genvalues[trait];
+                        pheVariances[trait][eco] += sqr(traitvalues[trait]);
+                        genVariances[trait][eco] += sqr(genvalues[trait]);
                     }
-                    ecotypes[group].push_back(ind);
+
+                    ecotypes[eco].push_back(ind);
                 }
             }
 
+            // Within-ecotype mean and variance in phenotypes and genetic values
             for (size_t trait = 0u; trait < 2u; ++trait) {
                 for (size_t eco = 0u; eco < 2u; ++eco) {
-                    meanPhenotypes[trait][eco] /= ecotypes[eco].size();
-                    meanGenValues[trait][eco] /= ecotypes[eco].size();
-                    pheVariances[trait][eco] /= ecotypes[eco].size();
+                    meanPhenotypes[trait][eco] /= census[eco];
+                    meanGenValues[trait][eco] /= census[eco];
+                    pheVariances[trait][eco] /= census[eco];
                     pheVariances[trait][eco] -= meanPhenotypes[trait][eco];
-                    genVariances[trait][eco] /= ecotypes[eco].size();
+                    genVariances[trait][eco] /= census[eco];
                     genVariances[trait][eco] -= meanGenValues[trait][eco];
                 }
             }
 
-            const size_t n0 = ecotypes[0u].size();
-            const size_t n1 = ecotypes[1u].size();
-            const vecUns census = { n0, n1, metapopsize };
-
             // Locus-specific variance decomposition
             for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
+                // Trait encoded
+                const size_t trait = genome.traits[locus];
+
+                // Genetic values and allele counts
                 double meanAlleleCount = 0.0;
                 double varAlleleCount = 0.0;
                 vecDbl locusMeanG = zeros(3u);
                 vecDbl locusVarG = zeros(3u);
                 double covGenValueAlleleCount = 0.0;
-
                 MatUns genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
                 vecDbl meanGenotypeGenValues = zeros(3u);
 
@@ -156,29 +161,28 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     }
                 }
 
+                // Means, variances and covariances in genetic values and allele
+                // counts
                 meanAlleleCount /= metapopsize;
                 varAlleleCount /= metapopsize;
                 varAlleleCount -= meanAlleleCount;
-
                 for (size_t eco = 0u; eco < 3u; ++eco) {
                     locusMeanG[eco] /= census[eco];
                     locusVarG[eco] /= census[eco];
                     locusVarG[eco] -= sqr(locusMeanG[eco]);
                 }
-
                 covGenValueAlleleCount /= metapopsize;
                 covGenValueAlleleCount -= meanAlleleCount * locusMeanG[2u];
                 for (size_t zyg = 0u; zyg < 3u; ++zyg)
                     meanGenotypeGenValues[zyg] /= genotypeCounts[2u][zyg];
 
-                const size_t trait = genome.traits[locus];
-
-                double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
+                // Population-wide additive variance
                 vecDbl locusVarA = zeros(3u);
-                vecDbl locusMeanBreed = zeros(2u); // 3rd is zero
+                double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
                 locusVarA[2u] = sqr(avgMutEffect) * varAlleleCount;
                 addVariances[trait][2u] += locusVarA[2u];
 
+                // Population-wide breeding values and dominance variance
                 vecDbl domDeviations = zeros(3u);
                 vecDbl breedingValues = zeros(3u);
                 vecDbl addExpectations = zeros(3u);
@@ -193,24 +197,19 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                     double genotypeSSDeviation = genotypeCounts[2u][zyg];
                     genotypeSSDeviation += sqr(domDeviations[zyg]);
                     locusVarD += genotypeSSDeviation;
-                    for (size_t eco = 0u; eco < 2u; ++eco) {
-                        size_t n = genotypeCounts[eco][zyg];
-                        locusVarA[eco] += n * sqr(breedingValues[zyg]);
-                        locusMeanBreed[eco] += n * breedingValues[zyg];
-                    }
-                }
-                for (size_t eco = 0u; eco < 2u; ++eco) {
-                    locusMeanBreed[eco] /= census[eco];
-                    locusVarA[eco] /= census[eco];
-                    locusVarA[eco] -= locusMeanBreed[eco];
                 }
                 locusVarD /= metapopsize;
                 domVariances[trait] += locusVarD;
 
+                // Deviations from additivity, and within-ecotype additive and
+                // non-additive variance
                 double locusVarI = 0.0;
-                vecDbl locusMeanDev = zeros(2u);
+                vecDbl locusMeanDev = zeros(2u); // within-ecotype
                 vecDbl locusVarN = zeros(3u);
                 for (size_t eco = 0u; eco < 2u; ++eco) {
+
+                    // Interaction deviations and within-ecotype
+                    // non-additive variance
                     for (auto ind : ecotypes[eco]) {
 
                         const size_t zyg = ind->getZygosity(locus);
@@ -225,12 +224,11 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         locusMeanDev[eco] += totDeviation;
 
                     }
-
-                    locusVarN[eco] /= ecotypes[eco].size();
+                    locusVarN[eco] /= census[eco];
                     locusVarN[eco] -= sqr(locusMeanDev[eco]);
-
                     nadVariances[trait][eco] += locusVarN[eco];
 
+                    // Within-ecotype additive variance
                     double meanBreed = 0.0;
                     double meanBreedSq = 0.0;
                     for (size_t zyg = 0u; zyg < 3u; ++zyg) {
@@ -239,19 +237,41 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         meanBreed += n * brv;
                         meanBreedSq += n * sqr(brv);
                     }
-                    meanBreed /= ecotypes[eco].size();
-                    meanBreedSq /= ecotypes[eco].size();
-                    addVariances[trait][eco] += meanBreedSq - sqr(meanBreed);
+                    meanBreed /= census[eco];
+                    meanBreedSq /= census[eco];
+                    locusVarA[eco] = meanBreedSq - sqr(meanBreed);
+                    addVariances[trait][eco] += locusVarA[eco];
                 }
+
+                // Population-wide interaction variance
                 locusVarI /= metapopsize;
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
 
+                // Population-wide non-additive variance
                 locusVarN[2u] = locusVarD + 0.5 * locusVarI;
                 nadVariances[trait][2u] += locusVarN[2u];
 
-                // Calculate VarS and VarT for genome-wide Fst
-                // Go check in a pop gen textbook what these mean
+                // Phenotypic variance
+                vecDbl locusVarP = zeros(3u);
+                double locusVarE = 1.0;
+                for (size_t eco = 0u; eco < 3u; ++eco)
+                    locusVarP[eco] = locusVarG[eco] + locusVarE;
+
+                // Genome scans
+                varPScan[locus] = locusVarP[2u];
+                varGScan[locus] = locusVarG[2u];
+                varAScan[locus] = locusVarA[2u];
+                varNScan[locus] = locusVarN[2u];
+
+                // Divergence statistics
+                PstScan[locus] = Xst(locusVarP, census);
+                GstScan[locus] = Xst(locusVarG, census);
+                QstScan[locus] = Xst(locusVarA, census);
+                CstScan[locus] = Xst(locusVarN, census);
+
+                // Within-ecotype heterozygosity (locus-specific and genome-
+                // wide)
                 double Hwithin = 0.0;
                 for (size_t eco = 0u; eco < 2u; ++eco) {
 
@@ -266,36 +286,26 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 varS[trait] /= metapopsize;
                 Hwithin /= metapopsize;
 
-                // Global allele frequency
+                // Population-wide heterozygosity (locus-specific and genome-
+                // wide)
                 double alleleFreq = genotypeCounts[2u][0u];
                 alleleFreq += 0.5 * genotypeCounts[2u][1u];
                 alleleFreq /= metapopsize;
                 varS[trait] -= sqr(alleleFreq);
                 varT[trait] += alleleFreq * (1.0 - alleleFreq);
-
-                vecDbl locusVarP = zeros(3u);
-                double locusVarE = 1.0;
-                for (size_t eco = 0u; eco < 3u; ++eco)
-                    locusVarP[eco] = locusVarG[eco] + locusVarE;
-
-                PstScan[locus] = Xst(locusVarP, census);
-                GstScan[locus] = Xst(locusVarG, census);
-                QstScan[locus] = Xst(locusVarA, census);
-                CstScan[locus] = Xst(locusVarN, census);
-
-                // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
+
+                // Locus-specific genetic divergence
                 FstScan[locus] = 1.0 - Hwithin / Htotal;
 
             }
 
-
+            // Genome-wide divergence
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 Pst[trait] = Xst(pheVariances[trait], census);
                 Gst[trait] = Xst(genVariances[trait], census);
                 Qst[trait] = Xst(addVariances[trait], census);
                 Cst[trait] = Xst(nadVariances[trait], census);
-
                 Fst[trait] = varS[trait] / varT[trait];
             }
 
@@ -305,7 +315,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             // Write to files
             for (size_t f = 0u; f < out.names.size(); ++f)
                 buffer.write(out.files[f], buffer.fields[f]);
-
 
         }
 
