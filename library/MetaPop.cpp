@@ -59,6 +59,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             PstScan = zeros(genome.nloci);
             GstScan = zeros(genome.nloci);
             QstScan = zeros(genome.nloci);
+            CstScan = zeros(genome.nloci);
             FstScan = zeros(genome.nloci);
 
             Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
@@ -207,6 +208,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 domVariances[trait] += locusVarD;
 
                 double locusVarI = 0.0;
+                vecDbl locusMeanDev = zeros(2u);
+                vecDbl locusVarN = zeros(3u);
                 for (size_t eco = 0u; eco < 2u; ++eco) {
                     for (auto ind : ecotypes[eco]) {
 
@@ -218,11 +221,15 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                         locusVarI += sqr(intDeviation);
 
                         double totDeviation = genvalue - addExpectations[zyg];
-                        nadVariances[trait][eco] += sqr(totDeviation);
+                        locusVarN[eco] += sqr(totDeviation);
+                        locusMeanDev[eco] += totDeviation;
 
                     }
 
-                    nadVariances[trait][eco] /= ecotypes[eco].size();
+                    locusVarN[eco] /= ecotypes[eco].size();
+                    locusVarN[eco] -= sqr(locusMeanDev[eco]);
+
+                    nadVariances[trait][eco] += locusVarN[eco];
 
                     double meanBreed = 0.0;
                     double meanBreedSq = 0.0;
@@ -240,8 +247,8 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 locusVarI *= 2.0;
                 intVariances[trait] += locusVarI;
 
-                nadVariances[trait][2u] += locusVarD + 0.5 * locusVarI;
-
+                locusVarN[2u] = locusVarD + 0.5 * locusVarI;
+                nadVariances[trait][2u] += locusVarN[2u];
 
                 // Calculate VarS and VarT for genome-wide Fst
                 // Go check in a pop gen textbook what these mean
@@ -274,6 +281,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
                 PstScan[locus] = Xst(locusVarP, census);
                 GstScan[locus] = Xst(locusVarG, census);
                 QstScan[locus] = Xst(locusVarA, census);
+                CstScan[locus] = Xst(locusVarN, census);
 
                 // Fst genome scan
                 double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
