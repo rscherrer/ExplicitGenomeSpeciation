@@ -29,15 +29,19 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
-    genvalues(develop(genome, networks)),
-    traitvalues({ ecoTrait, matePref, neutral }),
-    ecoTrait(genvalues[0u] + rnd::normal(0.0, scaleE)),
-    matePref(genvalues[1u] + rnd::normal(0.0, scaleE)),
-    neutral(genvalues[2u] + rnd::normal(0.0, scaleE)),
+    genvalues(zeros(3u)),
+    traitvalues(zeros(3u)),
+    ecoTrait(traitvalues[0u]),
+    matePref(traitvalues[1u]),
+    neutral(traitvalues[2u]),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
 {
+
+    develop(genome, networks);
+    std::cout << scaleE << '\n';
+
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
         assert(sequence[strain].size() == genome.nloci);
@@ -57,15 +61,18 @@ Individual::Individual(const Genome &genome,
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
-    genvalues(develop(genome, networks)),
-    traitvalues({ ecoTrait, matePref, neutral }),
-    ecoTrait(genvalues[0u] + rnd::normal(0.0, scaleE)),
-    matePref(genvalues[1u] + rnd::normal(0.0, scaleE)),
-    neutral(genvalues[2u] + rnd::normal(0.0, scaleE)),
+    genvalues(zeros(3u)),
+    traitvalues(zeros(3u)),
+    ecoTrait(traitvalues[0u]),
+    matePref(traitvalues[1u]),
+    neutral(traitvalues[2u]),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
 {
+
+    develop(genome, networks);
+    std::cout << scaleE << '\n';
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
