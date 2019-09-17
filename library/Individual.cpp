@@ -27,7 +27,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
  const double &snpfreq, const double &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
-    locusGeneticValues(zeros(genome.nloci)),
+    locivalues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     genvalues(develop(genome, networks)),
     ecoTrait(genvalues[0u] + rnd::normal(0.0, scaleE)),
@@ -55,7 +55,7 @@ Individual::Individual(const Genome &genome,
   const double &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
-    locusGeneticValues(zeros(genome.nloci)),
+    locivalues(zeros(genome.nloci)),
     isFemale(determineSex(genome.femgamy)),
     genvalues(develop(genome, networks)),
     ecoTrait(genvalues[0u] + rnd::normal(0.0, scaleE)),
@@ -163,8 +163,8 @@ std::vector<double> Individual::develop(const Genome &genome,
         const size_t trait = genome.traits[locus];
 
         // Contribute to trait
-        locusGeneticValues[locus] = genome.effects[locus] * expression;
-        phenotypes[trait] += locusGeneticValues[locus];
+        locivalues[locus] = genome.effects[locus] * expression;
+        phenotypes[trait] += locivalues[locus];
 
     }
 
@@ -189,8 +189,8 @@ std::vector<double> Individual::develop(const Genome &genome,
             assert(intexp <= 1.0);
 
             const double interaction = intexp * networks[trait].weights[e];
-            locusGeneticValues[edge.first] += 0.5 * interaction;
-            locusGeneticValues[edge.second] += 0.5 * interaction;
+            locivalues[edge.first] += 0.5 * interaction;
+            locivalues[edge.second] += 0.5 * interaction;
             phenotypes[trait] += interaction;
 
         }
@@ -353,8 +353,8 @@ size_t Individual::getZygosity(const size_t &locus)
     return sequence[0u][locus] + sequence[1u][locus];
 }
 
-double Individual::getLocusGenValue(const size_t &locus)
+double Individual::getLocusValue(const size_t &locus)
 {
-    return locusGeneticValues[locus];
+    return locivalues[locus];
 }
 

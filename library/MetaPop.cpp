@@ -152,7 +152,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
             for (auto ind : ecotypes[eco]) {
 
                 size_t zyg = ind->getZygosity(locus);
-                double genvalue = ind->getLocusGenValue(locus);
+                double genvalue = ind->getLocusValue(locus);
 
                 meanAlleleCount += zyg;
                 varAlleleCount += sqr(zyg);
@@ -222,7 +222,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
             for (auto ind : ecotypes[eco]) {
 
                 const size_t zyg = ind->getZygosity(locus);
-                const double genvalue = ind->getLocusGenValue(locus);
+                const double genvalue = ind->getLocusValue(locus);
 
                 double intDeviation = genvalue;
                 intDeviation -= meanGenotypeGenValues[zyg];

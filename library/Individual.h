@@ -41,7 +41,7 @@ public:
     vecDbl getExpression() const { return genexp; }
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&);
-    double getLocusGenValue(const size_t&);
+    double getLocusValue(const size_t&);
 
 
     // Actions
@@ -74,7 +74,7 @@ private:
     // Fields
     Diplotype sequence;
     vecDbl genexp;
-    vecDbl locusGeneticValues;
+    vecDbl locivalues;
     bool isFemale;
     vecDbl genvalues;
     double ecoTrait;
