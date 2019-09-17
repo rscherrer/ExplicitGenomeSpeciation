@@ -356,3 +356,9 @@ void Population::calcMeanNtrTrait()
         meanNtrTrait += individuals[ind]->getNeutral();
     meanNtrTrait /= individuals.size();
 }
+
+void Population::resetEcoTraits(const double &value, const double &sel)
+{
+    for (auto ind : individuals)
+        ind->setEcoTrait(value, sel);
+}

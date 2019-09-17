@@ -33,6 +33,7 @@ public:
     double getMeanEcoTrait() const { return meanEcoTrait; }
     double getMeanMatePref() const { return meanMatePref; }
     double getMeanNtrTrait() const { return meanNtrTrait; }
+    PInd getInd(const size_t &i) const { return individuals[i]; }
 
     // Life cycle
     void sortSexes();
@@ -56,6 +57,8 @@ public:
     void calcMeanEcoTrait();
     void calcMeanMatePref();
     void calcMeanNtrTrait();
+
+    void resetEcoTraits(const double&, const double&);
 
 
 private:

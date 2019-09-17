@@ -19,6 +19,9 @@ vecDbl calcFeedingRates(const double&, const double&,
 
 class Individual {
 
+    friend class Population;
+    friend class MetaPop;
+
 public:
 
     typedef Individual const * PInd;
@@ -59,6 +62,7 @@ public:
     // Setters
     void setEcoTrait(const double &value, const double &sel) {
         ecotrait = value;
+        traitvalues[0u] = value;
         feedingRates = calcFeedingRates(sel, value);
     }
     void setMatePref(const double &value) { matepref = value; }

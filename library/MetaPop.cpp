@@ -7,7 +7,7 @@ typedef std::vector<vecUns> MatUns;
 double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
 {
     if (v[2u] < tiny) return 0.0;
-    const double xst = 1.0 - (n[0u] * v[0u] - n[1u] * v[1u]) / (n[2u] * v[2u]);
+    const double xst = 1.0 - (n[0u] * v[0u] + n[1u] * v[1u]) / (n[2u] * v[2u]);
     if (xst < tiny) return 0.0;
     if (xst > 1.0 - tiny) return 1.0;
     return xst;
@@ -142,12 +142,11 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
     // Within-ecotype mean and variance in phenotypes and genetic values
     for (size_t trait = 0u; trait < 3u; ++trait) {
         for (size_t eco = 0u; eco < 2u; ++eco) {
-            const size_t n = census[eco];
-            if (n) {
-                meanPhenotypes[trait][eco] /= n;
-                meanGenValues[trait][eco] /= n;
-                pheVariances[trait][eco] /= n;
-                genVariances[trait][eco] /= n;
+            if (census[eco]) {
+                meanPhenotypes[trait][eco] /= census[eco];
+                meanGenValues[trait][eco] /= census[eco];
+                pheVariances[trait][eco] /= census[eco];
+                genVariances[trait][eco] /= census[eco];
             }
 
             pheVariances[trait][eco] -= sqr(meanPhenotypes[trait][eco]);
@@ -418,6 +417,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
 
     // Genome-wide divergence
     for (size_t trait = 0u; trait < 3u; ++trait) {
+
         Pst[trait] = Xst(pheVariances[trait], census);
         Gst[trait] = Xst(genVariances[trait], census);
         Qst[trait] = Xst(addVariances[trait], census);
