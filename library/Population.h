@@ -59,6 +59,7 @@ public:
     void calcMeanNtrTrait();
 
     void resetEcoTraits(const double&, const double&);
+    void resetMatePrefs(const double&);
 
 
 private:

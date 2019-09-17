@@ -276,3 +276,23 @@ BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
 }
 
 // Test case: a population with mating isolation = 1
+BOOST_AUTO_TEST_CASE(fullMatingIsolation)
+{
+
+    std::cout << "Testing full mating isolation...\n";
+
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    pop1.resetEcoTraits(-1.0, 1.0);
+    pop2.resetEcoTraits(1.0, 1.0);
+    pop1.resetMatePrefs(1.0);
+    pop2.resetMatePrefs(1.0);
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
+
+}

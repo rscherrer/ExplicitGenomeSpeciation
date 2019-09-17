@@ -59,12 +59,17 @@ public:
     void mutate(Haplotype&, const double& = 1.0e-5);
 
     // Setters
-    void setEcoTrait(const double &value, const double &sel) {
+    void setEcoTrait(const double &value, const double &sel)
+    {
         ecotrait = value;
         traitvalues[0u] = value;
         feedingRates = calcFeedingRates(sel, value);
     }
-    void setMatePref(const double &value) { matepref = value; }
+    void setMatePref(const double &value)
+    {
+        matepref = value;
+        traitvalues[1u] = value;
+    }
     void setEcotype(const double&);
 
 private:

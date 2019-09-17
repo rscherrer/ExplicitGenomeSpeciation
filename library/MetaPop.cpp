@@ -579,10 +579,14 @@ double MetaPop::getEcoIsolation()
 double MetaPop::getSpatialIsolation()
 {
 
+    const double tiny = 1E-15;
+
     // Calculated as some non-overlap between ecotypes
+    if (pops[0u].getPopSize() == 0u || pops[1u].getPopSize() == 0u)
+        return 0.0;
 
     // Ecotype-by-habitat table
-    std::vector<vecUns> n = { uzeros(2u), uzeros(2u) };
+    MatUns n = { uzeros(2u), uzeros(2u) };
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];
@@ -594,10 +598,19 @@ double MetaPop::getSpatialIsolation()
     }
 
     double si = n[0u][0u] * n[1u][1u] - n[0u][1u] * n[1u][0u];
+    if (n[0u][0u] + n[0u][1u] == 0u) return 0.0;
+    if (n[1u][0u] + n[1u][1u] == 0u) return 0.0;
+    if (n[0u][0u] + n[1u][0u] == 0u) return 0.0;
+    if (n[0u][1u] + n[1u][1u] == 0u) return 0.0;
     si /= sqrt(n[0u][0u] + n[0u][1u]);
     si /= sqrt(n[1u][0u] + n[1u][1u]);
     si /= sqrt(n[0u][0u] + n[1u][0u]);
     si /= sqrt(n[0u][1u] + n[1u][1u]);
+
+    if (si < tiny) si = 0.0;
+    if (si > 1.0 - tiny) si = 1.0;
+    assert(si >= 0.0);
+    assert(si <= 1.0);
 
     return si;
 }
@@ -611,7 +624,7 @@ double MetaPop::getMatingIsolation()
     // For each of them sample a number of males to encounter, from the metapop
     // Evaluate each male by a yes or no
     // Update the table of matings accordingly by looking at ecotypes
-    // RI = 0 is mating tests are not possible
+    // RI = 0 if mating tests are not possible
 
     size_t nfemales = 0u;
     size_t nmales = 0u;
@@ -625,7 +638,7 @@ double MetaPop::getMatingIsolation()
         return 0.0;
 
     // Table of crossings
-    std::vector<vecUns> m = { uzeros(2u), uzeros(2u) };
+    MatUns m = { uzeros(2u), uzeros(2u) };
 
     // Make a vector with all males of the metapop
     Crowd allMales;
@@ -648,7 +661,15 @@ double MetaPop::getMatingIsolation()
     }
 
     double ri = m[0u][0u] * m[1u][1u] - m[0u][1u] * m[1u][0u];
-    ri /= sqrt(m[0u][0u] * m[1u][1u] * m[0u][1u] * m[1u][0u]);
+    if (m[0u][0u] + m[0u][1u] == 0u) return 0.0;
+    if (m[1u][0u] + m[1u][1u] == 0u) return 0.0;
+    if (m[0u][0u] + m[1u][0u] == 0u) return 0.0;
+    if (m[0u][1u] + m[1u][1u] == 0u) return 0.0;
+    ri /= sqrt(m[0u][0u] + m[0u][1u]);
+    ri /= sqrt(m[1u][0u] + m[1u][1u]);
+    ri /= sqrt(m[0u][0u] + m[1u][0u]);
+    ri /= sqrt(m[0u][1u] + m[1u][1u]);
+
     return ri;
 
 }

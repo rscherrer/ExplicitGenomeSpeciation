@@ -362,3 +362,9 @@ void Population::resetEcoTraits(const double &value, const double &sel)
     for (auto ind : individuals)
         ind->setEcoTrait(value, sel);
 }
+
+void Population::resetMatePrefs(const double &value)
+{
+    for (auto ind : individuals)
+        ind->setMatePref(value);
+}
