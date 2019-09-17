@@ -4,6 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "Random.h"
+#include "utils.h"
 #include <stddef.h>
 
 
@@ -57,7 +58,9 @@ private:
 
     // Makers
     Crowd populate(const size_t&, const Genome&, const MultiNet&,
-     const double& = 0.5);
+     const double& = 0.5, const vecDbl& = { 1.0, 1.0, 1.0 },
+      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
+       const vecDbl& = zeros(3u));
 
     // The population
     Crowd individuals;

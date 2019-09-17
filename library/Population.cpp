@@ -29,13 +29,18 @@ Population::Population(const size_t &popsize,
 
 /// Function to initialize a population of individuals
 Crowd Population::populate(const size_t &popsize,
- const Genome &genome, const MultiNet &networks, const double &snpfreq)
+ const Genome &genome, const MultiNet &networks, const double &snpfreq,
+  const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
+   const vecDbl &scaleE)
 {
 
     Crowd indivs;
 
-    for (size_t ind = 0u; ind < popsize; ++ind)
-        indivs.push_back(new Individual(genome, networks, snpfreq));
+    for (size_t ind = 0u; ind < popsize; ++ind) {
+        auto indiv = new Individual(genome, networks, snpfreq, scaleA, scaleD,
+         scaleI, scaleE);
+        indivs.push_back(indiv);
+    }
 
     return indivs;
 
