@@ -24,12 +24,13 @@ public:
     typedef Individual const * PInd;
 
     Individual(const Genome&, const MultiNet&, const double& = 0.5,
-     const vecDbl& = { 1.0, 1.0, 1.0 }, const vecDbl& = zeros(3u),
+     const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
       const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
+
     Individual(const Genome&, const MultiNet&, const Haplotype&,
-     const Haplotype&, const vecDbl& = { 1.0, 1.0, 1.0 },
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
-       const vecDbl& = zeros(3u));
+     const Haplotype&, const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
+      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
+
     ~Individual() {}
 
     // Getters
