@@ -77,10 +77,10 @@ private:
     vecDbl locivalues;
     bool isFemale;
     vecDbl genvalues;
+    vecDbl traitvalues;
     double ecoTrait;
     double matePref;
-    double neutral;
-    vecDbl traitvalues;
+    double neutral;    
     double fitness;
     vecDbl feedingRates;
     size_t ecotype;
