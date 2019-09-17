@@ -130,8 +130,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 
 
 /// Development
-std::vector<double> Individual::develop(const Genome &genome,
- const MultiNet &networks)
+void Individual::develop(const Genome &genome, const MultiNet &networks)
 {
 
     // Development reads the genome and computes trait values
@@ -142,8 +141,6 @@ std::vector<double> Individual::develop(const Genome &genome,
     // And there is dominance
     // And there are multiple traits
     // And there is epistasis...
-
-    vecDbl phenotypes {0.0, 0.0, 0.0};
 
     for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
@@ -171,7 +168,7 @@ std::vector<double> Individual::develop(const Genome &genome,
 
         // Contribute to trait
         locivalues[locus] = genome.effects[locus] * expression;
-        phenotypes[trait] += locivalues[locus];
+        traitvalues[trait] += locivalues[locus];
 
     }
 
@@ -198,14 +195,12 @@ std::vector<double> Individual::develop(const Genome &genome,
             const double interaction = intexp * networks[trait].weights[e];
             locivalues[edge.first] += 0.5 * interaction;
             locivalues[edge.second] += 0.5 * interaction;
-            phenotypes[trait] += interaction;
+            traitvalues[trait] += interaction;
 
         }
     }
 
     // Normalize!
-
-    return phenotypes;
 }
 
 

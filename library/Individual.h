@@ -68,8 +68,10 @@ private:
     // Makers
     Diplotype makeSequence(const size_t&, const double& = 0.5);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
-    vecDbl develop(const Genome&, const MultiNet&);
     bool determineSex(const bool&);
+
+    // Setters
+    void develop(const Genome&, const MultiNet&);
 
     // Fields
     Diplotype sequence;
