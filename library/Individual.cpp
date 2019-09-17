@@ -33,7 +33,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     genvalues(zeros(3u)),
     traitvalues(zeros(3u)),
     ecotrait(traitvalues[0u]),
-    matePref(traitvalues[1u]),
+    matepref(traitvalues[1u]),
     neutral(traitvalues[2u]),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecotrait)),
@@ -65,7 +65,7 @@ Individual::Individual(const Genome &genome,
     genvalues(zeros(3u)),
     traitvalues(zeros(3u)),
     ecotrait(traitvalues[0u]),
-    matePref(traitvalues[1u]),
+    matepref(traitvalues[1u]),
     neutral(traitvalues[2u]),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecotrait)),
@@ -244,9 +244,9 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
     const double tiny = 0.00000001;
 
     // Calculate the probability of mating
-    double mateProb = matePref >= 0.0 ?
-     calcAssortProb(matePref, ecotrait, xj, strength) :
-      calcDisassortProb(matePref, ecotrait, xj, strength);
+    double mateProb = matepref >= 0.0 ?
+     calcAssortProb(matepref, ecotrait, xj, strength) :
+      calcDisassortProb(matepref, ecotrait, xj, strength);
 
     if (mateProb < tiny) mateProb = 0.0;
     if (mateProb > 1.0 - tiny) mateProb = 1.0;
