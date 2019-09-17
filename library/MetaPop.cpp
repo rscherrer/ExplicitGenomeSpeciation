@@ -4,9 +4,13 @@
 typedef std::vector<vecDbl> Matrix;
 typedef std::vector<vecUns> MatUns;
 
-double Xst(const vecDbl &v, const vecUns &n)
+double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
 {
-    return 1.0 - (n[0u] * v[0u] - n[1u] * v[1u]) / (n[2u] * v[2u]);
+    if (v[2u] < tiny) return 0.0;
+    const double xst = 1.0 - (n[0u] * v[0u] - n[1u] * v[1u]) / (n[2u] * v[2u]);
+    if (xst < tiny) return 0.0;
+    if (xst > 1.0 - tiny) return 1.0;
+    return xst;
 }
 
 void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
@@ -19,7 +23,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
     // The two first are for each of the two ecotypes
     // The third is for the value across the whole metapopulation
 
-    const double tiny = 0.00000000000000001;
+    const double tiny = 1E-15;
 
     // Mean and variance components
     // One value per trait per ecotype
@@ -98,6 +102,9 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);        
         genVariances[trait][2u] -= sqr(meanGenValues[trait][2u]);
 
+        if (pheVariances[trait][2u] < tiny) pheVariances[trait][2u] = 0.0;
+        if (genVariances[trait][2u] < tiny) genVariances[trait][2u] = 0.0;
+
         assert(pheVariances[trait][2u] >= 0.0);
         assert(genVariances[trait][2u] >= 0.0);
     }
@@ -141,8 +148,12 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
                 pheVariances[trait][eco] /= n;
                 genVariances[trait][eco] /= n;
             }
+
             pheVariances[trait][eco] -= sqr(meanPhenotypes[trait][eco]);
             genVariances[trait][eco] -= sqr(meanGenValues[trait][eco]);
+
+            if (pheVariances[trait][eco] < tiny) pheVariances[trait][eco] = 0.0;
+            if (genVariances[trait][eco] < tiny) genVariances[trait][eco] = 0.0;
 
             assert(pheVariances[trait][eco] >= 0.0);
             assert(genVariances[trait][eco] >= 0.0);
@@ -191,7 +202,10 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         meanAlleleCount /= metapopsize;
         varAlleleCount /= metapopsize;
         varAlleleCount -= sqr(meanAlleleCount);
+
+        if (varAlleleCount < tiny) varAlleleCount = 0.0;
         assert(varAlleleCount >= 0.0);
+
         for (size_t eco = 0u; eco < 3u; ++eco) {
             const size_t n = census[eco];
             if (n) {
@@ -200,6 +214,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
             }
             locusVarG[eco] -= sqr(locusMeanG[eco]);
             if (locusVarG[eco] < tiny) locusVarG[eco] = 0.0;
+
             assert(locusVarG[eco] >= 0.0);
         }
         covGenValueAlleleCount /= metapopsize;
@@ -211,8 +226,18 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
 
         // Population-wide additive variance
         vecDbl locusVarA = zeros(3u);
-        double avgMutEffect = covGenValueAlleleCount / varAlleleCount;
-        locusVarA[2u] = sqr(avgMutEffect) * varAlleleCount;
+        double avgMutEffect;
+        if (!varAlleleCount) {
+            avgMutEffect = 0.0;
+            locusVarA[2u] = 0.0;
+        } else {
+            avgMutEffect = covGenValueAlleleCount / varAlleleCount;
+            locusVarA[2u] = sqr(avgMutEffect) * varAlleleCount;
+            if (locusVarA[2u] < tiny) locusVarA[2u] = 0.0;
+        }
+
+        assert(locusVarA[2u] >= 0.0);
+
         addVariances[trait][2u] += locusVarA[2u];
 
         // Population-wide breeding values and dominance variance
@@ -232,6 +257,8 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
             locusVarD += genotypeSSDeviation;
         }
         locusVarD /= metapopsize;
+        if (locusVarD < tiny) locusVarD = 0.0;
+        assert(locusVarD >= 0.0);
         domVariances[trait] += locusVarD;
 
         // Deviations from additivity, and within-ecotype additive and
@@ -253,12 +280,18 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
                 locusVarI += sqr(intDeviation);
 
                 double totDeviation = genvalue - addExpectations[zyg];
-                locusVarN[eco] += sqr(totDeviation);
                 locusMeanDev[eco] += totDeviation;
+                locusVarN[eco] += sqr(totDeviation);                
 
             }
-            locusVarN[eco] /= census[eco];
+            if (census[eco]) {
+                locusMeanDev[eco] /= census[eco];
+                locusVarN[eco] /= census[eco];
+            }
             locusVarN[eco] -= sqr(locusMeanDev[eco]);
+            if (locusVarN[eco] < tiny) locusVarN[eco] = 0.0;
+
+            assert(locusVarN[eco] >= 0.0);
             nadVariances[trait][eco] += locusVarN[eco];
 
             // Within-ecotype additive variance
@@ -270,26 +303,37 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
                 meanBreed += n * brv;
                 meanBreedSq += n * sqr(brv);
             }
-            meanBreed /= census[eco];
-            meanBreedSq /= census[eco];
+            if (census[eco]) {
+                meanBreed /= census[eco];
+                meanBreedSq /= census[eco];
+            }
             locusVarA[eco] = meanBreedSq - sqr(meanBreed);
+            if (locusVarA[eco] < tiny) locusVarA[eco] = 0.0;
+            assert(locusVarA[eco] >= 0.0);
             addVariances[trait][eco] += locusVarA[eco];
         }
 
         // Population-wide interaction variance
         locusVarI /= metapopsize;
         locusVarI *= 2.0;
+        if (locusVarI < tiny) locusVarI = 0.0;
+        assert(locusVarI >= 0.0);
         intVariances[trait] += locusVarI;
 
         // Population-wide non-additive variance
         locusVarN[2u] = locusVarD + 0.5 * locusVarI;
+        if (locusVarN[2u] < tiny) locusVarN[2u] = 0.0;
+        assert(locusVarN[2u] >= 0.0);
         nadVariances[trait][2u] += locusVarN[2u];
 
         // Phenotypic variance
         vecDbl locusVarP = zeros(3u);
-        double locusVarE = 1.0;
-        for (size_t eco = 0u; eco < 3u; ++eco)
+        double locusVarE = 1.0; // fix this
+        for (size_t eco = 0u; eco < 3u; ++eco) {
             locusVarP[eco] = locusVarG[eco] + locusVarE;
+            if (locusVarP[eco] < tiny) locusVarP[eco] = 0.0;
+            assert(locusVarP[eco] >= 0.0);
+        }
 
         // Genome scans
         varPScan[locus] = locusVarP[2u];
@@ -303,34 +347,65 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         QstScan[locus] = Xst(locusVarA, census);
         CstScan[locus] = Xst(locusVarN, census);
 
-        // Within-ecotype heterozygosity (locus-specific and genome-
-        // wide)
+        assert(PstScan[locus] >= 0.0);
+        assert(GstScan[locus] >= 0.0);
+        assert(QstScan[locus] >= 0.0);
+        assert(CstScan[locus] >= 0.0);
+
+        assert(PstScan[locus] <= 1.0);
+        assert(GstScan[locus] <= 1.0);
+        assert(QstScan[locus] <= 1.0);
+        assert(CstScan[locus] <= 1.0);
+
+        // Within-ecotype heterozygosity (locus-specific and genome-wide)
         double Hwithin = 0.0;
         for (size_t eco = 0u; eco < 2u; ++eco) {
 
             // Within-ecotype allele frequencies
-            double alleleFreq = genotypeCounts[eco][0u];
-            alleleFreq += 0.5 * genotypeCounts[eco][1u];
-            alleleFreq /= ecotypes[eco].size();
-            varS[trait] += ecotypes[eco].size() * sqr(alleleFreq);
+            double alleleFreq = genotypeCounts[eco][0u]; // AA?
+            alleleFreq += 0.5 * genotypeCounts[eco][1u]; // Aa
+            if (census[eco]) alleleFreq /= census[eco];
+            if (alleleFreq > tiny) alleleFreq = 0.0;
+            if (alleleFreq > 1.0 - tiny) alleleFreq = 1.0;
+            assert(alleleFreq >= 0.0);
+            assert(alleleFreq <= 1.0);
+            varS[trait] += census[eco] * sqr(alleleFreq);
             double heterozFreq = 2.0 * alleleFreq * (1.0 - alleleFreq);
-            Hwithin += ecotypes[eco].size() * heterozFreq;
+            if (heterozFreq < tiny) heterozFreq = 0.0;
+            if (heterozFreq > 1.0 - tiny) heterozFreq = 1.0;
+            assert(heterozFreq >= 0.0);
+            assert(heterozFreq <= 1.0);
+            Hwithin += census[eco] * heterozFreq;
         }
         varS[trait] /= metapopsize;
         Hwithin /= metapopsize;
+        if (Hwithin < tiny) Hwithin = 0.0;
+        if (Hwithin > 1.0 - tiny) Hwithin = 1.0;
+        assert(Hwithin >= 0.0);
+        assert(Hwithin <= 1.0);
 
-        // Population-wide heterozygosity (locus-specific and genome-
-        // wide)
+        // Population-wide heterozygosity (locus-specific and genome-wide)
         double alleleFreq = genotypeCounts[2u][0u];
         alleleFreq += 0.5 * genotypeCounts[2u][1u];
         alleleFreq /= metapopsize;
+        if (alleleFreq < tiny) alleleFreq = 0.0;
+        if (alleleFreq > 1.0 - tiny) alleleFreq = 1.0;
+        assert(alleleFreq >= 0.0);
+        assert(alleleFreq <= 1.0);
         varS[trait] -= sqr(alleleFreq);
         varT[trait] += alleleFreq * (1.0 - alleleFreq);
         double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
+        if (Htotal < tiny) Htotal = 0.0;
+        if (Htotal < 1.0 - tiny) Htotal = 1.0;
+        assert(Htotal >= 0.0);
+        assert(Htotal <= 1.0);
 
         // Locus-specific genetic divergence
         FstScan[locus] = 1.0 - Hwithin / Htotal;
-
+        if (FstScan[locus] < tiny) FstScan[locus] = 0.0;
+        if (FstScan[locus] > 1.0 - tiny) FstScan[locus] = 1.0;
+        assert(FstScan[locus] >= 0.0);
+        assert(FstScan[locus] <= 1.0);
     }
 
     // Genome-wide divergence
@@ -339,7 +414,27 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         Gst[trait] = Xst(genVariances[trait], census);
         Qst[trait] = Xst(addVariances[trait], census);
         Cst[trait] = Xst(nadVariances[trait], census);
+
+        assert(Pst[trait] >= 0.0);
+        assert(Gst[trait] >= 0.0);
+        assert(Qst[trait] >= 0.0);
+        assert(Cst[trait] >= 0.0);
+
+        assert(Pst[trait] <= 1.0);
+        assert(Gst[trait] <= 1.0);
+        assert(Qst[trait] <= 1.0);
+        assert(Cst[trait] <= 1.0);
+
+        if (varS[trait] < tiny) varS[trait] = 0.0;
+        if (varT[trait] < tiny) varT[trait] = 0.0;
+        assert(varS[trait] >= 0.0);
+        assert(varT[trait] >= 0.0);
         Fst[trait] = varS[trait] / varT[trait];
+        if (Fst[trait] < tiny) Fst[trait] = 0.0;
+        if (Fst[trait] > 1.0 - tiny) Fst[trait] = 1.0;
+        assert(Fst[trait] >= 0.0);
+        assert(Fst[trait] <= 1.0);
+
     }
 }
 
