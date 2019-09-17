@@ -363,7 +363,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             pops[1u].burninConsume();
         }
 
-
         // Reproduction
         if (t > 0) {
             pops[0u].reproduce(birth, sexsel, genome, networks);
@@ -372,7 +371,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             pops[0u].burninReproduce(birth, sexsel, genome, networks, ecosel);
             pops[1u].burninReproduce(birth, sexsel, genome, networks, ecosel);
         }
-
 
         // Survival
         if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
@@ -406,7 +404,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add({ pops[0u].getResources()[1u] });
     buffer.add({ pops[1u].getResources()[1u] });
 
-    // Phenotypes
+    // Quantitative genetics
     for (size_t trait = 0u; trait < 2u; ++trait) {
         for (size_t group = 0u; group < 3u; ++group)
             buffer.add({ meanPhenotypes[trait][group] });
@@ -422,10 +420,12 @@ void MetaPop::loadBuffer(const size_t &t)
         buffer.add({ Fst[trait] });
     }
 
+    // Speciation metrics
     buffer.add({ getEcoIsolation() });
     buffer.add({ getSpatialIsolation() });
     buffer.add({ getMatingIsolation() });
 
+    // Genome scans
     buffer.add(varPScan);
     buffer.add(varGScan);
     buffer.add(varAScan);
