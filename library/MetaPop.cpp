@@ -73,7 +73,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         metapopsize += pops[p].getPopSize();
         for (auto ind : pops[p].individuals) {
             const vecDbl traitvalues = ind->getTraits();
-            const vecDbl genvalues = ind->getGeneticValues();
+            const vecDbl genvalues = ind->getGenValues();
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 meanPhenotypes[trait][2u] += traitvalues[trait];
                 meanGenValues[trait][2u] += traitvalues[trait];
@@ -104,7 +104,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         for (auto ind : pops[p].individuals) {
 
             vecDbl traitvalues = ind->getTraits();
-            vecDbl genvalues = ind->getGeneticValues();
+            vecDbl genvalues = ind->getGenValues();
 
             size_t eco = ind->getEcoTrait() < meanPhenotypes[0u][2u];
 
