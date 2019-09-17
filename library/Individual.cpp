@@ -32,11 +32,11 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     isFemale(determineSex(genome.femgamy)),
     genvalues(zeros(3u)),
     traitvalues(zeros(3u)),
-    ecoTrait(traitvalues[0u]),
+    ecotrait(traitvalues[0u]),
     matePref(traitvalues[1u]),
     neutral(traitvalues[2u]),
     fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecoTrait)),
+    feedingRates(calcFeedingRates(1.0, ecotrait)),
     ecotype(0u)
 {
 
@@ -64,11 +64,11 @@ Individual::Individual(const Genome &genome,
     isFemale(determineSex(genome.femgamy)),
     genvalues(zeros(3u)),
     traitvalues(zeros(3u)),
-    ecoTrait(traitvalues[0u]),
+    ecotrait(traitvalues[0u]),
     matePref(traitvalues[1u]),
     neutral(traitvalues[2u]),
     fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecoTrait)),
+    feedingRates(calcFeedingRates(1.0, ecotrait)),
     ecotype(0u)
 {
 
@@ -245,8 +245,8 @@ bool Individual::acceptMate(const double &xj, const double &strength) const
 
     // Calculate the probability of mating
     double mateProb = matePref >= 0.0 ?
-     calcAssortProb(matePref, ecoTrait, xj, strength) :
-      calcDisassortProb(matePref, ecoTrait, xj, strength);
+     calcAssortProb(matePref, ecotrait, xj, strength) :
+      calcDisassortProb(matePref, ecotrait, xj, strength);
 
     if (mateProb < tiny) mateProb = 0.0;
     if (mateProb > 1.0 - tiny) mateProb = 1.0;
@@ -354,7 +354,7 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 void Individual::setEcotype(const double &mean)
 {
 
-    ecotype = ecoTrait > mean;
+    ecotype = ecotrait > mean;
 
 }
 

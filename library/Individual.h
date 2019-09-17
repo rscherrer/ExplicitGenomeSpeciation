@@ -34,7 +34,7 @@ public:
 
     // Getters
     bool getGender() const { return isFemale; }
-    double getEcoTrait() const { return ecoTrait; }
+    double getEcoTrait() const { return ecotrait; }
     double getMatePref() const { return matePref; }
     double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
@@ -57,13 +57,11 @@ public:
 
     // Setters
     void setEcoTrait(const double &value, const double &sel) {
-        ecoTrait = value;
+        ecotrait = value;
         feedingRates = calcFeedingRates(sel, value);
     }
     void setMatePref(const double &value) { matePref = value; }
     void setEcotype(const double&);
-
-
 
 private:
 
@@ -85,7 +83,7 @@ private:
     bool isFemale;
     vecDbl genvalues;
     vecDbl traitvalues;
-    double ecoTrait;
+    double ecotrait;
     double matePref;
     double neutral;    
     double fitness;
