@@ -41,9 +41,13 @@ public:
     void consume();
     void burninConsume();
     void reproduce(const double&, const double&, const Genome&,
-     const MultiNet&, const double& = 0.01);
+     const MultiNet&, const double& = 0.01, const vecDbl& = ones(3u),
+      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
+       const vecDbl& = zeros(3u));
     void burninReproduce(const double&, const double&, const Genome&,
-     const MultiNet&, const double& = 0.01, const double& = 0.0);
+     const MultiNet&, const double& = 0.01, const double& = 0.0,
+      const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
+       const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
     void reproduceAsexual(const double&, const Genome&,
      const MultiNet&);
     bool survive(const double&);
