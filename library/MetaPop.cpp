@@ -339,7 +339,6 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
         pops[0u].sortSexes();
         pops[1u].sortSexes();
 
-
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
             analyze(genome.nloci, genome.traits);
@@ -347,7 +346,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
             save(out);
         }
 
-        // Dispersal (if not burnin)
+        // Dispersal (only if not burnin)
         if (t > 0) {
             Crowd migrants1 = pops[0u].emigrate(dispersal);
             Crowd migrants2 = pops[1u].emigrate(dispersal);

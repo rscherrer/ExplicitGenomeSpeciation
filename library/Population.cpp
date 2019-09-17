@@ -176,7 +176,7 @@ void Population::sortSexes()
 }
 
 /// Sexual reproduction function
-void Population::reproduce(const double &birth, const double &strength,
+void Population::reproduce(const double &birth, const double &sexsel,
  const Genome &genome, const MultiNet &networks, const double &cost)
 {
 
@@ -216,7 +216,7 @@ void Population::reproduce(const double &birth, const double &strength,
              genome.chromosomes);
             dad->mutate(sperm);
 
-            if (mom->acceptMate(dad->getEcoTrait(), strength)) {
+            if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
                 offspring.push_back(new Individual(genome, networks, egg,
                  sperm));
                 --nOffspring;
@@ -228,7 +228,7 @@ void Population::reproduce(const double &birth, const double &strength,
 }
 
 
-void Population::burninReproduce(const double &birth, const double &strength,
+void Population::burninReproduce(const double &birth, const double &sexsel,
  const Genome &genome, const MultiNet &networks, const double &cost,
   const double &ecosel)
 {
@@ -273,7 +273,7 @@ void Population::burninReproduce(const double &birth, const double &strength,
              genome.chromosomes);
             dad->mutate(sperm);
 
-            if (mom->acceptMate(dad->getEcoTrait(), strength)) {
+            if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
                 offspring.push_back(new Individual(genome, networks, egg,
                  sperm));
                 --nOffspring;
