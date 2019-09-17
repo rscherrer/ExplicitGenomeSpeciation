@@ -1,4 +1,5 @@
 #include "MetaPop.h"
+#include <cassert>
 
 typedef std::vector<vecDbl> Matrix;
 typedef std::vector<vecUns> MatUns;
@@ -17,6 +18,8 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
     // In this function, vectors with values "per ecotype" have three elements
     // The two first are for each of the two ecotypes
     // The third is for the value across the whole metapopulation
+
+    const double tiny = 0.00000000000000001;
 
     // Mean and variance components
     // One value per trait per ecotype
@@ -64,8 +67,10 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
     Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
     // Reset ecotypes
-    for (size_t eco = 0u; eco < 2u; ++eco)
+    for (size_t eco = 0u; eco < 2u; ++eco) {
         ecotypes[eco].clear();
+        assert(ecotypes[eco].size() == 0u);
+    }
 
     // Metapopulation size, sum and SS phenotypes and genetic values
     size_t metapopsize = 0u;
@@ -85,21 +90,22 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
 
     // Mean and variance in phenotypes and genetic values
     // The mean ecological trait will serve to classify ecotypes
-    for (size_t trait = 0u; trait < 2u; ++trait) {
+    for (size_t trait = 0u; trait < 3u; ++trait) {
         meanPhenotypes[trait][2u] /= metapopsize;
         meanGenValues[trait][2u] /= metapopsize;
         pheVariances[trait][2u] /= metapopsize;
-        pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);
         genVariances[trait][2u] /= metapopsize;
+        pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);        
         genVariances[trait][2u] -= sqr(meanGenValues[trait][2u]);
+
+        assert(pheVariances[trait][2u] >= 0.0);
+        assert(genVariances[trait][2u] >= 0.0);
     }
 
     // Census per ecotype and whole population
     vecUns census = { 0u, 0u, metapopsize };
 
     // Within-ecotype sum and SS in phenotype and genetic values
-    // Do I need two ecotype vectors?
-    // Can I reduce the number of for loops?
     for (size_t p = 0u; p < 2u; ++p) {
         for (auto ind : pops[p].individuals) {
 
@@ -107,7 +113,9 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
             vecDbl genvalues = ind->getGenValues();
 
             size_t eco = ind->getEcoTrait() < meanPhenotypes[0u][2u];
-
+            assert(eco == 0u || eco == 1u );
+            ind->setEcotype(eco);
+            ecotypes[eco].push_back(ind);
             ++census[eco];
 
             for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -116,20 +124,28 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
                 pheVariances[trait][eco] += sqr(traitvalues[trait]);
                 genVariances[trait][eco] += sqr(genvalues[trait]);
             }
-
-            ecotypes[eco].push_back(ind);
         }
     }
 
+    assert(census[0u] + census[1u] == metapopsize);
+
+    // Test: var or mean should be zero if no-one in ecotype
+
     // Within-ecotype mean and variance in phenotypes and genetic values
-    for (size_t trait = 0u; trait < 2u; ++trait) {
+    for (size_t trait = 0u; trait < 3u; ++trait) {
         for (size_t eco = 0u; eco < 2u; ++eco) {
-            meanPhenotypes[trait][eco] /= census[eco];
-            meanGenValues[trait][eco] /= census[eco];
-            pheVariances[trait][eco] /= census[eco];
-            pheVariances[trait][eco] -= meanPhenotypes[trait][eco];
-            genVariances[trait][eco] /= census[eco];
-            genVariances[trait][eco] -= meanGenValues[trait][eco];
+            const size_t n = census[eco];
+            if (n) {
+                meanPhenotypes[trait][eco] /= n;
+                meanGenValues[trait][eco] /= n;
+                pheVariances[trait][eco] /= n;
+                genVariances[trait][eco] /= n;
+            }
+            pheVariances[trait][eco] -= sqr(meanPhenotypes[trait][eco]);
+            genVariances[trait][eco] -= sqr(meanGenValues[trait][eco]);
+
+            assert(pheVariances[trait][eco] >= 0.0);
+            assert(genVariances[trait][eco] >= 0.0);
         }
     }
 
@@ -174,16 +190,24 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
         // counts
         meanAlleleCount /= metapopsize;
         varAlleleCount /= metapopsize;
-        varAlleleCount -= meanAlleleCount;
+        varAlleleCount -= sqr(meanAlleleCount);
+        assert(varAlleleCount >= 0.0);
         for (size_t eco = 0u; eco < 3u; ++eco) {
-            locusMeanG[eco] /= census[eco];
-            locusVarG[eco] /= census[eco];
+            const size_t n = census[eco];
+            if (n) {
+                locusMeanG[eco] /= n;
+                locusVarG[eco] /= n;
+            }
             locusVarG[eco] -= sqr(locusMeanG[eco]);
+            if (locusVarG[eco] < tiny) locusVarG[eco] = 0.0;
+            assert(locusVarG[eco] >= 0.0);
         }
         covGenValueAlleleCount /= metapopsize;
         covGenValueAlleleCount -= meanAlleleCount * locusMeanG[2u];
-        for (size_t zyg = 0u; zyg < 3u; ++zyg)
-            meanGenotypeGenValues[zyg] /= genotypeCounts[2u][zyg];
+        for (size_t zyg = 0u; zyg < 3u; ++zyg) {
+            const size_t n = genotypeCounts[2u][zyg];
+            if (n) meanGenotypeGenValues[zyg] /= n;
+        }
 
         // Population-wide additive variance
         vecDbl locusVarA = zeros(3u);

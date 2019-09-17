@@ -10,7 +10,6 @@
 #include <chrono>
 #include <cassert>
 
-
 /// Program to run the main function
 int doMain(const vecStr &args)
 {

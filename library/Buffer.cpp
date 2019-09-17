@@ -12,6 +12,7 @@ void Buffer::add(const vecDbl &vec)
 
 void Buffer::write(const vecDbl &vec, std::ofstream * &out)
 {
-    for (auto x : vec)
-        out->write((char *) &x, sizeof(x));
+    if (vec.size() > 0u)
+        for (auto x : vec)
+            out->write((char *) &x, sizeof(x));
 }
