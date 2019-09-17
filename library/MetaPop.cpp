@@ -12,31 +12,55 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
 {
 
     // Reset statistics
+
+    // Note:
+    // In this function, vectors with values "per ecotype" have three elements
+    // The two first are for each of the two ecotypes
+    // The third is for the value across the whole metapopulation
+
+    // Mean and variance components
+    // One value per trait per ecotype
+    // The within-ecotype variances are used in computing divergence statistics
     meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
     pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
     genVariances = { zeros(3u), zeros(3u), zeros(3u) };
     addVariances = { zeros(3u), zeros(3u), zeros(3u) };
     nadVariances = { zeros(3u), zeros(3u), zeros(3u) };
+
+    // Dominance and interaction variance
+    // One value per trait
+    // These are not used for computing divergence statistics
     domVariances = zeros(3u);
     intVariances = zeros(3u);
-    Pst = zeros(3u);
-    Gst = zeros(3u);
-    Qst = zeros(3u);
-    Fst = zeros(3u);
-    vecDbl varS = zeros(3u);
-    vecDbl varT = zeros(3u);
 
+    // Divergence between ecotypes
+    // One value per trait
+    Pst = zeros(3u); // phenotypic
+    Gst = zeros(3u); // genetic (values)
+    Qst = zeros(3u); // additive
+    Cst = zeros(3u); // non-additive
+    Fst = zeros(3u); // in allele frequency (true genetic divergence)
+
+    // Genome scans of divergence between ecotypes
+    // One value per locus (no matter what trait the locus is coding for)
     varPScan = zeros(nloci);
     varGScan = zeros(nloci);
     varAScan = zeros(nloci);
     varNScan = zeros(nloci);
-
     PstScan = zeros(nloci);
     GstScan = zeros(nloci);
     QstScan = zeros(nloci);
     CstScan = zeros(nloci);
     FstScan = zeros(nloci);
 
+    // Variances in heterozygosity
+    // Used for genome-wide Fst calculations
+    // One value per trait
+    vecDbl varS = zeros(3u);
+    vecDbl varT = zeros(3u);
+
+    // Mean genetic values
+    // One value per trait per ecotype
     Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
 
     // Reset ecotypes

@@ -55,16 +55,17 @@ public:
     {}
     ~MetaPop() {}
 
+    // Getters
     vecPop getPops() const { return pops; }
+    double getEcoIsolation();
+    double getSpatialIsolation();
+    double getMatingIsolation();
 
+    // Setters
     int evolve(const Genome&, const MultiNet&);
     void analyze(const size_t&, const vecUns&);
     void loadBuffer(const size_t &t);
     void save(StreamBag&);
-
-    double getEcoIsolation();
-    double getSpatialIsolation();
-    double getMatingIsolation();
 
 private:
 
@@ -95,18 +96,15 @@ private:
     vecDbl Qst;
     vecDbl Cst;
     vecDbl Fst;
-
     vecDbl varPScan;
     vecDbl varGScan;
     vecDbl varAScan;
     vecDbl varNScan;
-
     vecDbl PstScan;
     vecDbl GstScan;
     vecDbl QstScan;
     vecDbl CstScan;
     vecDbl FstScan;
-
 
 };
 
