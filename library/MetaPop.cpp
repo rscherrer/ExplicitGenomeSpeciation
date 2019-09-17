@@ -441,24 +441,11 @@ void MetaPop::loadBuffer(const size_t &t)
 double MetaPop::getEcoIsolation()
 {
     // Ecological isolation is the standard deviation in ecological trait value
+    // Ripa et al. use the standard deviation of the ecological trait
+    // We use Pst
 
-    double ei = 0.0;
-    const double ecomean = meanPhenotypes[0u][2u];
+    return Pst[0u];
 
-    for (size_t p = 0u; p < 2u; ++p) {
-        auto pop = pops[p];
-        for (size_t i = 0u; i < pop.getPopSize(); ++i) {
-            auto ind = pop.individuals[i];
-            ei += sqr(ind->getEcoTrait());
-        }
-    }
-
-    const size_t n0 = pops[0u].getPopSize();
-    const size_t n1 = pops[1u].getPopSize();
-
-    ei /= (n0 + n1);
-    ei -= sqr(ecomean); // minus the square of the mean
-    return sqrt(ei); // return standard deviation
 }
 
 double MetaPop::getSpatialIsolation()
