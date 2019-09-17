@@ -33,7 +33,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
     matePref(geneticValues[1u] + rnd::normal(0.0, scaleE)),
     neutral(geneticValues[2u] + rnd::normal(0.0, scaleE)),
-    traits({ ecoTrait, matePref, neutral }),
+    traitvalues({ ecoTrait, matePref, neutral }),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
@@ -42,7 +42,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     for (size_t strain = 0u; strain < 2u; ++strain)
         assert(sequence[strain].size() == genome.nloci);
     assert(genexp.size() == genome.nloci);
-    assert(traits.size() == 3u);
+    assert(traitvalues.size() == 3u);
     assert(fitness > 0.0);
     for (size_t res = 0u; res < 2u; ++res)
         assert(feedingRates[res] > 0.0);
@@ -61,7 +61,7 @@ Individual::Individual(const Genome &genome,
     ecoTrait(geneticValues[0u] + rnd::normal(0.0, scaleE)),
     matePref(geneticValues[1u] + rnd::normal(0.0, scaleE)),
     neutral(geneticValues[2u] + rnd::normal(0.0, scaleE)),
-    traits({ ecoTrait, matePref, neutral }),
+    traitvalues({ ecoTrait, matePref, neutral }),
     fitness(1.0),
     feedingRates(calcFeedingRates(1.0, ecoTrait)),
     ecotype(0u)
@@ -71,7 +71,7 @@ Individual::Individual(const Genome &genome,
     for (size_t strain = 0u; strain < 2u; ++strain)
         assert(sequence[strain].size() == genome.nloci);
     assert(genexp.size() == genome.nloci);
-    assert(traits.size() == 3u);
+    assert(traitvalues.size() == 3u);
     assert(fitness > 0.0);
     for (size_t res = 0u; res < 2u; ++res)
         assert(feedingRates[res] > 0.0);

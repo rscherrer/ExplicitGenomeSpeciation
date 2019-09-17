@@ -34,7 +34,7 @@ public:
     double getMatePref() const { return matePref; }
     double getNeutral() const { return neutral; }
     double getFitness() const { return fitness; }
-    vecDbl getTraits() const { return traits; }
+    vecDbl getTraits() const { return traitvalues; }
     vecDbl getFeedingRates() const { return feedingRates; }
     vecDbl getGeneticValues() const { return geneticValues; }
     Diplotype getSequence() const { return sequence; }
@@ -80,7 +80,7 @@ private:
     double ecoTrait;
     double matePref;
     double neutral;
-    vecDbl traits;
+    vecDbl traitvalues;
     double fitness;
     vecDbl feedingRates;
     size_t ecotype;
