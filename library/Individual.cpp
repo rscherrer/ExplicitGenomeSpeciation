@@ -168,6 +168,7 @@ void Individual::develop(const Genome &genome, const MultiNet &networks)
 
         // Contribute to trait
         locivalues[locus] = genome.effects[locus] * expression;
+        genvalues[trait] += locivalues[locus];
         traitvalues[trait] += locivalues[locus];
 
     }
@@ -195,6 +196,7 @@ void Individual::develop(const Genome &genome, const MultiNet &networks)
             const double interaction = intexp * networks[trait].weights[e];
             locivalues[edge.first] += 0.5 * interaction;
             locivalues[edge.second] += 0.5 * interaction;
+            genvalues[trait] += interaction;
             traitvalues[trait] += interaction;
 
         }
