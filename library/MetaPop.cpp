@@ -161,6 +161,14 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
         }
     }
 
+    // Locus-specific environmental variance
+    vecDbl locusVarE = zeros(3u);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        locusVarE[trait] = sqr(scaleE[trait]) / nloci;
+        if (locusVarE[trait] < tiny) locusVarE[trait] = 0.0;
+        assert(locusVarE[trait] >= 0.0);
+    }
+
     // Locus-specific variance decomposition
     for (size_t locus = 0u; locus < nloci; ++locus) {
 
@@ -329,9 +337,8 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
 
         // Phenotypic variance
         vecDbl locusVarP = zeros(3u);
-        double locusVarE = sqr(scaleE[trait]) / nloci;
         for (size_t eco = 0u; eco < 3u; ++eco) {
-            locusVarP[eco] = locusVarG[eco] + locusVarE;
+            locusVarP[eco] = locusVarG[eco] + locusVarE[trait];
             if (locusVarP[eco] < tiny) locusVarP[eco] = 0.0;
             assert(locusVarP[eco] >= 0.0);
         }
