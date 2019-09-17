@@ -25,10 +25,11 @@ public:
 
     Individual(const Genome&, const MultiNet&, const double& = 0.5,
      const vecDbl& = { 1.0, 1.0, 1.0 }, const vecDbl& = zeros(3u),
-      const vecDbl& = zeros(3u));
+      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
     Individual(const Genome&, const MultiNet&, const Haplotype&,
      const Haplotype&, const vecDbl& = { 1.0, 1.0, 1.0 },
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
+      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
+       const vecDbl& = zeros(3u));
     ~Individual() {}
 
     // Getters
@@ -75,7 +76,7 @@ private:
 
     // Setters
     void develop(const Genome&, const MultiNet&, const vecDbl&, const vecDbl&,
-     const vecDbl&);
+     const vecDbl&, const vecDbl&);
 
     // Fields
     Diplotype sequence;

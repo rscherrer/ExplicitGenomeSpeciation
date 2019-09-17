@@ -24,8 +24,8 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome, const MultiNet &networks,
- const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleI,
-  const vecDbl &scaleE) :
+ const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleD,
+  const vecDbl &scaleI, const vecDbl &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -40,7 +40,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleA, scaleI, scaleE);
+    develop(genome, networks, scaleA, scaleD, scaleI, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -56,7 +56,8 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
-  const vecDbl &scaleA, const vecDbl &scaleI, const vecDbl &scaleE) :
+  const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
+   const vecDbl &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -71,7 +72,7 @@ Individual::Individual(const Genome &genome,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleA, scaleI, scaleE);
+    develop(genome, networks, scaleA, scaleD, scaleI, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -130,7 +131,8 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 
 /// Development
 void Individual::develop(const Genome &genome, const MultiNet &networks,
- const vecDbl &scaleA, const vecDbl &scaleI, const vecDbl &scaleE)
+ const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
+  const vecDbl &scaleE)
 {
 
     // Development reads the genome and computes trait values
@@ -144,6 +146,9 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
 
     for (size_t locus = 0u; locus < genome.nloci; ++locus) {
 
+        // Determine the encoded trait
+        const size_t trait = genome.traits[locus];
+
         // Determine genotype
         size_t genotype = 0u;
         for (size_t hap = 0u; hap < 2u; ++hap)
@@ -153,7 +158,7 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         double expression;
         const double dominance = genome.dominances[locus];
         switch(genotype) {
-            case 1u : expression = dominance; break; // Aa
+            case 1u : expression = scaleD[trait] * dominance; break; // Aa
             case 2u : expression = 1.0; break; // AA
             default : expression = -1.0; break; // aa
         }
@@ -162,9 +167,6 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         assert(expression <= 1.0);
 
         genexp[locus] = expression; // record gene expression
-
-        // Determine the encoded trait
-        const size_t trait = genome.traits[locus];
 
         // Contribute to trait
         double locuseffect = genome.effects[locus] * expression;
