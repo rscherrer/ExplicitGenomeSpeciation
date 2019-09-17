@@ -13,7 +13,8 @@ double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
     return xst;
 }
 
-void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
+void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
+ const vecDbl &scaleE)
 {
 
     // Reset statistics
@@ -328,7 +329,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits)
 
         // Phenotypic variance
         vecDbl locusVarP = zeros(3u);
-        double locusVarE = 1.0; // fix this
+        double locusVarE = sqr(scaleE[trait]) / nloci;
         for (size_t eco = 0u; eco < 3u; ++eco) {
             locusVarP[eco] = locusVarG[eco] + locusVarE;
             if (locusVarP[eco] < tiny) locusVarP[eco] = 0.0;
@@ -444,7 +445,8 @@ void MetaPop::save(StreamBag &out)
         buffer.write(buffer.fields[f], out.files[f]);
 }
 
-int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
+int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
+ const vecDbl& scaleE)
 {
     int t = - tburnin;
     StreamBag out;
@@ -460,7 +462,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks)
 
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
-            analyze(genome.nloci, genome.traits);
+            analyze(genome.nloci, genome.traits, scaleE);
             loadBuffer(t);
             save(out);
         }

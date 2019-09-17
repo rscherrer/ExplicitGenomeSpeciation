@@ -42,6 +42,7 @@ public:
     double getHabitatSymmetry() const { return habitatSymmetry; }
     bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }
+    vecDbl getScaleE() const { return scaleE; }
 
     /// Setters
     void readParams(std::ifstream&);

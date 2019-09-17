@@ -62,8 +62,8 @@ public:
     double getMatingIsolation();
 
     // Setters
-    int evolve(const Genome&, const MultiNet&);
-    void analyze(const size_t&, const vecUns&);
+    int evolve(const Genome&, const MultiNet&, const vecDbl& = zeros(3u));
+    void analyze(const size_t&, const vecUns&, const vecDbl&);
     void loadBuffer(const size_t &t);
     void save(StreamBag&);
 

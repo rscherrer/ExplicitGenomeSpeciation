@@ -73,7 +73,7 @@ int doMain(const vecStr &args)
 
         // Launch simulation
         std::cout << "Simulation started\n";
-        metapop.evolve(genome, networks);
+        metapop.evolve(genome, networks, pars.getScaleE());
         std::cout << "Simulation ended\n";
 
         out.close();
