@@ -56,8 +56,8 @@ public:
 private:
 
     // Makers
-    Crowd populate(const size_t&, const Genome&,
-     const MultiNet&);
+    Crowd populate(const size_t&, const Genome&, const MultiNet&,
+     const double& = 0.5);
 
     // The population
     Crowd individuals;
