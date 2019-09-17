@@ -28,8 +28,8 @@ public:
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
-        buffer(Buffer()),
         record(pars.getRecord()),
+        buffer(Buffer()),
         ecotypes({ { }, { } }),
         meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
         pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
@@ -79,8 +79,8 @@ private:
     int tmax;
     int tsave;
     int tburnin;
-    Buffer buffer;
     bool record;
+    Buffer buffer;
 
     // Variables for analysis
     std::vector<Crowd> ecotypes;
