@@ -50,23 +50,21 @@ int doMain(const vecStr &args)
         Genome genome = arch.getGenome();
         MultiNet networks = arch.getNetworks();
 
+        // Create populations
         const size_t n0 = pars.getInitialPopSize();
         const double foodmax = pars.getMaxResourceCapacity();
         const double foodgrowth = pars.getMaxResourceGrowth();
-
-        // Symmetry in resource partitioning
         const double symmetry = pars.getHabitatSymmetry();
         const vecDbl foodmax1 = {foodmax, symmetry * foodmax};
         const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
         const vecDbl foodgrows = {foodgrowth, foodgrowth};
 
-        // Create populations
         Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
         Population pop2 = Population(0u, genome, networks, foodmax2, foodgrows);
-        vecPop metapop = {pop1, pop2};
+        vecPop pops = {pop1, pop2};
 
         // Create a metapopulation
-        MetaPop meta = MetaPop(metapop, pars);
+        MetaPop metapop = MetaPop(pops, pars);
 
         // Open a data file
         std::ofstream out;
@@ -76,7 +74,7 @@ int doMain(const vecStr &args)
 
         // Launch simulation
         std::cout << "Simulation started\n";
-        meta.evolve(genome, networks);
+        metapop.evolve(genome, networks);
         std::cout << "Simulation ended\n";
 
         out.close();
