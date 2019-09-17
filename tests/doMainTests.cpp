@@ -251,12 +251,28 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     pop2.resetEcoTraits(1.0, 1.0);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
     meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
-    size_t n = meta.getPops()[1u].getPopSize();
-    for (size_t i = 0u; i < n; ++i)
-        std::cout << meta.getPops()[1u].getInd(i)->getEcoTrait() << '\n';
     BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
 
 }
 
 // Test case: a population with spatial isolation = 1
+BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
+{
+
+    std::cout << "Testing full spatial isolation...\n";
+
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    pop1.resetEcoTraits(-1.0, 1.0);
+    pop2.resetEcoTraits(1.0, 1.0);
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
+
+}
+
 // Test case: a population with mating isolation = 1

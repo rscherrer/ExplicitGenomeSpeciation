@@ -51,7 +51,6 @@ public:
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
 
-
     // Actions
     void feed(const vecDbl&);
     bool acceptMate(const double&, const double&) const;
