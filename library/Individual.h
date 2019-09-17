@@ -3,6 +3,7 @@
 
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
+#include "utils.h"
 #include <vector>
 #include <random>
 #include <stddef.h>
@@ -23,9 +24,9 @@ public:
     typedef Individual const * PInd;
 
     Individual(const Genome&, const MultiNet&, const double& = 0.5,
-     const double& = 0.0);
+     const vecDbl& = zeros(3u));
     Individual(const Genome&, const MultiNet&, const Haplotype&,
-     const Haplotype&, const double& = 0.0);
+     const Haplotype&, const vecDbl& = zeros(3u));
     ~Individual() {}
 
     // Getters
@@ -71,7 +72,7 @@ private:
     bool determineSex(const bool&);
 
     // Setters
-    void develop(const Genome&, const MultiNet&);
+    void develop(const Genome&, const MultiNet&, const vecDbl&);
 
     // Fields
     Diplotype sequence;

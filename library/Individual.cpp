@@ -24,7 +24,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome, const MultiNet &networks,
- const double &snpfreq, const double &scaleE) :
+ const double &snpfreq, const vecDbl &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -39,8 +39,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     ecotype(0u)
 {
 
-    develop(genome, networks);
-    std::cout << scaleE << '\n';
+    develop(genome, networks, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -56,7 +55,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
-  const double &scaleE) :
+  const vecDbl &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -71,8 +70,7 @@ Individual::Individual(const Genome &genome,
     ecotype(0u)
 {
 
-    develop(genome, networks);
-    std::cout << scaleE << '\n';
+    develop(genome, networks, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -130,7 +128,8 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 
 
 /// Development
-void Individual::develop(const Genome &genome, const MultiNet &networks)
+void Individual::develop(const Genome &genome, const MultiNet &networks,
+ const vecDbl &scaleE)
 {
 
     // Development reads the genome and computes trait values
@@ -169,7 +168,6 @@ void Individual::develop(const Genome &genome, const MultiNet &networks)
         // Contribute to trait
         locivalues[locus] = genome.effects[locus] * expression;
         genvalues[trait] += locivalues[locus];
-        traitvalues[trait] += locivalues[locus];
 
     }
 
@@ -197,10 +195,12 @@ void Individual::develop(const Genome &genome, const MultiNet &networks)
             locivalues[edge.first] += 0.5 * interaction;
             locivalues[edge.second] += 0.5 * interaction;
             genvalues[trait] += interaction;
-            traitvalues[trait] += interaction;
 
         }
     }
+
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        traitvalues[trait] = genvalues[trait] + rnd::normal(0.0, scaleE[trait]);
 
     // Normalize!
 }
