@@ -1,7 +1,6 @@
 #ifndef EXPLICITGENOMESPECIATION_STREAMBAG_H
 #define EXPLICITGENOMESPECIATION_STREAMBAG_H
 
-#include "MetaPop.h"
 #include "Buffer.h"
 #include <vector>
 #include <iostream>
