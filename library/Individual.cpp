@@ -24,7 +24,8 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome, const MultiNet &networks,
- const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleE) :
+ const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleI,
+  const vecDbl &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -39,7 +40,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleA, scaleE);
+    develop(genome, networks, scaleA, scaleI, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -55,7 +56,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
-  const vecDbl &scaleA, const vecDbl &scaleE) :
+  const vecDbl &scaleA, const vecDbl &scaleI, const vecDbl &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -70,7 +71,7 @@ Individual::Individual(const Genome &genome,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleA, scaleE);
+    develop(genome, networks, scaleA, scaleI, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -129,7 +130,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 
 /// Development
 void Individual::develop(const Genome &genome, const MultiNet &networks,
- const vecDbl &scaleA, const vecDbl &scaleE)
+ const vecDbl &scaleA, const vecDbl &scaleI, const vecDbl &scaleE)
 {
 
     // Development reads the genome and computes trait values
@@ -192,7 +193,8 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
             assert(intexp >= -1.0);
             assert(intexp <= 1.0);
 
-            const double interaction = intexp * networks[trait].weights[e];
+            double interaction = intexp * networks[trait].weights[e];
+            interaction *= scaleI[trait];
             locivalues[edge.first] += 0.5 * interaction;
             locivalues[edge.second] += 0.5 * interaction;
             genvalues[trait] += interaction;
