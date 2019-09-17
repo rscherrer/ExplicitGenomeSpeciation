@@ -24,7 +24,7 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
 
 /// Constructor with randomly generated genome
 Individual::Individual(const Genome &genome, const MultiNet &networks,
- const double &snpfreq, const vecDbl &scaleE) :
+ const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleE) :
     sequence(makeSequence(genome.nloci, snpfreq)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -39,7 +39,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleE);
+    develop(genome, networks, scaleA, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -55,7 +55,7 @@ Individual::Individual(const Genome &genome, const MultiNet &networks,
 /// Constructor that inherits a parental genome
 Individual::Individual(const Genome &genome,
  const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
-  const vecDbl &scaleE) :
+  const vecDbl &scaleA, const vecDbl &scaleE) :
     sequence(fecundate(egg, sperm)),
     genexp(zeros(genome.nloci)),
     locivalues(zeros(genome.nloci)),
@@ -70,7 +70,7 @@ Individual::Individual(const Genome &genome,
     ecotype(0u)
 {
 
-    develop(genome, networks, scaleE);
+    develop(genome, networks, scaleA, scaleE);
 
     assert(sequence.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
@@ -129,7 +129,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 
 /// Development
 void Individual::develop(const Genome &genome, const MultiNet &networks,
- const vecDbl &scaleE)
+ const vecDbl &scaleA, const vecDbl &scaleE)
 {
 
     // Development reads the genome and computes trait values
@@ -166,7 +166,8 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         const size_t trait = genome.traits[locus];
 
         // Contribute to trait
-        locivalues[locus] = genome.effects[locus] * expression;
+        const double locuseffect = genome.effects[locus] * expression;
+        locivalues[locus] = scaleA[trait] * locuseffect;
         genvalues[trait] += locivalues[locus];
 
     }

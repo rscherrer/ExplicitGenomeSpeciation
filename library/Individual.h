@@ -24,9 +24,10 @@ public:
     typedef Individual const * PInd;
 
     Individual(const Genome&, const MultiNet&, const double& = 0.5,
-     const vecDbl& = zeros(3u));
+     const vecDbl& = { 1.0, 1.0, 1.0 }, const vecDbl& = zeros(3u));
     Individual(const Genome&, const MultiNet&, const Haplotype&,
-     const Haplotype&, const vecDbl& = zeros(3u));
+     const Haplotype&, const vecDbl& = { 1.0, 1.0, 1.0 },
+      const vecDbl& = zeros(3u));
     ~Individual() {}
 
     // Getters
@@ -72,7 +73,7 @@ private:
     bool determineSex(const bool&);
 
     // Setters
-    void develop(const Genome&, const MultiNet&, const vecDbl&);
+    void develop(const Genome&, const MultiNet&, const vecDbl&, const vecDbl&);
 
     // Fields
     Diplotype sequence;
