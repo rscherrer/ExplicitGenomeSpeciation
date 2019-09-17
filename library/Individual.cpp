@@ -167,8 +167,9 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         const size_t trait = genome.traits[locus];
 
         // Contribute to trait
-        const double locuseffect = genome.effects[locus] * expression;
-        locivalues[locus] = scaleA[trait] * locuseffect;
+        double locuseffect = genome.effects[locus] * expression;
+        locuseffect *= scaleA[trait];
+        locivalues[locus] = locuseffect;
         genvalues[trait] += locivalues[locus];
 
     }
