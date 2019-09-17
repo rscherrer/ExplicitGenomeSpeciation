@@ -238,15 +238,15 @@ double calcDisassortProb(const double &y, const double &xi,
 
 
 /// Function to evaluate a potential mate
-bool Individual::acceptMate(const double &xj, const double &strength) const
+bool Individual::acceptMate(const double &xj, const double &sexsel) const
 {
 
     const double tiny = 0.00000001;
 
     // Calculate the probability of mating
     double mateProb = matepref >= 0.0 ?
-     calcAssortProb(matepref, ecotrait, xj, strength) :
-      calcDisassortProb(matepref, ecotrait, xj, strength);
+     calcAssortProb(matepref, ecotrait, xj, sexsel) :
+      calcDisassortProb(matepref, ecotrait, xj, sexsel);
 
     if (mateProb < tiny) mateProb = 0.0;
     if (mateProb > 1.0 - tiny) mateProb = 1.0;
