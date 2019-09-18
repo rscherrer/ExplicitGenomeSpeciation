@@ -12,24 +12,7 @@
 class Network;
 class Genome;
 
-/// Constructor of genetic architecture
-GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
-    nChromosomes(pars.getNChromosomes()),
-    nLoci(pars.getNLoci()),
-    nLociPerTrait(pars.getNLociPerTrait()),
-    nEdgesPerTrait(pars.getNEdgesPerTrait()),
-    skewnesses(pars.getSkewnesses()),
-    effectSizeShape(pars.getEffectSizeShape()),
-    effectSizeScale(pars.getEffectSizeScale()),
-    interactionWeightShape(pars.getInteractionWeightShape()),
-    interactionWeightScale(pars.getInteractionWeightScale()),
-    dominanceVariance(pars.getDominanceVariance()),
-    femHeterogamy(pars.getIsFemaleHeterogamy()),
-    genome(makeGenome()),
-    networks(makeNetworks())
-{
-    assert(networks.size() == 3u);
-}
+
 
 
 /// Function to make a vector of chromosome sizes

@@ -7,8 +7,6 @@
 #include <string>
 #include <stddef.h>
 
-/// Function to run the program
 int doMain(const vecStrings&);
-
 
 #endif

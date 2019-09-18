@@ -8,20 +8,20 @@
 #include "types.h"
 #include <vector>
 #include <cstddef>
+#include <cassert>
 #include <stddef.h>
 
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
 
-/// A container for all constant genetic features
+
 class GeneticArchitecture {
 
 public:
 
     GeneticArchitecture(const ParameterSet&);
 
-    /// Getters
     Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
 
@@ -42,15 +42,30 @@ private:
     Genome genome;
     MultiNet networks;
 
-    // A set of vectors of loci underlying each trait
-    //std::vector<std::vector<size_t> > traitUnderlyingLoci;
-
     /// Makers
     vecDbl makeChromosomes();
     Genome makeGenome();
     MultiNet makeNetworks();
 
 };
+
+GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
+    nChromosomes(pars.getNChromosomes()),
+    nLoci(pars.getNLoci()),
+    nLociPerTrait(pars.getNLociPerTrait()),
+    nEdgesPerTrait(pars.getNEdgesPerTrait()),
+    skewnesses(pars.getSkewnesses()),
+    effectSizeShape(pars.getEffectSizeShape()),
+    effectSizeScale(pars.getEffectSizeScale()),
+    interactionWeightShape(pars.getInteractionWeightShape()),
+    interactionWeightScale(pars.getInteractionWeightScale()),
+    dominanceVariance(pars.getDominanceVariance()),
+    femHeterogamy(pars.getIsFemaleHeterogamy()),
+    genome(makeGenome()),
+    networks(makeNetworks())
+{
+    assert(networks.size() == 3u);
+}
 
 
 

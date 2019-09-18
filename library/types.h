@@ -1,3 +1,6 @@
+#ifndef EXPLICITGENOMESPECIATION_TYPES_H
+#define EXPLICITGENOMESPECIATION_TYPES_H
+
 #include <vector>
 #include <string>
 
@@ -7,5 +10,6 @@ typedef std::vector<bool> vecBool;
 typedef std::vector<std::string> vecStrings;
 typedef std::vector<vecDbl> Matrix;
 
+#endif
 
 

@@ -1,3 +1,6 @@
+#ifndef EXPLICITGENOMESPECIATION_UTILS_H
+#define EXPLICITGENOMESPECIATION_UTILS_H
+
 #include "types.h"
 #include <vector>
 #include <cstddef>
@@ -23,3 +26,5 @@ size_t sumbool(vecBool&);
 size_t sumu(vecUns&);
 
 double size2dbl(const size_t&);
+
+#endif
