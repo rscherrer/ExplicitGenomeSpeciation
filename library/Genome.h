@@ -3,13 +3,29 @@
 
 #include "types.h"
 #include <vector>
+#include <cassert>
 #include <stddef.h>
 
 struct Genome
 {
 
-    Genome(const vecUns&, const size_t&, const size_t&,
-     const double&, const double&, const double&, const bool&);
+    Genome(const std::vector<size_t> &nLociPerTrait,
+     const size_t &nLoci, const size_t &nchrom, const double &shape,
+      const double &scale, const double &domvar, const bool &heterogamy) :
+        nloci(nLoci),
+        chromosomes(makeChromosomes(nchrom)),
+        traits(makeEncodedTraits(nLociPerTrait)),
+        locations(makeLocations()),
+        effects(makeEffects(shape, scale)),
+        dominances(makeDominances(domvar)),
+        femgamy(heterogamy)
+    {
+        assert(chromosomes.size() == nchrom);
+        assert(traits.size() == nloci);
+        assert(effects.size() == nloci);
+        assert(dominances.size() == nloci);
+        assert(locations.size() == nloci);
+    }
 
     size_t nloci;
     vecDbl chromosomes;

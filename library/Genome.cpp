@@ -5,25 +5,6 @@
 #include <algorithm>
 #include <iostream>
 
-/// Genome constructor
-Genome::Genome(const std::vector<size_t> &nLociPerTrait,
- const size_t &nLoci, const size_t &nchrom, const double &shape,
-  const double &scale, const double &domvar, const bool &heterogamy) :
-    nloci(nLoci),
-    chromosomes(makeChromosomes(nchrom)),
-    traits(makeEncodedTraits(nLociPerTrait)),
-    locations(makeLocations()),
-    effects(makeEffects(shape, scale)),
-    dominances(makeDominances(domvar)),
-    femgamy(heterogamy)
-{
-    assert(chromosomes.size() == nchrom);
-    assert(traits.size() == nloci);
-    assert(effects.size() == nloci);
-    assert(dominances.size() == nloci);
-    assert(locations.size() == nloci);
-}
-
 
 /// Function to make a vector of chromosome sizes
 std::vector<double> Genome::makeChromosomes(const size_t &nchrom)
