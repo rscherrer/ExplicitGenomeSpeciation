@@ -5,6 +5,7 @@
 #include "Random.h"
 #include "Genome.h"
 #include "Network.h"
+#include "types.h"
 #include <vector>
 #include <cstddef>
 #include <stddef.h>

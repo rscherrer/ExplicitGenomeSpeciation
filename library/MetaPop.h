@@ -6,6 +6,7 @@
 #include "StreamBag.h"
 #include "Individual.h"
 #include "utils.h"
+#include "types.h"
 
 typedef std::vector<Population> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;

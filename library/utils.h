@@ -1,3 +1,4 @@
+#include "types.h"
 #include <vector>
 #include <cstddef>
 #include <string>
@@ -5,7 +6,7 @@
 
 typedef std::vector<double> vecDbl;
 typedef std::vector<size_t> vecUns;
-typedef std::vector<bool> Haplotype;
+typedef std::vector<bool> vecBool;
 
 double sqr(const double&);
 
@@ -15,13 +16,13 @@ vecDbl zeros(const size_t&);
 
 vecUns uzeros(const size_t&); // unsigned zeros
 
-Haplotype falses(const size_t&);
+vecBool falses(const size_t&);
 
 double sum(vecDbl&);
 
 size_t argmin(vecDbl&);
 
-size_t sumbool(Haplotype&);
+size_t sumbool(vecBool&);
 
 size_t sumu(vecUns&);
 

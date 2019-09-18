@@ -4,6 +4,7 @@
 #include "ParameterSet.h"
 #include "GeneticArchitecture.h"
 #include "utils.h"
+#include "types.h"
 #include <vector>
 #include <random>
 #include <stddef.h>

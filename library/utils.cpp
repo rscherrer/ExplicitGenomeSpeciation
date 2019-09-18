@@ -37,9 +37,9 @@ vecUns uzeros(const size_t &n)
 }
 
 
-Haplotype falses(const size_t &n)
+vecBool falses(const size_t &n)
 {
-    Haplotype falses;
+    vecBool falses;
     for (size_t i = 0u; i < n; ++i)
         falses.push_back(false);
     return falses;
@@ -57,7 +57,7 @@ size_t argmin(vecDbl &v)
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
 }
 
-size_t sumbool(Haplotype &v) {
+size_t sumbool(vecBool &v) {
     size_t sum = 0u;
     for (size_t i = 0u; i < v.size(); ++i)
         sum += v[i];

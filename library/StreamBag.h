@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_STREAMBAG_H
 
 #include "Buffer.h"
+#include "types.h"
 #include <vector>
 #include <iostream>
 #include <fstream>

@@ -1,6 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_GENOME_H
 #define EXPLICITGENOMESPECIATION_GENOME_H
 
+#include "types.h"
 #include <vector>
 #include <stddef.h>
 

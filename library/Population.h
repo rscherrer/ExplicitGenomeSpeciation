@@ -5,6 +5,7 @@
 #include "GeneticArchitecture.h"
 #include "Random.h"
 #include "utils.h"
+#include "types.h"
 #include <stddef.h>
 
 

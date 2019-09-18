@@ -33,3 +33,5 @@ HEADERS += $$PWD/library/StreamBag.h
 
 SOURCES += $$PWD/library/Buffer.cpp
 HEADERS += $$PWD/library/Buffer.h
+
+HEADERS += $$PWD/library/types.h
