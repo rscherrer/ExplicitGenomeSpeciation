@@ -6,8 +6,6 @@
 #include <vector>
 #include <stddef.h>
 
-typedef std::vector<double> vecDbl;
-
 namespace rnd
 {
 

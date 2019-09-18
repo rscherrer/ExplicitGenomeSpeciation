@@ -11,7 +11,7 @@
 #include <cassert>
 
 /// Program to run the main function
-int doMain(const vecStr &args)
+int doMain(const vecStrings &args)
 {
 
     try

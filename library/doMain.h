@@ -7,10 +7,8 @@
 #include <string>
 #include <stddef.h>
 
-typedef std::vector<std::string> vecStr;
-
 /// Function to run the program
-int doMain(const vecStr&);
+int doMain(const vecStrings&);
 
 
 #endif

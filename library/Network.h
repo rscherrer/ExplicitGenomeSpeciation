@@ -6,9 +6,8 @@
 #include <stddef.h>
 
 typedef std::pair<size_t, size_t> Edge;
-typedef std::vector<Edge> vecEdg; // vector of pairs
-typedef std::vector<size_t> vecUns;
-typedef std::vector<double> vecDbl;
+typedef std::vector<Edge> vecEdg;
+
 class Genome;
 
 /// A container for a gene regulatory network

@@ -8,12 +8,11 @@
 #include "types.h"
 #include <stddef.h>
 
-
 class Individual;
-class LocusVariables;
+
 typedef Individual * PInd;
 typedef std::vector<PInd> Crowd;
-typedef std::vector<double> vecDbl;
+
 
 class Population {
 

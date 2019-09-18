@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 
-typedef std::vector<double> vecDbl;
 
 class Buffer
 {

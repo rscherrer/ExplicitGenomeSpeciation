@@ -12,7 +12,6 @@
 
 typedef std::vector<bool> Haplotype;
 typedef std::vector<Haplotype > Diplotype;
-typedef std::vector<double> vecDbl;
 
 /// Function to calculate feeding rates
 vecDbl calcFeedingRates(const double&, const double&,

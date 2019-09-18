@@ -5,9 +5,6 @@
 #include <vector>
 #include <stddef.h>
 
-typedef std::vector<double> vecDbl;
-typedef std::vector<size_t> vecUns;
-
 /// A container of constant genetic features across the genome
 struct Genome
 {

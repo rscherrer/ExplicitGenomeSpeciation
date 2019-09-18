@@ -10,8 +10,6 @@
 
 typedef std::vector<Population> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
-typedef std::vector<std::string> vecStrings;
-typedef std::vector<vecDbl> Matrix;
 
 class MetaPop
 {

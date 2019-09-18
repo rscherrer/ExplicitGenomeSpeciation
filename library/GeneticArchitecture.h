@@ -13,8 +13,6 @@
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
-typedef std::vector<size_t> vecUns;
-typedef std::vector<double> vecDbl;
 
 /// A container for all constant genetic features
 class GeneticArchitecture {

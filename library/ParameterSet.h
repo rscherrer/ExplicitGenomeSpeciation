@@ -6,9 +6,6 @@
 #include <fstream>
 #include <stddef.h>
 
-typedef std::vector<size_t> vecUns;
-typedef std::vector<double> vecDbl;
-
 class ParameterSet {
 
 public:

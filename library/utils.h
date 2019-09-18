@@ -4,10 +4,6 @@
 #include <string>
 #include <stddef.h>
 
-typedef std::vector<double> vecDbl;
-typedef std::vector<size_t> vecUns;
-typedef std::vector<bool> vecBool;
-
 double sqr(const double&);
 
 vecDbl ones(const size_t &n);

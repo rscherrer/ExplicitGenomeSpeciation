@@ -9,7 +9,6 @@
 #include <string>
 
 typedef std::vector<std::ofstream *> vecStreams;
-typedef std::vector<std::string> vecStrings;
 
 class StreamBag
 {
