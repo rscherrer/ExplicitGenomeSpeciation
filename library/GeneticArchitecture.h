@@ -32,12 +32,15 @@ public:
         interactionWeightScale(pars.getInteractionWeightScale()),
         dominanceVariance(pars.getDominanceVariance()),
         femHeterogamy(pars.getIsFemaleHeterogamy()),
+        scaleA(pars.getScaleA()),
+        scaleD(pars.getScaleD()),
+        scaleI(pars.getScaleI()),
+        scaleE(pars.getScaleE()),
         genome(makeGenome()),
         networks(makeNetworks())
     {
         assert(networks.size() == 3u);
     }
-
 
     Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
@@ -56,10 +59,14 @@ private:
     double dominanceVariance;
     bool femHeterogamy;
 
+    vecDbl scaleA;
+    vecDbl scaleD;
+    vecDbl scaleI;
+    vecDbl scaleE;
+
     Genome genome;
     MultiNet networks;
 
-    /// Makers
     vecDbl makeChromosomes();
     Genome makeGenome();
     MultiNet makeNetworks();

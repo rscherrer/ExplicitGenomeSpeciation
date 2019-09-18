@@ -12,9 +12,6 @@
 class Network;
 class Genome;
 
-
-
-
 /// Function to make a vector of chromosome sizes
 vecDbl GeneticArchitecture::makeChromosomes()
 {

@@ -40,6 +40,9 @@ public:
     double getHabitatSymmetry() const { return habitatSymmetry; }
     bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }
+    vecDbl getScaleA() const { return scaleA; }
+    vecDbl getScaleD() const { return scaleD; }
+    vecDbl getScaleI() const { return scaleI; }
     vecDbl getScaleE() const { return scaleE; }
 
     /// Setters
