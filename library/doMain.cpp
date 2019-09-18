@@ -40,9 +40,7 @@ int doMain(const vecStr &args)
         }
 
         // Create and seed a random number generator
-        // rnd::rng.seed(pars.getSeed());
-        rnd::rng.seed(42u);
-        // std::cout << pars.getSeed() << '\n';
+        rnd::rng.seed(pars.getSeed());
 
         // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
