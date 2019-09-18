@@ -5,12 +5,10 @@
 #include <algorithm>
 #include <iostream>
 
-
-/// Function to make a vector of chromosome sizes
-std::vector<double> Genome::makeChromosomes(const size_t &nchrom)
+vecDbl Genome::makeChromosomes(const size_t &nchrom)
 {
 
-    std::vector<double> chromends;
+    vecDbl chromends;
 
     // Chromosomes all have the same size
     for (size_t chrom = 0u; chrom < nchrom; ++chrom)
@@ -20,13 +18,11 @@ std::vector<double> Genome::makeChromosomes(const size_t &nchrom)
 
 }
 
-
-/// Function to randomly assign loci to their encoded traits
-std::vector<size_t> Genome::makeEncodedTraits(const std::vector<size_t>
+vecUns Genome::makeEncodedTraits(const std::vector<size_t>
  &nLociPerTrait)
 {
 
-    std::vector<size_t> encoded;
+    vecUns encoded;
 
     // Make an ordered vector of trait indices
     for (size_t trait = 0u; trait < 3u; ++trait)
