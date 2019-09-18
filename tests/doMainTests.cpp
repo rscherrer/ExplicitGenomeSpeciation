@@ -297,10 +297,10 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
 
 }
 
-BOOST_AUTO_TEST_CASE(abuseSpatialIsolation)
+BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
 {
 
-    std::cout << "Testing uncomputable spatial isolation...\n";
+    std::cout << "Testing spatial isolation with only one population...\n";
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
@@ -309,6 +309,24 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolation)
     Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
     Population pop2 = Population(0u, genome, networks);
     pop1.resetEcoTraits(-1.0, 1.0);
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
+{
+
+    std::cout << "Testing spatial isolation with only one ecotype...\n";
+
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    pop1.resetEcotypes(1u);
+    pop2.resetEcotypes(1u);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
     meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
     BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
