@@ -74,7 +74,7 @@ vecDbl Genome::makeEffects(const double &shape, const double &scale)
     if (shape == 0.0 || scale == 0.0) return zeros(nloci);
 
     vecDbl effectsizes;
-    vecDbl sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
+    vecDbl sss = zeros(3u); // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
 
@@ -99,7 +99,7 @@ vecDbl Genome::makeDominances(const double &var)
     if (var == 0.0) return zeros(nloci);
 
     vecDbl coefficients;
-    vecDbl sss = {0.0, 0.0, 0.0}; // square rooted sum of squares
+    vecDbl sss = zeros(3u); // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nloci; ++locus) {
         const double dom = rnd::hnormal(var);
