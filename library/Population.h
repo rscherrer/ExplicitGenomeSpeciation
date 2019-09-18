@@ -60,6 +60,7 @@ public:
 
     void resetEcoTraits(const double&, const double&);
     void resetMatePrefs(const double&);
+    void resetGenders(const bool&);
 
 
 private:

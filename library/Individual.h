@@ -71,6 +71,10 @@ public:
         traitvalues[1u] = value;
     }
     void setEcotype(const double&);
+    void setGender(const bool &sex)
+    {
+        isFemale = sex;
+    }
 
 private:
 

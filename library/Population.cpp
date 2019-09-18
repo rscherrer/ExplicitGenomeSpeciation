@@ -368,3 +368,9 @@ void Population::resetMatePrefs(const double &value)
     for (auto ind : individuals)
         ind->setMatePref(value);
 }
+
+void Population::resetGenders(const bool &sex)
+{
+    for (auto ind : individuals)
+        ind->setGender(sex);
+}
