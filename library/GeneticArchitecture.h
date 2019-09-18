@@ -20,7 +20,24 @@ class GeneticArchitecture {
 
 public:
 
-    GeneticArchitecture(const ParameterSet&);
+    GeneticArchitecture(const ParameterSet &pars) :
+        nChromosomes(pars.getNChromosomes()),
+        nLoci(pars.getNLoci()),
+        nLociPerTrait(pars.getNLociPerTrait()),
+        nEdgesPerTrait(pars.getNEdgesPerTrait()),
+        skewnesses(pars.getSkewnesses()),
+        effectSizeShape(pars.getEffectSizeShape()),
+        effectSizeScale(pars.getEffectSizeScale()),
+        interactionWeightShape(pars.getInteractionWeightShape()),
+        interactionWeightScale(pars.getInteractionWeightScale()),
+        dominanceVariance(pars.getDominanceVariance()),
+        femHeterogamy(pars.getIsFemaleHeterogamy()),
+        genome(makeGenome()),
+        networks(makeNetworks())
+    {
+        assert(networks.size() == 3u);
+    }
+
 
     Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
@@ -49,23 +66,6 @@ private:
 
 };
 
-GeneticArchitecture::GeneticArchitecture(const ParameterSet &pars) :
-    nChromosomes(pars.getNChromosomes()),
-    nLoci(pars.getNLoci()),
-    nLociPerTrait(pars.getNLociPerTrait()),
-    nEdgesPerTrait(pars.getNEdgesPerTrait()),
-    skewnesses(pars.getSkewnesses()),
-    effectSizeShape(pars.getEffectSizeShape()),
-    effectSizeScale(pars.getEffectSizeScale()),
-    interactionWeightShape(pars.getInteractionWeightShape()),
-    interactionWeightScale(pars.getInteractionWeightScale()),
-    dominanceVariance(pars.getDominanceVariance()),
-    femHeterogamy(pars.getIsFemaleHeterogamy()),
-    genome(makeGenome()),
-    networks(makeNetworks())
-{
-    assert(networks.size() == 3u);
-}
 
 
 
