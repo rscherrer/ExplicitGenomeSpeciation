@@ -581,10 +581,6 @@ double MetaPop::getSpatialIsolation()
 
     const double tiny = 1E-15;
 
-    // Calculated as some non-overlap between ecotypes
-    if (pops[0u].getPopSize() == 0u || pops[1u].getPopSize() == 0u)
-        return 0.0;
-
     // Ecotype-by-habitat table
     MatUns n = { uzeros(2u), uzeros(2u) };
 
@@ -598,14 +594,15 @@ double MetaPop::getSpatialIsolation()
     }
 
     double si = n[0u][0u] * n[1u][1u] - n[0u][1u] * n[1u][0u];
-    if (n[0u][0u] + n[0u][1u] == 0u) return 0.0;
-    if (n[1u][0u] + n[1u][1u] == 0u) return 0.0;
-    if (n[0u][0u] + n[1u][0u] == 0u) return 0.0;
-    if (n[0u][1u] + n[1u][1u] == 0u) return 0.0;
-    si /= sqrt(n[0u][0u] + n[0u][1u]);
-    si /= sqrt(n[1u][0u] + n[1u][1u]);
-    si /= sqrt(n[0u][0u] + n[1u][0u]);
-    si /= sqrt(n[0u][1u] + n[1u][1u]);
+
+    // Normalizing product
+    double norm = n[0u][0u] + n[0u][1u];
+    norm *= n[1u][0u] + n[1u][1u];
+    norm *= n[0u][0u] + n[1u][0u];
+    norm *= n[0u][1u] + n[1u][1u];
+    if (norm == 0.0) return 0.0;
+
+    si /= sqrt(norm);
 
     if (si < tiny) si = 0.0;
     if (si > 1.0 - tiny) si = 1.0;
@@ -618,6 +615,8 @@ double MetaPop::getSpatialIsolation()
 
 double MetaPop::getMatingIsolation()
 {
+
+    const double tiny = 1E-15;
 
     // Count homogamic and heterogamic crossings
 
@@ -661,25 +660,19 @@ double MetaPop::getMatingIsolation()
     }
 
     double ri = m[0u][0u] * m[1u][1u] - m[0u][1u] * m[1u][0u];
-    if (m[0u][0u] + m[0u][1u] == 0u) return 0.0;
-    if (m[1u][0u] + m[1u][1u] == 0u) return 0.0;
-    if (m[0u][0u] + m[1u][0u] == 0u) return 0.0;
-    if (m[0u][1u] + m[1u][1u] == 0u) return 0.0;
-    ri /= sqrt(m[0u][0u] + m[0u][1u]);
-    ri /= sqrt(m[1u][0u] + m[1u][1u]);
-    ri /= sqrt(m[0u][0u] + m[1u][0u]);
-    ri /= sqrt(m[0u][1u] + m[1u][1u]);
+    double norm = m[0u][0u] + m[0u][1u];
+    norm *= m[1u][0u] + m[1u][1u];
+    norm *= m[0u][0u] + m[1u][0u];
+    norm *= m[0u][1u] + m[1u][1u];
+    if (norm == 0.0) return 0.0;
+
+    ri /= sqrt(norm);
+
+    if (ri < tiny) ri = 0.0;
+    if (ri > 1.0 - tiny) ri = 1.0;
+    assert(ri >= 0.0);
+    assert(ri <= 1.0);
 
     return ri;
 
 }
-
-
-
-
-
-
-
-
-
-

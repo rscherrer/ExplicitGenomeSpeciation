@@ -296,3 +296,18 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
 }
+
+BOOST_AUTO_TEST_CASE(abuseSpatialIsolation)
+{
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    pop1.resetEcoTraits(-1.0, 1.0);
+    pop2.resetEcoTraits(1.0, 1.0);
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
+}
