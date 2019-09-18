@@ -65,18 +65,10 @@ int doMain(const vecStr &args)
         // Create a metapopulation
         MetaPop metapop = MetaPop(pops, pars);
 
-        // Open a data file
-        std::ofstream out;
-        out.open("output.dat");
-        if (!out.is_open())
-            throw std::runtime_error("Unable to open output file");
-
         // Launch simulation
         std::cout << "Simulation started\n";
         metapop.evolve(genome, networks, pars.getScaleE());
         std::cout << "Simulation ended\n";
-
-        out.close();
 
     }
     catch (const std::runtime_error &err)
