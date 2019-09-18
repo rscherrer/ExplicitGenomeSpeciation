@@ -444,12 +444,36 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
         assert(Fst[trait] <= 1.0);
 
     }
+
+    assert(meanPhenotypes.size() == 3u);
+    assert(pheVariances.size() == 3u);
+    assert(genVariances.size() == 3u);
+    assert(addVariances.size() == 3u);
+    assert(nadVariances.size() == 3u);
+    assert(domVariances.size() == 3u);
+    assert(intVariances.size() == 3u);
+    assert(Pst.size() == 3u);
+    assert(Gst.size() == 3u);
+    assert(Qst.size() == 3u);
+    assert(Cst.size() == 3u);
+    assert(Fst.size() == 3u);
+    assert(varPScan.size() == nloci);
+    assert(varGScan.size() == nloci);
+    assert(varAScan.size() == nloci);
+    assert(varNScan.size() == nloci);
+    assert(PstScan.size() == nloci);
+    assert(GstScan.size() == nloci);
+    assert(QstScan.size() == nloci);
+    assert(CstScan.size() == nloci);
+    assert(FstScan.size() == nloci);
+
 }
 
 void MetaPop::save(StreamBag &out)
 {
-    for (size_t f = 0u; f < out.names.size(); ++f)
+    for (size_t f = 0u; f < out.names.size(); ++f) {
         buffer.write(buffer.fields[f], out.files[f]);
+    }
 }
 
 int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
@@ -471,6 +495,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
         if (record && t % tsave == 0u && t > 0) {
             analyze(genome.nloci, genome.traits, scaleE);
             loadBuffer(t);
+            assert(buffer.fields.size() == out.names.size());
             save(out);
         }
 
@@ -533,7 +558,7 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add({ pops[1u].getResources()[1u] });
 
     // Quantitative genetics
-    for (size_t trait = 0u; trait < 2u; ++trait) {
+    for (size_t trait = 0u; trait < 3u; ++trait) {
         for (size_t group = 0u; group < 3u; ++group)
             buffer.add({ meanPhenotypes[trait][group] });
         buffer.add({ pheVariances[trait][2u] });
