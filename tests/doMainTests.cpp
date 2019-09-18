@@ -314,10 +314,10 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolation)
     BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
 }
 
-BOOST_AUTO_TEST_CASE(abuseMatingIsolation)
+BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
 {
 
-    std::cout << "Testing uncomputable mating isolation...\n";
+    std::cout << "Testing mating isolation when only one sex...\n";
 
     ParameterSet pars;
     GeneticArchitecture arch = GeneticArchitecture(pars);
@@ -326,6 +326,23 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolation)
     Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
     Population pop2 = Population(0u, genome, networks);
     pop1.resetGenders(true); // only females
+    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
+{
+
+    std::cout << "Testing mating isolation when one reproducing ecotype...\n";
+
+    ParameterSet pars;
+    GeneticArchitecture arch = GeneticArchitecture(pars);
+    Genome genome = arch.getGenome();
+    MultiNet networks = arch.getNetworks();
+    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop2 = Population(0u, genome, networks);
+    pop1.resetEcotypes(1u);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
     meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);

@@ -61,6 +61,7 @@ public:
     void resetEcoTraits(const double&, const double&);
     void resetMatePrefs(const double&);
     void resetGenders(const bool&);
+    void resetEcotypes(const size_t&);
 
 
 private:

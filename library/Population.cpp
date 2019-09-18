@@ -374,3 +374,9 @@ void Population::resetGenders(const bool &sex)
     for (auto ind : individuals)
         ind->setGender(sex);
 }
+
+void Population::resetEcotypes(const size_t &ecotype)
+{
+    for (auto ind : individuals)
+        ind->setEcotype(ecotype);
+}
