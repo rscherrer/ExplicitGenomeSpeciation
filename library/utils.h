@@ -23,7 +23,7 @@ double sum(vecDbl&);
 
 size_t argmin(vecDbl&);
 
-size_t sumbool(vecBool&);
+size_t sumbool(vecBool);
 
 size_t sumu(vecUns&);
 

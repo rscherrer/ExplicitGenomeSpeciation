@@ -11,9 +11,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing generating a sequence of only zeros...\n";
         Individual ind = Individual(arch, 0.0);
-        Diplotype seq = ind.getSequence();
-        BOOST_CHECK_EQUAL(sumbool(seq[0u]), 0u);
-        BOOST_CHECK_EQUAL(sumbool(seq[1u]), 0u);
+        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(0u)), 0u);
+        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(1u)), 0u);
     }
 
     // Check the genome generation function
@@ -21,9 +20,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing generating a sequence of only ones...\n";
         Individual ind = Individual(arch, 1.0);
-        Diplotype seq = ind.getSequence();
-        BOOST_CHECK_EQUAL(sumbool(seq[0u]), genome.nloci);
-        BOOST_CHECK_EQUAL(sumbool(seq[1u]), genome.nloci);
+        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(0u)), genome.nloci);
+        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(1u)), genome.nloci);
     }
 
     // Check that a fully homogamous female will always accept identical mate
@@ -77,8 +75,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Haplotype egg = mom.recombine(arch.genome);
         Haplotype sperm = dad.recombine(arch.genome);
         Individual baby = Individual(arch, egg, sperm);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[0u]), 0u);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[1u]), genome.nloci);
+        BOOST_CHECK_EQUAL(sumbool(baby.getSequence(0u)), 0u);
+        BOOST_CHECK_EQUAL(sumbool(baby.getSequence(1u)), genome.nloci);
     }
 
     BOOST_AUTO_TEST_CASE(checkNoMutation)

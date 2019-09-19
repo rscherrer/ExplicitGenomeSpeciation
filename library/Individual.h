@@ -90,7 +90,7 @@ public:
     vecDbl getTraits() const { return traitvalues; }
     vecDbl getFeedingRates() const { return feedingRates; }
     vecDbl getGenValues() const { return genvalues; }
-    Diplotype getSequence() const { return sequence; }
+    Haplotype getSequence(const size_t &i) const { return sequence[i]; }
     vecDbl getExpression() const { return genexp; }
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&);
