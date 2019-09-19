@@ -20,8 +20,22 @@ class Population {
 
 public:
 
-    Population(const size_t&, const Genome&, const MultiNet&,
-     const vecDbl& = {100.0, 100.0}, const vecDbl& = {1.0, 1.0});
+    Population(const size_t &popsize, const GeneticArchitecture &arch,
+     const vecDbl &foodmax = rep(100.0, 2u),
+      const vecDbl &foodgrowth = ones(2u)) :
+        individuals(populate(popsize, arch)),
+        females({ }),
+        males({ }),
+        offspring({ }),
+        survivors({ }),
+        capacity(foodmax),
+        replenish(foodgrowth),
+        resources(capacity)
+    {
+        // Sexes should be sorted out upon creation of the population
+        sortSexes();
+    }
+
     ~Population() {};
 
     // Getters
@@ -41,22 +55,11 @@ public:
     void immigrate(const Crowd&);
     void consume();
     void burninConsume();
-    void reproduce(const double&, const double&, const Genome&,
-     const MultiNet&, const double& = 0.01, const vecDbl& = ones(3u),
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
-       const vecDbl& = zeros(3u));
-    void burninReproduce(const double&, const double&, const Genome&,
-     const MultiNet&, const double& = 0.01, const double& = 0.0,
-      const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
-       const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
-    void reproduceAsexual(const double&, const Genome&,
-     const MultiNet&);
+    void reproduce(const GeneticArchitecture&, const double&, const double&,
+     const double& = 0.01);
+    void burninReproduce(const GeneticArchitecture&, const double&,
+     const double&, const double& = 0.01, const double& = 0.0);
     bool survive(const double&);
-
-    // Setters
-    void calcMeanEcoTrait();
-    void calcMeanMatePref();
-    void calcMeanNtrTrait();
 
     void resetEcoTraits(const double&, const double&);
     void resetMatePrefs(const double&);
@@ -67,10 +70,7 @@ public:
 private:
 
     // Makers
-    Crowd populate(const size_t&, const Genome&, const MultiNet&,
-     const double& = 0.5, const vecDbl& = { 1.0, 1.0, 1.0 },
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u),
-       const vecDbl& = zeros(3u));
+    Crowd populate(const size_t&, const GeneticArchitecture&);
 
     // The population
     Crowd individuals;

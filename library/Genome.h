@@ -9,15 +9,17 @@
 struct Genome
 {
 
-    Genome(const std::vector<size_t> &nLociPerTrait,
-     const size_t &nLoci, const size_t &nchrom, const double &shape,
-      const double &scale, const double &domvar, const bool &heterogamy) :
+    Genome(const vecUns &nLociPerTrait, const size_t &nLoci,
+     const size_t &nchrom, const double &shape, const double &scale,
+      const double &domvar, const double &recombination,
+       const bool &heterogamy) :
         nloci(nLoci),
         chromosomes(makeChromosomes(nchrom)),
         traits(makeEncodedTraits(nLociPerTrait)),
         locations(makeLocations()),
         effects(makeEffects(shape, scale)),
         dominances(makeDominances(domvar)),
+        recombrate(recombination),
         femgamy(heterogamy)
     {
         assert(chromosomes.size() == nchrom);
@@ -35,6 +37,7 @@ struct Genome
     vecDbl effects;
     vecDbl dominances;
 
+    double recombrate;
     bool femgamy;
 
     vecDbl makeChromosomes(const size_t&);

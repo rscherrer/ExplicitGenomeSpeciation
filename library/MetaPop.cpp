@@ -13,8 +13,7 @@ double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
     return xst;
 }
 
-void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
- const vecDbl &scaleE)
+void MetaPop::analyze(const GeneticArchitecture &arch)
 {
 
     // Reset statistics
@@ -25,6 +24,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
     // The third is for the value across the whole metapopulation
 
     const double tiny = 1E-15;
+    const size_t nloci = arch.nLoci;
 
     // Mean and variance components
     // One value per trait per ecotype
@@ -163,7 +163,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
     // Locus-specific environmental variance
     vecDbl locusVarE = zeros(3u);
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        locusVarE[trait] = sqr(scaleE[trait]) / nloci;
+        locusVarE[trait] = sqr(arch.scaleE[trait]) / nloci;
         if (locusVarE[trait] < tiny) locusVarE[trait] = 0.0;
         assert(locusVarE[trait] >= 0.0);
     }
@@ -172,7 +172,7 @@ void MetaPop::analyze(const size_t &nloci, const vecUns &traits,
     for (size_t locus = 0u; locus < nloci; ++locus) {
 
         // Trait encoded
-        const size_t trait = traits[locus];
+        const size_t trait = arch.genome.traits[locus];
 
         // Genetic values and allele counts
         double meanAlleleCount = 0.0;
@@ -476,8 +476,7 @@ void MetaPop::save(StreamBag &out)
     }
 }
 
-int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
- const vecDbl& scaleE)
+int MetaPop::evolve(const GeneticArchitecture &arch)
 {
     int t = - tburnin;
     StreamBag out;
@@ -493,7 +492,7 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
 
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
-            analyze(genome.nloci, genome.traits, scaleE);
+            analyze(arch);
             loadBuffer(t);
             assert(buffer.fields.size() == out.names.size());
             save(out);
@@ -518,11 +517,11 @@ int MetaPop::evolve(const Genome &genome, const MultiNet &networks,
 
         // Reproduction
         if (t > 0) {
-            pops[0u].reproduce(birth, sexsel, genome, networks);
-            pops[1u].reproduce(birth, sexsel, genome, networks);
+            pops[0u].reproduce(arch, birth, sexsel);
+            pops[1u].reproduce(arch, birth, sexsel);
         } else {
-            pops[0u].burninReproduce(birth, sexsel, genome, networks, ecosel);
-            pops[1u].burninReproduce(birth, sexsel, genome, networks, ecosel);
+            pops[0u].burninReproduce(arch, birth, sexsel, ecosel);
+            pops[1u].burninReproduce(arch, birth, sexsel, ecosel);
         }
 
         // Survival

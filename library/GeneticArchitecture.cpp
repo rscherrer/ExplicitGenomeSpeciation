@@ -31,7 +31,8 @@ vecDbl GeneticArchitecture::makeChromosomes()
 Genome GeneticArchitecture::makeGenome()
 {
     const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale, dominanceVariance, femHeterogamy);
+     effectSizeShape, effectSizeScale, dominanceVariance, femHeterogamy,
+      recombinationRate);
     return gen;
 }
 

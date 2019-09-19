@@ -10,7 +10,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkNoDispersal)
     {
         std::cout << "Testing no emmigration...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         Crowd migrants = pop.emigrate(0.0);
         BOOST_CHECK_EQUAL(migrants.size(), 0u);
         BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
@@ -19,7 +19,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkExodus)
     {
         std::cout << "Testing everybody leaves...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         Crowd migrants = pop.emigrate(1.0);
         BOOST_CHECK_EQUAL(migrants.size(), 10u);
         BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
@@ -28,7 +28,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkBorderControl)
     {
         std::cout << "Testing immigration...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         Crowd migrants = pop.emigrate(1.0);
         pop.immigrate(migrants);
         BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
@@ -39,7 +39,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkNoSurvivors)
     {
         std::cout << "Testing population wipe-out...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         pop.survive(0.0);
         BOOST_CHECK_EQUAL(pop.getPopSize(), 0u);
     }
@@ -49,7 +49,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkNoMortality)
     {
         std::cout << "Testing absence of mortality...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         pop.survive(1.0);
         BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
     }
@@ -59,8 +59,8 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkGrowth)
     {
         std::cout << "Testing population growth...\n";
-        Population pop = Population(10u, genome, networks);
-        pop.reproduce(4.0, 1.0, genome, networks);
+        Population pop = Population(10u, arch);
+        pop.reproduce(arch, 4.0, 1.0);
         pop.survive(1.0);
         BOOST_CHECK(pop.getPopSize() >= 10u);
     }
@@ -70,8 +70,8 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkNewbornsShouldNotDie)
     {
         std::cout << "Testing that newborns do not die...\n";
-        Population pop = Population(100u, genome, networks);
-        pop.reproduce(1.0, 1.0, genome, networks);
+        Population pop = Population(100u, arch);
+        pop.reproduce(arch, 1.0, 1.0);
         pop.survive(0.0); // kill all adults
         BOOST_CHECK(pop.getPopSize() > 0u);
     }
@@ -80,7 +80,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     BOOST_AUTO_TEST_CASE(checkResourceIsDepleted)
     {
         std::cout << "Testing resource depletion...\n";
-        Population pop = Population(10u, genome, networks);
+        Population pop = Population(10u, arch);
         std::vector<double> resourcesBefore = pop.getResources();
         pop.consume();
         std::vector<double> resourcesAfter = pop.getResources();

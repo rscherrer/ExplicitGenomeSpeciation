@@ -31,7 +31,9 @@ public:
         interactionWeightShape(pars.getInteractionWeightShape()),
         interactionWeightScale(pars.getInteractionWeightScale()),
         dominanceVariance(pars.getDominanceVariance()),
+        snpFreq(pars.getSNPFreq()),
         femHeterogamy(pars.getIsFemaleHeterogamy()),
+        recombinationRate(pars.getRecombinationRate()),
         scaleA(pars.getScaleA()),
         scaleD(pars.getScaleD()),
         scaleI(pars.getScaleI()),
@@ -45,8 +47,6 @@ public:
     Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
 
-private:
-
     size_t nChromosomes;
     size_t nLoci;
     vecUns nLociPerTrait;
@@ -57,7 +57,9 @@ private:
     double interactionWeightShape;
     double interactionWeightScale;
     double dominanceVariance;
+    double snpFreq;
     bool femHeterogamy;
+    double recombinationRate;
 
     vecDbl scaleA;
     vecDbl scaleD;
@@ -66,6 +68,8 @@ private:
 
     Genome genome;
     MultiNet networks;
+
+private:
 
     vecDbl makeChromosomes();
     Genome makeGenome();

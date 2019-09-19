@@ -58,8 +58,8 @@ int doMain(const vecStrings &args)
         const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
         const vecDbl foodgrows = {foodgrowth, foodgrowth};
 
-        Population pop1 = Population(n0, genome, networks, foodmax1, foodgrows);
-        Population pop2 = Population(0u, genome, networks, foodmax2, foodgrows);
+        Population pop1 = Population(n0, arch, foodmax1, foodgrows);
+        Population pop2 = Population(0u, arch, foodmax2, foodgrows);
         vecPop pops = {pop1, pop2};
 
         // Create a metapopulation
@@ -67,7 +67,7 @@ int doMain(const vecStrings &args)
 
         // Launch simulation
         std::cout << "Simulation started\n";
-        metapop.evolve(genome, networks, pars.getScaleE());
+        metapop.evolve(arch);
         std::cout << "Simulation ended\n";
 
     }

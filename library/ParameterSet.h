@@ -24,6 +24,7 @@ public:
     double getInteractionWeightShape() const { return interactionWeightShape; }
     double getInteractionWeightScale() const { return interactionWeightScale; }
     double getDominanceVariance() const { return dominanceVariance; }
+    double getSNPFreq() const { return freqSNP; }
     size_t getSeed() const { return seed; }
     int getTEndSim() const { return tEndSim; }
     int getTSave() const { return tSave; }
@@ -38,6 +39,7 @@ public:
     double getMaxResourceCapacity() const { return maxResourceCapacity; }
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
+    double getRecombinationRate() const { return recombinationRate; }
     bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }
     vecDbl getScaleA() const { return scaleA; }

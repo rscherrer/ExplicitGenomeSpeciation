@@ -9,34 +9,79 @@
 #include <random>
 #include <stddef.h>
 
-
 typedef std::vector<bool> Haplotype;
 typedef std::vector<Haplotype > Diplotype;
-
-/// Function to calculate feeding rates
-vecDbl calcFeedingRates(const double&, const double&,
- const double& = 0.0004);
 
 class Individual {
 
     friend class Population;
     friend class MetaPop;
 
-public:
-
     typedef Individual const * PInd;
 
-    Individual(const Genome&, const MultiNet&, const double& = 0.5,
-     const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
+public:
 
-    Individual(const Genome&, const MultiNet&, const Haplotype&,
-     const Haplotype&, const vecDbl& = ones(3u), const vecDbl& = zeros(3u),
-      const vecDbl& = zeros(3u), const vecDbl& = zeros(3u));
+    /// Spontaneous creation
+    Individual(const GeneticArchitecture &arch, const double &snpFreq = -1.0) :
+        sequence(makeSequence(arch, snpFreq)),
+        genexp(zeros(arch.nLoci)),
+        locivalues(zeros(arch.nLoci)),
+        isFemale(determineSex(arch.femHeterogamy)),
+        genvalues(zeros(3u)),
+        traitvalues(zeros(3u)),
+        ecotrait(traitvalues[0u]),
+        matepref(traitvalues[1u]),
+        neutral(traitvalues[2u]),
+        fitness(1.0),
+        feedingRates(calcFeedingRates(1.0, ecotrait)),
+        ecotype(0u)
+    {
+
+        develop(arch);
+
+        assert(sequence.size() == 2u);
+        for (size_t strain = 0u; strain < 2u; ++strain)
+            assert(sequence[strain].size() == arch.genome.nloci);
+        assert(genexp.size() == arch.genome.nloci);
+        assert(traitvalues.size() == 3u);
+        assert(fitness > 0.0);
+        for (size_t res = 0u; res < 2u; ++res)
+            assert(feedingRates[res] > 0.0);
+    }
+
+
+    /// Newborn
+    Individual(const GeneticArchitecture &arch, const Haplotype &egg,
+     const Haplotype &sperm) :
+        sequence(fecundate(egg, sperm)),
+        genexp(zeros(arch.nLoci)),
+        locivalues(zeros(arch.nLoci)),
+        isFemale(determineSex(arch.femHeterogamy)),
+        genvalues(zeros(3u)),
+        traitvalues(zeros(3u)),
+        ecotrait(traitvalues[0u]),
+        matepref(traitvalues[1u]),
+        neutral(traitvalues[2u]),
+        fitness(1.0),
+        feedingRates(calcFeedingRates(1.0, ecotrait)),
+        ecotype(0u)
+    {
+
+        develop(arch);
+
+        assert(sequence.size() == 2u);
+        for (size_t strain = 0u; strain < 2u; ++strain)
+            assert(sequence[strain].size() == arch.genome.nloci);
+        assert(genexp.size() == arch.genome.nloci);
+        assert(traitvalues.size() == 3u);
+        assert(fitness > 0.0);
+        for (size_t res = 0u; res < 2u; ++res)
+            assert(feedingRates[res] > 0.0);
+
+    }
 
     ~Individual() {}
 
-    // Getters
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecotrait; }
     double getMatePref() const { return matepref; }
@@ -50,46 +95,26 @@ public:
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
-
-    // Actions
-    void feed(const vecDbl&);
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const vecDbl&, const vecDbl&,
-     const double& = 3.0);
-    void mutate(Haplotype&, const double& = 1.0e-5);
+    Haplotype recombine(const Genome&);
+    vecDbl calcFeedingRates(const double&, const double&,
+     const double& = 4.0E-4);
 
-    // Setters
-    void setEcoTrait(const double &value, const double &sel)
-    {
-        ecotrait = value;
-        traitvalues[0u] = value;
-        feedingRates = calcFeedingRates(sel, value);
-    }
-    void setMatePref(const double &value)
-    {
-        matepref = value;
-        traitvalues[1u] = value;
-    }
+    void setEcoTrait(const double&, const double&);
+    void setMatePref(const double&);
     void setEcotype(const double&);
-    void setGender(const bool &sex)
-    {
-        isFemale = sex;
-    }
+    void setGender(const bool&);
+    void feed(const vecDbl&);
+    void mutate(Haplotype&, const double& = 1.0e-5);
 
 private:
 
-    friend class Population;
-
-    // Makers
-    Diplotype makeSequence(const size_t&, const double& = 0.5);
+    Diplotype makeSequence(const GeneticArchitecture&, double = -1.0);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
     bool determineSex(const bool&);
 
-    // Setters
-    void develop(const Genome&, const MultiNet&, const vecDbl&, const vecDbl&,
-     const vecDbl&, const vecDbl&);
+    void develop(const GeneticArchitecture&);
 
-    // Fields
     Diplotype sequence;
     vecDbl genexp;
     vecDbl locivalues;
@@ -102,7 +127,6 @@ private:
     double fitness;
     vecDbl feedingRates;
     size_t ecotype;
-
 
 };
 

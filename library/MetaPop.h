@@ -54,15 +54,13 @@ public:
     {}
     ~MetaPop() {}
 
-    // Getters
     vecPop getPops() const { return pops; }
     double getEcoIsolation();
     double getSpatialIsolation();
     double getMatingIsolation();
 
-    // Setters
-    int evolve(const Genome&, const MultiNet&, const vecDbl& = zeros(3u));
-    void analyze(const size_t&, const vecUns&, const vecDbl&);
+    int evolve(const GeneticArchitecture&);
+    void analyze(const GeneticArchitecture&);
     void loadBuffer(const size_t &t);
     void save(StreamBag&);
 

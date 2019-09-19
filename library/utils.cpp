@@ -45,6 +45,14 @@ vecBool falses(const size_t &n)
     return falses;
 }
 
+vecDbl rep(const double &x, const size_t &n)
+{
+    vecDbl reps;
+    for (size_t i = 0u; i < n; ++i)
+        reps.push_back(x);
+    return reps;
+}
+
 
 double sum(vecDbl &v)
 {

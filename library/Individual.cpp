@@ -7,11 +7,7 @@
 #include <iostream>
 #include <algorithm>
 
-
-struct Locus;
-
-/// Function to calculate feeding rates
-std::vector<double> calcFeedingRates(const double &sel, const double &trait,
+vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
  const double &maxi)
 {
     const double rate1 = maxi * exp(- sel * sqr(trait + 1.0));
@@ -20,71 +16,6 @@ std::vector<double> calcFeedingRates(const double &sel, const double &trait,
     assert(rate2 >= 0.0);
     return { rate1, rate2 };
 }
-
-
-/// Constructor with randomly generated genome
-Individual::Individual(const Genome &genome, const MultiNet &networks,
- const double &snpfreq, const vecDbl &scaleA, const vecDbl &scaleD,
-  const vecDbl &scaleI, const vecDbl &scaleE) :
-    sequence(makeSequence(genome.nloci, snpfreq)),
-    genexp(zeros(genome.nloci)),
-    locivalues(zeros(genome.nloci)),
-    isFemale(determineSex(genome.femgamy)),
-    genvalues(zeros(3u)),
-    traitvalues(zeros(3u)),
-    ecotrait(traitvalues[0u]),
-    matepref(traitvalues[1u]),
-    neutral(traitvalues[2u]),
-    fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecotrait)),
-    ecotype(0u)
-{
-
-    develop(genome, networks, scaleA, scaleD, scaleI, scaleE);
-
-    assert(sequence.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(sequence[strain].size() == genome.nloci);
-    assert(genexp.size() == genome.nloci);
-    assert(traitvalues.size() == 3u);
-    assert(fitness > 0.0);
-    for (size_t res = 0u; res < 2u; ++res)
-        assert(feedingRates[res] > 0.0);
-}
-
-
-/// Constructor that inherits a parental genome
-Individual::Individual(const Genome &genome,
- const MultiNet &networks, const Haplotype &egg, const Haplotype &sperm,
-  const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
-   const vecDbl &scaleE) :
-    sequence(fecundate(egg, sperm)),
-    genexp(zeros(genome.nloci)),
-    locivalues(zeros(genome.nloci)),
-    isFemale(determineSex(genome.femgamy)),
-    genvalues(zeros(3u)),
-    traitvalues(zeros(3u)),
-    ecotrait(traitvalues[0u]),
-    matepref(traitvalues[1u]),
-    neutral(traitvalues[2u]),
-    fitness(1.0),
-    feedingRates(calcFeedingRates(1.0, ecotrait)),
-    ecotype(0u)
-{
-
-    develop(genome, networks, scaleA, scaleD, scaleI, scaleE);
-
-    assert(sequence.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(sequence[strain].size() == genome.nloci);
-    assert(genexp.size() == genome.nloci);
-    assert(traitvalues.size() == 3u);
-    assert(fitness > 0.0);
-    for (size_t res = 0u; res < 2u; ++res)
-        assert(feedingRates[res] > 0.0);
-
-}
-
 
 bool Individual::determineSex(const bool &femheterogamy)
 {
@@ -95,18 +26,20 @@ bool Individual::determineSex(const bool &femheterogamy)
     return isfemale;
 }
 
-
-/// Generate a diploid allele sequence
-Diplotype Individual::makeSequence(const size_t &nloci, const double &prob)
+Diplotype Individual::makeSequence(const GeneticArchitecture &arch, double prob)
 {
 
     Diplotype sequences;
+
+    if (prob < 0.0) {
+        prob = arch.snpFreq;
+    }
 
     for (size_t strain = 0u; strain < 2u; ++strain) {
 
         // Generate a random genetic sequence of alleles
         Haplotype haplotype;
-        for (size_t locus = 0u; locus < nloci; ++locus)
+        for (size_t locus = 0u; locus < arch.nLoci; ++locus)
             haplotype.push_back(rnd::bernoulli(prob));
         sequences.push_back(haplotype);
 
@@ -118,7 +51,6 @@ Diplotype Individual::makeSequence(const size_t &nloci, const double &prob)
 }
 
 
-/// Fecundation
 Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 {
     Diplotype zygote(2u);
@@ -128,11 +60,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
     return zygote;
 }
 
-
-/// Development
-void Individual::develop(const Genome &genome, const MultiNet &networks,
- const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
-  const vecDbl &scaleE)
+void Individual::develop(const GeneticArchitecture &arch)
 {
 
     // Development reads the genome and computes trait values
@@ -144,10 +72,10 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
     // And there are multiple traits
     // And there is epistasis...
 
-    for (size_t locus = 0u; locus < genome.nloci; ++locus) {
+    for (size_t locus = 0u; locus < arch.nLoci; ++locus) {
 
         // Determine the encoded trait
-        const size_t trait = genome.traits[locus];
+        const size_t trait = arch.genome.traits[locus];
 
         // Determine genotype
         size_t genotype = 0u;
@@ -156,11 +84,11 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
 
         // Determine gene expression
         double expression;
-        const double dominance = genome.dominances[locus];
+        const double dominance = arch.genome.dominances[locus];
         switch(genotype) {
-            case 1u : expression = scaleD[trait] * dominance; break; // Aa
-            case 2u : expression = 1.0; break; // AA
-            default : expression = -1.0; break; // aa
+            case 1u : expression = arch.scaleD[trait] * dominance; break;
+            case 2u : expression = 1.0; break;
+            default : expression = -1.0; break;
         }
 
         assert(expression >= -1.0);
@@ -169,8 +97,8 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         genexp[locus] = expression; // record gene expression
 
         // Contribute to trait
-        double locuseffect = genome.effects[locus] * expression;
-        locuseffect *= scaleA[trait];
+        double locuseffect = arch.genome.effects[locus] * expression;
+        locuseffect *= arch.scaleA[trait];
         locivalues[locus] = locuseffect;
         genvalues[trait] += locivalues[locus];
 
@@ -185,19 +113,19 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
 
-        for (size_t e = 0u; e < networks[trait].nedges; ++e) {
+        for (size_t e = 0u; e < arch.networks[trait].nedges; ++e) {
 
-            assert(networks[trait].edges.size() > 0u);
+            assert(arch.networks[trait].edges.size() > 0u);
 
             // Level of expression of an interaction
-            const Edge edge = networks[trait].edges[e];
+            const Edge edge = arch.networks[trait].edges[e];
             const double intexp = genexp[edge.first] * genexp[edge.second];
 
             assert(intexp >= -1.0);
             assert(intexp <= 1.0);
 
-            double interaction = intexp * networks[trait].weights[e];
-            interaction *= scaleI[trait];
+            double interaction = intexp * arch.networks[trait].weights[e];
+            interaction *= arch.scaleI[trait];
             locivalues[edge.first] += 0.5 * interaction;
             locivalues[edge.second] += 0.5 * interaction;
             genvalues[trait] += interaction;
@@ -205,10 +133,10 @@ void Individual::develop(const Genome &genome, const MultiNet &networks,
         }
     }
 
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        traitvalues[trait] = genvalues[trait] + rnd::normal(0.0, scaleE[trait]);
-
-    // Normalize!
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        const double envnoise = rnd::normal(0.0, arch.scaleE[trait]);
+        traitvalues[trait] = genvalues[trait] + envnoise;
+    }
 }
 
 
@@ -241,7 +169,7 @@ double calcDisassortProb(const double &y, const double &xi,
 bool Individual::acceptMate(const double &xj, const double &sexsel) const
 {
 
-    const double tiny = 0.00000001;
+    const double tiny = 1E-15;
 
     // Calculate the probability of mating
     double mateProb = matepref >= 0.0 ?
@@ -260,9 +188,7 @@ bool Individual::acceptMate(const double &xj, const double &sexsel) const
 }
 
 
-/// Meiosis to produce a gamete
-Haplotype Individual::recombine(const vecDbl &locations,
- const vecDbl &chromosomes, const double &rate)
+Haplotype Individual::recombine(const Genome &gen)
 {
     Haplotype gamete;
 
@@ -284,9 +210,9 @@ Haplotype Individual::recombine(const vecDbl &locations,
     size_t locus = 0u;
     size_t chrom = 0u;
 
-    double crossover = rnd::exponential(rate);
-    double position = locations[0u];
-    double chromend = chromosomes[0u];
+    double crossover = rnd::exponential(gen.recombrate);
+    double position = gen.locations[0u];
+    double chromend = gen.chromosomes[0u];
 
     size_t hap = 0u;
 
@@ -301,36 +227,34 @@ Haplotype Individual::recombine(const vecDbl &locations,
         // Crossover point
         case 0u:
             hap = hap ? 0u : 1u;
-            crossover += rnd::exponential(rate);
+            crossover += rnd::exponential(gen.recombrate);
             break;
 
         // Free recombination point
         case 1u:
             hap = rnd::random(2u);
             ++chrom;
-            chromend = chromosomes[chrom];
+            chromend = gen.chromosomes[chrom];
             break;
 
         // Gene
         default:
             gamete.push_back(sequence[hap][locus]);
             ++locus;
-            //assert(locus < locations.size());
-            position = locations[locus];
+            position = gen.locations[locus];
             break;
 
         }
     }
 
     assert(locus == nloci);
-    assert(chrom == chromosomes.size() - 1u);
+    assert(chrom == gen.chromosomes.size() - 1u);
     assert(gamete.size() == nloci);
 
     return gamete;
 }
 
 
-/// Mutation
 void Individual::mutate(Haplotype &gamete, const double &rate)
 {
 
@@ -366,5 +290,22 @@ size_t Individual::getZygosity(const size_t &locus)
 double Individual::getLocusValue(const size_t &locus)
 {
     return locivalues[locus];
+}
+
+void Individual::setEcoTrait(const double &value, const double &sel)
+{
+    ecotrait = value;
+    traitvalues[0u] = value;
+    feedingRates = calcFeedingRates(sel, value);
+}
+void Individual::setMatePref(const double &value)
+{
+    matepref = value;
+    traitvalues[1u] = value;
+}
+
+void Individual::setGender(const bool &sex)
+{
+    isFemale = sex;
 }
 

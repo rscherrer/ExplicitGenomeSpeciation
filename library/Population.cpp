@@ -9,36 +9,17 @@
 typedef std::discrete_distribution<size_t> Discrete;
 
 
-/// Constructor
-Population::Population(const size_t &popsize,
- const Genome &genome, const MultiNet &networks, const vecDbl &foodmax,
-  const vecDbl &foodgrowth) :
-    individuals(populate(popsize, genome, networks)),
-    females({ }),
-    males({ }),
-    offspring({ }),
-    survivors({ }),
-    capacity(foodmax),
-    replenish(foodgrowth),
-    resources(capacity)
-{
-    // Sexes should be sorted out upon creation of the population
-    sortSexes();
-}
+
 
 
 /// Function to initialize a population of individuals
-Crowd Population::populate(const size_t &popsize,
- const Genome &genome, const MultiNet &networks, const double &snpfreq,
-  const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
-   const vecDbl &scaleE)
+Crowd Population::populate(const size_t &n, const GeneticArchitecture &arch)
 {
 
     Crowd indivs;
 
-    for (size_t ind = 0u; ind < popsize; ++ind) {
-        auto indiv = new Individual(genome, networks, snpfreq, scaleA, scaleD,
-         scaleI, scaleE);
+    for (size_t ind = 0u; ind < n; ++ind) {
+        auto indiv = new Individual(arch);
         indivs.push_back(indiv);
     }
 
@@ -148,24 +129,6 @@ void Population::burninConsume()
         ind->feed(resources);
 }
 
-
-/// Asexual reproduction function
-void Population::reproduceAsexual(const double &birth,
- const Genome &genome, const MultiNet &networks)
-{
-    // Everybody gets a chance to produce babies
-    size_t nAdults = individuals.size();
-    while (nAdults) {
-        size_t nOffspring = rnd::poisson(birth);
-        while (nOffspring) {
-            offspring.push_back(new Individual(genome, networks));
-            --nOffspring;
-        }
-        --nAdults;
-    }
-}
-
-
 void Population::sortSexes()
 {
 
@@ -181,10 +144,8 @@ void Population::sortSexes()
 }
 
 /// Sexual reproduction function
-void Population::reproduce(const double &birth, const double &sexsel,
- const Genome &genome, const MultiNet &networks, const double &cost,
-  const vecDbl &scaleA, const vecDbl &scaleD, const vecDbl &scaleI,
-   const vecDbl &scaleE)
+void Population::reproduce(const GeneticArchitecture &arch, const double &birth,
+ const double &sexsel, const double &cost)
 {
 
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
@@ -206,7 +167,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
 
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
 
-        Haplotype egg = mom->recombine(genome.locations, genome.chromosomes);
+        Haplotype egg = mom->recombine(arch.genome);
         mom->mutate(egg);
 
         size_t time = 0u;
@@ -219,13 +180,11 @@ void Population::reproduce(const double &birth, const double &sexsel,
             assert(encounter < males.size());
             auto dad = males[encounter];
 
-            Haplotype sperm = dad->recombine(genome.locations,
-             genome.chromosomes);
+            Haplotype sperm = dad->recombine(arch.genome);
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
-                auto off = new Individual(genome, networks, egg, sperm, scaleA,
-                 scaleD, scaleI, scaleE);
+                auto off = new Individual(arch, egg, sperm);
                 offspring.push_back(off);
                 --nOffspring;
             }
@@ -236,10 +195,9 @@ void Population::reproduce(const double &birth, const double &sexsel,
 }
 
 
-void Population::burninReproduce(const double &birth, const double &sexsel,
- const Genome &genome, const MultiNet &networks, const double &cost,
-  const double &ecosel, const vecDbl& scaleA, const vecDbl& scaleD,
-   const vecDbl& scaleI, const vecDbl &scaleE)
+void Population::burninReproduce(const GeneticArchitecture &arch,
+ const double &birth, const double &sexsel, const double &cost,
+  const double &ecosel)
 {
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
 
@@ -265,7 +223,7 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
         double success = mom->getFitness() * burninFactor;
         size_t nOffspring = rnd::poisson(birth * success);
 
-        Haplotype egg = mom->recombine(genome.locations, genome.chromosomes);
+        Haplotype egg = mom->recombine(arch.genome);
         mom->mutate(egg);
 
         size_t time = 0u;
@@ -278,13 +236,11 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
             assert(encounter < males.size());
             auto dad = males[encounter];
 
-            Haplotype sperm = dad->recombine(genome.locations,
-             genome.chromosomes);
+            Haplotype sperm = dad->recombine(arch.genome);
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
-                auto off = new Individual(genome, networks, egg, sperm, scaleA,
-                 scaleD, scaleI, scaleE);
+                auto off = new Individual(arch, egg, sperm);
                 offspring.push_back(off);
                 --nOffspring;
             }
@@ -331,30 +287,6 @@ bool Population::survive(const double &survival)
     assert(individuals.size() == nSurvivors + nOffspring);
 
     return isAlive;
-}
-
-void Population::calcMeanEcoTrait()
-{
-    meanEcoTrait = 0.0;
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        meanEcoTrait += individuals[ind]->getEcoTrait();
-    meanEcoTrait /= individuals.size();
-}
-
-void Population::calcMeanMatePref()
-{
-    meanMatePref = 0.0;
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        meanMatePref += individuals[ind]->getMatePref();
-    meanMatePref /= individuals.size();
-}
-
-void Population::calcMeanNtrTrait()
-{
-    meanNtrTrait = 0.0;
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        meanNtrTrait += individuals[ind]->getNeutral();
-    meanNtrTrait /= individuals.size();
 }
 
 void Population::resetEcoTraits(const double &value, const double &sel)

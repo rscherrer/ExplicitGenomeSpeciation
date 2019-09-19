@@ -17,6 +17,8 @@ vecUns uzeros(const size_t&); // unsigned zeros
 
 vecBool falses(const size_t&);
 
+vecDbl rep(const double&, const size_t&);
+
 double sum(vecDbl&);
 
 size_t argmin(vecDbl&);

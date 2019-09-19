@@ -191,12 +191,12 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
 
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
-    int t = meta.evolve(genome, networks);
+    int t = meta.evolve(arch);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
     BOOST_CHECK(meta.getPops()[0u].getPopSize() > 0u);
@@ -223,12 +223,12 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
 
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
-    int t = meta.evolve(genome, networks);
+    int t = meta.evolve(arch);
 
     BOOST_CHECK(t < pars.getTEndSim());
     BOOST_CHECK(meta.getPops()[0u].getPopSize() == 0u);
@@ -245,12 +245,12 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
     pop1.resetEcoTraits(-1.0, 1.0);
     pop2.resetEcoTraits(1.0, 1.0);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
 
 }
@@ -265,12 +265,12 @@ BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
     pop1.resetEcoTraits(-1.0, 1.0);
     pop2.resetEcoTraits(1.0, 1.0);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
 
 }
@@ -285,14 +285,14 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
     pop1.resetEcoTraits(-1.0, 1.0);
     pop2.resetEcoTraits(1.0, 1.0);
     pop1.resetMatePrefs(1.0);
     pop2.resetMatePrefs(1.0);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
 }
@@ -306,11 +306,11 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(0u, genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(0u, arch);
     pop1.resetEcoTraits(-1.0, 1.0);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
 }
 
@@ -323,12 +323,12 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(pars.getInitialPopSize(), genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(pars.getInitialPopSize(), arch);
     pop1.resetEcotypes(1u);
     pop2.resetEcotypes(1u);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
 }
 
@@ -341,11 +341,11 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(0u, genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(0u, arch);
     pop1.resetGenders(true); // only females
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
 }
 
@@ -358,10 +358,10 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
     GeneticArchitecture arch = GeneticArchitecture(pars);
     Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), genome, networks);
-    Population pop2 = Population(0u, genome, networks);
+    Population pop1 = Population(pars.getInitialPopSize(), arch);
+    Population pop2 = Population(0u, arch);
     pop1.resetEcotypes(1u);
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(genome.nloci, genome.traits, pars.getScaleE());
+    meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
 }
