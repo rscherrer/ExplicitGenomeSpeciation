@@ -9,16 +9,12 @@ struct GenFixture {
 
     GenFixture() :
         pars(ParameterSet()),
-        arch(GeneticArchitecture(pars)),
-        genome(arch.getGenome()),
-        networks(arch.getNetworks())
+        arch(GeneticArchitecture(pars))
     {}
     ~GenFixture() {}
 
     ParameterSet pars;
     GeneticArchitecture arch;
-    Genome genome;
-    MultiNet networks;
 
 };
 
