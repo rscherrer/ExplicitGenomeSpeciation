@@ -53,7 +53,7 @@ public:
         assert(networks.size() == 3u);
     }
 
-    MultiNet getNetworks() const { return networks; }
+    Network getNetwork(const size_t &i) const { return networks[i]; }
 
     size_t nChromosomes;
     size_t nLoci;

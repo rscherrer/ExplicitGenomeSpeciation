@@ -45,9 +45,6 @@ int doMain(const vecStrings &args)
         // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
-        // Create a population of individuals
-        MultiNet networks = arch.getNetworks();
-
         // Create populations
         const size_t n0 = pars.getInitialPopSize();
         const double foodmax = pars.getMaxResourceCapacity();

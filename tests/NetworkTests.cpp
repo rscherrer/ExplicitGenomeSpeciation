@@ -11,9 +11,8 @@ BOOST_AUTO_TEST_CASE(checkNoNetworks)
     pars.setNLociPerTrait({ 100u, 100u, 100u });
     pars.setNEdgesPerTrait({ 0u, 0u, 0u });
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    MultiNet networks = arch.getNetworks();
-    for (auto net : networks)
-        BOOST_CHECK_EQUAL(net.map.size(), 0u);
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        BOOST_CHECK_EQUAL(arch.getNetwork(trait).map.size(), 0u);
 
 }
 
@@ -24,10 +23,10 @@ BOOST_AUTO_TEST_CASE(checkSmallNetworks)
     pars.setNLociPerTrait({ 100u, 100u, 100u });
     pars.setNEdgesPerTrait({ 1u, 0u, 0u });
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    MultiNet networks = arch.getNetworks();
-    BOOST_CHECK_EQUAL(networks[0u].map.size(), 1u);
-    BOOST_CHECK_EQUAL(networks[0u].map[0u].first, 0u);
-    BOOST_CHECK_EQUAL(networks[0u].map[0u].second, 1u);
+    Network net = arch.getNetwork(0u);
+    BOOST_CHECK_EQUAL(net.map.size(), 1u);
+    BOOST_CHECK_EQUAL(net.map[0u].first, 0u);
+    BOOST_CHECK_EQUAL(net.map[0u].second, 1u);
 
 }
 
@@ -38,10 +37,9 @@ BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
     pars.setNLociPerTrait({ 10u, 5u, 2u });
     pars.setNEdgesPerTrait({ 1000u, 1000u, 1000u });
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    MultiNet networks = arch.getNetworks();
-    BOOST_CHECK_EQUAL(networks[0u].map.size(), 45u);
-    BOOST_CHECK_EQUAL(networks[1u].map.size(), 10u);
-    BOOST_CHECK_EQUAL(networks[2u].map.size(), 1u);
+    BOOST_CHECK_EQUAL(arch.getNetwork(0u).map.size(), 45u);
+    BOOST_CHECK_EQUAL(arch.getNetwork(1u).map.size(), 10u);
+    BOOST_CHECK_EQUAL(arch.getNetwork(2u).map.size(), 1u);
 }
 
 BOOST_AUTO_TEST_CASE(checkInteractionWeights)
@@ -50,8 +48,8 @@ BOOST_AUTO_TEST_CASE(checkInteractionWeights)
     ParameterSet pars;
     pars.setInteractionWeightScale(0.0);
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    MultiNet networks = arch.getNetworks();
-    BOOST_CHECK_EQUAL(sum(networks[0u].weights), 0.0);
-    BOOST_CHECK_EQUAL(sum(networks[1u].weights), 0.0);
-    BOOST_CHECK_EQUAL(sum(networks[2u].weights), 0.0);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        Network net = arch.getNetwork(trait);
+        BOOST_CHECK_EQUAL(sum(net.weights), 0.0);
+    }
 }
