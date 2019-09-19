@@ -80,9 +80,9 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, GenFixture)
     {
         std::cout << "Testing resource depletion...\n";
         Population pop = Population(10u, arch);
-        std::vector<double> resourcesBefore = pop.getResources();
+        vecDbl resourcesBefore = pop.getResources();
         pop.consume();
-        std::vector<double> resourcesAfter = pop.getResources();
+        vecDbl resourcesAfter = pop.getResources();
         for (size_t res = 0u; res < 2u; ++res)
             BOOST_CHECK(resourcesBefore[res] > resourcesAfter[res]);
     }
