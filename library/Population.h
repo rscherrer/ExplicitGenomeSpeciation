@@ -51,10 +51,10 @@ public:
     void immigrate(const Crowd&);
     void consume();
     void burninConsume();
-    void reproduce(const GeneticArchitecture&, const double&, const double&,
-     const double&);
-    void burninReproduce(const GeneticArchitecture&, const double&,
-     const double&, const double&, const double&);
+    void reproduce(const double&, const double&, const double&,
+     const GeneticArchitecture&);
+    void burninReproduce(const double&, const double&, const double&,
+     const double&, const GeneticArchitecture&);
     bool survive(const double&);
 
     void resetEcoTraits(const double&, const double&);

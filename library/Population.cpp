@@ -140,8 +140,8 @@ void Population::sortSexes()
 }
 
 /// Sexual reproduction function
-void Population::reproduce(const GeneticArchitecture &arch, const double &birth,
- const double &sexsel, const double &cost)
+void Population::reproduce(const double &birth, const double &sexsel,
+ const double &cost, const GeneticArchitecture &arch)
 {
 
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
@@ -191,9 +191,8 @@ void Population::reproduce(const GeneticArchitecture &arch, const double &birth,
 }
 
 
-void Population::burninReproduce(const GeneticArchitecture &arch,
- const double &birth, const double &sexsel, const double &cost,
-  const double &ecosel)
+void Population::burninReproduce(const double &birth, const double &sexsel,
+ const double &cost, const double &ecosel, const GeneticArchitecture &arch)
 {
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
 
