@@ -3,6 +3,7 @@
 #include "library/doMain.h"
 #include "library/Population.h"
 #include "library/MetaPop.h"
+#include "tests/GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
@@ -188,8 +189,6 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     pars.setMatePreferenceStrength(0.0);
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
 
     Population pop1 = Population(pars.getInitialPopSize(), arch);
     Population pop2 = Population(pars.getInitialPopSize(), arch);
@@ -220,8 +219,6 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     pars.setMatePreferenceStrength(0.0);
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
 
     Population pop1 = Population(pars.getInitialPopSize(), arch);
     Population pop2 = Population(pars.getInitialPopSize(), arch);
@@ -235,133 +232,104 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     BOOST_CHECK(meta.getPops()[1u].getPopSize() == 0u);
 }
 
-// Test case: a population with ecological isolation = 1
-BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
-{
+BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
 
-    std::cout << "Testing full ecological isolation...\n";
+    // Test case: a population with ecological isolation = 1
+    BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
+    {
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
-    pop1.resetEcoTraits(-1.0, 1.0);
-    pop2.resetEcoTraits(1.0, 1.0);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
+        std::cout << "Testing full ecological isolation...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(pars.getInitialPopSize(), arch);
+        pop1.resetEcoTraits(-1.0, 1.0);
+        pop2.resetEcoTraits(1.0, 1.0);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
 
-}
+    }
 
-// Test case: a population with spatial isolation = 1
-BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
-{
+    // Test case: a population with spatial isolation = 1
+    BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
+    {
 
-    std::cout << "Testing full spatial isolation...\n";
+        std::cout << "Testing full spatial isolation...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(pars.getInitialPopSize(), arch);
+        pop1.resetEcoTraits(-1.0, 1.0);
+        pop2.resetEcoTraits(1.0, 1.0);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
-    pop1.resetEcoTraits(-1.0, 1.0);
-    pop2.resetEcoTraits(1.0, 1.0);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
+    }
 
-}
+    // Test case: a population with mating isolation = 1
+    BOOST_AUTO_TEST_CASE(fullMatingIsolation)
+    {
 
-// Test case: a population with mating isolation = 1
-BOOST_AUTO_TEST_CASE(fullMatingIsolation)
-{
+        std::cout << "Testing full mating isolation...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(pars.getInitialPopSize(), arch);
+        pop1.resetEcoTraits(-1.0, 1.0);
+        pop2.resetEcoTraits(1.0, 1.0);
+        pop1.resetMatePrefs(1.0);
+        pop2.resetMatePrefs(1.0);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
-    std::cout << "Testing full mating isolation...\n";
+    }
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
-    pop1.resetEcoTraits(-1.0, 1.0);
-    pop2.resetEcoTraits(1.0, 1.0);
-    pop1.resetMatePrefs(1.0);
-    pop2.resetMatePrefs(1.0);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
+    BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
+    {
 
-}
+        std::cout << "Testing spatial isolation with only one population...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(0u, arch);
+        pop1.resetEcoTraits(-1.0, 1.0);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+    }
 
-BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
-{
+    BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
+    {
 
-    std::cout << "Testing spatial isolation with only one population...\n";
+        std::cout << "Testing spatial isolation with only one ecotype...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(pars.getInitialPopSize(), arch);
+        pop1.resetEcotypes(1u);
+        pop2.resetEcotypes(1u);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+    }
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(0u, arch);
-    pop1.resetEcoTraits(-1.0, 1.0);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
-}
+    BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
+    {
 
-BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
-{
+        std::cout << "Testing mating isolation when only one sex...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(0u, arch);
+        pop1.resetGenders(true); // only females
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+    }
 
-    std::cout << "Testing spatial isolation with only one ecotype...\n";
+    BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
+    {
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
-    pop1.resetEcotypes(1u);
-    pop2.resetEcotypes(1u);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
-}
+        std::cout << "Testing mating isolation when one ecotype...\n";
+        Population pop1 = Population(pars.getInitialPopSize(), arch);
+        Population pop2 = Population(0u, arch);
+        pop1.resetEcotypes(1u);
+        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        meta.analyze(arch);
+        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+    }
 
-BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
-{
 
-    std::cout << "Testing mating isolation when only one sex...\n";
+BOOST_AUTO_TEST_SUITE_END()
 
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(0u, arch);
-    pop1.resetGenders(true); // only females
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
-}
-
-BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
-{
-
-    std::cout << "Testing mating isolation when one reproducing ecotype...\n";
-
-    ParameterSet pars;
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(0u, arch);
-    pop1.resetEcotypes(1u);
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
-}
