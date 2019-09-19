@@ -70,5 +70,78 @@ MultiNet GeneticArchitecture::makeNetworks()
     return multinet;
 }
 
+vecUns GeneticArchitecture::makeEncodedTraits()
+{
+
+    vecUns encoded;
+
+    // Make an ordered vector of trait indices
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        for (size_t locus = 0u; locus < nLociPerTrait[trait]; ++locus)
+            encoded.push_back(trait);
+
+    assert(encoded.size() == nLoci);
+
+    // Shuffle encoded traits randomly
+    std::shuffle(encoded.begin(), encoded.end(), rnd::rng);
+
+    assert(encoded.size() == nLoci);
+
+    std::vector<size_t> nvertices {0u, 0u, 0u};
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        ++nvertices[encoded[locus]];
+
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        assert(nvertices[trait] == nLociPerTrait[trait]);
+
+    return encoded;
+
+}
+
+
+
+vecDbl GeneticArchitecture::makeLocations()
+{
+    vecDbl positions;
+
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+        const double pos = rnd::uniform(1.0);
+        positions.push_back(pos);
+        assert(pos >= 0.0);
+        assert(pos <= 1.0);
+    }
+
+    std::sort(positions.begin(), positions.end());
+
+    for (size_t locus = 1u; locus < nLoci; ++locus)
+        assert(positions[locus] > positions[locus - 1u]);
+
+    return positions;
+}
+
+
+
+vecDbl GeneticArchitecture::makeDominances()
+{
+
+    if (dominanceVariance == 0.0) return zeros(nLoci);
+
+    vecDbl coefficients;
+    vecDbl sss = zeros(3u); // square rooted sum of squares
+
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+        const double dom = rnd::hnormal(dominanceVariance);
+        coefficients.push_back(dom);
+        sss[traits[locus]] += sqr(dom);
+    }
+
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        sss[trait] = sqrt(sss[trait]);
+
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        coefficients[locus] /= sss[traits[locus]];
+
+    return coefficients;
+}
 
 

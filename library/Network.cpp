@@ -102,7 +102,9 @@ vecUns Network::makeLoci(const Genome& genome)
     // Loop throughout the genome's vector of encoded traits
     // Record all loci that encode the current trait
 
-    for (size_t locus = 0u; locus < genome.nloci; ++locus)
+    const size_t nloci = genome.locations.size();
+
+    for (size_t locus = 0u; locus < nloci; ++locus)
         if (genome.traits[locus] == trait)
             underlying.push_back(locus);
 

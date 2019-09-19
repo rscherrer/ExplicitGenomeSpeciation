@@ -39,7 +39,10 @@ public:
         scaleI(pars.getScaleI()),
         scaleE(pars.getScaleE()),
         genome(makeGenome()),
-        networks(makeNetworks())
+        networks(makeNetworks()),
+        traits(makeEncodedTraits()),
+        locations(makeLocations()),
+        dominances(makeDominances())
     {
         assert(networks.size() == 3u);
     }
@@ -69,11 +72,20 @@ public:
     Genome genome;
     MultiNet networks;
 
+    vecUns traits;
+    vecDbl locations;
+    vecDbl dominances;
+
+
 private:
 
     vecDbl makeChromosomes();
     Genome makeGenome();
     MultiNet makeNetworks();
+
+    vecUns makeEncodedTraits();
+    vecDbl makeLocations();
+    vecDbl makeDominances();
 
 };
 

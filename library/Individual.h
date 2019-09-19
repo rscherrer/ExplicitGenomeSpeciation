@@ -41,8 +41,8 @@ public:
 
         assert(sequence.size() == 2u);
         for (size_t strain = 0u; strain < 2u; ++strain)
-            assert(sequence[strain].size() == arch.genome.nloci);
-        assert(genexp.size() == arch.genome.nloci);
+            assert(sequence[strain].size() == arch.nLoci);
+        assert(genexp.size() == arch.nLoci);
         assert(traitvalues.size() == 3u);
         assert(fitness > 0.0);
         for (size_t res = 0u; res < 2u; ++res)
@@ -71,8 +71,8 @@ public:
 
         assert(sequence.size() == 2u);
         for (size_t strain = 0u; strain < 2u; ++strain)
-            assert(sequence[strain].size() == arch.genome.nloci);
-        assert(genexp.size() == arch.genome.nloci);
+            assert(sequence[strain].size() == arch.nLoci);
+        assert(genexp.size() == arch.nLoci);
         assert(traitvalues.size() == 3u);
         assert(fitness > 0.0);
         for (size_t res = 0u; res < 2u; ++res)
