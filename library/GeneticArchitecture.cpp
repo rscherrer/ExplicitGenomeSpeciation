@@ -121,6 +121,35 @@ vecDbl GeneticArchitecture::makeLocations()
 
 
 
+vecDbl GeneticArchitecture::makeEffects()
+{
+
+    const double shape = effectSizeShape;
+    const double scale = effectSizeScale;
+
+    if (shape == 0.0 || scale == 0.0) return zeros(nLoci);
+
+    vecDbl effectsizes;
+    vecDbl sss = zeros(3u); // square rooted sum of squares
+
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+        const double effect = rnd::bigamma(shape, scale);
+        effectsizes.push_back(effect);
+        sss[traits[locus]] += sqr(effect);
+    }
+
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        sss[trait] = sqrt(sss[trait]);
+
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        effectsizes[locus] /= sss[traits[locus]];
+
+    return effectsizes;
+}
+
+
+
 vecDbl GeneticArchitecture::makeDominances()
 {
 

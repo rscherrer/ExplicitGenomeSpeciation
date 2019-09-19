@@ -42,6 +42,7 @@ public:
         networks(makeNetworks()),
         traits(makeEncodedTraits()),
         locations(makeLocations()),
+        effects(makeEffects()),
         dominances(makeDominances())
     {
         assert(networks.size() == 3u);
@@ -74,6 +75,7 @@ public:
 
     vecUns traits;
     vecDbl locations;
+    vecDbl effects;
     vecDbl dominances;
 
 
@@ -85,6 +87,7 @@ private:
 
     vecUns makeEncodedTraits();
     vecDbl makeLocations();
+    vecDbl makeEffects();
     vecDbl makeDominances();
 
 };
