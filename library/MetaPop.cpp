@@ -517,11 +517,11 @@ int MetaPop::evolve(const GeneticArchitecture &arch)
 
         // Reproduction
         if (t > 0) {
-            pops[0u].reproduce(arch, birth, sexsel);
-            pops[1u].reproduce(arch, birth, sexsel);
+            pops[0u].reproduce(arch, birth, sexsel, matingcost);
+            pops[1u].reproduce(arch, birth, sexsel, matingcost);
         } else {
-            pops[0u].burninReproduce(arch, birth, sexsel, ecosel);
-            pops[1u].burninReproduce(arch, birth, sexsel, ecosel);
+            pops[0u].burninReproduce(arch, birth, sexsel, matingcost, ecosel);
+            pops[1u].burninReproduce(arch, birth, sexsel, matingcost, ecosel);
         }
 
         // Survival

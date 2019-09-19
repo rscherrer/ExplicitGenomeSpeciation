@@ -8,10 +8,6 @@
 
 typedef std::discrete_distribution<size_t> Discrete;
 
-
-
-
-
 /// Function to initialize a population of individuals
 Crowd Population::populate(const size_t &n, const GeneticArchitecture &arch)
 {

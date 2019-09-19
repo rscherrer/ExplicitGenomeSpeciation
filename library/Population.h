@@ -13,7 +13,6 @@ class Individual;
 typedef Individual * PInd;
 typedef std::vector<PInd> Crowd;
 
-
 class Population {
 
     friend class MetaPop;
@@ -44,9 +43,6 @@ public:
     size_t getNFemales() const { return females.size(); }
     size_t getNMales() const { return males.size(); }
     vecDbl getResources() const { return resources; }
-    double getMeanEcoTrait() const { return meanEcoTrait; }
-    double getMeanMatePref() const { return meanMatePref; }
-    double getMeanNtrTrait() const { return meanNtrTrait; }
     PInd getInd(const size_t &i) const { return individuals[i]; }
 
     // Life cycle
@@ -56,16 +52,15 @@ public:
     void consume();
     void burninConsume();
     void reproduce(const GeneticArchitecture&, const double&, const double&,
-     const double& = 0.01);
+     const double&);
     void burninReproduce(const GeneticArchitecture&, const double&,
-     const double&, const double& = 0.01, const double& = 0.0);
+     const double&, const double&, const double&);
     bool survive(const double&);
 
     void resetEcoTraits(const double&, const double&);
     void resetMatePrefs(const double&);
     void resetGenders(const bool&);
     void resetEcotypes(const size_t&);
-
 
 private:
 
@@ -82,11 +77,6 @@ private:
     vecDbl capacity;
     vecDbl replenish;
     vecDbl resources;
-
-    double meanEcoTrait = 0.0;
-    double meanMatePref = 0.0;
-    double meanNtrTrait = 0.0;
-
 
 };
 
