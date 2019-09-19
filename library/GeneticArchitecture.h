@@ -38,16 +38,21 @@ public:
         scaleD(pars.getScaleD()),
         scaleI(pars.getScaleI()),
         scaleE(pars.getScaleE()),
-        genome(makeGenome()),
-        networks(makeNetworks()),
+        chromosomes(makeChromosomes()),
         traits(makeEncodedTraits()),
         locations(makeLocations()),
-        dominances(makeDominances())
+        effects(makeEffects()),
+        dominances(makeDominances()),
+        networks(makeNetworks())
     {
+        assert(chromosomes.size() == nChromosomes);
+        assert(traits.size() == nLoci);
+        assert(effects.size() == nLoci);
+        assert(dominances.size() == nLoci);
+        assert(locations.size() == nLoci);
         assert(networks.size() == 3u);
     }
 
-    Genome getGenome() const { return genome; }
     MultiNet getNetworks() const { return networks; }
 
     size_t nChromosomes;
@@ -69,22 +74,21 @@ public:
     vecDbl scaleI;
     vecDbl scaleE;
 
-    Genome genome;
-    MultiNet networks;
-
+    vecDbl chromosomes;
     vecUns traits;
     vecDbl locations;
+    vecDbl effects;
     vecDbl dominances;
 
+    MultiNet networks;
 
 private:
 
-    vecDbl makeChromosomes();
-    Genome makeGenome();
     MultiNet makeNetworks();
-
+    vecDbl makeChromosomes();
     vecUns makeEncodedTraits();
     vecDbl makeLocations();
+    vecDbl makeEffects();
     vecDbl makeDominances();
 
 };

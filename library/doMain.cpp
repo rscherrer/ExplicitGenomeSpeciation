@@ -46,7 +46,6 @@ int doMain(const vecStrings &args)
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
         // Create a population of individuals
-        Genome genome = arch.getGenome();
         MultiNet networks = arch.getNetworks();
 
         // Create populations

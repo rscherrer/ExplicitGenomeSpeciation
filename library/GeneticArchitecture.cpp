@@ -12,31 +12,6 @@
 class Network;
 class Genome;
 
-/// Function to make a vector of chromosome sizes
-vecDbl GeneticArchitecture::makeChromosomes()
-{
-
-    vecDbl chromsizes;
-
-    // Chromosomes all have the same size
-    for (size_t i = 0u; i < nChromosomes; ++i)
-        chromsizes.push_back((i + 1.0) / nChromosomes);
-
-    return chromsizes;
-
-}
-
-
-/// Function from architecture to call the Genome constructor
-Genome GeneticArchitecture::makeGenome()
-{
-    const Genome gen = Genome(nLociPerTrait, nLoci, nChromosomes,
-     effectSizeShape, effectSizeScale, dominanceVariance, femHeterogamy,
-      recombinationRate);
-    return gen;
-}
-
-
 /// Function to make a vector of interacting partner loci for each trait
 MultiNet GeneticArchitecture::makeNetworks()
 {
@@ -52,7 +27,7 @@ MultiNet GeneticArchitecture::makeNetworks()
         const double intscale = interactionWeightScale;
 
         Network network = Network(trait, nloci, nedges, skew, intshape,
-         intscale, genome);
+         intscale, locations, traits);
 
         multinet.push_back(network);
     }
@@ -68,6 +43,19 @@ MultiNet GeneticArchitecture::makeNetworks()
     }
 
     return multinet;
+}
+
+vecDbl GeneticArchitecture::makeChromosomes()
+{
+
+    vecDbl chromends;
+
+    // Chromosomes all have the same size
+    for (size_t chrom = 0u; chrom < nChromosomes; ++chrom)
+        chromends.push_back((chrom + 1.0) / nChromosomes);
+
+    return chromends;
+
 }
 
 vecUns GeneticArchitecture::makeEncodedTraits()
@@ -119,6 +107,33 @@ vecDbl GeneticArchitecture::makeLocations()
     return positions;
 }
 
+
+vecDbl GeneticArchitecture::makeEffects()
+{
+
+    const double shape = effectSizeShape;
+    const double scale = effectSizeScale;
+
+    if (shape == 0.0 || scale == 0.0) return zeros(nLoci);
+
+    vecDbl effectsizes;
+    vecDbl sss = zeros(3u); // square rooted sum of squares
+
+    for (size_t locus = 0u; locus < nLoci; ++locus) {
+
+        const double effect = rnd::bigamma(shape, scale);
+        effectsizes.push_back(effect);
+        sss[traits[locus]] += sqr(effect);
+    }
+
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        sss[trait] = sqrt(sss[trait]);
+
+    for (size_t locus = 0u; locus < nLoci; ++locus)
+        effectsizes[locus] /= sss[traits[locus]];
+
+    return effectsizes;
+}
 
 
 vecDbl GeneticArchitecture::makeDominances()

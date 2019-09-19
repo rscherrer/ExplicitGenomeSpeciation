@@ -72,8 +72,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         std::cout << "Testing that fecundation fuses two gametes...\n";
         Individual mom = Individual(arch, 0.0);
         Individual dad = Individual(arch, 1.0);
-        Haplotype egg = mom.recombine(arch.genome);
-        Haplotype sperm = dad.recombine(arch.genome);
+        Haplotype egg = mom.recombine(arch);
+        Haplotype sperm = dad.recombine(arch);
         Individual baby = Individual(arch, egg, sperm);
         BOOST_CHECK_EQUAL(sumbool(baby.getSequence(0u)), 0u);
         BOOST_CHECK_EQUAL(sumbool(baby.getSequence(1u)), arch.nLoci);
@@ -83,7 +83,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing absence of mutations...\n";
         Individual ind = Individual(arch, 0.0);
-        Haplotype gamete = ind.recombine(arch.genome);
+        Haplotype gamete = ind.recombine(arch);
         ind.mutate(gamete, 0.0);
         BOOST_CHECK_EQUAL(sumbool(gamete), 0u);
     }
@@ -92,7 +92,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing high mutation rate...\n";
         Individual ind = Individual(arch, 0.0);
-        Haplotype gamete = ind.recombine(arch.genome);
+        Haplotype gamete = ind.recombine(arch);
         ind.mutate(gamete, 100.0);
         BOOST_CHECK(sumbool(gamete) != 0u);
     }
@@ -102,11 +102,11 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         std::cout << "Testing high recombination rate...\n";
         Individual mom = Individual(arch, 0.0);
         Individual dad = Individual(arch, 1.0);
-        Haplotype egg = mom.recombine(arch.genome);
-        Haplotype sperm = dad.recombine(arch.genome);
+        Haplotype egg = mom.recombine(arch);
+        Haplotype sperm = dad.recombine(arch);
         Individual baby = Individual(arch, egg, sperm);
-        arch.genome.recombrate = 10.0;
-        Haplotype gamete = baby.recombine(arch.genome);
+        arch.recombinationRate = 10.0;
+        Haplotype gamete = baby.recombine(arch);
         BOOST_CHECK(sumbool(gamete) != 0u);
         BOOST_CHECK(sumbool(gamete) != arch.nLoci);
     }
@@ -131,14 +131,13 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     ParameterSet pars;
     pars.setNChromosomes(1u); // to avoid free recombination
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
     Individual mom = Individual(arch, 0.0);
     Individual dad = Individual(arch, 1.0);
-    Haplotype egg = mom.recombine(arch.genome);
-    Haplotype sperm = dad.recombine(arch.genome);
+    Haplotype egg = mom.recombine(arch);
+    Haplotype sperm = dad.recombine(arch);
     Individual baby = Individual(arch, egg, sperm);
-    Haplotype gam = baby.recombine(arch.genome);
+    Haplotype gam = baby.recombine(arch);
     BOOST_CHECK_EQUAL(sumbool(gam) / arch.nLoci, gam[0u]);
 }
 
@@ -148,12 +147,11 @@ BOOST_AUTO_TEST_CASE(checkDevelopment)
     ParameterSet pars;
     pars.setDominanceVariance(0.0);
     GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
     MultiNet networks = arch.getNetworks();
     Individual mom = Individual(arch, 0.0);
     Individual dad = Individual(arch, 1.0);
-    Haplotype egg = mom.recombine(arch.genome);
-    Haplotype sperm = dad.recombine(arch.genome);
+    Haplotype egg = mom.recombine(arch);
+    Haplotype sperm = dad.recombine(arch);
     Individual baby = Individual(arch, egg, sperm);
     BOOST_CHECK_EQUAL(baby.getEcoTrait(), 0.0);
     BOOST_CHECK_EQUAL(baby.getMatePref(), 0.0);

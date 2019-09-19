@@ -172,7 +172,7 @@ void MetaPop::analyze(const GeneticArchitecture &arch)
     for (size_t locus = 0u; locus < nloci; ++locus) {
 
         // Trait encoded
-        const size_t trait = arch.genome.traits[locus];
+        const size_t trait = arch.traits[locus];
 
         // Genetic values and allele counts
         double meanAlleleCount = 0.0;

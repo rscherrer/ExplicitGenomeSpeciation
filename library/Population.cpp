@@ -163,7 +163,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
 
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
 
-        Haplotype egg = mom->recombine(arch.genome);
+        Haplotype egg = mom->recombine(arch);
         mom->mutate(egg);
 
         size_t time = 0u;
@@ -176,7 +176,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
             assert(encounter < males.size());
             auto dad = males[encounter];
 
-            Haplotype sperm = dad->recombine(arch.genome);
+            Haplotype sperm = dad->recombine(arch);
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
@@ -218,7 +218,7 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
         double success = mom->getFitness() * burninFactor;
         size_t nOffspring = rnd::poisson(birth * success);
 
-        Haplotype egg = mom->recombine(arch.genome);
+        Haplotype egg = mom->recombine(arch);
         mom->mutate(egg);
 
         size_t time = 0u;
@@ -231,7 +231,7 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
             assert(encounter < males.size());
             auto dad = males[encounter];
 
-            Haplotype sperm = dad->recombine(arch.genome);
+            Haplotype sperm = dad->recombine(arch);
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {

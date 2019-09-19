@@ -6,27 +6,6 @@
 
 typedef std::discrete_distribution<size_t> Discrete;
 
-/// Network constructor
-Network::Network(const size_t &character, const size_t &nVertices,
- const size_t &nEdges, const double &skew, const double &shape,
-  const double &scale, const Genome &genome) :
-    trait(character),
-    nvertices(nVertices),
-    nedges(nEdges),
-    skewness(skew),
-    map(makeMap()),
-    loci(makeLoci(genome)),
-    edges(makeEdges()),
-    weights(makeWeights(shape, scale))
-{
-    assert(map.size() == nedges);
-    assert(loci.size() == nvertices);
-    assert(edges.size() == nedges);
-    assert(weights.size() == nedges);
-}
-
-
-/// Make a map of pairwise connexions
 vecEdg Network::makeMap()
 {
 
@@ -92,9 +71,7 @@ vecEdg Network::makeMap()
 
 }
 
-
-/// Function to detect the loci underlying a trait
-vecUns Network::makeLoci(const Genome& genome)
+vecUns Network::makeUnderlyingLoci(const vecDbl &locs, const vecUns &traits)
 {
     vecUns underlying;
 
@@ -102,10 +79,10 @@ vecUns Network::makeLoci(const Genome& genome)
     // Loop throughout the genome's vector of encoded traits
     // Record all loci that encode the current trait
 
-    const size_t nloci = genome.locations.size();
+    const size_t nloci = locs.size();
 
     for (size_t locus = 0u; locus < nloci; ++locus)
-        if (genome.traits[locus] == trait)
+        if (traits[locus] == trait)
             underlying.push_back(locus);
 
     assert(underlying.size() == nvertices);
@@ -113,8 +90,6 @@ vecUns Network::makeLoci(const Genome& genome)
     return underlying;
 }
 
-
-/// Function to map the network to the genome
 vecEdg Network::makeEdges()
 {
 
@@ -134,8 +109,6 @@ vecEdg Network::makeEdges()
 
 }
 
-
-/// Sample interaction weights
 vecDbl Network::makeWeights(const double &shape,
  const double &scale)
 {

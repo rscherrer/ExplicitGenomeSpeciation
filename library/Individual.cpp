@@ -75,7 +75,7 @@ void Individual::develop(const GeneticArchitecture &arch)
     for (size_t locus = 0u; locus < arch.nLoci; ++locus) {
 
         // Determine the encoded trait
-        const size_t trait = arch.genome.traits[locus];
+        const size_t trait = arch.traits[locus];
 
         // Determine genotype
         size_t genotype = 0u;
@@ -84,7 +84,7 @@ void Individual::develop(const GeneticArchitecture &arch)
 
         // Determine gene expression
         double expression;
-        const double dominance = arch.genome.dominances[locus];
+        const double dominance = arch.dominances[locus];
         switch(genotype) {
             case 1u : expression = arch.scaleD[trait] * dominance; break;
             case 2u : expression = 1.0; break;
@@ -97,7 +97,7 @@ void Individual::develop(const GeneticArchitecture &arch)
         genexp[locus] = expression; // record gene expression
 
         // Contribute to trait
-        double locuseffect = arch.genome.effects[locus] * expression;
+        double locuseffect = arch.effects[locus] * expression;
         locuseffect *= arch.scaleA[trait];
         locivalues[locus] = locuseffect;
         genvalues[trait] += locivalues[locus];
@@ -188,7 +188,7 @@ bool Individual::acceptMate(const double &xj, const double &sexsel) const
 }
 
 
-Haplotype Individual::recombine(const Genome &gen)
+Haplotype Individual::recombine(const GeneticArchitecture &arch)
 {
     Haplotype gamete;
 
@@ -205,18 +205,16 @@ Haplotype Individual::recombine(const Genome &gen)
     // 1cM = 1% change recombination
     // But wait, there is free recombination between the chromosomes!
 
-    const size_t nloci = sequence[0u].size();
-
     size_t locus = 0u;
     size_t chrom = 0u;
 
-    double crossover = rnd::exponential(gen.recombrate);
-    double position = gen.locations[0u];
-    double chromend = gen.chromosomes[0u];
+    double crossover = rnd::exponential(arch.recombinationRate);
+    double position = arch.locations[0u];
+    double chromend = arch.chromosomes[0u];
 
     size_t hap = 0u;
 
-    while (locus < nloci) {
+    while (locus < arch.nLoci) {
 
         // What is the next thing coming up next?
         vecDbl closest = { crossover, chromend, position };
@@ -227,29 +225,29 @@ Haplotype Individual::recombine(const Genome &gen)
         // Crossover point
         case 0u:
             hap = hap ? 0u : 1u;
-            crossover += rnd::exponential(gen.recombrate);
+            crossover += rnd::exponential(arch.recombinationRate);
             break;
 
         // Free recombination point
         case 1u:
             hap = rnd::random(2u);
             ++chrom;
-            chromend = gen.chromosomes[chrom];
+            chromend = arch.chromosomes[chrom];
             break;
 
         // Gene
         default:
             gamete.push_back(sequence[hap][locus]);
             ++locus;
-            position = gen.locations[locus];
+            position = arch.locations[locus];
             break;
 
         }
     }
 
-    assert(locus == nloci);
-    assert(chrom == gen.chromosomes.size() - 1u);
-    assert(gamete.size() == nloci);
+    assert(locus == arch.nLoci);
+    assert(chrom == arch.nChromosomes - 1u);
+    assert(gamete.size() == arch.nLoci);
 
     return gamete;
 }

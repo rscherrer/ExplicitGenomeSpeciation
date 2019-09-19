@@ -96,7 +96,7 @@ public:
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const Genome&);
+    Haplotype recombine(const GeneticArchitecture&);
     vecDbl calcFeedingRates(const double&, const double&,
      const double& = 4.0E-4);
 
