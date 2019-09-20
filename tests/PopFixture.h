@@ -1,6 +1,8 @@
 #ifndef EXPLICITGENOMESPECIATION_POPFIXTURE_H
 #define EXPLICITGENOMESPECIATION_POPFIXTURE_H
 
+#include "library/ParameterSet.h"
+#include "library/GeneticArchitecture.h"
 #include "library/utils.h"
 
 struct PopFixture

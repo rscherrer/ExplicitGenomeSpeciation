@@ -4,6 +4,26 @@
 typedef std::vector<vecDbl> Matrix;
 typedef std::vector<vecUns> MatUns;
 
+void MetaPop::resetEcoTraits(const size_t &p, const double &x)
+{
+    pops[p].resetEcoTraits(x, ecosel, maxfeed);
+}
+
+void MetaPop::resetMatePrefs(const size_t &p, const double &y)
+{
+    pops[p].resetMatePrefs(y);
+}
+
+void MetaPop::resetEcotypes(const size_t &p, const size_t &e)
+{
+    pops[p].resetEcotypes(e);
+}
+
+void MetaPop::resetGenders(const size_t &p, const bool &sex)
+{
+    pops[p].resetGenders(sex);
+}
+
 double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
 {
     if (v[2u] < tiny) return 0.0;

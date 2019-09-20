@@ -16,26 +16,33 @@ class MetaPop
 
 public:
 
-    MetaPop(const vecPop &populations, const ParameterSet &pars) :
-        pops(populations),
+    MetaPop(const vecUns& popSizes, const ParameterSet &pars,
+     const GeneticArchitecture &arch) :
+        pops({ }),
+        popsizes(popSizes),
         dispersal(pars.getDispersalRate()),
         survival(pars.getSurvivalProb()),
         birth(pars.getBirthRate()),
         matingcost(pars.getMateEvaluationCost()),
         sexsel(pars.getMatePreferenceStrength()),
         ecosel(pars.getEcoSelCoeff()),
+        symmetry(pars.getHabitatSymmetry()),
         maxfeed(pars.getMaxFeedingRate()),
+        maxresources(pars.getMaxResourceCapacity()),
+        maxreplenish(pars.getMaxResourceGrowth()),
+        resources(matzeros(2u, 2u)),
+        replenish(matzeros(2u, 2u)),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
         record(pars.getRecord()),
         buffer(Buffer()),
         ecotypes({ { }, { } }),
-        meanPhenotypes({ zeros(3u), zeros(3u), zeros(3u) }),
-        pheVariances({ zeros(3u), zeros(3u), zeros(3u) }),
-        genVariances({ zeros(3u), zeros(3u), zeros(3u) }),
-        addVariances({ zeros(3u), zeros(3u), zeros(3u) }),
-        nadVariances({ zeros(3u), zeros(3u), zeros(3u) }),
+        meanPhenotypes(matzeros(3u, 3u)),
+        pheVariances(matzeros(3u, 3u)),
+        genVariances(matzeros(3u, 3u)),
+        addVariances(matzeros(3u, 3u)),
+        nadVariances(matzeros(3u, 3u)),
         domVariances(zeros(3u)),
         intVariances(zeros(3u)),
         Pst(zeros(3u)),
@@ -52,7 +59,20 @@ public:
         QstScan(zeros(pars.getNLoci())),
         CstScan(zeros(pars.getNLoci())),
         FstScan(zeros(pars.getNLoci()))
-    {}
+    {
+        // Create the demes
+        for (size_t p = 0u; p < 2u; ++p) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[p][res] = maxresources * fabs(p - res) * symmetry;
+                replenish[p][res] = maxreplenish;
+            }
+            const size_t n = popsizes[p];
+            const double max = maxfeed;
+            const vecDbl k = resources[p];
+            const vecDbl r = replenish[p];
+            pops.push_back(Population(n, ecosel, max, k, r, arch));
+        }
+    }
     ~MetaPop() {}
 
     vecPop getPops() const { return pops; }
@@ -65,16 +85,27 @@ public:
     void loadBuffer(const size_t &t);
     void save(StreamBag&);
 
+    void resetEcoTraits(const size_t&, const double&);
+    void resetMatePrefs(const size_t&, const double&);
+    void resetEcotypes(const size_t&, const size_t&);
+    void resetGenders(const size_t&, const bool&);
+
 private:
 
     vecPop pops;
+    vecUns popsizes;
     double dispersal;
     double survival;
     double birth;
     double matingcost;
     double sexsel;
     double ecosel;
+    double symmetry;
     double maxfeed;
+    double maxresources;
+    double maxreplenish;
+    Matrix resources;
+    Matrix replenish;
     int tmax;
     int tsave;
     int tburnin;

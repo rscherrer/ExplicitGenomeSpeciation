@@ -1,4 +1,5 @@
 #include "library/MetaPop.h"
+#include "library/utils.h"
 #include "tests/PopFixture.h"
 #include <boost/test/unit_test.hpp>
 
@@ -18,18 +19,8 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     pars.setMatePreferenceStrength(0.0);
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
-
     const size_t n0 = pars.getInitialPopSize();
-    const double s = pars.getEcoSelCoeff();
-    const double max = pars.getMaxFeedingRate();
-    const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-    const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
-
-    Population pop1 = Population(n0, s, max, k, r, arch);
-    Population pop2 = Population(n0, s, max, k, r, arch);
-
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-
+    MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
@@ -54,18 +45,8 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     pars.setMatePreferenceStrength(0.0);
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
-
     const size_t n0 = pars.getInitialPopSize();
-    const double s = pars.getEcoSelCoeff();
-    const double max = pars.getMaxFeedingRate();
-    const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-    const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
-
-    Population pop1 = Population(n0, s, max, k, r, arch);
-    Population pop2 = Population(n0, s, max, k, r, arch);
-
-    MetaPop meta = MetaPop({ pop1, pop2 }, pars);
-
+    MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);
 
     BOOST_CHECK(t < pars.getTEndSim());
@@ -80,13 +61,9 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full ecological isolation...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(n0, s, max, k, r, arch);
-
-        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
-        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        meta.resetEcoTraits(0u, -1.0);
+        meta.resetEcoTraits(1u, 1.0);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
 
@@ -97,12 +74,9 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full spatial isolation...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(n0, s, max, k, r, arch);
-        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
-        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        meta.resetEcoTraits(0u, -1.0);
+        meta.resetEcoTraits(1u, 1.0);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
 
@@ -113,15 +87,11 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full mating isolation...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(n0, s, max, k, r, arch);
-
-        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
-        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
-        pop1.resetMatePrefs(1.0);
-        pop2.resetMatePrefs(1.0);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        meta.resetEcoTraits(0u, -1.0);
+        meta.resetEcoTraits(1u, 1.0);
+        meta.resetMatePrefs(0u, 1.0);
+        meta.resetMatePrefs(0u, 1.0);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
@@ -131,11 +101,8 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing spatial isolation with only one population...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(0u, s, max, k, r, arch);
-        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop({ n0, 0u }, pars, arch);
+        meta.resetEcoTraits(0u, -1.0);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
     }
@@ -144,12 +111,9 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing spatial isolation with only one ecotype...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(n0, s, max, k, r, arch);
-        pop1.resetEcotypes(1u);
-        pop2.resetEcotypes(1u);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        meta.resetEcotypes(0u, 1u);
+        meta.resetEcotypes(1u, 1u);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
     }
@@ -158,11 +122,9 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing mating isolation when only one sex...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(0u, s, max, k, r, arch);
-        pop1.resetGenders(true); // only females
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop({ n0, 0 }, pars, arch);
+        meta.resetGenders(0u, true);
+        meta.resetGenders(1u, true);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
     }
@@ -171,11 +133,8 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing mating isolation when one ecotype...\n";
-
-        Population pop1 = Population(n0, s, max, k, r, arch);
-        Population pop2 = Population(0u, s, max, k, r, arch);
-        pop1.resetEcotypes(1u);
-        MetaPop meta = MetaPop({ pop1, pop2 }, pars);
+        MetaPop meta = MetaPop({ n0, 0u }, pars, arch);
+        meta.resetEcotypes(0u, 1u);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
     }

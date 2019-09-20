@@ -45,23 +45,9 @@ int doMain(const vecStrings &args)
         // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
-        // Create populations
-        const size_t n0 = pars.getInitialPopSize();
-        const double foodmax = pars.getMaxResourceCapacity();
-        const double foodgrowth = pars.getMaxResourceGrowth();
-        const double symmetry = pars.getHabitatSymmetry();
-        const vecDbl k1 = {foodmax, symmetry * foodmax};
-        const vecDbl k2 = {symmetry * foodmax, foodmax};
-        const vecDbl r = rep(foodgrowth, 2u);
-        const double ecosel = pars.getEcoSelCoeff();
-        const double maxfeeding = pars.getMaxFeedingRate();
-
-        Population pop1 = Population(n0, ecosel, maxfeeding, k1, r, arch);
-        Population pop2 = Population(0u, ecosel, maxfeeding, k2, r, arch);
-        vecPop pops = {pop1, pop2};
-
         // Create a metapopulation
-        MetaPop metapop = MetaPop(pops, pars);
+        const vecUns popsizes = { pars.getInitialPopSize(), 0u };
+        MetaPop metapop = MetaPop(popsizes, pars, arch);
 
         // Launch simulation
         std::cout << "Simulation started\n";

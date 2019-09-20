@@ -15,9 +15,13 @@ vecDbl zeros(const size_t&);
 
 vecUns uzeros(const size_t&); // unsigned zeros
 
+Matrix matzeros(const size_t&, const size_t&);
+
 vecBool falses(const size_t&);
 
 vecDbl rep(const double&, const size_t&);
+
+vecUns repUns(const size_t&, const size_t&);
 
 double sum(vecDbl&);
 

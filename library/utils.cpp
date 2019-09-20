@@ -37,6 +37,15 @@ vecUns uzeros(const size_t &n)
 }
 
 
+Matrix matzeros(const size_t &ncol, const size_t &nrow)
+{
+    Matrix mat;
+    for (size_t i = 0u; i < ncol; ++i)
+        mat.push_back(zeros(nrow));
+    return mat;
+}
+
+
 vecBool falses(const size_t &n)
 {
     vecBool falses;
@@ -48,6 +57,14 @@ vecBool falses(const size_t &n)
 vecDbl rep(const double &x, const size_t &n)
 {
     vecDbl reps;
+    for (size_t i = 0u; i < n; ++i)
+        reps.push_back(x);
+    return reps;
+}
+
+vecUns repUns(const size_t &x, const size_t &n)
+{
+    vecUns reps;
     for (size_t i = 0u; i < n; ++i)
         reps.push_back(x);
     return reps;
