@@ -15,7 +15,6 @@
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
 
-
 class GeneticArchitecture {
 
 public:
@@ -74,6 +73,7 @@ public:
     vecDbl scaleI;
     vecDbl scaleE;
 
+    // Genome
     vecDbl chromosomes;
     vecUns traits;
     vecDbl locations;

@@ -39,14 +39,7 @@ public:
 
         develop(arch);
 
-        assert(sequence.size() == 2u);
-        for (size_t strain = 0u; strain < 2u; ++strain)
-            assert(sequence[strain].size() == arch.nLoci);
-        assert(genexp.size() == arch.nLoci);
-        assert(traitvalues.size() == 3u);
-        assert(fitness > 0.0);
-        for (size_t res = 0u; res < 2u; ++res)
-            assert(feedingRates[res] > 0.0);
+        checkIndividual(arch.nLoci);
     }
 
 
@@ -69,14 +62,7 @@ public:
 
         develop(arch);
 
-        assert(sequence.size() == 2u);
-        for (size_t strain = 0u; strain < 2u; ++strain)
-            assert(sequence[strain].size() == arch.nLoci);
-        assert(genexp.size() == arch.nLoci);
-        assert(traitvalues.size() == 3u);
-        assert(fitness > 0.0);
-        for (size_t res = 0u; res < 2u; ++res)
-            assert(feedingRates[res] > 0.0);
+        checkIndividual(arch.nLoci);
 
     }
 
@@ -114,6 +100,7 @@ private:
     bool determineSex(const bool&);
 
     void develop(const GeneticArchitecture&);
+    bool checkIndividual(const size_t&);
 
     Diplotype sequence;
     vecDbl genexp;

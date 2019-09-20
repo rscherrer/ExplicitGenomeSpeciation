@@ -7,6 +7,23 @@
 #include <iostream>
 #include <algorithm>
 
+bool Individual::checkIndividual(const size_t &nLoci)
+{
+
+    assert(sequence.size() == 2u);
+    for (size_t strain = 0u; strain < 2u; ++strain)
+        assert(sequence[strain].size() == nLoci);
+    assert(genexp.size() == nLoci);
+    assert(traitvalues.size() == 3u);
+    assert(fitness > 0.0);
+    for (size_t res = 0u; res < 2u; ++res)
+        assert(feedingRates[res] > 0.0);
+
+    // For the sake of not breaking in release mode
+    const double out = nLoci;
+    return nLoci == out;
+}
+
 vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
  const double &maxi)
 {

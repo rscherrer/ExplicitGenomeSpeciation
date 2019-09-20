@@ -9,9 +9,10 @@
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Edge> vecEdg;
 
-/// A container for a gene regulatory network
-struct Network
+class Network
 {
+
+public:
 
     Network(const size_t &character, const size_t &nVertices,
      const size_t &nEdges, const double &skew, const double &shape,
@@ -48,6 +49,7 @@ struct Network
     vecDbl makeWeights(const double&, const double&);
 
 };
+
 
 
 #endif
