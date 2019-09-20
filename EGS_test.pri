@@ -7,3 +7,4 @@ SOURCES += $$PWD/tests/GenomeTests.cpp
 SOURCES += $$PWD/tests/NetworkTests.cpp
 HEADERS += $$PWD/tests/testUtilities.h
 HEADERS += $$PWD/tests/GenFixture.h
+HEADERS += $$PWD/tests/PopFixture.h
