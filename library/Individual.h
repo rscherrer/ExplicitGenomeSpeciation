@@ -22,7 +22,8 @@ class Individual {
 public:
 
     /// Spontaneous creation
-    Individual(const GeneticArchitecture &arch, const double &snpFreq = -1.0) :
+    Individual(const GeneticArchitecture &arch, const double &ecosel,
+     const double &maxfeeding, const double &snpFreq) :
         genome(makeSequence(arch, snpFreq)),
         transcriptome(zeros(arch.nLoci)),
         locivalues(zeros(arch.nLoci)),
@@ -33,7 +34,7 @@ public:
         matepref(traitvalues[1u]),
         neutral(traitvalues[2u]),
         fitness(1.0),
-        feedingRates(calcFeedingRates(1.0, ecotrait)),
+        feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
         ecotype(0u)
     {
         develop(arch);
@@ -43,7 +44,7 @@ public:
 
     /// Newborn
     Individual(const GeneticArchitecture &arch, const Haplotype &egg,
-     const Haplotype &sperm) :
+     const Haplotype &sperm, const double &ecosel, const double &maxfeeding) :
         genome(fecundate(egg, sperm)),
         transcriptome(zeros(arch.nLoci)),
         locivalues(zeros(arch.nLoci)),
@@ -54,7 +55,7 @@ public:
         matepref(traitvalues[1u]),
         neutral(traitvalues[2u]),
         fitness(1.0),
-        feedingRates(calcFeedingRates(1.0, ecotrait)),
+        feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
         ecotype(0u)
     {
         develop(arch);
@@ -78,10 +79,9 @@ public:
     double getLocusValue(const size_t&);
     bool acceptMate(const double&, const double&) const;
     Haplotype recombine(const GeneticArchitecture&);
-    vecDbl calcFeedingRates(const double&, const double&,
-     const double& = 4.0E-4);
+    vecDbl calcFeedingRates(const double&, const double&, const double&);
 
-    void setEcoTrait(const double&, const double&);
+    void setEcoTrait(const double&, const double&, const double&);
     void setMatePref(const double&);
     void setEcotype(const double&);
     void setGender(const bool&);

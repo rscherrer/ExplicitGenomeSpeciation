@@ -9,13 +9,14 @@
 typedef std::discrete_distribution<size_t> Discrete;
 
 /// Function to initialize a population of individuals
-Crowd Population::populate(const size_t &n, const GeneticArchitecture &arch)
+Crowd Population::populate(const size_t &n, const double &ecosel,
+ const double &maxfeeding, const GeneticArchitecture &arch)
 {
 
     Crowd indivs;
 
     for (size_t ind = 0u; ind < n; ++ind) {
-        auto indiv = new Individual(arch);
+        auto indiv = new Individual(arch, ecosel, maxfeeding, arch.snpFreq);
         indivs.push_back(indiv);
     }
 
@@ -141,7 +142,8 @@ void Population::sortSexes()
 
 /// Sexual reproduction function
 void Population::reproduce(const double &birth, const double &sexsel,
- const double &cost, const GeneticArchitecture &arch)
+ const double &cost, const double &ecosel, const double &maxfeeding,
+  const GeneticArchitecture &arch)
 {
 
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
@@ -180,7 +182,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
-                auto off = new Individual(arch, egg, sperm);
+                auto off = new Individual(arch, egg, sperm, ecosel, maxfeeding);
                 offspring.push_back(off);
                 --nOffspring;
             }
@@ -192,7 +194,8 @@ void Population::reproduce(const double &birth, const double &sexsel,
 
 
 void Population::burninReproduce(const double &birth, const double &sexsel,
- const double &cost, const double &ecosel, const GeneticArchitecture &arch)
+ const double &cost, const double &ecosel, const double &maxfeeding,
+  const GeneticArchitecture &arch)
 {
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
 
@@ -235,7 +238,7 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
             dad->mutate(sperm);
 
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
-                auto off = new Individual(arch, egg, sperm);
+                auto off = new Individual(arch, egg, sperm, ecosel, maxfeeding);
                 offspring.push_back(off);
                 --nOffspring;
             }
@@ -284,10 +287,11 @@ bool Population::survive(const double &survival)
     return isAlive;
 }
 
-void Population::resetEcoTraits(const double &value, const double &sel)
+void Population::resetEcoTraits(const double &value, const double &sel,
+ const double &max)
 {
     for (auto ind : individuals)
-        ind->setEcoTrait(value, sel);
+        ind->setEcoTrait(value, sel, max);
 }
 
 void Population::resetMatePrefs(const double &value)

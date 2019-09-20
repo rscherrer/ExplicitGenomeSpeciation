@@ -40,6 +40,7 @@ public:
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
     double getRecombinationRate() const { return recombinationRate; }
+    double getMaxFeedingRate() const { return maxFeedingRate; }
     bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }
     vecDbl getScaleA() const { return scaleA; }
@@ -92,16 +93,17 @@ public:
 private:
 
     // Ecological parameters
-    double  maxResourceCapacity     = 100.0;
-    double  maxResourceGrowth       = 1.0;
-    double  habitatSymmetry         = 1.0;
-    double  ecoSelCoeff             = 1.0;
-    size_t  initialPopSize          = 100u;
-    double  dispersalRate           = 1.0e-3;
-    double  birthRate               = 4.0;
-    double  survivalProb            = 0.8;
-    double  matePreferenceStrength  = 10.0;
-    double  mateEvaluationCost      = 0.01;
+    double maxResourceCapacity     = 100.0;
+    double maxResourceGrowth       = 1.0;
+    double habitatSymmetry         = 1.0;
+    double ecoSelCoeff             = 1.0;
+    size_t initialPopSize          = 100u;
+    double dispersalRate           = 1.0e-3;
+    double birthRate               = 4.0;
+    double survivalProb            = 0.8;
+    double matePreferenceStrength  = 10.0;
+    double mateEvaluationCost      = 0.01;
+    double maxFeedingRate          = 4.0E-4;
 
     // Genetic parameters
     size_t nEcoLoci = 400u;

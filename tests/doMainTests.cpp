@@ -190,8 +190,14 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
 
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
+    const size_t n0 = pars.getInitialPopSize();
+    const double s = pars.getEcoSelCoeff();
+    const double max = pars.getMaxFeedingRate();
+    const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+    const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+    Population pop1 = Population(n0, s, max, k, r, arch);
+    Population pop2 = Population(n0, s, max, k, r, arch);
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
@@ -220,8 +226,14 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     GeneticArchitecture arch = GeneticArchitecture(pars);
 
-    Population pop1 = Population(pars.getInitialPopSize(), arch);
-    Population pop2 = Population(pars.getInitialPopSize(), arch);
+    const size_t n0 = pars.getInitialPopSize();
+    const double s = pars.getEcoSelCoeff();
+    const double max = pars.getMaxFeedingRate();
+    const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+    const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+    Population pop1 = Population(n0, s, max, k, r, arch);
+    Population pop2 = Population(n0, s, max, k, r, arch);
 
     MetaPop meta = MetaPop({ pop1, pop2 }, pars);
 
@@ -239,10 +251,18 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing full ecological isolation...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(pars.getInitialPopSize(), arch);
-        pop1.resetEcoTraits(-1.0, 1.0);
-        pop2.resetEcoTraits(1.0, 1.0);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(n0, s, max, k, r, arch);
+
+        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
+        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
@@ -254,10 +274,17 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing full spatial isolation...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(pars.getInitialPopSize(), arch);
-        pop1.resetEcoTraits(-1.0, 1.0);
-        pop2.resetEcoTraits(1.0, 1.0);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(n0, s, max, k, r, arch);
+        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
+        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
@@ -269,10 +296,18 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing full mating isolation...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(pars.getInitialPopSize(), arch);
-        pop1.resetEcoTraits(-1.0, 1.0);
-        pop2.resetEcoTraits(1.0, 1.0);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(n0, s, max, k, r, arch);
+
+        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
+        pop2.resetEcoTraits(1.0, 1.0, 4.0E-4);
         pop1.resetMatePrefs(1.0);
         pop2.resetMatePrefs(1.0);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
@@ -285,9 +320,16 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing spatial isolation with only one population...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(0u, arch);
-        pop1.resetEcoTraits(-1.0, 1.0);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(0u, s, max, k, r, arch);
+        pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
@@ -297,8 +339,15 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing spatial isolation with only one ecotype...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(pars.getInitialPopSize(), arch);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(n0, s, max, k, r, arch);
         pop1.resetEcotypes(1u);
         pop2.resetEcotypes(1u);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
@@ -310,8 +359,15 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing mating isolation when only one sex...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(0u, arch);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(0u, s, max, k, r, arch);
         pop1.resetGenders(true); // only females
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
         meta.analyze(arch);
@@ -322,8 +378,15 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing mating isolation when one ecotype...\n";
-        Population pop1 = Population(pars.getInitialPopSize(), arch);
-        Population pop2 = Population(0u, arch);
+
+        const size_t n0 = pars.getInitialPopSize();
+        const double s = pars.getEcoSelCoeff();
+        const double max = pars.getMaxFeedingRate();
+        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
+        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
+
+        Population pop1 = Population(n0, s, max, k, r, arch);
+        Population pop2 = Population(0u, s, max, k, r, arch);
         pop1.resetEcotypes(1u);
         MetaPop meta = MetaPop({ pop1, pop2 }, pars);
         meta.analyze(arch);

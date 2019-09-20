@@ -50,12 +50,14 @@ int doMain(const vecStrings &args)
         const double foodmax = pars.getMaxResourceCapacity();
         const double foodgrowth = pars.getMaxResourceGrowth();
         const double symmetry = pars.getHabitatSymmetry();
-        const vecDbl foodmax1 = {foodmax, symmetry * foodmax};
-        const vecDbl foodmax2 = {symmetry * foodmax, foodmax};
-        const vecDbl foodgrows = {foodgrowth, foodgrowth};
+        const vecDbl k1 = {foodmax, symmetry * foodmax};
+        const vecDbl k2 = {symmetry * foodmax, foodmax};
+        const vecDbl r = rep(foodgrowth, 2u);
+        const double ecosel = pars.getEcoSelCoeff();
+        const double maxfeeding = pars.getMaxFeedingRate();
 
-        Population pop1 = Population(n0, arch, foodmax1, foodgrows);
-        Population pop2 = Population(0u, arch, foodmax2, foodgrows);
+        Population pop1 = Population(n0, ecosel, maxfeeding, k1, r, arch);
+        Population pop2 = Population(0u, ecosel, maxfeeding, k2, r, arch);
         vecPop pops = {pop1, pop2};
 
         // Create a metapopulation

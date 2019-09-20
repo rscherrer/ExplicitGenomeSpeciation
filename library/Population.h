@@ -19,10 +19,10 @@ class Population {
 
 public:
 
-    Population(const size_t &popsize, const GeneticArchitecture &arch,
-     const vecDbl &foodmax = rep(100.0, 2u),
-      const vecDbl &foodgrowth = ones(2u)) :
-        individuals(populate(popsize, arch)),
+    Population(const size_t &popsize, const double &ecosel,
+     const double &maxfeeding, const vecDbl &foodmax, const vecDbl &foodgrowth,
+      const GeneticArchitecture &arch) :
+        individuals(populate(popsize, ecosel, maxfeeding, arch)),
         females({ }),
         males({ }),
         offspring({ }),
@@ -51,13 +51,13 @@ public:
     void immigrate(const Crowd&);
     void consume();
     void burninConsume();
-    void reproduce(const double&, const double&, const double&,
-     const GeneticArchitecture&);
-    void burninReproduce(const double&, const double&, const double&,
+    void reproduce(const double&, const double&, const double&, const double&,
      const double&, const GeneticArchitecture&);
+    void burninReproduce(const double&, const double&, const double&,
+     const double&, const double&, const GeneticArchitecture&);
     bool survive(const double&);
 
-    void resetEcoTraits(const double&, const double&);
+    void resetEcoTraits(const double&, const double&, const double&);
     void resetMatePrefs(const double&);
     void resetGenders(const bool&);
     void resetEcotypes(const size_t&);
@@ -65,7 +65,8 @@ public:
 private:
 
     // Makers
-    Crowd populate(const size_t&, const GeneticArchitecture&);
+    Crowd populate(const size_t&, const double&, const double&,
+     const GeneticArchitecture&);
 
     // The population
     Crowd individuals;

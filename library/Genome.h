@@ -6,6 +6,8 @@
 #include <cassert>
 #include <stddef.h>
 
+// Remove this file
+
 struct Genome
 {
 

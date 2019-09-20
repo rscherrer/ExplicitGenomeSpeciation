@@ -309,11 +309,12 @@ double Individual::getLocusValue(const size_t &locus)
     return locivalues[locus];
 }
 
-void Individual::setEcoTrait(const double &value, const double &sel)
+void Individual::setEcoTrait(const double &value, const double &sel,
+ const double &max)
 {
     ecotrait = value;
     traitvalues[0u] = value;
-    feedingRates = calcFeedingRates(sel, value);
+    feedingRates = calcFeedingRates(sel, value, max);
 }
 void Individual::setMatePref(const double &value)
 {

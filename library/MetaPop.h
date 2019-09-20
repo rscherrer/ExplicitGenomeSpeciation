@@ -24,6 +24,7 @@ public:
         matingcost(pars.getMateEvaluationCost()),
         sexsel(pars.getMatePreferenceStrength()),
         ecosel(pars.getEcoSelCoeff()),
+        maxfeed(pars.getMaxFeedingRate()),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
@@ -73,6 +74,7 @@ private:
     double matingcost;
     double sexsel;
     double ecosel;
+    double maxfeed;
     int tmax;
     int tsave;
     int tburnin;
