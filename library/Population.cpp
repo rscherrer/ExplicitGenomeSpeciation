@@ -95,6 +95,13 @@ void Population::consume()
         resources[res] = capacity[res] * (1.0 - consumed[res] / replenish[res]);
 
     assert(resources[0u] >= 0.0);
+
+    if (resources[1u] < 0.0) {
+        std::cout << "consumed = " << consumed[1u] << '\n';
+        std::cout << "replenish = " << replenish[1u] << '\n';
+        std::cout << "capacity = " << capacity[1u] << '\n';
+        std::cout << "resource = " << resources[1u] << '\n';
+    }
     assert(resources[1u] >= 0.0);
 
     // Split the resource among the individuals

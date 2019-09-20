@@ -61,8 +61,8 @@ public:
         FstScan(zeros(pars.getNLoci()))
     {
         // Create the demes
-        for (size_t p = 0u; p < 2u; ++p) {
-            for (size_t res = 0u; res < 2u; ++res) {
+        for (int p = 0; p < 2; ++p) {
+            for (int res = 0; res < 2; ++res) {
                 resources[p][res] = maxresources * fabs(p - res) * symmetry;
                 replenish[p][res] = maxreplenish;
             }

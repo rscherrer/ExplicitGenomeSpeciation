@@ -10,20 +10,18 @@
 #include <chrono>
 #include <cassert>
 
-/// Program to run the main function
 int doMain(const vecStrings &args)
 {
 
     try
     {
-        // Return an error if there are more than one argument
+
         if (args.size() > 2u)
             throw std::runtime_error("More than one argument were supplied");
 
-        // Create a default parameter set
         ParameterSet pars;
 
-        // Now is the time to update parameters if some are provided
+        // Read parameters from a file if supplied
         if (args.size() == 2u) {
 
             std::string filename = args[1u];
@@ -39,10 +37,9 @@ int doMain(const vecStrings &args)
 
         }
 
-        // Create and seed a random number generator
+        // Random number generator
         rnd::rng.seed(pars.getSeed());
 
-        // Create a genetic architecture
         GeneticArchitecture arch = GeneticArchitecture(pars);
 
         // Create a metapopulation

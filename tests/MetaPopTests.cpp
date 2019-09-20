@@ -91,7 +91,7 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
         meta.resetEcoTraits(0u, -1.0);
         meta.resetEcoTraits(1u, 1.0);
         meta.resetMatePrefs(0u, 1.0);
-        meta.resetMatePrefs(0u, 1.0);
+        meta.resetMatePrefs(1u, 1.0);
         meta.analyze(arch);
         BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
