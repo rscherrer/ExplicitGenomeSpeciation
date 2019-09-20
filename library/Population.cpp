@@ -83,6 +83,7 @@ void Deme::consume()
     vecDbl consumed{0.0, 0.0};
     for (auto ind : individuals) {
         vecDbl rates = ind->getFeedingRates();
+        if (burnin) rates[1u] = 0.0;
         for (size_t res = 0u; res < 2u; ++res)
             consumed[res] += rates[res];
     }
@@ -94,14 +95,9 @@ void Deme::consume()
     for (size_t res = 0u; res < 2u; ++res)
         resources[res] = capacity[res] * (1.0 - consumed[res] / replenish[res]);
 
-    assert(resources[0u] >= 0.0);
+    if (burnin) resources[1u] = 0.0;
 
-    if (resources[1u] < 0.0) {
-        std::cout << "consumed = " << consumed[1u] << '\n';
-        std::cout << "replenish = " << replenish[1u] << '\n';
-        std::cout << "capacity = " << capacity[1u] << '\n';
-        std::cout << "resource = " << resources[1u] << '\n';
-    }
+    assert(resources[0u] >= 0.0);
     assert(resources[1u] >= 0.0);
 
     // Split the resource among the individuals
@@ -110,6 +106,10 @@ void Deme::consume()
 
 }
 
+void Deme::exitBurnIn()
+{
+    burnin = false;
+}
 
 void Deme::burninConsume()
 {
@@ -147,7 +147,7 @@ void Deme::sortSexes()
             males.push_back(ind);
 }
 
-/// Sexual reproduction function
+
 void Deme::reproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
   const GenArch &arch)
@@ -157,8 +157,11 @@ void Deme::reproduce(const double &birth, const double &sexsel,
 
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
-    for (auto male : males)
+    for (auto male : males) {
+        double fit = male->getFitness();
+        if (burnin) fit *= exp(- ecosel * sqr(male->getMatePref()));
         successes.push_back(male->getFitness());
+    }
 
     assert(successes.size() == males.size());
 
@@ -170,6 +173,8 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
 
+        double fecundity = birth * mom->getFitness();
+        if (burnin) fecundity *= exp(- ecosel * sqr(mom->getMatePref()));
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
 
         Haplotype egg = mom->recombine(arch);

@@ -6,22 +6,22 @@ typedef std::vector<vecUns> MatUns;
 
 void MetaPop::resetEcoTraits(const size_t &p, const double &x)
 {
-    pops[p].resetEcoTraits(x, ecosel, maxfeed);
+    pops[p]->resetEcoTraits(x, ecosel, maxfeed);
 }
 
 void MetaPop::resetMatePrefs(const size_t &p, const double &y)
 {
-    pops[p].resetMatePrefs(y);
+    pops[p]->resetMatePrefs(y);
 }
 
 void MetaPop::resetEcotypes(const size_t &p, const size_t &e)
 {
-    pops[p].resetEcotypes(e);
+    pops[p]->resetEcotypes(e);
 }
 
 void MetaPop::resetGenders(const size_t &p, const bool &sex)
 {
-    pops[p].resetGenders(sex);
+    pops[p]->resetGenders(sex);
 }
 
 double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
@@ -100,8 +100,8 @@ void MetaPop::analyze(const GenArch &arch)
     // Metapopulation size, sum and SS phenotypes and genetic values
     size_t metapopsize = 0u;
     for (size_t p = 0u; p < 2u; ++p) {
-        metapopsize += pops[p].getPopSize();
-        for (auto ind : pops[p].individuals) {
+        metapopsize += pops[p]->getPopSize();
+        for (auto ind : pops[p]->individuals) {
             const vecDbl traitvalues = ind->getTraits();
             const vecDbl genvalues = ind->getGenValues();
             for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -135,7 +135,7 @@ void MetaPop::analyze(const GenArch &arch)
 
     // Within-ecotype sum and SS in phenotype and genetic values
     for (size_t p = 0u; p < 2u; ++p) {
-        for (auto ind : pops[p].individuals) {
+        for (auto ind : pops[p]->individuals) {
 
             vecDbl traitvalues = ind->getTraits();
             vecDbl genvalues = ind->getGenValues();
@@ -498,17 +498,22 @@ void MetaPop::save(StreamBag &out)
 
 int MetaPop::evolve(const GenArch &arch)
 {
+    bool isBurnin = true;
     int t = - tburnin;
-    StreamBag out;
 
-    if (record)
-        out.openAll();
+    StreamBag out;
+    if (record) out.openAll();
 
     for (; t < tmax; ++t) {
 
         // Sort out the sexes
-        pops[0u].sortSexes();
-        pops[1u].sortSexes();
+        pops[0u]->sortSexes();
+        pops[1u]->sortSexes();
+
+        if (t > 0 && isBurnin) {
+            isBurnin = false;
+            for (auto pop : pops) pop->exitBurnIn();
+        }
 
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
@@ -520,41 +525,27 @@ int MetaPop::evolve(const GenArch &arch)
 
         // Dispersal (only if not burnin)
         if (t > 0) {
-            Crowd migrants1 = pops[0u].emigrate(dispersal);
-            Crowd migrants2 = pops[1u].emigrate(dispersal);
-            pops[0u].immigrate(migrants2);
-            pops[1u].immigrate(migrants1);
+            Crowd migrants1 = pops[0u]->emigrate(dispersal);
+            Crowd migrants2 = pops[1u]->emigrate(dispersal);
+            pops[0u]->immigrate(migrants2);
+            pops[1u]->immigrate(migrants1);
         }
 
-        // Feeding
-        if (t > 0) {
-            pops[0u].consume();
-            pops[1u].consume();
-        } else {
-            pops[0u].burninConsume();
-            pops[1u].burninConsume();
+        size_t isExtant = 0u;
+
+        for (auto pop : pops) {
+            pop->consume();
+            pop->reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);
+            isExtant += pop->survive(survival);
         }
 
-        // Reproduction
-        if (t > 0) {
-            pops[0u].reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);
-            pops[1u].reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);
-        } else {
-            pops[0u].burninReproduce(birth, sexsel, matingcost, ecosel, maxfeed,
-             arch);
-            pops[1u].burninReproduce(birth, sexsel, matingcost, ecosel, maxfeed,
-             arch);
-        }
-
-        // Survival
-        if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
+        if (isExtant == 0u) {
             std::cout << "The population went extinct at t = " << t << '\n';
             break;
         }
     }
 
-    if (record)
-        out.closeAll();
+    if (record) out.closeAll();
 
     return t;
 }
@@ -567,16 +558,16 @@ void MetaPop::loadBuffer(const size_t &t)
     // Census
     buffer.add({ size2dbl(ecotypes[0u].size()) });
     buffer.add({ size2dbl(ecotypes[1u].size()) });
-    buffer.add({ size2dbl(pops[0u].getPopSize()) });
-    buffer.add({ size2dbl(pops[1u].getPopSize()) });
-    buffer.add({ size2dbl(pops[0u].getNFemales()) });
-    buffer.add({ size2dbl(pops[1u].getNFemales()) });
+    buffer.add({ size2dbl(pops[0u]->getPopSize()) });
+    buffer.add({ size2dbl(pops[1u]->getPopSize()) });
+    buffer.add({ size2dbl(pops[0u]->getNFemales()) });
+    buffer.add({ size2dbl(pops[1u]->getNFemales()) });
 
     // Resources in each habitat
-    buffer.add({ pops[0u].getResources()[0u] });
-    buffer.add({ pops[1u].getResources()[0u] });
-    buffer.add({ pops[0u].getResources()[1u] });
-    buffer.add({ pops[1u].getResources()[1u] });
+    buffer.add({ pops[0u]->getResources()[0u] });
+    buffer.add({ pops[1u]->getResources()[0u] });
+    buffer.add({ pops[0u]->getResources()[1u] });
+    buffer.add({ pops[1u]->getResources()[1u] });
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -632,8 +623,8 @@ double MetaPop::getSpatialIsolation()
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];
-        for (size_t i = 0u; i < pop.getPopSize(); ++i) {
-            auto ind = pop.individuals[i];
+        for (size_t i = 0u; i < pop->getPopSize(); ++i) {
+            auto ind = pop->individuals[i];
             size_t ecotype = ind->getEcotype();
             ++n[p][ecotype];
         }
@@ -675,8 +666,8 @@ double MetaPop::getMatingIsolation()
     size_t nmales = 0u;
 
     for (size_t p = 0u; p < 2u; ++p) {
-        nfemales += pops[p].getNFemales();
-        nmales += pops[p].getNMales();
+        nfemales += pops[p]->getNFemales();
+        nmales += pops[p]->getNMales();
     }
 
     if (nfemales == 0u || nmales == 0u)
@@ -688,13 +679,13 @@ double MetaPop::getMatingIsolation()
     // Make a vector with all males of the metapop
     Crowd allMales;
     for (size_t p = 0u; p < 2u; ++p)
-        for (size_t i = 0u; i < pops[p].getNMales(); ++i)
-            allMales.push_back(pops[p].individuals[i]);
+        for (size_t i = 0u; i < pops[p]->getNMales(); ++i)
+            allMales.push_back(pops[p]->individuals[i]);
 
     // Loop through the females of the metapop and test their preference
     for (size_t p = 0u; p < 2u; ++p) {
-        for (size_t i = 0u; i < pops[p].getNFemales(); ++i) {
-            auto fem = pops[p].females[i];
+        for (size_t i = 0u; i < pops[p]->getNFemales(); ++i) {
+            auto fem = pops[p]->females[i];
             size_t nencounters = rnd::poisson(1.0 / matingcost);
             while (nencounters) {
                 auto candidate = allMales[rnd::random(allMales.size())];

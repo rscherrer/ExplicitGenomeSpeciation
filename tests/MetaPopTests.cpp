@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     int t = meta.evolve(arch);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
-    BOOST_CHECK(meta.getPops()[0u].getPopSize() > 0u);
-    BOOST_CHECK(meta.getPops()[1u].getPopSize() > 0u);
+    BOOST_CHECK(meta.getPopSize(0u) > 0u);
+    BOOST_CHECK(meta.getPopSize(1u) > 0u);
 }
 
 
@@ -50,8 +50,8 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     int t = meta.evolve(arch);
 
     BOOST_CHECK(t < pars.getTEndSim());
-    BOOST_CHECK(meta.getPops()[0u].getPopSize() == 0u);
-    BOOST_CHECK(meta.getPops()[1u].getPopSize() == 0u);
+    BOOST_CHECK(meta.getPopSize(0u) == 0u);
+    BOOST_CHECK(meta.getPopSize(1u) == 0u);
 }
 
 BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)

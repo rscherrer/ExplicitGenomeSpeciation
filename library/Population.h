@@ -21,7 +21,7 @@ public:
 
     Deme(const size_t &popsize, const double &ecosel,
      const double &maxfeeding, const vecDbl &foodmax, const vecDbl &foodgrowth,
-      const GenArch &arch) :
+      const GenArch &arch, const bool &isBurnin = false) :
         individuals(populate(popsize, ecosel, maxfeeding, arch)),
         females({ }),
         males({ }),
@@ -29,7 +29,8 @@ public:
         survivors({ }),
         capacity(foodmax),
         replenish(foodgrowth),
-        resources(capacity)
+        resources(capacity),
+        burnin(isBurnin)
     {
         // Sexes should be sorted out upon creation of the population
         sortSexes();
@@ -56,6 +57,7 @@ public:
     void burninReproduce(const double&, const double&, const double&,
      const double&, const double&, const GenArch&);
     bool survive(const double&);
+    void exitBurnIn();
 
     void resetEcoTraits(const double&, const double&, const double&);
     void resetMatePrefs(const double&);
@@ -78,6 +80,8 @@ private:
     vecDbl capacity;
     vecDbl replenish;
     vecDbl resources;
+
+    bool burnin;
 
 };
 
