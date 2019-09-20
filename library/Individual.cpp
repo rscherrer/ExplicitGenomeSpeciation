@@ -10,10 +10,10 @@
 bool Individual::checkIndividual(const size_t &nLoci)
 {
 
-    assert(sequence.size() == 2u);
+    assert(genome.size() == 2u);
     for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(sequence[strain].size() == nLoci);
-    assert(genexp.size() == nLoci);
+        assert(genome[strain].size() == nLoci);
+    assert(transcriptome.size() == nLoci);
     assert(traitvalues.size() == 3u);
     assert(fitness > 0.0);
     for (size_t res = 0u; res < 2u; ++res)
@@ -36,11 +36,12 @@ vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
 
 bool Individual::determineSex(const bool &femheterogamy)
 {
-    const bool hetero = sequence[0u][0u] != sequence[1u][0u];
+    const bool hetero = genome[0u][0u] != genome[1u][0u];
     const bool isZW = hetero && femheterogamy;
     const bool isXX = !hetero && !femheterogamy;
     const bool isfemale = isZW || isXX;
     return isfemale;
+
 }
 
 Diplotype Individual::makeSequence(const GeneticArchitecture &arch, double prob)
@@ -97,7 +98,7 @@ void Individual::develop(const GeneticArchitecture &arch)
         // Determine genotype
         size_t genotype = 0u;
         for (size_t hap = 0u; hap < 2u; ++hap)
-            genotype += sequence[hap][locus];
+            genotype += genome[hap][locus];
 
         // Determine gene expression
         double expression;
@@ -111,7 +112,7 @@ void Individual::develop(const GeneticArchitecture &arch)
         assert(expression >= -1.0);
         assert(expression <= 1.0);
 
-        genexp[locus] = expression; // record gene expression
+        transcriptome[locus] = expression; // record gene expression
 
         // Contribute to trait
         double locuseffect = arch.effects[locus] * expression;
@@ -136,7 +137,8 @@ void Individual::develop(const GeneticArchitecture &arch)
 
             // Level of expression of an interaction
             const Edge edge = arch.networks[trait].edges[e];
-            const double intexp = genexp[edge.first] * genexp[edge.second];
+            double intexp = transcriptome[edge.first];
+            intexp *= transcriptome[edge.second];
 
             assert(intexp >= -1.0);
             assert(intexp <= 1.0);
@@ -254,7 +256,7 @@ Haplotype Individual::recombine(const GeneticArchitecture &arch)
 
         // Gene
         default:
-            gamete.push_back(sequence[hap][locus]);
+            gamete.push_back(genome[hap][locus]);
             ++locus;
             position = arch.locations[locus];
             break;
@@ -299,7 +301,7 @@ void Individual::setEcotype(const double &mean)
 
 size_t Individual::getZygosity(const size_t &locus)
 {
-    return sequence[0u][locus] + sequence[1u][locus];
+    return genome[0u][locus] + genome[1u][locus];
 }
 
 double Individual::getLocusValue(const size_t &locus)

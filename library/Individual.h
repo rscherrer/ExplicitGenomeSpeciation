@@ -23,8 +23,8 @@ public:
 
     /// Spontaneous creation
     Individual(const GeneticArchitecture &arch, const double &snpFreq = -1.0) :
-        sequence(makeSequence(arch, snpFreq)),
-        genexp(zeros(arch.nLoci)),
+        genome(makeSequence(arch, snpFreq)),
+        transcriptome(zeros(arch.nLoci)),
         locivalues(zeros(arch.nLoci)),
         isFemale(determineSex(arch.femHeterogamy)),
         genvalues(zeros(3u)),
@@ -36,9 +36,7 @@ public:
         feedingRates(calcFeedingRates(1.0, ecotrait)),
         ecotype(0u)
     {
-
         develop(arch);
-
         checkIndividual(arch.nLoci);
     }
 
@@ -46,8 +44,8 @@ public:
     /// Newborn
     Individual(const GeneticArchitecture &arch, const Haplotype &egg,
      const Haplotype &sperm) :
-        sequence(fecundate(egg, sperm)),
-        genexp(zeros(arch.nLoci)),
+        genome(fecundate(egg, sperm)),
+        transcriptome(zeros(arch.nLoci)),
         locivalues(zeros(arch.nLoci)),
         isFemale(determineSex(arch.femHeterogamy)),
         genvalues(zeros(3u)),
@@ -59,11 +57,8 @@ public:
         feedingRates(calcFeedingRates(1.0, ecotrait)),
         ecotype(0u)
     {
-
         develop(arch);
-
         checkIndividual(arch.nLoci);
-
     }
 
     ~Individual() {}
@@ -76,8 +71,8 @@ public:
     vecDbl getTraits() const { return traitvalues; }
     vecDbl getFeedingRates() const { return feedingRates; }
     vecDbl getGenValues() const { return genvalues; }
-    Haplotype getSequence(const size_t &i) const { return sequence[i]; }
-    vecDbl getExpression() const { return genexp; }
+    Haplotype getSequence(const size_t &i) const { return genome[i]; }
+    vecDbl getExpression() const { return transcriptome; }
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
@@ -102,8 +97,8 @@ private:
     void develop(const GeneticArchitecture&);
     bool checkIndividual(const size_t&);
 
-    Diplotype sequence;
-    vecDbl genexp;
+    Diplotype genome;
+    vecDbl transcriptome;
     vecDbl locivalues;
     bool isFemale;
     vecDbl genvalues;
