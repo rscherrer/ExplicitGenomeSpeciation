@@ -1,6 +1,7 @@
 #include "library/Network.h"
 #include "library/utils.h"
-#include "tests/GenFixture.h"
+#include "library/ParameterSet.h"
+#include "library/GeneticArchitecture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
