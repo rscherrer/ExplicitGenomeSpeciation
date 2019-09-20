@@ -9,6 +9,7 @@ struct PopFixture
     PopFixture() :
         pars(ParameterSet()),
         arch(GeneticArchitecture(pars)),
+        n0(pars.getInitialPopSize()),
         s(pars.getEcoSelCoeff()),
         max(pars.getMaxFeedingRate()),
         k(rep(pars.getMaxResourceCapacity(), 2u)),
@@ -19,6 +20,7 @@ struct PopFixture
 
     ParameterSet pars;
     GeneticArchitecture arch;
+    size_t n0;  // initial population size
     double s;   // ecological selection coefficient
     double max; // maximum feeding rate
     vecDbl k;   // maximum resource capacities

@@ -1,5 +1,5 @@
 #include "library/MetaPop.h"
-#include "tests/GenFixture.h"
+#include "tests/PopFixture.h"
 #include <boost/test/unit_test.hpp>
 
 // Simulation should reach tmax in the absence of mortality
@@ -73,19 +73,13 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     BOOST_CHECK(meta.getPops()[1u].getPopSize() == 0u);
 }
 
-BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
+BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
 
     // Test case: a population with ecological isolation = 1
     BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     {
 
         std::cout << "Testing full ecological isolation...\n";
-
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
 
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(n0, s, max, k, r, arch);
@@ -104,12 +98,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
 
         std::cout << "Testing full spatial isolation...\n";
 
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
-
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(n0, s, max, k, r, arch);
         pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
@@ -125,12 +113,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing full mating isolation...\n";
-
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
 
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(n0, s, max, k, r, arch);
@@ -150,12 +132,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
 
         std::cout << "Testing spatial isolation with only one population...\n";
 
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
-
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(0u, s, max, k, r, arch);
         pop1.resetEcoTraits(-1.0, 1.0, 4.0E-4);
@@ -168,12 +144,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing spatial isolation with only one ecotype...\n";
-
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
 
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(n0, s, max, k, r, arch);
@@ -189,12 +159,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
 
         std::cout << "Testing mating isolation when only one sex...\n";
 
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
-
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(0u, s, max, k, r, arch);
         pop1.resetGenders(true); // only females
@@ -207,12 +171,6 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, GenFixture)
     {
 
         std::cout << "Testing mating isolation when one ecotype...\n";
-
-        const size_t n0 = pars.getInitialPopSize();
-        const double s = pars.getEcoSelCoeff();
-        const double max = pars.getMaxFeedingRate();
-        const vecDbl k = rep(pars.getMaxResourceCapacity(), 2u);
-        const vecDbl r = rep(pars.getMaxResourceGrowth(), 2u);
 
         Population pop1 = Population(n0, s, max, k, r, arch);
         Population pop2 = Population(0u, s, max, k, r, arch);
