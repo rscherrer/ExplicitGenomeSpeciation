@@ -80,11 +80,12 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, PopFixture)
     {
         std::cout << "Testing resource depletion...\n";
         Population pop = Population(10u, s, max, k, r, arch);
-        vecDbl resourcesBefore = pop.getResources();
+        vecDbl before = pop.getResources();
         pop.consume();
-        vecDbl resourcesAfter = pop.getResources();
+        vecDbl after = pop.getResources();
+
         for (size_t res = 0u; res < 2u; ++res)
-            BOOST_CHECK(resourcesBefore[res] > resourcesAfter[res]);
+            BOOST_CHECK(before[res] > after[res]);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
