@@ -13,13 +13,13 @@ class Individual;
 typedef Individual * PInd;
 typedef std::vector<PInd> Crowd;
 
-class Population {
+class Deme {
 
     friend class MetaPop;
 
 public:
 
-    Population(const size_t &popsize, const double &ecosel,
+    Deme(const size_t &popsize, const double &ecosel,
      const double &maxfeeding, const vecDbl &foodmax, const vecDbl &foodgrowth,
       const GenArch &arch) :
         individuals(populate(popsize, ecosel, maxfeeding, arch)),
@@ -35,7 +35,7 @@ public:
         sortSexes();
     }
 
-    ~Population() {};
+    ~Deme() {};
 
     // Getters
     size_t getPopSize() const { return individuals.size(); }

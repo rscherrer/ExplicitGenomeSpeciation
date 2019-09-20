@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "types.h"
 
-typedef std::vector<Population> vecPop;
+typedef std::vector<Deme> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
 
 class MetaPop
@@ -70,7 +70,7 @@ public:
             const double max = maxfeed;
             const vecDbl k = resources[p];
             const vecDbl r = replenish[p];
-            pops.push_back(Population(n, ecosel, max, k, r, arch));
+            pops.push_back(Deme(n, ecosel, max, k, r, arch));
         }
     }
     ~MetaPop() {}

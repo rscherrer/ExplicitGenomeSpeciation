@@ -9,7 +9,7 @@
 typedef std::discrete_distribution<size_t> Discrete;
 
 /// Function to initialize a population of individuals
-Crowd Population::populate(const size_t &n, const double &ecosel,
+Crowd Deme::populate(const size_t &n, const double &ecosel,
  const double &maxfeeding, const GenArch &arch)
 {
 
@@ -25,7 +25,7 @@ Crowd Population::populate(const size_t &n, const double &ecosel,
 }
 
 
-Crowd Population::emigrate(const double &rate)
+Crowd Deme::emigrate(const double &rate)
 {
     // Loop through individuals in the pop
     // Everyone has a change to migrate
@@ -63,7 +63,7 @@ Crowd Population::emigrate(const double &rate)
 }
 
 
-void Population::immigrate(const Crowd &newcomers)
+void Deme::immigrate(const Crowd &newcomers)
 {
     for (auto ind : newcomers)
         individuals.push_back(ind);
@@ -71,7 +71,7 @@ void Population::immigrate(const Crowd &newcomers)
 
 
 /// Resource consumption
-void Population::consume()
+void Deme::consume()
 {
 
     // cap is the carrying capacity (K)
@@ -111,7 +111,7 @@ void Population::consume()
 }
 
 
-void Population::burninConsume()
+void Deme::burninConsume()
 {
     // Calculate the total amount of food consumed
     double consumed = 0.0;
@@ -133,7 +133,7 @@ void Population::burninConsume()
         ind->feed(resources);
 }
 
-void Population::sortSexes()
+void Deme::sortSexes()
 {
 
     females.clear();
@@ -148,7 +148,7 @@ void Population::sortSexes()
 }
 
 /// Sexual reproduction function
-void Population::reproduce(const double &birth, const double &sexsel,
+void Deme::reproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
   const GenArch &arch)
 {
@@ -200,7 +200,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
 }
 
 
-void Population::burninReproduce(const double &birth, const double &sexsel,
+void Deme::burninReproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
   const GenArch &arch)
 {
@@ -258,7 +258,7 @@ void Population::burninReproduce(const double &birth, const double &sexsel,
 
 
 /// Function to make it to the next generation
-bool Population::survive(const double &survival)
+bool Deme::survive(const double &survival)
 {
 
     // Sample life or death for every adult
@@ -294,26 +294,26 @@ bool Population::survive(const double &survival)
     return isAlive;
 }
 
-void Population::resetEcoTraits(const double &value, const double &sel,
+void Deme::resetEcoTraits(const double &value, const double &sel,
  const double &max)
 {
     for (auto ind : individuals)
         ind->setEcoTrait(value, sel, max);
 }
 
-void Population::resetMatePrefs(const double &value)
+void Deme::resetMatePrefs(const double &value)
 {
     for (auto ind : individuals)
         ind->setMatePref(value);
 }
 
-void Population::resetGenders(const bool &sex)
+void Deme::resetGenders(const bool &sex)
 {
     for (auto ind : individuals)
         ind->setGender(sex);
 }
 
-void Population::resetEcotypes(const size_t &ecotype)
+void Deme::resetEcotypes(const size_t &ecotype)
 {
     for (auto ind : individuals)
         ind->setEcotype(ecotype);
