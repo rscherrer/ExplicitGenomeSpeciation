@@ -1,7 +1,7 @@
 #define BOOST_TEST_MAIN
 
 #include "library/doMain.h"
-#include "library/Population.h"
+#include "library/Deme.h"
 #include "library/MetaPop.h"
 #include "tests/GenFixture.h"
 #include "tests/testUtilities.h"

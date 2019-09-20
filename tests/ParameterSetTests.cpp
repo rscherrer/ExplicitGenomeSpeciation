@@ -1,4 +1,4 @@
-#include "library/ParameterSet.h"
+#include "library/Param.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 

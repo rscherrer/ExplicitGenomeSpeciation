@@ -1,11 +1,11 @@
-#include "ParameterSet.h"
+#include "Param.h"
 #include <iostream>
 #include <chrono>
 #include <sstream>
 #include <cassert>
 #include <cstdint>
 
-void ParameterSet::capEdges()
+void Param::capEdges()
 {
     for (size_t trait = 0u; trait < 3u; ++trait) {
         const size_t n = nLociPerTrait[trait];
@@ -18,7 +18,7 @@ void ParameterSet::capEdges()
     }
 }
 
-ParameterSet::ParameterSet() : seed(makeDefaultSeed())
+Param::Param() : seed(makeDefaultSeed())
 {
 
     capEdges();
@@ -27,7 +27,7 @@ ParameterSet::ParameterSet() : seed(makeDefaultSeed())
 }
 
 /// Function to create a default seed based on what time it is
-size_t ParameterSet::makeDefaultSeed()
+size_t Param::makeDefaultSeed()
 {
     return static_cast<size_t>(std::chrono::high_resolution_clock::now().
      time_since_epoch().count());
@@ -52,7 +52,7 @@ uint64_t _(const std::string& s)
   return fnv::_(14695981039346656037ull, s.data());
 }
 
-void ParameterSet::readParams(std::ifstream &file)
+void Param::readParams(std::ifstream &file)
 {
 
     std::string input;
@@ -133,7 +133,7 @@ void ParameterSet::readParams(std::ifstream &file)
 
 }
 
-void ParameterSet::checkParams()
+void Param::checkParams()
 {
     std::string msg = "No error detected";
 

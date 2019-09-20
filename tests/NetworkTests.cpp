@@ -1,14 +1,14 @@
 #include "library/Network.h"
-#include "library/utils.h"
-#include "library/ParameterSet.h"
-#include "library/GeneticArchitecture.h"
+#include "library/Utilities.h"
+#include "library/Param.h"
+#include "library/GenArch.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
 BOOST_AUTO_TEST_CASE(checkNoNetworks)
 {
     std::cout << "Testing empty networks...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setNLociPerTrait({ 100u, 100u, 100u });
     pars.setNEdgesPerTrait({ 0u, 0u, 0u });
     GenArch arch = GenArch(pars);
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(checkNoNetworks)
 BOOST_AUTO_TEST_CASE(checkSmallNetworks)
 {
     std::cout << "Testing small networks...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setNLociPerTrait({ 100u, 100u, 100u });
     pars.setNEdgesPerTrait({ 1u, 0u, 0u });
     GenArch arch = GenArch(pars);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(checkSmallNetworks)
 BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
 {
     std::cout << "Testing that network size is capped...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setNLociPerTrait({ 10u, 5u, 2u });
     pars.setNEdgesPerTrait({ 1000u, 1000u, 1000u });
     GenArch arch = GenArch(pars);
@@ -46,11 +46,11 @@ BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
 BOOST_AUTO_TEST_CASE(checkInteractionWeights)
 {
     std::cout << "Testing interaction weights...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setInteractionWeightScale(0.0);
     GenArch arch = GenArch(pars);
     for (size_t trait = 0u; trait < 3u; ++trait) {
         Network net = arch.getNetwork(trait);
-        BOOST_CHECK_EQUAL(sum(net.weights), 0.0);
+        BOOST_CHECK_EQUAL(utl::sum(net.weights), 0.0);
     }
 }

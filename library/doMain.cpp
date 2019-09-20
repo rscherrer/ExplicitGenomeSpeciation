@@ -1,8 +1,8 @@
 #include "doMain.h"
-#include "ParameterSet.h"
-#include "GeneticArchitecture.h"
+#include "Param.h"
+#include "GenArch.h"
 #include "Random.h"
-#include "Population.h"
+#include "Deme.h"
 #include "MetaPop.h"
 #include <iostream>
 #include <vector>
@@ -19,7 +19,7 @@ int doMain(const vecStrings &args)
         if (args.size() > 2u)
             throw std::runtime_error("More than one argument were supplied");
 
-        ParameterSet pars;
+        Param pars;
 
         // Read parameters from a file if supplied
         if (args.size() == 2u) {

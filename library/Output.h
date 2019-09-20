@@ -1,5 +1,5 @@
-#ifndef EXPLICITGENOMESPECIATION_STREAMBAG_H
-#define EXPLICITGENOMESPECIATION_STREAMBAG_H
+#ifndef EXPLICITGENOMESPECIATION_OUTPUT_H
+#define EXPLICITGENOMESPECIATION_OUTPUT_H
 
 #include "Buffer.h"
 #include "types.h"
@@ -10,7 +10,7 @@
 
 typedef std::vector<std::ofstream *> vecStreams;
 
-class StreamBag
+class Output
 {
 
     friend class MetaPop;
@@ -23,7 +23,7 @@ private:
 
 public:
 
-    StreamBag() :
+    Output() :
         files({ }),
         names({
               "time",
@@ -90,7 +90,7 @@ public:
               "Fst_scan"
         })
     {}
-    ~StreamBag() {}
+    ~Output() {}
 
     void openAll();
     void closeAll();

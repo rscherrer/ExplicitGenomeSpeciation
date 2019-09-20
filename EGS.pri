@@ -1,17 +1,27 @@
-SOURCES += $$PWD/library/doMain.cpp
-HEADERS += $$PWD/library/doMain.h
+SOURCES += $$PWD/library/doMain.cpp \
+    $$PWD/library/GenArch.cpp \
+    $$PWD/library/Param.cpp \
+    $$PWD/library/Deme.cpp \
+    $$PWD/library/Output.cpp \
+    $$PWD/library/Utilities.cpp
+HEADERS += $$PWD/library/doMain.h \
+    $$PWD/library/GenArch.h \
+    $$PWD/library/Param.h \
+    $$PWD/library/Deme.h \
+    $$PWD/library/Output.h \
+    $$PWD/library/Utilities.h
 
-SOURCES += $$PWD/library/GeneticArchitecture.cpp
-HEADERS += $$PWD/library/GeneticArchitecture.h
+SOURCES +=
+HEADERS +=
 
-SOURCES += $$PWD/library/ParameterSet.cpp
-HEADERS += $$PWD/library/ParameterSet.h
+SOURCES +=
+HEADERS +=
 
 SOURCES += $$PWD/library/Random.cpp
 HEADERS += $$PWD/library/Random.h
 
-SOURCES += $$PWD/library/utils.cpp
-HEADERS += $$PWD/library/utils.h
+SOURCES +=
+HEADERS +=
 
 SOURCES += $$PWD/library/Network.cpp
 HEADERS += $$PWD/library/Network.h
@@ -19,8 +29,8 @@ HEADERS += $$PWD/library/Network.h
 SOURCES += $$PWD/library/Genome.cpp
 HEADERS += $$PWD/library/Genome.h
 
-SOURCES += $$PWD/library/Population.cpp
-HEADERS += $$PWD/library/Population.h
+SOURCES +=
+HEADERS +=
 
 SOURCES += $$PWD/library/Individual.cpp
 HEADERS += $$PWD/library/Individual.h
@@ -28,8 +38,8 @@ HEADERS += $$PWD/library/Individual.h
 SOURCES += $$PWD/library/MetaPop.cpp
 HEADERS += $$PWD/library/MetaPop.h
 
-SOURCES += $$PWD/library/StreamBag.cpp
-HEADERS += $$PWD/library/StreamBag.h
+SOURCES +=
+HEADERS +=
 
 SOURCES += $$PWD/library/Buffer.cpp
 HEADERS += $$PWD/library/Buffer.h

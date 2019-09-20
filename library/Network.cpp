@@ -1,5 +1,5 @@
-#include "GeneticArchitecture.h"
-#include "utils.h"
+#include "GenArch.h"
+#include "Utilities.h"
 #include <cassert>
 #include <algorithm>
 #include <iostream>
@@ -21,7 +21,7 @@ vecEdg Network::makeMap()
 
     vecEdg connexions;
     if (!nedges) return connexions;
-    vecUns degrees = uzeros(nvertices);
+    vecUns degrees = utl::uzeros(nvertices);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
@@ -49,7 +49,7 @@ vecEdg Network::makeMap()
         // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
 
-            if (sum(probs) < 1.0) break;
+            if (utl::sum(probs) < 1.0) break;
 
             // Make a bond without replacement and update degree distribution
             const size_t partner = rnd::sample(probs);
@@ -112,7 +112,7 @@ vecEdg Network::makeEdges()
 vecDbl Network::makeWeights(const double &shape,
  const double &scale)
 {
-    if (shape == 0.0 || scale == 0.0) return zeros(nedges);
+    if (shape == 0.0 || scale == 0.0) return utl::zeros(nedges);
 
     vecDbl intweights;
     double sss = 0.0; // square rooted sum of squares
@@ -123,7 +123,7 @@ vecDbl Network::makeWeights(const double &shape,
         // Two-sided Gamma distribution
         const double weight = rnd::bigamma(shape, scale);
         intweights.push_back(weight);
-        sss += sqr(weight);
+        sss += utl::sqr(weight);
     }
 
     // Normalize

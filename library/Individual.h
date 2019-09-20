@@ -1,9 +1,9 @@
 #ifndef EXPLICITGENOMESPECIATION_INDIVIDUAL_H
 #define EXPLICITGENOMESPECIATION_INDIVIDUAL_H
 
-#include "ParameterSet.h"
-#include "GeneticArchitecture.h"
-#include "utils.h"
+#include "Param.h"
+#include "GenArch.h"
+#include "Utilities.h"
 #include "types.h"
 #include <vector>
 #include <random>
@@ -25,11 +25,11 @@ public:
     Individual(const GenArch &arch, const double &ecosel,
      const double &maxfeeding, const double &snpFreq) :
         genome(makeSequence(arch, snpFreq)),
-        transcriptome(zeros(arch.nLoci)),
-        locivalues(zeros(arch.nLoci)),
+        transcriptome(utl::zeros(arch.nLoci)),
+        locivalues(utl::zeros(arch.nLoci)),
         isFemale(determineSex(arch.femHeterogamy)),
-        genvalues(zeros(3u)),
-        traitvalues(zeros(3u)),
+        genvalues(utl::zeros(3u)),
+        traitvalues(utl::zeros(3u)),
         ecotrait(traitvalues[0u]),
         matepref(traitvalues[1u]),
         neutral(traitvalues[2u]),
@@ -46,11 +46,11 @@ public:
     Individual(const GenArch &arch, const Haplotype &egg,
      const Haplotype &sperm, const double &ecosel, const double &maxfeeding) :
         genome(fecundate(egg, sperm)),
-        transcriptome(zeros(arch.nLoci)),
-        locivalues(zeros(arch.nLoci)),
+        transcriptome(utl::zeros(arch.nLoci)),
+        locivalues(utl::zeros(arch.nLoci)),
         isFemale(determineSex(arch.femHeterogamy)),
-        genvalues(zeros(3u)),
-        traitvalues(zeros(3u)),
+        genvalues(utl::zeros(3u)),
+        traitvalues(utl::zeros(3u)),
         ecotrait(traitvalues[0u]),
         matepref(traitvalues[1u]),
         neutral(traitvalues[2u]),

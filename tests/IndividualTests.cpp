@@ -1,5 +1,5 @@
 #include "library/Individual.h"
-#include "library/utils.h"
+#include "library/Utilities.h"
 #include "tests/GenFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
@@ -11,8 +11,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing generating a sequence of only zeros...\n";
         Individual ind = Individual(arch, 1.0, 4.0E-4, 0.0);
-        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(0u)), 0u);
-        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(1u)), 0u);
+        BOOST_CHECK_EQUAL(utl::sumbool(ind.getSequence(0u)), 0u);
+        BOOST_CHECK_EQUAL(utl::sumbool(ind.getSequence(1u)), 0u);
     }
 
     // Check the genome generation function
@@ -20,8 +20,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::cout << "Testing generating a sequence of only ones...\n";
         Individual ind = Individual(arch, 1.0, 4.0E-4, 1.0);
-        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(0u)), arch.nLoci);
-        BOOST_CHECK_EQUAL(sumbool(ind.getSequence(1u)), arch.nLoci);
+        BOOST_CHECK_EQUAL(utl::sumbool(ind.getSequence(0u)), arch.nLoci);
+        BOOST_CHECK_EQUAL(utl::sumbool(ind.getSequence(1u)), arch.nLoci);
     }
 
     // Check that a fully homogamous female will always accept identical mate
@@ -75,8 +75,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Haplotype egg = mom.recombine(arch);
         Haplotype sperm = dad.recombine(arch);
         Individual baby = Individual(arch, egg, sperm, 1.0, 4.0E-4);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence(0u)), 0u);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence(1u)), arch.nLoci);
+        BOOST_CHECK_EQUAL(utl::sumbool(baby.getSequence(0u)), 0u);
+        BOOST_CHECK_EQUAL(utl::sumbool(baby.getSequence(1u)), arch.nLoci);
     }
 
     BOOST_AUTO_TEST_CASE(checkNoMutation)
@@ -85,7 +85,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Individual ind = Individual(arch, 1.0, 4.0E-4, 0.0);
         Haplotype gamete = ind.recombine(arch);
         ind.mutate(gamete, 0.0);
-        BOOST_CHECK_EQUAL(sumbool(gamete), 0u);
+        BOOST_CHECK_EQUAL(utl::sumbool(gamete), 0u);
     }
 
     BOOST_AUTO_TEST_CASE(checkHighMutation)
@@ -94,7 +94,7 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Individual ind = Individual(arch, 1.0, 4.0E-4, 0.0);
         Haplotype gamete = ind.recombine(arch);
         ind.mutate(gamete, 100.0);
-        BOOST_CHECK(sumbool(gamete) != 0u);
+        BOOST_CHECK(utl::sumbool(gamete) != 0u);
     }
 
     BOOST_AUTO_TEST_CASE(checkHighRecombination)
@@ -107,8 +107,8 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Individual baby = Individual(arch, egg, sperm, 1.0, 4.0E-4);
         arch.recombinationRate = 10.0;
         Haplotype gamete = baby.recombine(arch);
-        BOOST_CHECK(sumbool(gamete) != 0u);
-        BOOST_CHECK(sumbool(gamete) != arch.nLoci);
+        BOOST_CHECK(utl::sumbool(gamete) != 0u);
+        BOOST_CHECK(utl::sumbool(gamete) != arch.nLoci);
     }
 
     BOOST_AUTO_TEST_CASE(checkExpression)
@@ -116,10 +116,10 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         std::cout << "Testing gene expression...\n";
         Individual ind1 = Individual(arch, 1.0, 4.0E-4, 0.0);
         vecDbl expression1 = ind1.getExpression();
-        BOOST_CHECK_EQUAL(sum(expression1), -1.0 * arch.nLoci);
+        BOOST_CHECK_EQUAL(utl::sum(expression1), -1.0 * arch.nLoci);
         Individual ind2 = Individual(arch, 1.0, 4.0E-4, 1.0);
         vecDbl expression2 = ind2.getExpression();
-        BOOST_CHECK_EQUAL(sum(expression2), arch.nLoci);
+        BOOST_CHECK_EQUAL(utl::sum(expression2), arch.nLoci);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_CASE(checkNoRecombination)
 {
     std::cout << "Testing meiosis without recombination...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setNChromosomes(1u); // to avoid free recombination
     GenArch arch = GenArch(pars);
     Individual mom = Individual(arch, 1.0, 4.0E-4, 0.0);
@@ -137,13 +137,13 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     Haplotype sperm = dad.recombine(arch);
     Individual baby = Individual(arch, egg, sperm, 1.0, 4.0E-4);
     Haplotype gam = baby.recombine(arch);
-    BOOST_CHECK_EQUAL(sumbool(gam) / arch.nLoci, gam[0u]);
+    BOOST_CHECK_EQUAL(utl::sumbool(gam) / arch.nLoci, gam[0u]);
 }
 
 BOOST_AUTO_TEST_CASE(checkDevelopment)
 {
     std::cout << "Testing developing individual...\n";
-    ParameterSet pars;
+    Param pars;
     pars.setDominanceVariance(0.0);
     GenArch arch = GenArch(pars);
     Individual mom = Individual(arch, 1.0, 4.0E-4, 0.0);

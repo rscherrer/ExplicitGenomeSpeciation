@@ -1,6 +1,6 @@
-#include "Population.h"
+#include "Deme.h"
 #include "Individual.h"
-#include "utils.h"
+#include "Utilities.h"
 #include "Random.h"
 #include <cassert>
 #include <iostream>
@@ -34,8 +34,8 @@ Crowd Deme::emigrate(const double &rate)
     Crowd residents;
 
     size_t nmigrants = rnd::binomial(individuals.size(), rate);
-    vecDbl probs = ones(nmigrants);
-    Haplotype whom = falses(individuals.size());
+    vecDbl probs = utl::ones(nmigrants);
+    Haplotype whom = utl::falses(individuals.size());
 
     while (nmigrants) {
         const size_t mig = rnd::sample(probs);
@@ -159,7 +159,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     vecDbl successes;
     for (auto male : males) {
         double fit = male->getFitness();
-        if (burnin) fit *= exp(- ecosel * sqr(male->getMatePref()));
+        if (burnin) fit *= exp(- ecosel * utl::sqr(male->getMatePref()));
         successes.push_back(male->getFitness());
     }
 
@@ -174,7 +174,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     for (auto mom : females) {
 
         double fecundity = birth * mom->getFitness();
-        if (burnin) fecundity *= exp(- ecosel * sqr(mom->getMatePref()));
+        if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom->getMatePref()));
         size_t nOffspring = rnd::poisson(birth * mom->getFitness());
 
         Haplotype egg = mom->recombine(arch);
@@ -214,7 +214,7 @@ void Deme::burninReproduce(const double &birth, const double &sexsel,
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
     for (auto male : males) {
-        double burninFactor = exp(- ecosel * sqr(male->getMatePref()));
+        double burninFactor = exp(- ecosel * utl::sqr(male->getMatePref()));
         double success = male->getFitness() * burninFactor;
         successes.push_back(success);
     }
@@ -229,7 +229,7 @@ void Deme::burninReproduce(const double &birth, const double &sexsel,
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
 
-        double burninFactor = - ecosel * sqr(mom->getMatePref());
+        double burninFactor = - ecosel * utl::sqr(mom->getMatePref());
         double success = mom->getFitness() * burninFactor;
         size_t nOffspring = rnd::poisson(birth * success);
 

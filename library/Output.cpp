@@ -1,6 +1,6 @@
-#include "StreamBag.h"
+#include "Output.h"
 
-void StreamBag::openAll()
+void Output::openAll()
 {
     for (size_t f = 0u; f < names.size(); ++f) {
         std::string filename = names[f] + ".dat";
@@ -13,7 +13,7 @@ void StreamBag::openAll()
     }
 }
 
-void StreamBag::closeAll()
+void Output::closeAll()
 {
     for (size_t f = 0u; f < names.size(); ++f) {
         files[f]->close();

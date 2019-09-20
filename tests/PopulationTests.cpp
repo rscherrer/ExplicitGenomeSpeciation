@@ -1,4 +1,4 @@
-#include "library/Population.h"
+#include "library/Deme.h"
 #include "tests/PopFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>

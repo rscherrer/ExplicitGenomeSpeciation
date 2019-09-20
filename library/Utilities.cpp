@@ -1,16 +1,16 @@
-#include "utils.h"
+#include "Utilities.h"
 #include <numeric>
 #include <algorithm>
 #include <string>
 #include <iostream>
 
-double sqr(const double &number)
+double utl::sqr(const double &number)
 {
     return number * number;
 }
 
 
-vecDbl ones(const size_t &n)
+vecDbl utl::ones(const size_t &n)
 {
     vecDbl ones;
     for (size_t i = 0u; i < n; ++i)
@@ -19,7 +19,7 @@ vecDbl ones(const size_t &n)
 }
 
 
-vecDbl zeros(const size_t &n)
+vecDbl utl::zeros(const size_t &n)
 {
     vecDbl zeros;
     for (size_t i = 0u; i < n; ++i)
@@ -28,7 +28,7 @@ vecDbl zeros(const size_t &n)
 }
 
 
-vecUns uzeros(const size_t &n)
+vecUns utl::uzeros(const size_t &n)
 {
     vecUns zeros;
     for (size_t i = 0u; i < n; ++i)
@@ -37,7 +37,7 @@ vecUns uzeros(const size_t &n)
 }
 
 
-Matrix matzeros(const size_t &ncol, const size_t &nrow)
+Matrix utl::matzeros(const size_t &ncol, const size_t &nrow)
 {
     Matrix mat;
     for (size_t i = 0u; i < ncol; ++i)
@@ -45,8 +45,15 @@ Matrix matzeros(const size_t &ncol, const size_t &nrow)
     return mat;
 }
 
+MatUns utl::matuzeros(const size_t &ncol, const size_t &nrow)
+{
+    MatUns mat;
+    for (size_t i = 0u; i < ncol; ++i)
+        mat.push_back(uzeros(nrow));
+    return mat;
+}
 
-vecBool falses(const size_t &n)
+vecBool utl::falses(const size_t &n)
 {
     vecBool falses;
     for (size_t i = 0u; i < n; ++i)
@@ -54,7 +61,7 @@ vecBool falses(const size_t &n)
     return falses;
 }
 
-vecDbl rep(const double &x, const size_t &n)
+vecDbl utl::rep(const double &x, const size_t &n)
 {
     vecDbl reps;
     for (size_t i = 0u; i < n; ++i)
@@ -62,7 +69,7 @@ vecDbl rep(const double &x, const size_t &n)
     return reps;
 }
 
-vecUns repUns(const size_t &x, const size_t &n)
+vecUns utl::repUns(const size_t &x, const size_t &n)
 {
     vecUns reps;
     for (size_t i = 0u; i < n; ++i)
@@ -71,32 +78,32 @@ vecUns repUns(const size_t &x, const size_t &n)
 }
 
 
-double sum(vecDbl &v)
+double utl::sum(vecDbl &v)
 {
     return std::accumulate(v.begin(), v.end(), 0);
 }
 
 
-size_t argmin(vecDbl &v)
+size_t utl::argmin(vecDbl &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
 }
 
-size_t sumbool(vecBool v) {
+size_t utl::sumbool(vecBool v) {
     size_t sum = 0u;
     for (size_t i = 0u; i < v.size(); ++i)
         sum += v[i];
     return sum;
 }
 
-size_t sumu(vecUns &v) {
+size_t utl::sumu(vecUns &v) {
     size_t sum = 0u;
     for (size_t i = 0u; i < v.size(); ++i)
         sum += v[i];
     return sum;
 }
 
-double size2dbl(const size_t &x)
+double utl::size2dbl(const size_t &x)
 {
     return static_cast<double>(x);
 }

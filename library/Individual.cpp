@@ -1,6 +1,6 @@
 #include "Individual.h"
-#include "Population.h"
-#include "utils.h"
+#include "Deme.h"
+#include "Utilities.h"
 #include "Random.h"
 #include <cmath>
 #include <cassert>
@@ -27,8 +27,8 @@ bool Individual::checkIndividual(const size_t &nLoci)
 vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
  const double &maxi)
 {
-    const double rate1 = maxi * exp(- sel * sqr(trait + 1.0));
-    const double rate2 = maxi * exp(- sel * sqr(trait - 1.0));
+    const double rate1 = maxi * exp(- sel * utl::sqr(trait + 1.0));
+    const double rate2 = maxi * exp(- sel * utl::sqr(trait - 1.0));
     assert(rate1 >= 0.0);
     assert(rate2 >= 0.0);
     return { rate1, rate2 };
@@ -172,7 +172,7 @@ double calcAssortProb(const double &y, const double &xi,
  const double &xj, const double &alpha)
 {
     const double d = xi - xj;
-    return exp(- 0.5 * alpha * sqr(y * d));
+    return exp(- 0.5 * alpha * utl::sqr(y * d));
 }
 
 
@@ -180,7 +180,7 @@ double calcAssortProb(const double &y, const double &xi,
 double calcDisassortProb(const double &y, const double &xi,
  const double &xj, const double &alpha)
 {
-    return 1.0 - sqr(sqr(y)) * calcAssortProb(y, xi, xj, alpha);
+    return 1.0 - utl::sqr(utl::sqr(y)) * calcAssortProb(y, xi, xj, alpha);
 }
 
 
@@ -237,7 +237,7 @@ Haplotype Individual::recombine(const GenArch &arch)
 
         // What is the next thing coming up next?
         vecDbl closest = { crossover, chromend, position };
-        size_t next = argmin(closest);
+        size_t next = utl::argmin(closest);
 
         switch (next) {
 

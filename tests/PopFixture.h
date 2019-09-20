@@ -1,26 +1,26 @@
 #ifndef EXPLICITGENOMESPECIATION_POPFIXTURE_H
 #define EXPLICITGENOMESPECIATION_POPFIXTURE_H
 
-#include "library/ParameterSet.h"
-#include "library/GeneticArchitecture.h"
-#include "library/utils.h"
+#include "library/Param.h"
+#include "library/GenArch.h"
+#include "library/Utilities.h"
 
 struct PopFixture
 {
 
     PopFixture() :
-        pars(ParameterSet()),
+        pars(Param()),
         arch(GenArch(pars)),
         n0(pars.getInitialPopSize()),
         s(pars.getEcoSelCoeff()),
         max(pars.getMaxFeedingRate()),
-        k(rep(pars.getMaxResourceCapacity(), 2u)),
-        r(rep(pars.getMaxResourceGrowth(), 2u))
+        k(utl::rep(pars.getMaxResourceCapacity(), 2u)),
+        r(utl::rep(pars.getMaxResourceGrowth(), 2u))
     {}
 
     ~PopFixture() {}
 
-    ParameterSet pars;
+    Param pars;
     GenArch arch;
     size_t n0;  // initial population size
     double s;   // ecological selection coefficient

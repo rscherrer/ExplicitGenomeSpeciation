@@ -1,7 +1,7 @@
-#ifndef EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
-#define EXPLICITGENOMESPECIATION_GENETICARCHITECTURE_H
+#ifndef EXPLICITGENOMESPECIATION_GENARCH_H
+#define EXPLICITGENOMESPECIATION_GENARCH_H
 
-#include "ParameterSet.h"
+#include "Param.h"
 #include "Random.h"
 #include "Genome.h"
 #include "Network.h"
@@ -11,7 +11,6 @@
 #include <cassert>
 #include <stddef.h>
 
-
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
 
@@ -19,7 +18,7 @@ class GenArch {
 
 public:
 
-    GenArch(const ParameterSet &pars) :
+    GenArch(const Param &pars) :
         nChromosomes(pars.getNChromosomes()),
         nLoci(pars.getNLoci()),
         nLociPerTrait(pars.getNLociPerTrait()),

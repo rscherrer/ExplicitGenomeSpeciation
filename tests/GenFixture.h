@@ -1,19 +1,19 @@
 #ifndef EXPLICITGENOMESPECIATION_GENFIXTURE_H
 #define EXPLICITGENOMESPECIATION_GENFIXTURE_H
 
-#include "library/GeneticArchitecture.h"
+#include "library/GenArch.h"
 
 typedef std::vector<Network> MultiNet;
 
 struct GenFixture {
 
     GenFixture() :
-        pars(ParameterSet()),
+        pars(Param()),
         arch(GenArch(pars))
     {}
     ~GenFixture() {}
 
-    ParameterSet pars;
+    Param pars;
     GenArch arch;
 
 };

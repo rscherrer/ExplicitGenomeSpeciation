@@ -1,17 +1,17 @@
-#ifndef EXPLICITGENOMESPECIATION_PARAMETERSET_H
-#define EXPLICITGENOMESPECIATION_PARAMETERSET_H
+#ifndef EXPLICITGENOMESPECIATION_PARAM_H
+#define EXPLICITGENOMESPECIATION_PARAM_H
 
 #include "types.h"
 #include <vector>
 #include <fstream>
 #include <stddef.h>
 
-class ParameterSet {
+class Param {
 
 public:
 
     /// Constructor
-    ParameterSet();
+    Param();
 
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }

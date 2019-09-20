@@ -1,9 +1,9 @@
-#include "GeneticArchitecture.h"
-#include "ParameterSet.h"
+#include "GenArch.h"
+#include "Param.h"
 #include "Random.h"
 #include "Network.h"
 #include "Genome.h"
-#include "utils.h"
+#include "Utilities.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -114,16 +114,16 @@ vecDbl GenArch::makeEffects()
     const double shape = effectSizeShape;
     const double scale = effectSizeScale;
 
-    if (shape == 0.0 || scale == 0.0) return zeros(nLoci);
+    if (shape == 0.0 || scale == 0.0) return utl::zeros(nLoci);
 
     vecDbl effectsizes;
-    vecDbl sss = zeros(3u); // square rooted sum of squares
+    vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nLoci; ++locus) {
 
         const double effect = rnd::bigamma(shape, scale);
         effectsizes.push_back(effect);
-        sss[traits[locus]] += sqr(effect);
+        sss[traits[locus]] += utl::sqr(effect);
     }
 
     for (size_t trait = 0u; trait < 3u; ++trait)
@@ -139,15 +139,15 @@ vecDbl GenArch::makeEffects()
 vecDbl GenArch::makeDominances()
 {
 
-    if (dominanceVariance == 0.0) return zeros(nLoci);
+    if (dominanceVariance == 0.0) return utl::zeros(nLoci);
 
     vecDbl coefficients;
-    vecDbl sss = zeros(3u); // square rooted sum of squares
+    vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
     for (size_t locus = 0u; locus < nLoci; ++locus) {
         const double dom = rnd::hnormal(dominanceVariance);
         coefficients.push_back(dom);
-        sss[traits[locus]] += sqr(dom);
+        sss[traits[locus]] += utl::sqr(dom);
     }
 
     for (size_t trait = 0u; trait < 3u; ++trait)

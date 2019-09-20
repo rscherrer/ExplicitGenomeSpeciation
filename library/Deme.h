@@ -1,10 +1,10 @@
-#ifndef EXPLICITGENOMESPECIATION_POPULATION_H
-#define EXPLICITGENOMESPECIATION_POPULATION_H
+#ifndef EXPLICITGENOMESPECIATION_DEME_H
+#define EXPLICITGENOMESPECIATION_DEME_H
 
-#include "ParameterSet.h"
-#include "GeneticArchitecture.h"
+#include "Param.h"
+#include "GenArch.h"
 #include "Random.h"
-#include "utils.h"
+#include "Utilities.h"
 #include "types.h"
 #include <stddef.h>
 

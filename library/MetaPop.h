@@ -1,15 +1,14 @@
 #ifndef EXPLICITGENOMESPECIATION_METAPOP_H
 #define EXPLICITGENOMESPECIATION_METAPOP_H
 
-#include "Population.h"
+#include "Deme.h"
 #include "Buffer.h"
-#include "StreamBag.h"
+#include "Output.h"
 #include "Individual.h"
-#include "utils.h"
+#include "Utilities.h"
 #include "types.h"
 
-typedef Deme * pDeme;
-typedef std::vector<pDeme> vecPop;
+typedef std::vector<Deme *> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
 
 class MetaPop
@@ -17,7 +16,7 @@ class MetaPop
 
 public:
 
-    MetaPop(const vecUns& popSizes, const ParameterSet &pars,
+    MetaPop(const vecUns& popSizes, const Param &pars,
      const GenArch &arch) :
         pops({ }),
         popsizes(popSizes),
@@ -31,35 +30,35 @@ public:
         maxfeed(pars.getMaxFeedingRate()),
         maxresources(pars.getMaxResourceCapacity()),
         maxreplenish(pars.getMaxResourceGrowth()),
-        resources(matzeros(2u, 2u)),
-        replenish(matzeros(2u, 2u)),
+        resources(utl::matzeros(2u, 2u)),
+        replenish(utl::matzeros(2u, 2u)),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
         record(pars.getRecord()),
         buffer(Buffer()),
         ecotypes({ { }, { } }),
-        meanPhenotypes(matzeros(3u, 3u)),
-        pheVariances(matzeros(3u, 3u)),
-        genVariances(matzeros(3u, 3u)),
-        addVariances(matzeros(3u, 3u)),
-        nadVariances(matzeros(3u, 3u)),
-        domVariances(zeros(3u)),
-        intVariances(zeros(3u)),
-        Pst(zeros(3u)),
-        Gst(zeros(3u)),
-        Qst(zeros(3u)),
-        Cst(zeros(3u)),
-        Fst(zeros(3u)),
-        varPScan(zeros(pars.getNLoci())),
-        varGScan(zeros(pars.getNLoci())),
-        varAScan(zeros(pars.getNLoci())),
-        varNScan(zeros(pars.getNLoci())),
-        PstScan(zeros(pars.getNLoci())),
-        GstScan(zeros(pars.getNLoci())),
-        QstScan(zeros(pars.getNLoci())),
-        CstScan(zeros(pars.getNLoci())),
-        FstScan(zeros(pars.getNLoci()))
+        meanPhenotypes(utl::matzeros(3u, 3u)),
+        pheVariances(utl::matzeros(3u, 3u)),
+        genVariances(utl::matzeros(3u, 3u)),
+        addVariances(utl::matzeros(3u, 3u)),
+        nadVariances(utl::matzeros(3u, 3u)),
+        domVariances(utl::zeros(3u)),
+        intVariances(utl::zeros(3u)),
+        Pst(utl::zeros(3u)),
+        Gst(utl::zeros(3u)),
+        Qst(utl::zeros(3u)),
+        Cst(utl::zeros(3u)),
+        Fst(utl::zeros(3u)),
+        varPScan(utl::zeros(pars.getNLoci())),
+        varGScan(utl::zeros(pars.getNLoci())),
+        varAScan(utl::zeros(pars.getNLoci())),
+        varNScan(utl::zeros(pars.getNLoci())),
+        PstScan(utl::zeros(pars.getNLoci())),
+        GstScan(utl::zeros(pars.getNLoci())),
+        QstScan(utl::zeros(pars.getNLoci())),
+        CstScan(utl::zeros(pars.getNLoci())),
+        FstScan(utl::zeros(pars.getNLoci()))
     {
         // Create the demes
         for (int p = 0; p < 2; ++p) {
@@ -84,7 +83,7 @@ public:
     int evolve(const GenArch&);
     void analyze(const GenArch&);
     void loadBuffer(const size_t &t);
-    void save(StreamBag&);
+    void save(Output&);
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);

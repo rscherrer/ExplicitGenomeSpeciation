@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_DOMAIN_H
 #define EXPLICITGENOMESPECIATION_DOMAIN_H
 
-#include "Population.h"
+#include "Deme.h"
 #include "types.h"
 #include <vector>
 #include <string>

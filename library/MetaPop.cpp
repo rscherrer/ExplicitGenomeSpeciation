@@ -49,47 +49,47 @@ void MetaPop::analyze(const GenArch &arch)
     // Mean and variance components
     // One value per trait per ecotype
     // The within-ecotype variances are used in computing divergence statistics
-    meanPhenotypes = { zeros(3u), zeros(3u), zeros(3u) };
-    pheVariances = { zeros(3u), zeros(3u), zeros(3u) };
-    genVariances = { zeros(3u), zeros(3u), zeros(3u) };
-    addVariances = { zeros(3u), zeros(3u), zeros(3u) };
-    nadVariances = { zeros(3u), zeros(3u), zeros(3u) };
+    meanPhenotypes = utl::matzeros(3u, 3u);
+    pheVariances = utl::matzeros(3u, 3u);
+    genVariances = utl::matzeros(3u, 3u);
+    addVariances = utl::matzeros(3u, 3u);
+    nadVariances = utl::matzeros(3u, 3u);
 
     // Dominance and interaction variance
     // One value per trait
     // These are not used for computing divergence statistics
-    domVariances = zeros(3u);
-    intVariances = zeros(3u);
+    domVariances = utl::zeros(3u);
+    intVariances = utl::zeros(3u);
 
     // Divergence between ecotypes
     // One value per trait
-    Pst = zeros(3u); // phenotypic
-    Gst = zeros(3u); // genetic (values)
-    Qst = zeros(3u); // additive
-    Cst = zeros(3u); // non-additive
-    Fst = zeros(3u); // in allele frequency (true genetic divergence)
+    Pst = utl::zeros(3u); // phenotypic
+    Gst = utl::zeros(3u); // genetic (values)
+    Qst = utl::zeros(3u); // additive
+    Cst = utl::zeros(3u); // non-additive
+    Fst = utl::zeros(3u); // in allele frequency (true genetic divergence)
 
     // Genome scans of divergence between ecotypes
     // One value per locus (no matter what trait the locus is coding for)
-    varPScan = zeros(nloci);
-    varGScan = zeros(nloci);
-    varAScan = zeros(nloci);
-    varNScan = zeros(nloci);
-    PstScan = zeros(nloci);
-    GstScan = zeros(nloci);
-    QstScan = zeros(nloci);
-    CstScan = zeros(nloci);
-    FstScan = zeros(nloci);
+    varPScan = utl::zeros(nloci);
+    varGScan = utl::zeros(nloci);
+    varAScan = utl::zeros(nloci);
+    varNScan = utl::zeros(nloci);
+    PstScan = utl::zeros(nloci);
+    GstScan = utl::zeros(nloci);
+    QstScan = utl::zeros(nloci);
+    CstScan = utl::zeros(nloci);
+    FstScan = utl::zeros(nloci);
 
     // Variances in heterozygosity
     // Used for genome-wide Fst calculations
     // One value per trait
-    vecDbl varS = zeros(3u);
-    vecDbl varT = zeros(3u);
+    vecDbl varS = utl::zeros(3u);
+    vecDbl varT = utl::zeros(3u);
 
     // Mean genetic values
     // One value per trait per ecotype
-    Matrix meanGenValues = { zeros(3u), zeros(3u), zeros(3u) };
+    Matrix meanGenValues = utl::matzeros(3u, 3u);
 
     // Reset ecotypes
     for (size_t eco = 0u; eco < 2u; ++eco) {
@@ -107,8 +107,8 @@ void MetaPop::analyze(const GenArch &arch)
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 meanPhenotypes[trait][2u] += traitvalues[trait];
                 meanGenValues[trait][2u] += traitvalues[trait];
-                pheVariances[trait][2u] += sqr(traitvalues[trait]);
-                genVariances[trait][2u] += sqr(traitvalues[trait]);
+                pheVariances[trait][2u] += utl::sqr(traitvalues[trait]);
+                genVariances[trait][2u] += utl::sqr(traitvalues[trait]);
             }
         }
     }
@@ -120,8 +120,8 @@ void MetaPop::analyze(const GenArch &arch)
         meanGenValues[trait][2u] /= metapopsize;
         pheVariances[trait][2u] /= metapopsize;
         genVariances[trait][2u] /= metapopsize;
-        pheVariances[trait][2u] -= sqr(meanPhenotypes[trait][2u]);        
-        genVariances[trait][2u] -= sqr(meanGenValues[trait][2u]);
+        pheVariances[trait][2u] -= utl::sqr(meanPhenotypes[trait][2u]);
+        genVariances[trait][2u] -= utl::sqr(meanGenValues[trait][2u]);
 
         if (pheVariances[trait][2u] < tiny) pheVariances[trait][2u] = 0.0;
         if (genVariances[trait][2u] < tiny) genVariances[trait][2u] = 0.0;
@@ -149,8 +149,8 @@ void MetaPop::analyze(const GenArch &arch)
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 meanPhenotypes[trait][eco] += traitvalues[trait];
                 meanGenValues[trait][eco] += genvalues[trait];
-                pheVariances[trait][eco] += sqr(traitvalues[trait]);
-                genVariances[trait][eco] += sqr(genvalues[trait]);
+                pheVariances[trait][eco] += utl::sqr(traitvalues[trait]);
+                genVariances[trait][eco] += utl::sqr(genvalues[trait]);
             }
         }
     }
@@ -169,8 +169,8 @@ void MetaPop::analyze(const GenArch &arch)
                 genVariances[trait][eco] /= census[eco];
             }
 
-            pheVariances[trait][eco] -= sqr(meanPhenotypes[trait][eco]);
-            genVariances[trait][eco] -= sqr(meanGenValues[trait][eco]);
+            pheVariances[trait][eco] -= utl::sqr(meanPhenotypes[trait][eco]);
+            genVariances[trait][eco] -= utl::sqr(meanGenValues[trait][eco]);
 
             if (pheVariances[trait][eco] < tiny) pheVariances[trait][eco] = 0.0;
             if (genVariances[trait][eco] < tiny) genVariances[trait][eco] = 0.0;
@@ -181,9 +181,9 @@ void MetaPop::analyze(const GenArch &arch)
     }
 
     // Locus-specific environmental variance
-    vecDbl locusVarE = zeros(3u);
+    vecDbl locusVarE = utl::zeros(3u);
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        locusVarE[trait] = sqr(arch.scaleE[trait]) / nloci;
+        locusVarE[trait] = utl::sqr(arch.scaleE[trait]) / nloci;
         if (locusVarE[trait] < tiny) locusVarE[trait] = 0.0;
         assert(locusVarE[trait] >= 0.0);
     }
@@ -197,11 +197,11 @@ void MetaPop::analyze(const GenArch &arch)
         // Genetic values and allele counts
         double meanAlleleCount = 0.0;
         double varAlleleCount = 0.0;
-        vecDbl locusMeanG = zeros(3u);
-        vecDbl locusVarG = zeros(3u);
+        vecDbl locusMeanG = utl::zeros(3u);
+        vecDbl locusVarG = utl::zeros(3u);
         double covGenValueAlleleCount = 0.0;
-        MatUns genotypeCounts = { uzeros(3u), uzeros(3u), uzeros(3u) };
-        vecDbl meanGenotypeGenValues = zeros(3u);
+        MatUns genotypeCounts = utl::matuzeros(3u, 3u);
+        vecDbl meanGenotypeGenValues = utl::zeros(3u);
 
         for (size_t eco = 0u; eco < 2u; ++eco) {
             for (auto ind : ecotypes[eco]) {
@@ -210,7 +210,7 @@ void MetaPop::analyze(const GenArch &arch)
                 double genvalue = ind->getLocusValue(locus);
 
                 meanAlleleCount += zyg;
-                varAlleleCount += sqr(zyg);
+                varAlleleCount += utl::sqr(zyg);
 
                 ++genotypeCounts[2u][zyg];
                 ++genotypeCounts[eco][zyg];
@@ -218,8 +218,8 @@ void MetaPop::analyze(const GenArch &arch)
 
                 locusMeanG[eco] += genvalue;
                 locusMeanG[2u] += genvalue;
-                locusVarG[eco] += sqr(genvalue);
-                locusVarG[2u] += sqr(genvalue);
+                locusVarG[eco] += utl::sqr(genvalue);
+                locusVarG[2u] += utl::sqr(genvalue);
                 covGenValueAlleleCount += zyg * genvalue;
 
             }
@@ -229,7 +229,7 @@ void MetaPop::analyze(const GenArch &arch)
         // counts
         meanAlleleCount /= metapopsize;
         varAlleleCount /= metapopsize;
-        varAlleleCount -= sqr(meanAlleleCount);
+        varAlleleCount -= utl::sqr(meanAlleleCount);
 
         if (varAlleleCount < tiny) varAlleleCount = 0.0;
         assert(varAlleleCount >= 0.0);
@@ -240,7 +240,7 @@ void MetaPop::analyze(const GenArch &arch)
                 locusMeanG[eco] /= n;
                 locusVarG[eco] /= n;
             }
-            locusVarG[eco] -= sqr(locusMeanG[eco]);
+            locusVarG[eco] -= utl::sqr(locusMeanG[eco]);
             if (locusVarG[eco] < tiny) locusVarG[eco] = 0.0;
 
             assert(locusVarG[eco] >= 0.0);
@@ -253,14 +253,14 @@ void MetaPop::analyze(const GenArch &arch)
         }
 
         // Population-wide additive variance
-        vecDbl locusVarA = zeros(3u);
+        vecDbl locusVarA = utl::zeros(3u);
         double avgMutEffect;
         if (!varAlleleCount) {
             avgMutEffect = 0.0;
             locusVarA[2u] = 0.0;
         } else {
             avgMutEffect = covGenValueAlleleCount / varAlleleCount;
-            locusVarA[2u] = sqr(avgMutEffect) * varAlleleCount;
+            locusVarA[2u] = utl::sqr(avgMutEffect) * varAlleleCount;
             if (locusVarA[2u] < tiny) locusVarA[2u] = 0.0;
         }
 
@@ -269,9 +269,9 @@ void MetaPop::analyze(const GenArch &arch)
         addVariances[trait][2u] += locusVarA[2u];
 
         // Population-wide breeding values and dominance variance
-        vecDbl domDeviations = zeros(3u);
-        vecDbl breedingValues = zeros(3u);
-        vecDbl addExpectations = zeros(3u);
+        vecDbl domDeviations = utl::zeros(3u);
+        vecDbl breedingValues = utl::zeros(3u);
+        vecDbl addExpectations = utl::zeros(3u);
         double locusVarD = 0.0;
         for (size_t zyg = 0u; zyg < 3u; ++zyg) {
             breedingValues[zyg] = avgMutEffect;
@@ -281,7 +281,7 @@ void MetaPop::analyze(const GenArch &arch)
             domDeviations[zyg] = meanGenotypeGenValues[zyg];
             domDeviations[zyg] -= addExpectations[zyg];
             double genotypeSSDeviation = genotypeCounts[2u][zyg];
-            genotypeSSDeviation += sqr(domDeviations[zyg]);
+            genotypeSSDeviation += utl::sqr(domDeviations[zyg]);
             locusVarD += genotypeSSDeviation;
         }
         locusVarD /= metapopsize;
@@ -292,8 +292,8 @@ void MetaPop::analyze(const GenArch &arch)
         // Deviations from additivity, and within-ecotype additive and
         // non-additive variance
         double locusVarI = 0.0;
-        vecDbl locusMeanDev = zeros(2u); // within-ecotype
-        vecDbl locusVarN = zeros(3u);
+        vecDbl locusMeanDev = utl::zeros(2u); // within-ecotype
+        vecDbl locusVarN = utl::zeros(3u);
         for (size_t eco = 0u; eco < 2u; ++eco) {
 
             // Interaction deviations and within-ecotype
@@ -305,18 +305,18 @@ void MetaPop::analyze(const GenArch &arch)
 
                 double intDeviation = genvalue;
                 intDeviation -= meanGenotypeGenValues[zyg];
-                locusVarI += sqr(intDeviation);
+                locusVarI += utl::sqr(intDeviation);
 
                 double totDeviation = genvalue - addExpectations[zyg];
                 locusMeanDev[eco] += totDeviation;
-                locusVarN[eco] += sqr(totDeviation);                
+                locusVarN[eco] += utl::sqr(totDeviation);
 
             }
             if (census[eco]) {
                 locusMeanDev[eco] /= census[eco];
                 locusVarN[eco] /= census[eco];
             }
-            locusVarN[eco] -= sqr(locusMeanDev[eco]);
+            locusVarN[eco] -= utl::sqr(locusMeanDev[eco]);
             if (locusVarN[eco] < tiny) locusVarN[eco] = 0.0;
 
             assert(locusVarN[eco] >= 0.0);
@@ -329,13 +329,13 @@ void MetaPop::analyze(const GenArch &arch)
                 size_t n = genotypeCounts[eco][zyg];
                 double brv = breedingValues[zyg];
                 meanBreed += n * brv;
-                meanBreedSq += n * sqr(brv);
+                meanBreedSq += n * utl::sqr(brv);
             }
             if (census[eco]) {
                 meanBreed /= census[eco];
                 meanBreedSq /= census[eco];
             }
-            locusVarA[eco] = meanBreedSq - sqr(meanBreed);
+            locusVarA[eco] = meanBreedSq - utl::sqr(meanBreed);
             if (locusVarA[eco] < tiny) locusVarA[eco] = 0.0;
             assert(locusVarA[eco] >= 0.0);
             addVariances[trait][eco] += locusVarA[eco];
@@ -355,7 +355,7 @@ void MetaPop::analyze(const GenArch &arch)
         nadVariances[trait][2u] += locusVarN[2u];
 
         // Phenotypic variance
-        vecDbl locusVarP = zeros(3u);
+        vecDbl locusVarP = utl::zeros(3u);
         for (size_t eco = 0u; eco < 3u; ++eco) {
             locusVarP[eco] = locusVarG[eco] + locusVarE[trait];
             if (locusVarP[eco] < tiny) locusVarP[eco] = 0.0;
@@ -396,7 +396,7 @@ void MetaPop::analyze(const GenArch &arch)
             if (alleleFreq > 1.0 - tiny) alleleFreq = 1.0;
             assert(alleleFreq >= 0.0);
             assert(alleleFreq <= 1.0);
-            varS[trait] += census[eco] * sqr(alleleFreq);
+            varS[trait] += census[eco] * utl::sqr(alleleFreq);
             double heterozFreq = 2.0 * alleleFreq * (1.0 - alleleFreq);
             if (heterozFreq < tiny) heterozFreq = 0.0;
             if (heterozFreq > 1.0 - tiny) heterozFreq = 1.0;
@@ -419,7 +419,7 @@ void MetaPop::analyze(const GenArch &arch)
         if (alleleFreq > 1.0 - tiny) alleleFreq = 1.0;
         assert(alleleFreq >= 0.0);
         assert(alleleFreq <= 1.0);
-        varS[trait] -= sqr(alleleFreq);
+        varS[trait] -= utl::sqr(alleleFreq);
         varT[trait] += alleleFreq * (1.0 - alleleFreq);
         double Htotal = meanAlleleCount * (1.0 - 0.5 * meanAlleleCount);
         if (Htotal < tiny) Htotal = 0.0;
@@ -489,7 +489,7 @@ void MetaPop::analyze(const GenArch &arch)
 
 }
 
-void MetaPop::save(StreamBag &out)
+void MetaPop::save(Output &out)
 {
     for (size_t f = 0u; f < out.names.size(); ++f) {
         buffer.write(buffer.fields[f], out.files[f]);
@@ -501,7 +501,7 @@ int MetaPop::evolve(const GenArch &arch)
     bool isBurnin = true;
     int t = - tburnin;
 
-    StreamBag out;
+    Output out;
     if (record) out.openAll();
 
     for (; t < tmax; ++t) {
@@ -553,15 +553,15 @@ int MetaPop::evolve(const GenArch &arch)
 void MetaPop::loadBuffer(const size_t &t)
 {
     buffer.flush();
-    buffer.add({ size2dbl(t) });
+    buffer.add({ utl::size2dbl(t) });
 
     // Census
-    buffer.add({ size2dbl(ecotypes[0u].size()) });
-    buffer.add({ size2dbl(ecotypes[1u].size()) });
-    buffer.add({ size2dbl(pops[0u]->getPopSize()) });
-    buffer.add({ size2dbl(pops[1u]->getPopSize()) });
-    buffer.add({ size2dbl(pops[0u]->getNFemales()) });
-    buffer.add({ size2dbl(pops[1u]->getNFemales()) });
+    buffer.add({ utl::size2dbl(ecotypes[0u].size()) });
+    buffer.add({ utl::size2dbl(ecotypes[1u].size()) });
+    buffer.add({ utl::size2dbl(pops[0u]->getPopSize()) });
+    buffer.add({ utl::size2dbl(pops[1u]->getPopSize()) });
+    buffer.add({ utl::size2dbl(pops[0u]->getNFemales()) });
+    buffer.add({ utl::size2dbl(pops[1u]->getNFemales()) });
 
     // Resources in each habitat
     buffer.add({ pops[0u]->getResources()[0u] });
@@ -619,7 +619,7 @@ double MetaPop::getSpatialIsolation()
     const double tiny = 1E-15;
 
     // Ecotype-by-habitat table
-    MatUns n = { uzeros(2u), uzeros(2u) };
+    MatUns n = { utl::uzeros(2u), utl::uzeros(2u) };
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];
@@ -674,7 +674,7 @@ double MetaPop::getMatingIsolation()
         return 0.0;
 
     // Table of crossings
-    MatUns m = { uzeros(2u), uzeros(2u) };
+    MatUns m = { utl::uzeros(2u), utl::uzeros(2u) };
 
     // Make a vector with all males of the metapop
     Crowd allMales;

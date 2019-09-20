@@ -1,5 +1,5 @@
 #include "library/MetaPop.h"
-#include "library/utils.h"
+#include "library/Utilities.h"
 #include "tests/PopFixture.h"
 #include <boost/test/unit_test.hpp>
 
@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     std::cout << "Testing an immortal population...\n";
 
-    ParameterSet pars;
+    Param pars;
     pars.setTEndSim(100u);
     pars.setTSave(1u);
     pars.setInitialPopSize(10u);
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 
     GenArch arch = GenArch(pars);
     const size_t n0 = pars.getInitialPopSize();
-    MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+    MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     std::cout << "Testing progressive extinction...\n";
 
-    ParameterSet pars;
+    Param pars;
     pars.setTEndSim(100u);
     pars.setTSave(1u);
     pars.setInitialPopSize(10u);
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 
     GenArch arch = GenArch(pars);
     const size_t n0 = pars.getInitialPopSize();
-    MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+    MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);
 
     BOOST_CHECK(t < pars.getTEndSim());
@@ -61,7 +61,7 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full ecological isolation...\n";
-        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
         meta.resetEcoTraits(0u, -1.0);
         meta.resetEcoTraits(1u, 1.0);
         meta.analyze(arch);
@@ -74,7 +74,7 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full spatial isolation...\n";
-        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
         meta.resetEcoTraits(0u, -1.0);
         meta.resetEcoTraits(1u, 1.0);
         meta.analyze(arch);
@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing full mating isolation...\n";
-        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
         meta.resetEcoTraits(0u, -1.0);
         meta.resetEcoTraits(1u, 1.0);
         meta.resetMatePrefs(0u, 1.0);
@@ -111,7 +111,7 @@ BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
     {
 
         std::cout << "Testing spatial isolation with only one ecotype...\n";
-        MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
+        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch);
         meta.resetEcotypes(0u, 1u);
         meta.resetEcotypes(1u, 1u);
         meta.analyze(arch);
