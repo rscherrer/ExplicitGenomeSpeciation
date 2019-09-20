@@ -10,7 +10,7 @@ typedef std::discrete_distribution<size_t> Discrete;
 
 /// Function to initialize a population of individuals
 Crowd Population::populate(const size_t &n, const double &ecosel,
- const double &maxfeeding, const GeneticArchitecture &arch)
+ const double &maxfeeding, const GenArch &arch)
 {
 
     Crowd indivs;
@@ -150,7 +150,7 @@ void Population::sortSexes()
 /// Sexual reproduction function
 void Population::reproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
-  const GeneticArchitecture &arch)
+  const GenArch &arch)
 {
 
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
@@ -202,7 +202,7 @@ void Population::reproduce(const double &birth, const double &sexsel,
 
 void Population::burninReproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
-  const GeneticArchitecture &arch)
+  const GenArch &arch)
 {
     if (!(females.size() > 0u) || !(males.size() > 0u)) return;
 

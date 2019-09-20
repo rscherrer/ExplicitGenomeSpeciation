@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     pars.setBirthRate(0.0);
     pars.setMatePreferenceStrength(0.0);
 
-    GeneticArchitecture arch = GeneticArchitecture(pars);
+    GenArch arch = GenArch(pars);
     const size_t n0 = pars.getInitialPopSize();
     MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     pars.setBirthRate(0.0);
     pars.setMatePreferenceStrength(0.0);
 
-    GeneticArchitecture arch = GeneticArchitecture(pars);
+    GenArch arch = GenArch(pars);
     const size_t n0 = pars.getInitialPopSize();
     MetaPop meta = MetaPop(repUns(n0, 2u), pars, arch);
     int t = meta.evolve(arch);

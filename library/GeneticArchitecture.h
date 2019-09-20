@@ -15,11 +15,11 @@
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
 
-class GeneticArchitecture {
+class GenArch {
 
 public:
 
-    GeneticArchitecture(const ParameterSet &pars) :
+    GenArch(const ParameterSet &pars) :
         nChromosomes(pars.getNChromosomes()),
         nLoci(pars.getNLoci()),
         nLociPerTrait(pars.getNLociPerTrait()),

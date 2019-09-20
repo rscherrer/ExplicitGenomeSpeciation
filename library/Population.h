@@ -21,7 +21,7 @@ public:
 
     Population(const size_t &popsize, const double &ecosel,
      const double &maxfeeding, const vecDbl &foodmax, const vecDbl &foodgrowth,
-      const GeneticArchitecture &arch) :
+      const GenArch &arch) :
         individuals(populate(popsize, ecosel, maxfeeding, arch)),
         females({ }),
         males({ }),
@@ -52,9 +52,9 @@ public:
     void consume();
     void burninConsume();
     void reproduce(const double&, const double&, const double&, const double&,
-     const double&, const GeneticArchitecture&);
+     const double&, const GenArch&);
     void burninReproduce(const double&, const double&, const double&,
-     const double&, const double&, const GeneticArchitecture&);
+     const double&, const double&, const GenArch&);
     bool survive(const double&);
 
     void resetEcoTraits(const double&, const double&, const double&);
@@ -66,7 +66,7 @@ private:
 
     // Makers
     Crowd populate(const size_t&, const double&, const double&,
-     const GeneticArchitecture&);
+     const GenArch&);
 
     // The population
     Crowd individuals;

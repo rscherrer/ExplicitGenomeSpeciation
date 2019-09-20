@@ -13,7 +13,7 @@ class Network;
 class Genome;
 
 /// Function to make a vector of interacting partner loci for each trait
-MultiNet GeneticArchitecture::makeNetworks()
+MultiNet GenArch::makeNetworks()
 {
     MultiNet multinet;
 
@@ -45,7 +45,7 @@ MultiNet GeneticArchitecture::makeNetworks()
     return multinet;
 }
 
-vecDbl GeneticArchitecture::makeChromosomes()
+vecDbl GenArch::makeChromosomes()
 {
 
     vecDbl chromends;
@@ -58,7 +58,7 @@ vecDbl GeneticArchitecture::makeChromosomes()
 
 }
 
-vecUns GeneticArchitecture::makeEncodedTraits()
+vecUns GenArch::makeEncodedTraits()
 {
 
     vecUns encoded;
@@ -88,7 +88,7 @@ vecUns GeneticArchitecture::makeEncodedTraits()
 
 
 
-vecDbl GeneticArchitecture::makeLocations()
+vecDbl GenArch::makeLocations()
 {
     vecDbl positions;
 
@@ -108,7 +108,7 @@ vecDbl GeneticArchitecture::makeLocations()
 }
 
 
-vecDbl GeneticArchitecture::makeEffects()
+vecDbl GenArch::makeEffects()
 {
 
     const double shape = effectSizeShape;
@@ -136,7 +136,7 @@ vecDbl GeneticArchitecture::makeEffects()
 }
 
 
-vecDbl GeneticArchitecture::makeDominances()
+vecDbl GenArch::makeDominances()
 {
 
     if (dominanceVariance == 0.0) return zeros(nLoci);

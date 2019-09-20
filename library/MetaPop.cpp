@@ -33,7 +33,7 @@ double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
     return xst;
 }
 
-void MetaPop::analyze(const GeneticArchitecture &arch)
+void MetaPop::analyze(const GenArch &arch)
 {
 
     // Reset statistics
@@ -496,7 +496,7 @@ void MetaPop::save(StreamBag &out)
     }
 }
 
-int MetaPop::evolve(const GeneticArchitecture &arch)
+int MetaPop::evolve(const GenArch &arch)
 {
     int t = - tburnin;
     StreamBag out;

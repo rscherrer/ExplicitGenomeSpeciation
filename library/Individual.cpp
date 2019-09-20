@@ -44,7 +44,7 @@ bool Individual::determineSex(const bool &femheterogamy)
 
 }
 
-Diplotype Individual::makeSequence(const GeneticArchitecture &arch, double prob)
+Diplotype Individual::makeSequence(const GenArch &arch, double prob)
 {
 
     Diplotype sequences;
@@ -78,7 +78,7 @@ Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
     return zygote;
 }
 
-void Individual::develop(const GeneticArchitecture &arch)
+void Individual::develop(const GenArch &arch)
 {
 
     // Development reads the genome and computes trait values
@@ -207,7 +207,7 @@ bool Individual::acceptMate(const double &xj, const double &sexsel) const
 }
 
 
-Haplotype Individual::recombine(const GeneticArchitecture &arch)
+Haplotype Individual::recombine(const GenArch &arch)
 {
     Haplotype gamete;
 

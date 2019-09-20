@@ -9,12 +9,12 @@ struct GenFixture {
 
     GenFixture() :
         pars(ParameterSet()),
-        arch(GeneticArchitecture(pars))
+        arch(GenArch(pars))
     {}
     ~GenFixture() {}
 
     ParameterSet pars;
-    GeneticArchitecture arch;
+    GenArch arch;
 
 };
 

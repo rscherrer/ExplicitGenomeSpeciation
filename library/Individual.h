@@ -22,7 +22,7 @@ class Individual {
 public:
 
     /// Spontaneous creation
-    Individual(const GeneticArchitecture &arch, const double &ecosel,
+    Individual(const GenArch &arch, const double &ecosel,
      const double &maxfeeding, const double &snpFreq) :
         genome(makeSequence(arch, snpFreq)),
         transcriptome(zeros(arch.nLoci)),
@@ -43,7 +43,7 @@ public:
 
 
     /// Newborn
-    Individual(const GeneticArchitecture &arch, const Haplotype &egg,
+    Individual(const GenArch &arch, const Haplotype &egg,
      const Haplotype &sperm, const double &ecosel, const double &maxfeeding) :
         genome(fecundate(egg, sperm)),
         transcriptome(zeros(arch.nLoci)),
@@ -78,7 +78,7 @@ public:
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const GeneticArchitecture&);
+    Haplotype recombine(const GenArch&);
     vecDbl calcFeedingRates(const double&, const double&, const double&);
 
     void setEcoTrait(const double&, const double&, const double&);
@@ -90,11 +90,11 @@ public:
 
 private:
 
-    Diplotype makeSequence(const GeneticArchitecture&, double = -1.0);
+    Diplotype makeSequence(const GenArch&, double = -1.0);
     Diplotype fecundate(const Haplotype&, const Haplotype&);
     bool determineSex(const bool&);
 
-    void develop(const GeneticArchitecture&);
+    void develop(const GenArch&);
     bool checkIndividual(const size_t&);
 
     Diplotype genome;

@@ -10,7 +10,7 @@ struct PopFixture
 
     PopFixture() :
         pars(ParameterSet()),
-        arch(GeneticArchitecture(pars)),
+        arch(GenArch(pars)),
         n0(pars.getInitialPopSize()),
         s(pars.getEcoSelCoeff()),
         max(pars.getMaxFeedingRate()),
@@ -21,7 +21,7 @@ struct PopFixture
     ~PopFixture() {}
 
     ParameterSet pars;
-    GeneticArchitecture arch;
+    GenArch arch;
     size_t n0;  // initial population size
     double s;   // ecological selection coefficient
     double max; // maximum feeding rate

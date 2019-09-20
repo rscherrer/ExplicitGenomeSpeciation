@@ -17,7 +17,7 @@ class MetaPop
 public:
 
     MetaPop(const vecUns& popSizes, const ParameterSet &pars,
-     const GeneticArchitecture &arch) :
+     const GenArch &arch) :
         pops({ }),
         popsizes(popSizes),
         dispersal(pars.getDispersalRate()),
@@ -80,8 +80,8 @@ public:
     double getSpatialIsolation();
     double getMatingIsolation();
 
-    int evolve(const GeneticArchitecture&);
-    void analyze(const GeneticArchitecture&);
+    int evolve(const GenArch&);
+    void analyze(const GenArch&);
     void loadBuffer(const size_t &t);
     void save(StreamBag&);
 

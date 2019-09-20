@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     std::cout << "Testing meiosis without recombination...\n";
     ParameterSet pars;
     pars.setNChromosomes(1u); // to avoid free recombination
-    GeneticArchitecture arch = GeneticArchitecture(pars);
+    GenArch arch = GenArch(pars);
     Individual mom = Individual(arch, 1.0, 4.0E-4, 0.0);
     Individual dad = Individual(arch, 1.0, 4.0E-4, 1.0);
     Haplotype egg = mom.recombine(arch);
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE(checkDevelopment)
     std::cout << "Testing developing individual...\n";
     ParameterSet pars;
     pars.setDominanceVariance(0.0);
-    GeneticArchitecture arch = GeneticArchitecture(pars);
+    GenArch arch = GenArch(pars);
     Individual mom = Individual(arch, 1.0, 4.0E-4, 0.0);
     Individual dad = Individual(arch, 1.0, 4.0E-4, 1.0);
     Haplotype egg = mom.recombine(arch);

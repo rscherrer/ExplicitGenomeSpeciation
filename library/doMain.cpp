@@ -40,7 +40,7 @@ int doMain(const vecStrings &args)
         // Random number generator
         rnd::rng.seed(pars.getSeed());
 
-        GeneticArchitecture arch = GeneticArchitecture(pars);
+        GenArch arch = GenArch(pars);
 
         // Create a metapopulation
         const vecUns popsizes = { pars.getInitialPopSize(), 0u };
