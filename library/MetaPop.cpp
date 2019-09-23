@@ -535,7 +535,6 @@ int MetaPop::evolve(const GenArch &arch)
 
         size_t isExtant = 0u;
 
-        // int i = 0;
         for (auto pop : pops) {
             pop->consume();
             pop->reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);

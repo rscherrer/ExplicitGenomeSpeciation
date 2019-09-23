@@ -78,7 +78,7 @@ public:
 private:
 
     // Ecological parameters
-    double maxResourceCapacity     = 1000.0;
+    double maxResourceCapacity     = 100.0;
     double maxResourceGrowth       = 1.0;
     double habitatSymmetry         = 0.0;
     double ecoSelCoeff             = 1.0;
@@ -124,9 +124,9 @@ private:
     double dominanceVariance = 1.0;
 
     // Simulation parameters
-    int  tBurnIn = 100;
-    int  tEndSim = 1000;
-    int  tSave = 100;
+    int  tBurnIn = 10;
+    int  tEndSim = 100;
+    int  tSave = 10;
     bool record = true;
     size_t seed;
 
