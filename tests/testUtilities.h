@@ -48,7 +48,6 @@ void makeValidParamFile()
         << "tBurnIn" << '\t' << 1 << '\n'
         << "tEndSim" << '\t' << 5 << '\n'
         << "tSave" << '\t' << 1 << '\n'
-        << "tiny" << '\t' << 1.0e-12 << '\n'
         << "seed" << '\t' << 42 << '\n'
         << "record" << '\t' << 1 << '\n';
 
@@ -99,8 +98,7 @@ void makeInvalidParamValue()
         << "effectSizeScale" << '\t' << -1.0 << '\n'
         << "interactionWeightShape" << '\t' << -5.0 << '\n'
         << "interactionWeightScale" << '\t' << -1.0 << '\n'
-        << "dominanceVariance" << '\t' << -1.0 << '\n'
-        << "tiny" << '\t' << -1.0e-12 << '\n';
+        << "dominanceVariance" << '\t' << -1.0 << '\n';
 
     out.close();
 }

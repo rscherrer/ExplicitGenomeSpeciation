@@ -56,32 +56,17 @@ public:
     void setDispersalRate(const double &d) { dispersalRate = d; }
     void setSurvivalProb(const double &p) { survivalProb = p; }
     void setBirthRate(const double &b) { birthRate = b; }
-    void setMatePreferenceStrength(const double &alpha)
-    {
-        matePreferenceStrength = alpha;
-    }
+    void setMatePreferenceStrength(const double &);
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
-    void setNLociPerTrait(const vecUns &locipertrait)
-    {
-        nLociPerTrait = locipertrait;
-        nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
-        capEdges();
-    }
-    void setNEdgesPerTrait(const vecUns &edgespertrait)
-    {
-        nEdgesPerTrait = edgespertrait;
-        capEdges();
-    }
+    void setNLociPerTrait(const vecUns&);
+    void setNEdgesPerTrait(const vecUns&);
     void setSkewnesses(const vecDbl &skews) { skewnesses = skews; }
     void setDominanceVariance(const double &x) { dominanceVariance = x; }
     void setNLoci(const size_t &nloci) { nLoci = nloci; }
     void setSeed(const size_t &number) { seed = number; }
     void capEdges();
     void setEffectSizeScale(const double &x) { effectSizeScale = x; }
-    void setInteractionWeightScale(const double &x)
-    {
-        interactionWeightScale = x;
-    }
+    void setInteractionWeightScale(const double&);
 
     /// Makers
     size_t makeDefaultSeed();
@@ -93,9 +78,9 @@ public:
 private:
 
     // Ecological parameters
-    double maxResourceCapacity     = 100.0;
+    double maxResourceCapacity     = 1000.0;
     double maxResourceGrowth       = 1.0;
-    double habitatSymmetry         = 1.0;
+    double habitatSymmetry         = 0.0;
     double ecoSelCoeff             = 1.0;
     size_t initialPopSize          = 100u;
     double dispersalRate           = 1.0e-3;
@@ -121,7 +106,7 @@ private:
     double  mutationRate            = 1.0e-5;
     double  recombinationRate       = 0.01;
     double  genomeLength            = 300.0;
-    double  freqSNP                 = 0.02;
+    double  freqSNP                 = 0.2;
     bool    isFemaleHeterogamy      = false;
 
     // Genotype-phenotype map
@@ -139,12 +124,11 @@ private:
     double dominanceVariance = 1.0;
 
     // Simulation parameters
-    int  tBurnIn                 = 10;
-    int  tEndSim                 = 100;
-    int  tSave                   = 1;
-    double tiny                  = 1.0e-12;
-    size_t seed;
+    int  tBurnIn = 100;
+    int  tEndSim = 1000;
+    int  tSave = 100;
     bool record = true;
+    size_t seed;
 
 };
 

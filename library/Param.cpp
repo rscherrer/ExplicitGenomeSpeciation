@@ -110,7 +110,6 @@ void Param::readParams(std::ifstream &file)
         case _("tBurnIn"): file >> tBurnIn; break;
         case _("tEndSim"): file >> tEndSim; break;
         case _("tSave"): file >> tSave; break;
-        case _("tiny"): file >> tiny; break;
         case _("seed"): file >> seed; break;
         case _("record"): file >> record; break;
 
@@ -205,12 +204,33 @@ void Param::checkParams()
         msg = "Interaction weight scale should be positive";
     if (dominanceVariance < 0.0)
         msg = "Dominance variance should be positive";
-    if (tiny < 0.0)
-        msg = "Tiny should be positive";
 
     if(msg != "No error detected")
         throw std::runtime_error(msg);
 
+}
+
+void Param::setMatePreferenceStrength(const double &alpha)
+{
+    matePreferenceStrength = alpha;
+}
+
+void Param::setNLociPerTrait(const vecUns &locipertrait)
+{
+    nLociPerTrait = locipertrait;
+    nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
+    capEdges();
+}
+
+void Param::setNEdgesPerTrait(const vecUns &edgespertrait)
+{
+    nEdgesPerTrait = edgespertrait;
+    capEdges();
+}
+
+void Param::setInteractionWeightScale(const double &x)
+{
+    interactionWeightScale = x;
 }
 
 
