@@ -2,7 +2,7 @@
 #define EXPLICITGENOMESPECIATION_OUTPUT_H
 
 #include "Buffer.h"
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <iostream>
 #include <fstream>

@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_PARAM_H
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <fstream>
 #include <stddef.h>
