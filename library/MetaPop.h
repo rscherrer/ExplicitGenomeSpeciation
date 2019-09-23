@@ -6,7 +6,7 @@
 #include "Output.h"
 #include "Individual.h"
 #include "Utilities.h"
-#include "types.h"
+#include "Types.h"
 
 typedef std::vector<Deme *> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;

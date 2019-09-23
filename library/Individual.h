@@ -4,7 +4,7 @@
 #include "Param.h"
 #include "GenArch.h"
 #include "Utilities.h"
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <random>
 #include <stddef.h>

@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_UTILITIES_H
 #define EXPLICITGENOMESPECIATION_UTILITIES_H
 
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <cstddef>
 #include <string>

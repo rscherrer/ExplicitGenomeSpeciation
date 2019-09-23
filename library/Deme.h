@@ -5,7 +5,7 @@
 #include "GenArch.h"
 #include "Random.h"
 #include "Utilities.h"
-#include "types.h"
+#include "Types.h"
 #include <stddef.h>
 
 class Individual;

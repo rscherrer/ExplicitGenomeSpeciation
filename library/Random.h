@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_RANDOM_H
 #define EXPLICITGENOMESPECIATION_RANDOM_H
 
-#include "types.h"
+#include "Types.h"
 #include <random>
 #include <vector>
 #include <stddef.h>
