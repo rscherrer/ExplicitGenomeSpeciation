@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_BUFFER_H
 #define EXPLICITGENOMESPECIATION_BUFFER_H
 
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <iostream>
 #include <fstream>

@@ -2,7 +2,7 @@
 #define EXPLICITGENOMESPECIATION_DOMAIN_H
 
 #include "Deme.h"
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <string>
 #include <stddef.h>

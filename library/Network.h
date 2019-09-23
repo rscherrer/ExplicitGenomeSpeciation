@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_NETWORK_H
 #define EXPLICITGENOMESPECIATION_NETWORK_H
 
-#include "types.h"
+#include "Types.h"
 #include <vector>
 #include <cassert>
 #include <stddef.h>
