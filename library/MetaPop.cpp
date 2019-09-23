@@ -508,16 +508,6 @@ int MetaPop::evolve(const GenArch &arch)
 
         std::cout << t << '\n';
 
-        /*
-        if (t == -100)
-            std::cout << getNFemales(0u) << " females and " << getPopSize(0u) - getNFemales(0u) << " males in founder population.\n";
-
-        if (getPopSize(0u) - getNFemales(0u) > 1000) {
-            std::cout << getPopSize(0u) - getNFemales(0u) << " males at t = ";
-            std::cout << t << '\n';
-        }
-        */
-
         // Sort out the sexes
         pops[0u]->sortSexes();
         pops[1u]->sortSexes();
