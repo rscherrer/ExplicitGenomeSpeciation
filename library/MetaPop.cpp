@@ -539,18 +539,6 @@ int MetaPop::evolve(const GenArch &arch)
         for (auto pop : pops) {
             pop->consume();
             pop->reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);
-            /*
-            if (t == -60 || t == -59 || t == -58) {
-                if (i == 0) {
-                    std::cout << getNOffspring(0u) << '\t';
-                    std::cout << getNFemales(0u) << '\t';
-                    std::cout << getPopSize(0u) << '\t';
-                    std::cout << getPopSize(0u) - getNFemales(0u) << '\t';
-                    std::cout << getResource(0u, 0u) << '\n';
-                }
-            }
-            ++i;
-            */
             isExtant += pop->survive(survival);
         }
 
