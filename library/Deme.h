@@ -7,6 +7,7 @@
 #include "Utilities.h"
 #include "Types.h"
 #include <stddef.h>
+#include <iostream>
 
 class Individual;
 
@@ -43,7 +44,7 @@ public:
     size_t getNOffspring() const { return offspring.size(); }
     size_t getNFemales() const { return females.size(); }
     size_t getNMales() const { return males.size(); }
-    vecDbl getResources() const { return resources; }
+    double getResource(const size_t &r) const { return resources[r]; }
     PInd getInd(const size_t &i) const { return individuals[i]; }
 
     // Life cycle
@@ -51,11 +52,8 @@ public:
     Crowd emigrate(const double& = 0.01);
     void immigrate(const Crowd&);
     void consume();
-    void burninConsume();
     void reproduce(const double&, const double&, const double&, const double&,
      const double&, const GenArch&);
-    void burninReproduce(const double&, const double&, const double&,
-     const double&, const double&, const GenArch&);
     bool survive(const double&);
     void exitBurnIn();
 

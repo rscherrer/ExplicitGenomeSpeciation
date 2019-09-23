@@ -36,6 +36,12 @@ vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
 
 bool Individual::determineSex(const bool &femheterogamy)
 {
+
+    // The first locus determines the sex
+    // If the individual is heterozygous
+    // and if females are the heterozygous sex, then ZW
+    // otherwise, if males are the heterozygous sex, then XY
+
     const bool hetero = genome[0u][0u] != genome[1u][0u];
     const bool isZW = hetero && femheterogamy;
     const bool isXX = !hetero && !femheterogamy;
@@ -221,7 +227,7 @@ Haplotype Individual::recombine(const GenArch &arch)
     // The rate of recombination can be provided
     // A rate of 3 means three crossovers are expected across the genome
     // which means that the genome size is equivalent to 300cM
-    // 1cM = 1% change recombination
+    // 1cM = 1% chance recombination
     // But wait, there is free recombination between the chromosomes!
 
     size_t locus = 0u;
@@ -231,11 +237,11 @@ Haplotype Individual::recombine(const GenArch &arch)
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
-    size_t hap = 0u;
+    size_t hap = rnd::bernoulli(0.5);
 
     while (locus < arch.nLoci) {
 
-        // What is the next thing coming up next?
+        // What is the thing coming up next?
         vecDbl closest = { crossover, chromend, position };
         size_t next = utl::argmin(closest);
 

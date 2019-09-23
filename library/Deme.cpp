@@ -101,36 +101,15 @@ void Deme::consume()
     assert(resources[1u] >= 0.0);
 
     // Split the resource among the individuals
-    for (auto ind : individuals)
+    for (auto ind : individuals) {
         ind->feed(resources);
+    }
 
 }
 
 void Deme::exitBurnIn()
 {
     burnin = false;
-}
-
-void Deme::burninConsume()
-{
-    // Calculate the total amount of food consumed
-    double consumed = 0.0;
-    for (auto ind : individuals) {
-        double rate = ind->getFeedingRates()[0u];
-        consumed += rate;
-    }
-
-    assert(consumed >= 0.0);
-
-    // Update the resource equilibrium state
-    resources[0u] = capacity[0u] * (1.0 - consumed / replenish[0u]);
-    resources[1u] = 0.0;
-
-    assert(resources[0u] >= 0.0);
-
-    // Split the resource among the individuals
-    for (auto ind : individuals)
-        ind->feed(resources);
 }
 
 void Deme::sortSexes()
@@ -160,7 +139,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     for (auto male : males) {
         double fit = male->getFitness();
         if (burnin) fit *= exp(- ecosel * utl::sqr(male->getMatePref()));
-        successes.push_back(male->getFitness());
+        successes.push_back(fit);
     }
 
     assert(successes.size() == males.size());
@@ -175,7 +154,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
 
         double fecundity = birth * mom->getFitness();
         if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom->getMatePref()));
-        size_t nOffspring = rnd::poisson(birth * mom->getFitness());
+        size_t nOffspring = rnd::poisson(fecundity);
 
         Haplotype egg = mom->recombine(arch);
         mom->mutate(egg);
@@ -203,63 +182,6 @@ void Deme::reproduce(const double &birth, const double &sexsel,
         }
     }
 }
-
-
-void Deme::burninReproduce(const double &birth, const double &sexsel,
- const double &cost, const double &ecosel, const double &maxfeeding,
-  const GenArch &arch)
-{
-    if (!(females.size() > 0u) || !(males.size() > 0u)) return;
-
-    // Prepare a weighted lottery based on male mating successes
-    vecDbl successes;
-    for (auto male : males) {
-        double burninFactor = exp(- ecosel * utl::sqr(male->getMatePref()));
-        double success = male->getFitness() * burninFactor;
-        successes.push_back(success);
-    }
-
-    assert(successes.size() == males.size());
-
-    Discrete maleMarket(successes.begin(), successes.end());
-
-    // Sample the duration of the mating season this year
-    const size_t seasonEnd = rnd::geometric(cost);
-
-    // Every mom gets a chance to produce babies
-    for (auto mom : females) {
-
-        double burninFactor = - ecosel * utl::sqr(mom->getMatePref());
-        double success = mom->getFitness() * burninFactor;
-        size_t nOffspring = rnd::poisson(birth * success);
-
-        Haplotype egg = mom->recombine(arch);
-        mom->mutate(egg);
-
-        size_t time = 0u;
-
-        // The mating season begins...
-        while (nOffspring && time < seasonEnd) {
-
-            // Sample a male
-            const size_t encounter = maleMarket(rnd::rng);
-            assert(encounter < males.size());
-            auto dad = males[encounter];
-
-            Haplotype sperm = dad->recombine(arch);
-            dad->mutate(sperm);
-
-            if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
-                auto off = new Individual(arch, egg, sperm, ecosel, maxfeeding);
-                offspring.push_back(off);
-                --nOffspring;
-            }
-
-            ++time;
-        }
-    }
-}
-
 
 
 /// Function to make it to the next generation

@@ -39,6 +39,7 @@ int doMain(const vecStrings &args)
 
         // Random number generator
         rnd::rng.seed(pars.getSeed());
+        rnd::rng.seed(42u);
 
         GenArch arch = GenArch(pars);
 

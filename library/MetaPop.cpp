@@ -502,9 +502,21 @@ int MetaPop::evolve(const GenArch &arch)
     int t = - tburnin;
 
     Output out;
-    if (record) out.openAll();
+    if (record) out.openAll();    
 
     for (; t < tmax; ++t) {
+
+        std::cout << t << '\n';
+
+        /*
+        if (t == -100)
+            std::cout << getNFemales(0u) << " females and " << getPopSize(0u) - getNFemales(0u) << " males in founder population.\n";
+
+        if (getPopSize(0u) - getNFemales(0u) > 1000) {
+            std::cout << getPopSize(0u) - getNFemales(0u) << " males at t = ";
+            std::cout << t << '\n';
+        }
+        */
 
         // Sort out the sexes
         pops[0u]->sortSexes();
@@ -533,9 +545,22 @@ int MetaPop::evolve(const GenArch &arch)
 
         size_t isExtant = 0u;
 
+        // int i = 0;
         for (auto pop : pops) {
             pop->consume();
             pop->reproduce(birth, sexsel, matingcost, ecosel, maxfeed, arch);
+            /*
+            if (t == -60 || t == -59 || t == -58) {
+                if (i == 0) {
+                    std::cout << getNOffspring(0u) << '\t';
+                    std::cout << getNFemales(0u) << '\t';
+                    std::cout << getPopSize(0u) << '\t';
+                    std::cout << getPopSize(0u) - getNFemales(0u) << '\t';
+                    std::cout << getResource(0u, 0u) << '\n';
+                }
+            }
+            ++i;
+            */
             isExtant += pop->survive(survival);
         }
 
@@ -564,10 +589,10 @@ void MetaPop::loadBuffer(const size_t &t)
     buffer.add({ utl::size2dbl(pops[1u]->getNFemales()) });
 
     // Resources in each habitat
-    buffer.add({ pops[0u]->getResources()[0u] });
-    buffer.add({ pops[1u]->getResources()[0u] });
-    buffer.add({ pops[0u]->getResources()[1u] });
-    buffer.add({ pops[1u]->getResources()[1u] });
+    buffer.add({ pops[0u]->getResource(0u) });
+    buffer.add({ pops[1u]->getResource(0u) });
+    buffer.add({ pops[0u]->getResource(1u) });
+    buffer.add({ pops[1u]->getResource(1u) });
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -712,4 +737,14 @@ double MetaPop::getMatingIsolation()
 
     return ri;
 
+}
+
+size_t MetaPop::getNOffspring(const size_t &p) const
+{
+    return pops[p]->getNOffspring();
+}
+
+double MetaPop::getResource(const size_t &p, const size_t &r) const
+{
+    return pops[p]->getResource(r);
 }

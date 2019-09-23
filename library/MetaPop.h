@@ -61,9 +61,10 @@ public:
         FstScan(utl::zeros(pars.getNLoci()))
     {
         // Create the demes
-        for (int p = 0; p < 2; ++p) {
-            for (int res = 0; res < 2; ++res) {
-                resources[p][res] = maxresources * fabs(p - res) * symmetry;
+        for (size_t p = 0u; p < 2u; ++p) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[p][res] = maxresources;
+                if (p != res) resources[p][res] *= symmetry;
                 replenish[p][res] = maxreplenish;
             }
             const size_t n = popsizes[p];
@@ -73,9 +74,13 @@ public:
             pops.push_back(new Deme(n, ecosel, max, k, r, arch, true));
         }
     }
+
     ~MetaPop() {}
 
     size_t getPopSize(const size_t &p) const { return pops[p]->getPopSize(); }
+    size_t getNFemales(const size_t &p) const { return pops[p]->getNFemales(); }
+    size_t getNOffspring(const size_t&) const;
+    double getResource(const size_t&, const size_t&) const;
     double getEcoIsolation();
     double getSpatialIsolation();
     double getMatingIsolation();

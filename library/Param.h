@@ -106,7 +106,7 @@ private:
     double  mutationRate            = 1.0e-5;
     double  recombinationRate       = 0.01;
     double  genomeLength            = 300.0;
-    double  freqSNP                 = 0.2;
+    double  freqSNP                 = 0.5;
     bool    isFemaleHeterogamy      = false;
 
     // Genotype-phenotype map
