@@ -7,4 +7,36 @@ develop|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciatio
 
 An individual based simulation of adaptive speciation with explicit genome, additive and non-additive genetic effects.
 
-Note: module load Qt5 to compile on Peregrine cluster
+# Compile
+
+module load Qt5
+qmake EGS.pro
+make --silent release
+
+# Run
+
+./EGS
+or
+./EGS parameters.txt
+
+# Submit to Peregrine
+
+./launcher.sh
+
+# Install Python dependencies
+
+./pystaller.sh # if needed, to install Python dependencies
+
+# Read single files
+
+./reader.py <variable_name>.dat
+or 
+python reader.py <variable_name>.dat
+
+# Plot single files
+
+./plotter.py <variable_name>.dat
+or 
+python plotter.py <variable_name>.dat
+
+
