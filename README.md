@@ -6,3 +6,5 @@ master|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 develop|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=develop)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=develop)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/develop)
 
 An individual based simulation of adaptive speciation with explicit genome, additive and non-additive genetic effects.
+
+Note: module load Qt5 to compile on Peregrine cluster
