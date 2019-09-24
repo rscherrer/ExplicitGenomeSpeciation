@@ -3,4 +3,4 @@
 #SBATCH --mem=10Gb
 #SBATCH --partition=short
 
-./EGS
+./EGS parameters.txt
