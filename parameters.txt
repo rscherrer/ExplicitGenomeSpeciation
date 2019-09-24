@@ -1,0 +1,37 @@
+maxResourceCapacity 5000.0
+maxResourceGrowth 1.0
+habitatSymmetry 0.0
+ecoSelCoeff 1.0
+initialPopSize 100
+dispersalRate 0.001
+birthRate 4.0
+survivalProb 0.8
+matePreferenceStrength 10.0
+mateEvalutationCost 0.01
+maxFeedingRate 0.0004
+nEcoLoci 100
+nMatLoci 100
+nNtrLoci 100
+nEcoEdges 50
+nMatEdges 50
+nNtrEdges 50
+nChromosomes 3
+mutationRate 0.001
+recombinationRate 0.01
+freqSNP 0.5
+isFemaleHeterogamy 0
+scaleA 1.0 1.0 1.0
+scaleD 0.0 0.0 0.0
+scaleI 0.0 0.0 0.0
+scaleE 0.0 0.0 0.0
+skewnesses 1.0 1.0 1.0
+effectSizeShape 2.0
+effectSizeScale 1.0
+interactionWeightShape 5.0
+interactionWeightScale 1.0
+dominanceVariance 1.0
+tBurnIn 1000
+tEndSim 100000
+tSave 100
+record 1
+seed 42
