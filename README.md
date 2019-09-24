@@ -29,6 +29,12 @@ or
 ./launcher.sh
 ```
 
+# Check job progression
+
+```bash
+./checker.sh
+```
+
 # Install Python dependencies
 
 ```bash
