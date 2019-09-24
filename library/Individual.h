@@ -30,9 +30,9 @@ public:
         isFemale(determineSex(arch.femHeterogamy)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(traitvalues[0u]),
-        matepref(traitvalues[1u]),
-        neutral(traitvalues[2u]),
+        ecotrait(0.0),
+        matepref(0.0),
+        neutrait(0.0),
         fitness(1.0),
         feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
         ecotype(0u)
@@ -51,9 +51,9 @@ public:
         isFemale(determineSex(arch.femHeterogamy)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(traitvalues[0u]),
-        matepref(traitvalues[1u]),
-        neutral(traitvalues[2u]),
+        ecotrait(0.0),
+        matepref(0.0),
+        neutrait(0.0),
         fitness(1.0),
         feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
         ecotype(0u)
@@ -67,7 +67,7 @@ public:
     bool getGender() const { return isFemale; }
     double getEcoTrait() const { return ecotrait; }
     double getMatePref() const { return matepref; }
-    double getNeutral() const { return neutral; }
+    double getNeutral() const { return neutrait; }
     double getFitness() const { return fitness; }
     vecDbl getTraits() const { return traitvalues; }
     vecDbl getFeedingRates() const { return feedingRates; }
@@ -84,6 +84,7 @@ public:
     void setEcoTrait(const double&, const double&, const double&);
     void setMatePref(const double&);
     void setEcotype(const double&);
+    void resetEcotype(const size_t &e) { ecotype = e; }
     void setGender(const bool&);
     void feed(const vecDbl&);
     void mutate(Haplotype&, const double& = 1.0e-5);
@@ -105,7 +106,7 @@ private:
     vecDbl traitvalues;
     double ecotrait;
     double matepref;
-    double neutral;    
+    double neutrait;
     double fitness;
     vecDbl feedingRates;
     size_t ecotype;

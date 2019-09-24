@@ -22,7 +22,7 @@ int doMain(const vecStrings &args)
         Param pars;
 
         // Read parameters from a file if supplied
-        if (args.size() == 2u) {
+        if (args.size() == 2u) {            
 
             std::string filename = args[1u];
             std::ifstream inputfile;
@@ -32,14 +32,13 @@ int doMain(const vecStrings &args)
                 throw std::runtime_error(msg + filename);
             }
 
-            pars.readParams(inputfile);
+            pars.readParams(inputfile);            
             inputfile.close();
 
         }
 
         // Random number generator
         rnd::rng.seed(pars.getSeed());
-        rnd::rng.seed(42u);
 
         GenArch arch = GenArch(pars);
 

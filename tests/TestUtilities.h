@@ -32,8 +32,6 @@ void makeValidParamFile()
         << "recombinationRate" << '\t' << 0.01 << '\n'
         << "freqSNP" << '\t' << 0.02 << '\n'
         << "isFemaleHeterogamy" << '\t' << 0 << '\n'
-        // << "isGeneticArchitecture" << '\t' << 0 << '\n'
-        // << "architectureFileName" << '\t' << "architecture.txt" << '\n'
         << "scaleA" << '\t' << 1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
         << "scaleD" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
         << "scaleI" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
@@ -80,6 +78,7 @@ void makeInvalidParamValue()
         << "survivalProb" << '\t' << -0.8 << '\n'
         << "matePreferenceStrength" << '\t' << -10.0 << '\n'
         << "mateEvalutationCost" << '\t' << -0.01 << '\n'
+        << "maxFeedingRate" << '\t' << -1.0 << '\n'
         << "nEcoLoci" << '\t' << 1 << '\n'
         << "nMatLoci" << '\t' << 1 << '\n'
         << "nNtrLoci" << '\t' << 1 << '\n'
@@ -104,7 +103,7 @@ void makeInvalidParamValue()
 void makeInvalidParamValue2()
 {
     std::ofstream out;
-    out.open("invalid_paramvalue_test.txt");
+    out.open("invalid_paramvalue_test2.txt");
     if (!out.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
@@ -116,7 +115,5 @@ void makeInvalidParamValue2()
 
     out.close();
 }
-
-
 
 #endif

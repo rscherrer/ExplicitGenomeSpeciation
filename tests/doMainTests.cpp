@@ -50,8 +50,8 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
 {
     std::cout << "Testing invalid parameter value...\n";
-    makeInvalidParamValue();
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramvalue_test.txt" }), 1);
+    makeInvalidParamValue();    
+    BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test.txt"}), 1);
     makeInvalidParamValue2();
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramvalue_test.txt" }), 1);
+    BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test2.txt"}), 1);
 }

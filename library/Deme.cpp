@@ -236,12 +236,14 @@ void Deme::resetMatePrefs(const double &value)
 
 void Deme::resetGenders(const bool &sex)
 {
-    for (auto ind : individuals)
-        ind->setGender(sex);
+    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
+        std::cout << sex << '\t';
+        individuals[ind]->setGender(sex);
+    }
 }
 
 void Deme::resetEcotypes(const size_t &ecotype)
 {
-    for (auto ind : individuals)
-        ind->setEcotype(ecotype);
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        individuals[ind]->resetEcotype(ecotype);
 }

@@ -22,6 +22,7 @@ void MetaPop::resetEcotypes(const size_t &p, const size_t &e)
 void MetaPop::resetGenders(const size_t &p, const bool &sex)
 {
     pops[p]->resetGenders(sex);
+    pops[p]->sortSexes();
 }
 
 double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
@@ -506,7 +507,7 @@ int MetaPop::evolve(const GenArch &arch)
 
     for (; t < tmax; ++t) {
 
-        std::cout << t << '\n';
+        //std::cout << "t = " << t << '\n';
 
         // Sort out the sexes
         pops[0u]->sortSexes();
@@ -668,6 +669,7 @@ double MetaPop::getMatingIsolation()
     size_t nmales = 0u;
 
     for (size_t p = 0u; p < 2u; ++p) {
+        pops[p]->sortSexes();
         nfemales += pops[p]->getNFemales();
         nmales += pops[p]->getNMales();
     }

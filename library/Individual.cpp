@@ -162,6 +162,10 @@ void Individual::develop(const GenArch &arch)
         const double envnoise = rnd::normal(0.0, arch.scaleE[trait]);
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
+
+    ecotrait = traitvalues[0u];
+    matepref = traitvalues[1u];
+    neutrait = traitvalues[2u];
 }
 
 

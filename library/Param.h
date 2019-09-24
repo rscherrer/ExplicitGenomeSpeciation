@@ -72,7 +72,7 @@ public:
     size_t makeDefaultSeed();
 
     /// Checkers
-    void checkParams();
+    std::string checkParams();
 
 
 private:
@@ -80,7 +80,7 @@ private:
     // Ecological parameters
     double maxResourceCapacity     = 100.0;
     double maxResourceGrowth       = 1.0;
-    double habitatSymmetry         = 0.0;
+    double habitatSymmetry         = 1.0;
     double ecoSelCoeff             = 1.0;
     size_t initialPopSize          = 100u;
     double dispersalRate           = 1.0e-3;
