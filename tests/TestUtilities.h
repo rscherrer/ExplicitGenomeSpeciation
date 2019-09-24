@@ -4,7 +4,17 @@
 #include <boost/test/included/unit_test.hpp>
 #include <vector>
 
-void makeValidParamFile()
+namespace tst
+{
+
+    void makeValidParamFile();
+    void makeInvalidParamName();
+    void makeInvalidParamValue();
+    void makeInvalidParamValue2();
+
+}
+
+void tst::makeValidParamFile()
 {
     std::ofstream out;
     out.open("valid_paramfile_test.txt");
@@ -51,7 +61,7 @@ void makeValidParamFile()
     out.close();
 }
 
-void makeInvalidParamName()
+void tst::makeInvalidParamName()
 {
     std::ofstream out;
     out.open("invalid_paramname_test.txt");
@@ -61,7 +71,7 @@ void makeInvalidParamName()
     out.close();
 }
 
-void makeInvalidParamValue()
+void tst::makeInvalidParamValue()
 {
     std::ofstream out;
     out.open("invalid_paramvalue_test.txt");
@@ -100,7 +110,7 @@ void makeInvalidParamValue()
     out.close();
 }
 
-void makeInvalidParamValue2()
+void tst::makeInvalidParamValue2()
 {
     std::ofstream out;
     out.open("invalid_paramvalue_test2.txt");

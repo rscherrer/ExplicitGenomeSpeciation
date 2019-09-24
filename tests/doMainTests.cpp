@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
 {
     std::clog << "Testing invalid parameter file name...\n";
-    makeValidParamFile();
+    tst::makeValidParamFile();
     BOOST_CHECK_EQUAL(doMain({ "EGS_test", "nonsense.txt" }), 1);
 }
 
@@ -43,15 +43,15 @@ BOOST_AUTO_TEST_CASE(testUseValidFilename)
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
 {
     std::clog << "Testing invalid parameter name...\n";
-    makeInvalidParamName();
+    tst::makeInvalidParamName();
     BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramname_test.txt" }), 1);
 }
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
 {
     std::clog << "Testing invalid parameter value...\n";
-    makeInvalidParamValue();    
+    tst::makeInvalidParamValue();
     BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test.txt"}), 1);
-    makeInvalidParamValue2();
+    tst::makeInvalidParamValue2();
     BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test2.txt"}), 1);
 }
