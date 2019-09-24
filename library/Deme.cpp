@@ -140,7 +140,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
         double fit = male->getFitness();
         if (burnin) fit *= exp(- ecosel * utl::sqr(male->getMatePref()));
         successes.push_back(fit);
-    }
+    }    
 
     assert(successes.size() == males.size());
 
@@ -156,7 +156,7 @@ void Deme::reproduce(const double &birth, const double &sexsel,
         if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom->getMatePref()));
         size_t nOffspring = rnd::poisson(fecundity);
 
-        Haplotype egg = mom->recombine(arch);
+        Haplotype egg = mom->recombine(arch); // should the mom always produce the same egg?
         mom->mutate(egg);
 
         size_t time = 0u;
@@ -237,7 +237,6 @@ void Deme::resetMatePrefs(const double &value)
 void Deme::resetGenders(const bool &sex)
 {
     for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        std::cout << sex << '\t';
         individuals[ind]->setGender(sex);
     }
 }

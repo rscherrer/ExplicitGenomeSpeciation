@@ -53,9 +53,9 @@ uint64_t _(const std::string& s)
 }
 
 
-std::string Param::checkParams()
+void Param::checkParams()
 {
-    std::string msg = "Parameters were read in succesfully";
+    std::string msg = "No error detected";
 
     if (dispersalRate < 0.0)
         msg = "Dispersal rate should be positive";
@@ -126,9 +126,7 @@ std::string Param::checkParams()
     if (dominanceVariance < 0.0)
         msg = "Dominance variance should be positive";
 
-    if(msg == "Parameters were read in succesfully")
-        return(msg);
-    else
+    if(msg != "No error detected")
         throw std::runtime_error(msg);
 }
 
@@ -204,9 +202,9 @@ void Param::readParams(std::ifstream &file)
     nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
 
     capEdges();
-    std::string msg = checkParams();
+    checkParams();
 
-    std::cout << msg << '\n';
+    std::cout << "Parameters were read in succesfully.\n";
 
 }
 

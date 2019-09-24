@@ -72,7 +72,7 @@ public:
     size_t makeDefaultSeed();
 
     /// Checkers
-    std::string checkParams();
+    void checkParams();
 
 
 private:

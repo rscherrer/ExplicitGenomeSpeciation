@@ -7,7 +7,7 @@
 
 BOOST_AUTO_TEST_CASE(checkChromosomes)
 {
-    std::cout << "Testing chromosome lengths...\n";
+    std::clog << "Testing chromosome lengths...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     BOOST_CHECK_EQUAL(arch.chromosomes[0u], 1.0 / 3.0);
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(checkChromosomes)
 
 BOOST_AUTO_TEST_CASE(checkEncodedTraits)
 {
-    std::cout << "Testing genes underlying traits...\n";
+    std::clog << "Testing genes underlying traits...\n";
     Param pars;
     pars.setNLociPerTrait({10u, 2u, 2u});
     GenArch arch = GenArch(pars);
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(checkEncodedTraits)
 
 BOOST_AUTO_TEST_CASE(checkEffectSizes)
 {
-    std::cout << "Testing gene effect sizes...\n";
+    std::clog << "Testing gene effect sizes...\n";
     Param pars;
     pars.setEffectSizeScale(0.0);
     GenArch arch = GenArch(pars);
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(checkEffectSizes)
 
 BOOST_AUTO_TEST_CASE(checkDominances)
 {
-    std::cout << "Testing gene dominance coefficients...\n";
+    std::clog << "Testing gene dominance coefficients...\n";
     Param pars;
     pars.setDominanceVariance(0.0);
     GenArch arch = GenArch(pars);
