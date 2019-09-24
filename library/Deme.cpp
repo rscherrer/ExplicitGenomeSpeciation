@@ -159,25 +159,41 @@ void Deme::reproduce(const double &birth, const double &sexsel,
 
         size_t time = 0u;
 
+        // Should a female have offspring from different fathers?
+        // Or from the same one?
+        // Option 2 would increase the intensity of sexual selection
+        // Option 1 would be closer to species doing extra pair mating?
+        // Can be discussed during lab meeting
+
         // The mating season begins...
-        while (nOffspring && time < seasonEnd) {
+        while (time < seasonEnd) {
 
             // Sample a male
             const size_t encounter = maleMarket(rnd::rng);
             assert(encounter < males.size());
             auto dad = males[encounter];
 
+            // Upon mating...
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
 
-                Haplotype egg = mom->recombine(arch);
-                mom->mutate(egg);
+                while (nOffspring) {
 
-                Haplotype sperm = dad->recombine(arch);
-                dad->mutate(sperm);
+                    // Produce gametes
+                    Haplotype egg = mom->recombine(arch);
+                    mom->mutate(egg);
 
-                auto off = new Individual(arch, egg, sperm, ecosel, maxfeeding);
-                offspring.push_back(off);
-                --nOffspring;
+                    Haplotype sperm = dad->recombine(arch);
+                    dad->mutate(sperm);
+
+                    // And a baby
+                    auto off = new Individual(arch, egg, sperm, ecosel,
+                     maxfeeding);
+                    offspring.push_back(off);
+                    --nOffspring;
+
+                }
+
+                break; // end the mating season
             }
 
             ++time;
