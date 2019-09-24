@@ -105,13 +105,12 @@ private:
 
     double  mutationRate            = 1.0e-5;
     double  recombinationRate       = 0.01;
-    double  genomeLength            = 300.0;
     double  freqSNP                 = 0.5;
     bool    isFemaleHeterogamy      = false;
 
     // Genotype-phenotype map
-    bool isGenerateArchitecture = true;
-    std::string architectureFileName = "";
+    // bool isGenerateArchitecture = true; // unused
+    // std::string architectureFileName = ""; // unused
     vecDbl scaleA = {1.0, 1.0, 1.0};
     vecDbl scaleD = {0.0, 0.0, 0.0};
     vecDbl scaleI = {0.0, 0.0, 0.0};

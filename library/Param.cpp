@@ -71,6 +71,7 @@ void Param::readParams(std::ifstream &file)
         case _("matePreferenceStrength"):
             file >> matePreferenceStrength; break;
         case _("mateEvalutationCost"): file >> mateEvaluationCost; break;
+        case _("maxFeedingRate"): file >> maxFeedingRate; break;
         case _("nEcoLoci"): file >> nEcoLoci; break;
         case _("nMatLoci"): file >> nMatLoci; break;
         case _("nNtrLoci"): file >> nNtrLoci; break;
@@ -80,11 +81,10 @@ void Param::readParams(std::ifstream &file)
         case _("nChromosomes"): file >> nChromosomes; break;
         case _("mutationRate"): file >> mutationRate; break;
         case _("recombinationRate"): file >> recombinationRate; break;
-        case _("genomeLength"): file >> genomeLength; break;
         case _("freqSNP"): file >> freqSNP; break;
         case _("isFemaleHeterogamy"): file >> isFemaleHeterogamy; break;
-        case _("isGeneticArchitecture"): file >> isGenerateArchitecture; break;
-        case _("architectureFileName"): file >> architectureFileName; break;
+        // case _("isGeneticArchitecture"): file >> isGenerateArchitecture; break;
+        // case _("architectureFileName"): file >> architectureFileName; break;
         case _("scaleA"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
             break;
@@ -110,8 +110,8 @@ void Param::readParams(std::ifstream &file)
         case _("tBurnIn"): file >> tBurnIn; break;
         case _("tEndSim"): file >> tEndSim; break;
         case _("tSave"): file >> tSave; break;
-        case _("seed"): file >> seed; break;
         case _("record"): file >> record; break;
+        case _("seed"): file >> seed; break;
 
         default:
             throw std::runtime_error("Invalid parameter name: " + input); break;
@@ -125,7 +125,6 @@ void Param::readParams(std::ifstream &file)
     nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
 
     capEdges();
-
     checkParams();
 
     std::cout << "Parameters were read in succesfully.\n";
@@ -156,6 +155,8 @@ void Param::checkParams()
         msg = "Mate preference strength should be positive";
     if (mateEvaluationCost < 0.0)
         msg = "Mate evaluation cost should be positive";
+    if (maxFeedingRate < 0.0)
+        msg = "Maximum feeding rate should be positive";
     if (maxResourceCapacity < 0.0)
         msg = "Maximum resource capacity should be positive";
     if (maxResourceGrowth < 0.0)
@@ -178,8 +179,6 @@ void Param::checkParams()
         msg = "Mutation rate should be positive";
     if (mutationRate > 1.0)
         msg = "Mutation rate should be at most one";
-    if (genomeLength < 0.0)
-        msg = "Genome length should be positive";
     if (recombinationRate < 0.0)
         msg = "Recombination rate should be positive";
     for (size_t i = 0u; i < 3u; ++i) {

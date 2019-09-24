@@ -4,7 +4,7 @@
 #include "library/Deme.h"
 #include "library/MetaPop.h"
 #include "tests/GenFixture.h"
-#include "tests/testUtilities.h"
+#include "tests/TestUtilities.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
