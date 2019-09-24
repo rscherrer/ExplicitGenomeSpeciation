@@ -15,9 +15,13 @@ make --silent release
 
 # Run
 
+```bash
 ./EGS
+```
 or
+```bash
 ./EGS parameters.txt
+```
 
 # Submit to Peregrine
 
