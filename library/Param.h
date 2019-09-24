@@ -88,7 +88,7 @@ private:
     double survivalProb            = 0.8;
     double matePreferenceStrength  = 10.0;
     double mateEvaluationCost      = 0.01;
-    double maxFeedingRate          = 4.0E-4;
+    double maxFeedingRate          = 4.0E-3;
 
     // Genetic parameters
     size_t nEcoLoci = 400u;

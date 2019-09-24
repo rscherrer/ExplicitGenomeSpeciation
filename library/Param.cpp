@@ -204,7 +204,7 @@ void Param::readParams(std::ifstream &file)
     capEdges();
     checkParams();
 
-    std::cout << "Parameters were read in succesfully.\n";
+    std::clog << "Parameters were read in succesfully.\n";
 
 }
 

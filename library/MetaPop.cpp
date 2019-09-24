@@ -507,7 +507,7 @@ int MetaPop::evolve(const GenArch &arch)
 
     for (; t < tmax; ++t) {
 
-        //std::cout << "t = " << t << '\n';
+        //std::clog << "t = " << t << '\n';
 
         // Sort out the sexes
         pops[0u]->sortSexes();
@@ -543,7 +543,7 @@ int MetaPop::evolve(const GenArch &arch)
         }
 
         if (isExtant == 0u) {
-            std::cout << "The population went extinct at t = " << t << '\n';
+            std::clog << "The population went extinct at t = " << t << '\n';
             break;
         }
     }

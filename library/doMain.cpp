@@ -47,9 +47,9 @@ int doMain(const vecStrings &args)
         MetaPop metapop = MetaPop(popsizes, pars, arch);
 
         // Launch simulation
-        std::cout << "Simulation started\n";
+        std::clog << "Simulation started\n";
         metapop.evolve(arch);
-        std::cout << "Simulation ended\n";
+        std::clog << "Simulation ended\n";
 
     }
     catch (const std::runtime_error &err)

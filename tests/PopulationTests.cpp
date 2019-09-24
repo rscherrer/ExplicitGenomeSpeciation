@@ -71,7 +71,6 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, PopFixture)
         std::clog << "Testing that newborns do not die...\n";
         Deme pop = Deme(100u, s, max, k, r, arch);
         pop.reproduce(4.0, 0.0, 0.01, 1.0, 4.0E-4, arch);
-        std::cout << "reproduction is done\n";
         pop.survive(0.0); // kill all adults        
         BOOST_CHECK(pop.getPopSize() > 0u);
     }
