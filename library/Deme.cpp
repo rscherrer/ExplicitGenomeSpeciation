@@ -152,12 +152,10 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     // Every mom gets a chance to produce babies
     for (auto mom : females) {
 
+        // Produce a certain number of offspring
         double fecundity = birth * mom->getFitness();
         if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom->getMatePref()));
         size_t nOffspring = rnd::poisson(fecundity);
-
-        Haplotype egg = mom->recombine(arch); // should the mom always produce the same egg?
-        mom->mutate(egg);
 
         size_t time = 0u;
 
@@ -169,10 +167,14 @@ void Deme::reproduce(const double &birth, const double &sexsel,
             assert(encounter < males.size());
             auto dad = males[encounter];
 
-            Haplotype sperm = dad->recombine(arch);
-            dad->mutate(sperm);
-
             if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
+
+                Haplotype egg = mom->recombine(arch);
+                mom->mutate(egg);
+
+                Haplotype sperm = dad->recombine(arch);
+                dad->mutate(sperm);
+
                 auto off = new Individual(arch, egg, sperm, ecosel, maxfeeding);
                 offspring.push_back(off);
                 --nOffspring;
