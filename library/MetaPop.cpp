@@ -507,7 +507,7 @@ int MetaPop::evolve(const GenArch &arch)
 
     for (; t < tmax; ++t) {
 
-        //std::clog << "t = " << t << '\n';
+        std::clog << "t = " << t << '\n';
 
         // Sort out the sexes
         pops[0u]->sortSexes();
