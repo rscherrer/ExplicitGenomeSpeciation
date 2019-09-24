@@ -25,22 +25,37 @@ or
 
 # Submit to Peregrine
 
+```bash
 ./launcher.sh
 
 # Install Python dependencies
 
+```bash
 ./pystaller.sh # if needed, to install Python dependencies
+```
 
 # Read single files
 
+```bash
 ./reader.py <variable_name>.dat
-or 
+```
+
+or
+
+```bash
 python reader.py <variable_name>.dat
+```
 
 # Plot single files
 
+```bash
 ./plotter.py <variable_name>.dat
-or 
+```
+
+or
+
+```bash
 python plotter.py <variable_name>.dat
+```
 
 
