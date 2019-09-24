@@ -27,6 +27,7 @@ or
 
 ```bash
 ./launcher.sh
+```
 
 # Install Python dependencies
 
