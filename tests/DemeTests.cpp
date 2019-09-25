@@ -1,5 +1,5 @@
 #include "library/Deme.h"
-#include "tests/PopFixture.h"
+#include "tests/DemeFixture.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 

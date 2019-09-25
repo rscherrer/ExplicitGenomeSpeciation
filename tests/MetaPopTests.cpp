@@ -1,6 +1,6 @@
 #include "library/MetaPop.h"
 #include "library/Utilities.h"
-#include "tests/PopFixture.h"
+#include "tests/DemeFixture.h"
 #include <boost/test/unit_test.hpp>
 
 // Simulation should reach tmax in the absence of mortality
