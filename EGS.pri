@@ -7,8 +7,7 @@ SOURCES += $$PWD/library/doMain.cpp \
     $$PWD/library/Random.cpp \
     $$PWD/library/Network.cpp \
     $$PWD/library/Individual.cpp \
-    $$PWD/library/MetaPop.cpp \
-    $$PWD/library/Buffer.cpp
+    $$PWD/library/MetaPop.cpp
 HEADERS += $$PWD/library/doMain.h \
     $$PWD/library/GenArch.h \
     $$PWD/library/Param.h \
@@ -19,5 +18,4 @@ HEADERS += $$PWD/library/doMain.h \
     $$PWD/library/Network.h \
     $$PWD/library/Individual.h \
     $$PWD/library/MetaPop.h \
-    $$PWD/library/Buffer.h \
     $$PWD/library/Types.h

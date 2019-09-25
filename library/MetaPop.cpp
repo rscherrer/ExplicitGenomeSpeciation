@@ -490,17 +490,10 @@ void MetaPop::analyze(const GenArch &arch)
 
 }
 
-void MetaPop::save(Output &out)
-{
-    for (size_t f = 0u; f < out.names.size(); ++f) {
-        buffer.write(buffer.fields[f], out.files[f]);
-    }
-}
-
 int MetaPop::evolve(const GenArch &arch)
 {
     bool isBurnin = true;
-    int t = - tburnin;
+    t = - tburnin;
 
     Output out;
     if (record) out.openAll();    
@@ -521,8 +514,6 @@ int MetaPop::evolve(const GenArch &arch)
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
             analyze(arch);
-            loadBuffer(t);
-            assert(buffer.fields.size() == out.names.size());
             save(out);
         }
 
@@ -553,57 +544,70 @@ int MetaPop::evolve(const GenArch &arch)
     return t;
 }
 
-void MetaPop::loadBuffer(const size_t &t)
+void MetaPop::save(Output &out)
 {
-    buffer.flush();
-    buffer.add({ utl::size2dbl(t) });
+    // Time
+    write(utl::size2dbl(t), out.files[0u]);
 
     // Census
-    buffer.add({ utl::size2dbl(ecotypes[0u].size()) });
-    buffer.add({ utl::size2dbl(ecotypes[1u].size()) });
-    buffer.add({ utl::size2dbl(pops[0u]->getPopSize()) });
-    buffer.add({ utl::size2dbl(pops[1u]->getPopSize()) });
-    buffer.add({ utl::size2dbl(pops[0u]->getNFemales()) });
-    buffer.add({ utl::size2dbl(pops[1u]->getNFemales()) });
+    write(utl::size2dbl(getEcotypeSize(0u)), out.files[1u]);
+    write(utl::size2dbl(getEcotypeSize(1u)), out.files[2u]);
+    write(utl::size2dbl(getPopSize(0u)), out.files[3u]);
+    write(utl::size2dbl(getPopSize(1u)), out.files[4u]);
+    write(utl::size2dbl(getNFemales(0u)), out.files[5u]);
+    write(utl::size2dbl(getNFemales(1u)), out.files[6u]);
 
     // Resources in each habitat
-    buffer.add({ pops[0u]->getResource(0u) });
-    buffer.add({ pops[1u]->getResource(0u) });
-    buffer.add({ pops[0u]->getResource(1u) });
-    buffer.add({ pops[1u]->getResource(1u) });
+    write(getResource(0u, 0u), out.files[7u]);
+    write(getResource(1u, 0u), out.files[8u]);
+    write(getResource(0u, 1u), out.files[9u]);
+    write(getResource(1u, 1u), out.files[10u]);
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        for (size_t group = 0u; group < 3u; ++group)
-            buffer.add({ meanPhenotypes[trait][group] });
-        buffer.add({ pheVariances[trait][2u] });
-        buffer.add({ genVariances[trait][2u] });
-        buffer.add({ addVariances[trait][2u] });
-        buffer.add({ domVariances[trait] });
-        buffer.add({ intVariances[trait] });
-        buffer.add({ Pst[trait] });
-        buffer.add({ Gst[trait] });
-        buffer.add({ Qst[trait] });
-        buffer.add({ Cst[trait] });
-        buffer.add({ Fst[trait] });
+        const size_t off = trait * 13u;
+        write(meanPhenotypes[trait][0u], out.files[11u + off]); // ecotype 0
+        write(meanPhenotypes[trait][1u], out.files[12u + off]); // ecotype 1
+        write(meanPhenotypes[trait][2u], out.files[13u + off]); // whole pop
+        write(pheVariances[trait][2u], out.files[14u + off]); // whole pop
+        write(genVariances[trait][2u], out.files[15u + off]); // whole pop
+        write(addVariances[trait][2u], out.files[16u + off]); // whole pop
+        write(domVariances[trait], out.files[17u + off]); // whole pop
+        write(intVariances[trait], out.files[18u + off]); // whole pop
+        write(Pst[trait], out.files[19u + off]);
+        write(Gst[trait], out.files[20u + off]);
+        write(Qst[trait], out.files[21u + off]);
+        write(Cst[trait], out.files[22u + off]);
+        write(Fst[trait], out.files[23u + off]);
     }
 
     // Speciation metrics
-    buffer.add({ getEcoIsolation() });
-    buffer.add({ getSpatialIsolation() });
-    buffer.add({ getMatingIsolation() });
+    write(getEcoIsolation(), out.files[49u]);
+    write(getSpatialIsolation(), out.files[50u]);
+    write(getMatingIsolation(), out.files[51u]);
 
     // Genome scans
-    buffer.add(varPScan);
-    buffer.add(varGScan);
-    buffer.add(varAScan);
-    buffer.add(varNScan);
-    buffer.add(PstScan);
-    buffer.add(GstScan);
-    buffer.add(QstScan);
-    buffer.add(CstScan);
-    buffer.add(FstScan);
+    write(varPScan, out.files[52u]);
+    write(varGScan, out.files[53u]);
+    write(varAScan, out.files[54u]);
+    write(varNScan, out.files[55u]);
+    write(PstScan, out.files[56u]);
+    write(GstScan, out.files[57u]);
+    write(QstScan, out.files[58u]);
+    write(CstScan, out.files[59u]);
+    write(FstScan, out.files[60u]);
+}
 
+void MetaPop::write(const double &x, std::ofstream * &out)
+{
+    out->write((char *) &x, sizeof(x));
+}
+
+void MetaPop::write(const vecDbl &vec, std::ofstream * &out)
+{
+    if (vec.size() > 0.0)
+        for (auto x : vec)
+            write(x, out);
 }
 
 double MetaPop::getEcoIsolation()

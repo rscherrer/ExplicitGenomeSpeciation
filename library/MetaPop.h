@@ -2,7 +2,6 @@
 #define EXPLICITGENOMESPECIATION_METAPOP_H
 
 #include "Deme.h"
-#include "Buffer.h"
 #include "Output.h"
 #include "Individual.h"
 #include "Utilities.h"
@@ -32,11 +31,11 @@ public:
         maxreplenish(pars.getMaxResourceGrowth()),
         resources(utl::matzeros(2u, 2u)),
         replenish(utl::matzeros(2u, 2u)),
+        t(0),
         tmax(pars.getTEndSim()),
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
         record(pars.getRecord()),
-        buffer(Buffer()),
         ecotypes({ { }, { } }),
         meanPhenotypes(utl::matzeros(3u, 3u)),
         pheVariances(utl::matzeros(3u, 3u)),
@@ -80,6 +79,7 @@ public:
     size_t getPopSize(const size_t &p) const { return pops[p]->getPopSize(); }
     size_t getNFemales(const size_t &p) const { return pops[p]->getNFemales(); }
     size_t getNOffspring(const size_t&) const;
+    size_t getEcotypeSize(const size_t &e) const { return ecotypes[e].size(); }
     double getResource(const size_t&, const size_t&) const;
     double getEcoIsolation();
     double getSpatialIsolation();
@@ -87,8 +87,9 @@ public:
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
-    void loadBuffer(const size_t &t);
     void save(Output&);
+    void write(const double&, std::ofstream *&);
+    void write(const vecDbl&, std::ofstream *&);
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);
@@ -111,11 +112,11 @@ private:
     double maxreplenish;
     Matrix resources;
     Matrix replenish;
+    int t;
     int tmax;
     int tsave;
     int tburnin;
     bool record;
-    Buffer buffer;
 
     // Variables for analysis
     std::vector<Crowd> ecotypes;
