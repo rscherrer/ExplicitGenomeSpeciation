@@ -1,12 +1,4 @@
 #include "Individual.h"
-#include "Deme.h"
-#include "Utilities.h"
-#include "Random.h"
-#include <cmath>
-#include <cassert>
-#include <iostream>
-#include <algorithm>
-
 
 size_t Individual::getAlleleSum(const size_t &hap)
 {

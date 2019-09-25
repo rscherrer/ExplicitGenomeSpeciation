@@ -1,14 +1,6 @@
 #include "doMain.h"
-#include "Param.h"
-#include "GenArch.h"
-#include "Random.h"
-#include "Deme.h"
-#include "MetaPop.h"
-#include <iostream>
-#include <vector>
-#include <string>
-#include <chrono>
-#include <cassert>
+
+
 
 int doMain(const vecStrings &args)
 {

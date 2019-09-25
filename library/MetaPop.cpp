@@ -1,8 +1,4 @@
 #include "MetaPop.h"
-#include <cassert>
-
-typedef std::vector<vecDbl> Matrix;
-typedef std::vector<vecUns> MatUns;
 
 void MetaPop::resetEcoTraits(const size_t &p, const double &x)
 {

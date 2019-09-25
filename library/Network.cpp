@@ -1,8 +1,4 @@
-#include "GenArch.h"
-#include "Utilities.h"
-#include <cassert>
-#include <algorithm>
-#include <iostream>
+#include "Network.h"
 
 typedef std::discrete_distribution<size_t> Discrete;
 

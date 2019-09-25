@@ -4,8 +4,10 @@
 #include "Param.h"
 #include "GenArch.h"
 #include "Random.h"
+#include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
+#include <cassert>
 #include <stddef.h>
 #include <iostream>
 

@@ -6,6 +6,7 @@
 #include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
+#include <cassert>
 
 typedef std::vector<Deme *> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;

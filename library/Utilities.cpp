@@ -1,8 +1,4 @@
 #include "Utilities.h"
-#include <numeric>
-#include <algorithm>
-#include <string>
-#include <iostream>
 
 double utl::sqr(const double &number)
 {

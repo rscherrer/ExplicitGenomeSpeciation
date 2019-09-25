@@ -1,9 +1,4 @@
 #include "Param.h"
-#include <iostream>
-#include <chrono>
-#include <sstream>
-#include <cassert>
-#include <cstdint>
 
 void Param::capEdges()
 {

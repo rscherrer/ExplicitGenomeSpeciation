@@ -5,8 +5,14 @@
 #include "GenArch.h"
 #include "Utilities.h"
 #include "Types.h"
+#include "Deme.h"
+#include "Random.h"
 #include <vector>
 #include <random>
+#include <cmath>
+#include <cassert>
+#include <iostream>
+#include <algorithm>
 #include <stddef.h>
 #include <boost/dynamic_bitset.hpp>
 

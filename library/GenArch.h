@@ -5,10 +5,13 @@
 #include "Random.h"
 #include "Network.h"
 #include "Types.h"
+#include "Utilities.h"
 #include <vector>
 #include <cstddef>
 #include <cassert>
 #include <stddef.h>
+#include <iostream>
+#include <algorithm>
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;

@@ -6,6 +6,9 @@
 #include <cstddef>
 #include <string>
 #include <stddef.h>
+#include <numeric>
+#include <algorithm>
+#include <iostream>
 
 namespace utl
 {

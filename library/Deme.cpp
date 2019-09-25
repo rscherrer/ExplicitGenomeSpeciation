@@ -1,10 +1,4 @@
 #include "Deme.h"
-#include "Individual.h"
-#include "Utilities.h"
-#include "Random.h"
-#include <cassert>
-#include <iostream>
-
 
 typedef std::discrete_distribution<size_t> Discrete;
 
@@ -23,7 +17,6 @@ Crowd Deme::populate(const size_t &n, const double &ecosel,
     return indivs;
 
 }
-
 
 Crowd Deme::emigrate(const double &rate)
 {

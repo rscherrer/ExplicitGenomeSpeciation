@@ -1,15 +1,6 @@
 #include "GenArch.h"
-#include "Param.h"
-#include "Random.h"
-#include "Network.h"
-#include "Utilities.h"
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <cassert>
 
 class Network;
-class Genome;
 
 /// Function to make a vector of interacting partner loci for each trait
 MultiNet GenArch::makeNetworks()
