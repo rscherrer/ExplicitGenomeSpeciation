@@ -88,6 +88,7 @@ public:
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
+    void initialize(const size_t&);
     void save(Output&);
     void write(const double&, std::ofstream *&);
     void write(const vecDbl&, std::ofstream *&);

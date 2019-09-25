@@ -30,19 +30,9 @@ double Xst(const vecDbl &v, const vecUns &n, const double &tiny = 1E-15)
     return xst;
 }
 
-void MetaPop::analyze(const GenArch &arch)
+
+void MetaPop::initialize(const size_t &nloci)
 {
-
-    // Reset statistics
-
-    // Note:
-    // In this function, vectors with values "per ecotype" have three elements
-    // The two first are for each of the two ecotypes
-    // The third is for the value across the whole metapopulation
-
-    const double tiny = 1E-15;
-    const size_t nloci = arch.nLoci;
-
     // Mean and variance components
     // One value per trait per ecotype
     // The within-ecotype variances are used in computing divergence statistics
@@ -77,6 +67,23 @@ void MetaPop::analyze(const GenArch &arch)
     QstScan = utl::zeros(nloci);
     CstScan = utl::zeros(nloci);
     FstScan = utl::zeros(nloci);
+}
+
+
+void MetaPop::analyze(const GenArch &arch)
+{
+
+    // Reset statistics
+
+    // Note:
+    // In this function, vectors with values "per ecotype" have three elements
+    // The two first are for each of the two ecotypes
+    // The third is for the value across the whole metapopulation
+
+    const double tiny = 1E-15;
+    const size_t nloci = arch.nLoci;
+
+    initialize(nloci);
 
     // Variances in heterozygosity
     // Used for genome-wide Fst calculations
