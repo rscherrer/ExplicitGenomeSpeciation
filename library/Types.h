@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <stddef.h>
 
 typedef std::vector<double> vecDbl;
 typedef std::vector<size_t> vecUns;
