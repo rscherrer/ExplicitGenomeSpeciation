@@ -16,12 +16,10 @@ namespace utl
     vecUns uzeros(const size_t&); // unsigned zeros
     Matrix matzeros(const size_t&, const size_t&);
     MatUns matuzeros(const size_t&, const size_t&);
-    vecBool falses(const size_t&);
     vecDbl rep(const double&, const size_t&);
     vecUns repUns(const size_t&, const size_t&);
     double sum(vecDbl&);
     size_t argmin(vecDbl&);
-    size_t sumbool(vecBool);
     size_t sumu(vecUns&);
     double size2dbl(const size_t&);
 

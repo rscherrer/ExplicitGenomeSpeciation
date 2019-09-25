@@ -53,14 +53,6 @@ MatUns utl::matuzeros(const size_t &ncol, const size_t &nrow)
     return mat;
 }
 
-vecBool utl::falses(const size_t &n)
-{
-    vecBool falses;
-    for (size_t i = 0u; i < n; ++i)
-        falses.push_back(false);
-    return falses;
-}
-
 vecDbl utl::rep(const double &x, const size_t &n)
 {
     vecDbl reps;
@@ -87,13 +79,6 @@ double utl::sum(vecDbl &v)
 size_t utl::argmin(vecDbl &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
-}
-
-size_t utl::sumbool(vecBool v) {
-    size_t sum = 0u;
-    for (size_t i = 0u; i < v.size(); ++i)
-        sum += v[i];
-    return sum;
 }
 
 size_t utl::sumu(vecUns &v) {
