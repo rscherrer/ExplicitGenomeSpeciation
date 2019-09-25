@@ -3,7 +3,6 @@
 
 #include "Param.h"
 #include "Random.h"
-#include "Genome.h"
 #include "Network.h"
 #include "Types.h"
 #include <vector>

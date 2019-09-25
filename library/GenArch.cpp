@@ -2,7 +2,6 @@
 #include "Param.h"
 #include "Random.h"
 #include "Network.h"
-#include "Genome.h"
 #include "Utilities.h"
 #include <vector>
 #include <iostream>
