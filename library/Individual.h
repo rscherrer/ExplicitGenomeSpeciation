@@ -20,9 +20,7 @@ class Individual {
 
     typedef Individual const * PInd;
 
-public:    
-
-    static size_t nloci;
+public:
 
     /// Spontaneous creation
     Individual(const GenArch &arch, const double &ecosel,
@@ -30,7 +28,7 @@ public:
         genome(generateGenome(arch, snpFreq)),
         transcriptome(utl::zeros(arch.nLoci)),
         locivalues(utl::zeros(arch.nLoci)),
-        isFemale(determineSex(arch.femHeterogamy)),
+        gender(rnd::bernoulli(0.5)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
         ecotrait(0.0),
@@ -51,7 +49,7 @@ public:
         genome(fecundate(egg, sperm)),
         transcriptome(utl::zeros(arch.nLoci)),
         locivalues(utl::zeros(arch.nLoci)),
-        isFemale(determineSex(arch.femHeterogamy)),
+        gender(rnd::bernoulli(0.5)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
         ecotrait(0.0),
@@ -67,7 +65,7 @@ public:
 
     ~Individual() {}
 
-    bool getGender() const { return isFemale; }
+    bool getGender() const { return gender; }
     double getEcoTrait() const { return ecotrait; }
     double getMatePref() const { return matepref; }
     double getNeutral() const { return neutrait; }
@@ -97,7 +95,6 @@ private:
 
     Genome generateGenome(const GenArch&, double = -1.0);
     Genome fecundate(const Haplotype&, const Haplotype&);
-    bool determineSex(const bool&);
 
     void develop(const GenArch&);
     bool checkIndividual(const size_t&);
@@ -105,7 +102,7 @@ private:
     Genome genome;
     vecDbl transcriptome;
     vecDbl locivalues;
-    bool isFemale;
+    bool gender;
     vecDbl genvalues;
     vecDbl traitvalues;
     double ecotrait;

@@ -41,22 +41,6 @@ vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
     return { rate1, rate2 };
 }
 
-bool Individual::determineSex(const bool &femheterogamy)
-{
-
-    // The first locus determines the sex
-    // If the individual is heterozygous
-    // and if females are the heterozygous sex, then ZW
-    // otherwise, if males are the heterozygous sex, then XY
-
-    const bool hetero = genome[0u][0u] != genome[1u][0u];
-    const bool isZW = hetero && femheterogamy;
-    const bool isXX = !hetero && !femheterogamy;
-    const bool isfemale = isZW || isXX;
-    return isfemale;
-
-}
-
 Genome Individual::generateGenome(const GenArch &arch, double prob)
 {
 
@@ -367,6 +351,6 @@ void Individual::setMatePref(const double &value)
 
 void Individual::setGender(const bool &sex)
 {
-    isFemale = sex;
+    gender = sex;
 }
 
