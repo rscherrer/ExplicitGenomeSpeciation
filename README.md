@@ -65,4 +65,8 @@ or
 python plotter.py <variable_name>.dat
 ```
 
+# Future features
+
+Talk about genetic sex determination.
+
 
