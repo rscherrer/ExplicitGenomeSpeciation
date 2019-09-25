@@ -3,7 +3,7 @@
 
 #include "Deme.h"
 #include "Output.h"
-#include "Individual.h"
+//#include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
 #include <cassert>

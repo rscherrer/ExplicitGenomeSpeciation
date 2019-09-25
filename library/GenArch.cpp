@@ -1,7 +1,5 @@
 #include "GenArch.h"
 
-class Network;
-
 /// Function to make a vector of interacting partner loci for each trait
 MultiNet GenArch::makeNetworks()
 {

@@ -1,15 +1,14 @@
 #ifndef EXPLICITGENOMESPECIATION_DEME_H
 #define EXPLICITGENOMESPECIATION_DEME_H
 
-#include "Param.h"
 #include "GenArch.h"
 #include "Random.h"
 #include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
 #include <cassert>
-#include <stddef.h>
-#include <iostream>
+// #include <stddef.h> // maybe this was making travis unhappy
+
 
 class Individual;
 

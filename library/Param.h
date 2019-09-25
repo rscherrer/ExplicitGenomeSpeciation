@@ -2,13 +2,13 @@
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
 #include "Types.h"
-#include <vector>
+//#include <vector>
 #include <fstream>
 #include <iostream>
 #include <chrono>
-#include <sstream>
+//#include <sstream>
 #include <cassert>
-#include <cstdint>
+//#include <cstdint>
 
 class Param {
 
@@ -97,11 +97,11 @@ private:
     double maxFeedingRate          = 4.0E-3;
 
     // Genetic parameters
-    size_t nEcoLoci = 400u;
-    size_t nMatLoci = 200u;
-    size_t nNtrLoci = 400u;
-    size_t nEcoEdges = 1000u;
-    size_t nMatEdges = 500u;
+    size_t nEcoLoci = 10;
+    size_t nMatLoci = 10u;
+    size_t nNtrLoci = 10u;
+    size_t nEcoEdges = 0u;
+    size_t nMatEdges = 0u;
     size_t nNtrEdges = 0u;
     size_t nChromosomes = 3u;
 
@@ -127,8 +127,8 @@ private:
     double dominanceVariance = 1.0;
 
     // Simulation parameters
-    int  tBurnIn = 10;
-    int  tEndSim = 100;
+    int  tBurnIn = 100;
+    int  tEndSim = 10;
     int  tSave = 10;
     bool record = true;
     size_t seed;

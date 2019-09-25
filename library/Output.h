@@ -2,10 +2,10 @@
 #define EXPLICITGENOMESPECIATION_OUTPUT_H
 
 #include "Types.h"
-#include <vector>
-#include <iostream>
+//#include <vector>
+//#include <iostream>
 #include <fstream>
-#include <string>
+//#include <string>
 
 typedef std::vector<std::ofstream *> vecStreams;
 
@@ -13,7 +13,6 @@ class Output
 {
 
     friend class MetaPop;
-    friend class Buffer;
 
 private:
 

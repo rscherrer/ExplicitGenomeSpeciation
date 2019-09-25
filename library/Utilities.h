@@ -2,13 +2,13 @@
 #define EXPLICITGENOMESPECIATION_UTILITIES_H
 
 #include "Types.h"
-#include <vector>
-#include <cstddef>
-#include <string>
-#include <stddef.h>
+//#include <vector>
+//#include <cstddef>
+//#include <string>
+//#include <stddef.h>
 #include <numeric>
 #include <algorithm>
-#include <iostream>
+//#include <iostream>
 
 namespace utl
 {

@@ -6,12 +6,10 @@
 #include "Network.h"
 #include "Types.h"
 #include "Utilities.h"
-#include <vector>
-#include <cstddef>
 #include <cassert>
-#include <stddef.h>
-#include <iostream>
-#include <algorithm>
+//#include <stddef.h>
+//#include <cstddef>
+//#include <algorithm>
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;

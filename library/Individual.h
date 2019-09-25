@@ -1,19 +1,18 @@
 #ifndef EXPLICITGENOMESPECIATION_INDIVIDUAL_H
 #define EXPLICITGENOMESPECIATION_INDIVIDUAL_H
 
-#include "Param.h"
+//#include "Param.h"
 #include "GenArch.h"
 #include "Utilities.h"
 #include "Types.h"
-#include "Deme.h"
+//#include "Deme.h"
 #include "Random.h"
-#include <vector>
-#include <random>
-#include <cmath>
+//#include <vector>
+//#include <random>
+//#include <cmath> // exponential?
 #include <cassert>
-#include <iostream>
-#include <algorithm>
-#include <stddef.h>
+//#include <algorithm>
+//#include <stddef.h>
 #include <boost/dynamic_bitset.hpp>
 
 typedef boost::dynamic_bitset<> Haplotype;
