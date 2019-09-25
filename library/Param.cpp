@@ -18,14 +18,6 @@ void Param::capEdges()
     }
 }
 
-Param::Param() : seed(makeDefaultSeed())
-{
-
-    capEdges();
-    checkParams();
-
-}
-
 /// Function to create a default seed based on what time it is
 size_t Param::makeDefaultSeed()
 {

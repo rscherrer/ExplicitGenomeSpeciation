@@ -8,9 +8,10 @@
 #include <vector>
 #include <random>
 #include <stddef.h>
+#include <boost/dynamic_bitset.hpp>
 
-typedef std::vector<bool> Haplotype;
-typedef std::vector<Haplotype > Diplotype;
+typedef boost::dynamic_bitset<> Haplotype;
+typedef std::vector<Haplotype> Genome;
 
 class Individual {
 
@@ -19,12 +20,14 @@ class Individual {
 
     typedef Individual const * PInd;
 
-public:
+public:    
+
+    static size_t nloci;
 
     /// Spontaneous creation
     Individual(const GenArch &arch, const double &ecosel,
      const double &maxfeeding, const double &snpFreq) :
-        genome(makeSequence(arch, snpFreq)),
+        genome(generateGenome(arch, snpFreq)),
         transcriptome(utl::zeros(arch.nLoci)),
         locivalues(utl::zeros(arch.nLoci)),
         isFemale(determineSex(arch.femHeterogamy)),
@@ -77,6 +80,7 @@ public:
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&);
     double getLocusValue(const size_t&);
+    size_t getAlleleSum(const size_t&);
     bool acceptMate(const double&, const double&) const;
     Haplotype recombine(const GenArch&);
     vecDbl calcFeedingRates(const double&, const double&, const double&);
@@ -91,14 +95,14 @@ public:
 
 private:
 
-    Diplotype makeSequence(const GenArch&, double = -1.0);
-    Diplotype fecundate(const Haplotype&, const Haplotype&);
+    Genome generateGenome(const GenArch&, double = -1.0);
+    Genome fecundate(const Haplotype&, const Haplotype&);
     bool determineSex(const bool&);
 
     void develop(const GenArch&);
     bool checkIndividual(const size_t&);
 
-    Diplotype genome;
+    Genome genome;
     vecDbl transcriptome;
     vecDbl locivalues;
     bool isFemale;

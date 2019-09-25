@@ -34,22 +34,20 @@ Crowd Deme::emigrate(const double &rate)
     Crowd residents;
 
     size_t nmigrants = rnd::binomial(individuals.size(), rate);
-    vecDbl probs = utl::ones(nmigrants);
-    Haplotype whom = utl::falses(individuals.size());
+    vecDbl probs = utl::ones(individuals.size());
 
+    // All individuals that moved
     while (nmigrants) {
         const size_t mig = rnd::sample(probs);
-        whom[mig] = true;
+        migrants.push_back(individuals[mig]);
         probs[mig] = 0.0;
         --nmigrants;
     }
 
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        if(whom[ind])
-            migrants.push_back(individuals[ind]);
-        else
+    // All individuals that stayed
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        if (probs[ind] == 1.0)
             residents.push_back(individuals[ind]);
-    }
 
     assert(residents.size() + migrants.size() == individuals.size());
     assert(migrants.size() <= individuals.size());

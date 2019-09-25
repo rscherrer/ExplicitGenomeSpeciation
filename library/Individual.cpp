@@ -7,12 +7,19 @@
 #include <iostream>
 #include <algorithm>
 
+
+size_t Individual::getAlleleSum(const size_t &hap)
+{
+    return genome[hap].count();
+}
+
 bool Individual::checkIndividual(const size_t &nLoci)
 {
 
     assert(genome.size() == 2u);
-    for (size_t strain = 0u; strain < 2u; ++strain)
-        assert(genome[strain].size() == nLoci);
+    for (size_t hap = 0u; hap < 2u; ++hap) {
+        assert(genome[hap].size() == nLoci);
+    }
     assert(transcriptome.size() == nLoci);
     assert(traitvalues.size() == 3u);
     assert(fitness > 0.0);
@@ -50,21 +57,45 @@ bool Individual::determineSex(const bool &femheterogamy)
 
 }
 
-Diplotype Individual::makeSequence(const GenArch &arch, double prob)
+Genome Individual::generateGenome(const GenArch &arch, double prob)
 {
 
-    Diplotype sequences;
+    Genome sequences;
 
-    if (prob < 0.0) {
-        prob = arch.snpFreq;
-    }
+    // SNP frequency is read in architecture if not provided explicitly
+    if (prob < 0.0) prob = arch.snpFreq;
 
-    for (size_t strain = 0u; strain < 2u; ++strain) {
+    assert(prob <= 1.0);
+    assert(prob >= 0.0);
 
-        // Generate a random genetic sequence of alleles
-        Haplotype haplotype;
-        for (size_t locus = 0u; locus < arch.nLoci; ++locus)
-            haplotype.push_back(rnd::bernoulli(prob));
+    // For each haplotype
+    for (size_t hap = 0u; hap < 2u; ++hap) {
+
+        // Generate a genetic sequence of N zero-alleles
+        Haplotype haplotype(arch.nLoci);
+
+        // Throw mutations here and there
+        if (prob < 0.5) {
+
+            // Binomial distribution
+            size_t nmut = rnd::binomial(arch.nLoci, prob);
+            vecDbl probs = utl::ones(arch.nLoci);
+            while (nmut) {
+                size_t mutant = rnd::sample(probs);
+                haplotype.set(mutant);
+                probs[mutant] = 0.0; // without replacement
+                --nmut;
+            }
+
+        } else {
+
+            // Bernoulli events
+            for (size_t locus = 0u; locus < arch.nLoci; ++locus)
+                if (rnd::bernoulli(prob))
+                    haplotype.set(locus);
+
+        }
+
         sequences.push_back(haplotype);
 
     }
@@ -74,10 +105,9 @@ Diplotype Individual::makeSequence(const GenArch &arch, double prob)
     return sequences;
 }
 
-
-Diplotype Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
+Genome Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
 {
-    Diplotype zygote(2u);
+    Genome zygote(2u); // diploid genome
     zygote[0u] = egg;
     zygote[1u] = sperm;
     assert(zygote[0u].size() == zygote[1u].size());
@@ -219,7 +249,6 @@ bool Individual::acceptMate(const double &xj, const double &sexsel) const
 
 Haplotype Individual::recombine(const GenArch &arch)
 {
-    Haplotype gamete;
 
     // Choose a random haplotype
     // Loop through loci along this haplotype
@@ -240,6 +269,8 @@ Haplotype Individual::recombine(const GenArch &arch)
     double crossover = rnd::exponential(arch.recombinationRate);
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
+
+    Haplotype gamete = genome[0u];
 
     size_t hap = rnd::bernoulli(0.5);
 
@@ -266,7 +297,9 @@ Haplotype Individual::recombine(const GenArch &arch)
 
         // Gene
         default:
-            gamete.push_back(genome[hap][locus]);
+            if (hap == 1u)
+                if (genome[0u].test(locus) != genome[1u].test(locus))
+                    gamete.flip(locus);
             ++locus;
             position = arch.locations[locus];
             break;

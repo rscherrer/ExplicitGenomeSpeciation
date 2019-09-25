@@ -9,8 +9,11 @@ class Param {
 
 public:
 
-    /// Constructor
-    Param();
+    Param() : seed(makeDefaultSeed())
+    {
+        capEdges();
+        checkParams();
+    }
 
     /// Getters
     size_t getNChromosomes() const { return nChromosomes; }
@@ -73,7 +76,6 @@ public:
     /// Checkers
     void checkParams();
 
-
 private:
 
     // Ecological parameters
@@ -108,8 +110,6 @@ private:
     bool    isFemaleHeterogamy      = false;
 
     // Genotype-phenotype map
-    // bool isGenerateArchitecture = true; // unused
-    // std::string architectureFileName = ""; // unused
     vecDbl scaleA = {1.0, 1.0, 1.0};
     vecDbl scaleD = {0.0, 0.0, 0.0};
     vecDbl scaleI = {0.0, 0.0, 0.0};
