@@ -36,6 +36,7 @@ public:
         scaleD(pars.getScaleD()),
         scaleI(pars.getScaleI()),
         scaleE(pars.getScaleE()),
+        locusVarE(utl::zeros(3u)),
         chromosomes(makeChromosomes()),
         traits(makeEncodedTraits()),
         locations(makeLocations()),
@@ -43,6 +44,7 @@ public:
         dominances(makeDominances()),
         networks(makeNetworks())
     {
+        setLocusVarE();
         assert(chromosomes.size() == nChromosomes);
         assert(traits.size() == nLoci);
         assert(effects.size() == nLoci);
@@ -71,6 +73,7 @@ public:
     vecDbl scaleD;
     vecDbl scaleI;
     vecDbl scaleE;
+    vecDbl locusVarE;
 
     // Genome
     vecDbl chromosomes;
@@ -89,6 +92,8 @@ private:
     vecDbl makeLocations();
     vecDbl makeEffects();
     vecDbl makeDominances();
+
+    void setLocusVarE();
 
 };
 

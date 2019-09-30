@@ -75,6 +75,8 @@ public:
     double getMatePref() const { return matepref; }
     double getNeutral() const { return neutrait; }
     double getFitness() const { return fitness; }
+    double getTraitValue(const size_t &t) const { return traitvalues[t]; }
+    double getGenValue(const size_t &t) const { return genvalues[t]; }
     vecDbl getTraits() const { return traitvalues; }
     vecDbl getFeedingRates() const { return feedingRates; }
     vecDbl getGenValues() const { return genvalues; }
@@ -90,7 +92,6 @@ public:
 
     void setEcoTrait(const double&, const double&, const double&);
     void setMatePref(const double&);
-    void setEcotype(const double&);
     void resetEcotype(const size_t &e) { ecotype = e; }
     void setGender(const bool&);
     void feed(const vecDbl&);

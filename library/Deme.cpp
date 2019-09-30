@@ -255,3 +255,28 @@ void Deme::resetEcotypes(const size_t &ecotype)
     for (size_t ind = 0u; ind < individuals.size(); ++ind)
         individuals[ind]->resetEcotype(ecotype);
 }
+
+size_t Deme::getEcotype(const size_t &i) const
+{
+    return individuals[i]->getEcotype();
+}
+
+double Deme::getGenValue(const size_t &i, const size_t &t) const
+{
+    return individuals[i]->getGenValue(t);
+}
+
+double Deme::getTraitValue(const size_t &i, const size_t &t) const
+{
+    return individuals[i]->getTraitValue(t);
+}
+
+double Deme::getLocusValue(const size_t &i, const size_t &l) const
+{
+    return individuals[i]->getLocusValue(l);
+}
+
+size_t Deme::getZygosity(const size_t &i, const size_t &l) const
+{
+    return individuals[i]->getZygosity(l);
+}

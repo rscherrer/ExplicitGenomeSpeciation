@@ -147,4 +147,10 @@ vecDbl GenArch::makeDominances()
     return coefficients;
 }
 
+void GenArch::setLocusVarE()
+{
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        locusVarE[trait] = utl::sqr(scaleE[trait]) / nLociPerTrait[trait];
+}
+
 

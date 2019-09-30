@@ -13,6 +13,8 @@
 namespace utl
 {
 
+    double Xst(const double&, const double&, const double&, const size_t&,
+     const size_t&, const size_t&, const double& = 1E-15);
     double sqr(const double&);
     vecDbl ones(const size_t &n);
     vecDbl zeros(const size_t&);
@@ -22,6 +24,7 @@ namespace utl
     vecDbl rep(const double&, const size_t&);
     vecUns repUns(const size_t&, const size_t&);
     double sum(vecDbl&);
+    double sum(Matrix&);
     size_t argmin(vecDbl&);
     size_t sumu(vecUns&);
     double size2dbl(const size_t&);

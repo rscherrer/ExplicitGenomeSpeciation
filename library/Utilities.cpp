@@ -1,5 +1,19 @@
 #include "Utilities.h"
 
+double utl::Xst(const double &v0, const double &v1, const double &v,
+ const size_t &n0, const size_t &n1, const size_t &n,
+  const double &tiny)
+{
+    if (v < tiny) return 0.0;
+
+    const double xst = 1.0 - (n0 * v0 + n1 * v1) / (n * v);
+
+    if (xst < tiny) return 0.0;
+    if (xst > 1.0 - tiny) return 1.0;
+    return xst;
+}
+
+
 double utl::sqr(const double &number)
 {
     return number * number;
@@ -71,6 +85,13 @@ double utl::sum(vecDbl &v)
     return std::accumulate(v.begin(), v.end(), 0);
 }
 
+double utl::sum(Matrix &m)
+{
+    double res = 0.0;
+    for (auto vec : m)
+        res += utl::sum(vec);
+    return res;
+}
 
 size_t utl::argmin(vecDbl &v)
 {

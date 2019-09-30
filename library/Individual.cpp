@@ -179,6 +179,8 @@ void Individual::develop(const GenArch &arch)
 void Individual::feed(const vecDbl &food)
 {
     fitness = feedingRates[0u] * food[0u] + feedingRates[1u] * food[1u];
+    ecotype = feedingRates[1u] * food[1u] > feedingRates[0u] * food[0u];
+
     assert(fitness >= 0.0);
 }
 
@@ -307,14 +309,6 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 
         --nmut;
     }
-
-}
-
-
-void Individual::setEcotype(const double &mean)
-{
-
-    ecotype = ecotrait > mean;
 
 }
 

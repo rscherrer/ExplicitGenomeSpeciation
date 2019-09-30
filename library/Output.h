@@ -12,7 +12,7 @@ typedef std::vector<std::ofstream *> vecStreams;
 class Output
 {
 
-    friend class MetaPop;
+    friend class Stats;
 
 private:
 
@@ -80,6 +80,8 @@ public:
               "varP_scan",
               "varG_scan",
               "varA_scan",
+              "varD_scan",
+              "varI_scan",
               "varN_scan",
               "Pst_scan",
               "Gst_scan",

@@ -6,6 +6,7 @@
 //#include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
+#include "Stats.h"
 #include <cassert>
 
 typedef std::vector<Deme *> vecPop;
@@ -37,28 +38,7 @@ public:
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
         record(pars.getRecord()),
-        ecotypes({ { }, { } }),
-        meanPhenotypes(utl::matzeros(3u, 3u)),
-        pheVariances(utl::matzeros(3u, 3u)),
-        genVariances(utl::matzeros(3u, 3u)),
-        addVariances(utl::matzeros(3u, 3u)),
-        nadVariances(utl::matzeros(3u, 3u)),
-        domVariances(utl::zeros(3u)),
-        intVariances(utl::zeros(3u)),
-        Pst(utl::zeros(3u)),
-        Gst(utl::zeros(3u)),
-        Qst(utl::zeros(3u)),
-        Cst(utl::zeros(3u)),
-        Fst(utl::zeros(3u)),
-        varPScan(utl::zeros(pars.getNLoci())),
-        varGScan(utl::zeros(pars.getNLoci())),
-        varAScan(utl::zeros(pars.getNLoci())),
-        varNScan(utl::zeros(pars.getNLoci())),
-        PstScan(utl::zeros(pars.getNLoci())),
-        GstScan(utl::zeros(pars.getNLoci())),
-        QstScan(utl::zeros(pars.getNLoci())),
-        CstScan(utl::zeros(pars.getNLoci())),
-        FstScan(utl::zeros(pars.getNLoci()))
+        stats(Stats(arch))
     {
         // Create the demes
         for (size_t p = 0u; p < 2u; ++p) {
@@ -80,18 +60,13 @@ public:
     size_t getPopSize(const size_t &p) const { return pops[p]->getPopSize(); }
     size_t getNFemales(const size_t &p) const { return pops[p]->getNFemales(); }
     size_t getNOffspring(const size_t&) const;
-    size_t getEcotypeSize(const size_t &e) const { return ecotypes[e].size(); }
     double getResource(const size_t&, const size_t&) const;
-    double getEcoIsolation();
-    double getSpatialIsolation();
-    double getMatingIsolation();
+    double getEcoIsolation() const { return stats.getEcoIsolation(); }
+    double getSpatialIsolation() const { return stats.getSpatialIsolation(); }
+    double getMatingIsolation() const { return stats.getMatingIsolation(); }
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
-    void initialize(const size_t&);
-    void save(Output&);
-    void write(const double&, std::ofstream *&);
-    void write(const vecDbl&, std::ofstream *&);
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);
@@ -120,29 +95,11 @@ private:
     int tburnin;
     bool record;
 
-    // Variables for analysis
-    std::vector<Crowd> ecotypes;
-    Matrix meanPhenotypes;
-    Matrix pheVariances;
-    Matrix genVariances;
-    Matrix addVariances;
-    Matrix nadVariances;
-    vecDbl domVariances;
-    vecDbl intVariances;
-    vecDbl Pst;
-    vecDbl Gst;
-    vecDbl Qst;
-    vecDbl Cst;
-    vecDbl Fst;
-    vecDbl varPScan;
-    vecDbl varGScan;
-    vecDbl varAScan;
-    vecDbl varNScan;
-    vecDbl PstScan;
-    vecDbl GstScan;
-    vecDbl QstScan;
-    vecDbl CstScan;
-    vecDbl FstScan;
+    Stats stats;
+
+    static constexpr size_t x = 0u;
+    static constexpr size_t y = 1u;
+    static constexpr size_t z = 2u;
 
 };
 
