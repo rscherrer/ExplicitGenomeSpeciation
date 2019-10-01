@@ -2,7 +2,9 @@
 
 typedef std::discrete_distribution<size_t> Discrete;
 
-/// Function to initialize a population of individuals
+
+// Initialization
+
 Crowd Deme::populate(const size_t &n, const double &ecosel,
  const double &maxfeeding, const GenArch &arch)
 {
@@ -16,6 +18,30 @@ Crowd Deme::populate(const size_t &n, const double &ecosel,
 
     return indivs;
 
+}
+
+
+// Life cycle
+
+void Deme::exitBurnIn()
+{
+    burnin = false;
+}
+
+void Deme::sortSexes()
+{
+
+    females.clear();
+    males.clear();
+    females.shrink_to_fit();
+    males.shrink_to_fit();
+
+    // Sort out moms and dads
+    for (auto ind : individuals)
+        if (ind->getGender())
+            females.push_back(ind);
+        else
+            males.push_back(ind);
 }
 
 Crowd Deme::emigrate(const double &rate)
@@ -54,15 +80,12 @@ Crowd Deme::emigrate(const double &rate)
 
 }
 
-
 void Deme::immigrate(const Crowd &newcomers)
 {
     for (auto ind : newcomers)
         individuals.push_back(ind);
 }
 
-
-/// Resource consumption
 void Deme::consume()
 {
 
@@ -98,28 +121,6 @@ void Deme::consume()
     }
 
 }
-
-void Deme::exitBurnIn()
-{
-    burnin = false;
-}
-
-void Deme::sortSexes()
-{
-
-    females.clear();
-    males.clear();
-    females.shrink_to_fit();
-    males.shrink_to_fit();
-
-    // Sort out moms and dads
-    for (auto ind : individuals)
-        if (ind->getGender())
-            females.push_back(ind);
-        else
-            males.push_back(ind);
-}
-
 
 void Deme::reproduce(const double &birth, const double &sexsel,
  const double &cost, const double &ecosel, const double &maxfeeding,
@@ -195,8 +196,6 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     }
 }
 
-
-/// Function to make it to the next generation
 bool Deme::survive(const double &survival)
 {
 
@@ -233,6 +232,37 @@ bool Deme::survive(const double &survival)
     return isAlive;
 }
 
+
+// Getters
+
+size_t Deme::getEcotype(const size_t &i) const
+{
+    return individuals[i]->getEcotype();
+}
+
+double Deme::getGenValue(const size_t &i, const size_t &t) const
+{
+    return individuals[i]->getGenValue(t);
+}
+
+double Deme::getTraitValue(const size_t &i, const size_t &t) const
+{
+    return individuals[i]->getTraitValue(t);
+}
+
+double Deme::getLocusValue(const size_t &i, const size_t &l) const
+{
+    return individuals[i]->getLocusValue(l);
+}
+
+size_t Deme::getZygosity(const size_t &i, const size_t &l) const
+{
+    return individuals[i]->getZygosity(l);
+}
+
+
+// Resetters used in testing
+
 void Deme::resetEcoTraits(const double &value, const double &sel,
  const double &max)
 {
@@ -259,27 +289,3 @@ void Deme::resetEcotypes(const size_t &ecotype)
         individuals[ind]->resetEcotype(ecotype);
 }
 
-size_t Deme::getEcotype(const size_t &i) const
-{
-    return individuals[i]->getEcotype();
-}
-
-double Deme::getGenValue(const size_t &i, const size_t &t) const
-{
-    return individuals[i]->getGenValue(t);
-}
-
-double Deme::getTraitValue(const size_t &i, const size_t &t) const
-{
-    return individuals[i]->getTraitValue(t);
-}
-
-double Deme::getLocusValue(const size_t &i, const size_t &l) const
-{
-    return individuals[i]->getLocusValue(l);
-}
-
-size_t Deme::getZygosity(const size_t &i, const size_t &l) const
-{
-    return individuals[i]->getZygosity(l);
-}
