@@ -11,11 +11,11 @@ struct PopFixture
     PopFixture() :
         pars(Param()),
         arch(GenArch(pars)),
-        n0(pars.getInitialPopSize()),
-        s(pars.getEcoSelCoeff()),
-        max(pars.getMaxFeedingRate()),
-        k(utl::rep(pars.getMaxResourceCapacity(), 2u)),
-        r(utl::rep(pars.getMaxResourceGrowth(), 2u))
+        n0(100u),
+        s(1.0),
+        max(0.004),
+        k(utl::rep(100.0, 2u)),
+        r(utl::rep(1.0, 2u))
     {}
 
     ~PopFixture() {}

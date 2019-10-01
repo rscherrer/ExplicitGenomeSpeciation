@@ -34,9 +34,9 @@ int doMain(const vecStrings &args)
 
         // Create a metapopulation
         const vecUns popsizes = { pars.getInitialPopSize(), 0u };
-        MetaPop metapop = MetaPop(popsizes, pars, arch);
+        MetaPop metapop = MetaPop(popsizes, pars, arch, true);
 
-        // Launch simulation
+        // Launch simulation        
         std::clog << "Simulation started\n";
         metapop.evolve(arch);
         std::clog << "Simulation ended\n";

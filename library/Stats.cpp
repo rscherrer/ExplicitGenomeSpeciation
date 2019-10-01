@@ -1,17 +1,11 @@
 #include "Stats.h"
 
-
-
-
-
-
-
-
-
 //-/////////////////////////////
 // Main module for statistics
 //-/////////////////////////////
 
+
+// Reset the statistics
 
 void Stats::reset(const size_t &t, const GenArch &arch)
 {
@@ -28,27 +22,188 @@ void Stats::reset(const size_t &t, const GenArch &arch)
     RI = 0.0;
 }
 
+std::vector<Stats::Trait *> Stats::makeEmptyTraits()
+{
+    std::vector<Stats::Trait *> traits;
+    for (size_t i = 0u; i < 3u; ++i)
+        traits.push_back(new Stats::Trait());
+    assert(traits.size() == 3u);
+    return traits;
+}
+
+std::vector<Stats::Locus *> Stats::makeEmptyGenomeScan(const GenArch &arch)
+{
+    std::vector<Stats::Locus *> scan;
+    for (size_t locus = 0u; locus < arch.nLoci; ++locus) {
+        const size_t trait = arch.traits[locus];
+        const double envar = arch.locusVarE[trait];
+        scan.push_back(new Stats::Locus(locus, envar));
+    }
+    assert(scan.size() == arch.nLoci);
+    return scan;
+}
+
+
+// Perform statistical analyses
+
 void Stats::analyze(const vecPop &pops, const GenArch &arch)
 {
+
     for (size_t p = 0u; p < 2u; ++p) {
-        for (size_t r = 0u; r < 2u; ++p)
+        for (size_t r = 0u; r < 2u; ++r) {
             resources[p][r] = pops[p]->getResource(r);
+        }
         popcounts[p] = pops[p]->getPopSize();
         nfemales[p] = pops[p]->getNFemales();
     }
+
     totcount = popcounts[0u] + popcounts[1u];
+
     Stats::Trait::totcount = totcount;
     Stats::Locus::totcount = totcount;
+
+    accumulate(pops);
+
     Stats::Trait::ecocounts = ecocounts;
     Stats::Locus::ecocounts = ecocounts;
-    accumulate(pops);
+
     scanGenome(pops, arch.traits);
     setVariance();
+
+}
+
+void Stats::accumulate(const vecPop &pops)
+{
+    for (auto pop : pops) {
+        for (size_t ind = 0u; ind < pop->getPopSize(); ++ind) {
+
+            const size_t eco = pop->getEcotype(ind);
+            ++ecocounts[eco];
+
+            for (size_t trait : { x, y, z }) {
+                const double gen = pop->getGenValue(ind, trait);
+                const double phe = pop->getTraitValue(ind, trait);
+                traitstats[trait]->ecostats[eco].sumgen += gen;
+                traitstats[trait]->ecostats[eco].sumphe += phe;
+                traitstats[trait]->ecostats[eco].ssqgen += utl::sqr(gen);
+                traitstats[trait]->ecostats[eco].ssqphe += utl::sqr(phe);
+            }
+        }
+    }
+
+    for (size_t trait : { x, y, z }) {
+        for (size_t eco : { 0u, 1u }) {
+            assert(traitstats[trait]->getSsqGen(eco) >= 0.0);
+            assert(traitstats[trait]->getSsqPhe(eco) >= 0.0);
+            traitstats[trait]->sumgen += traitstats[trait]->getSumGen(eco);
+            traitstats[trait]->sumphe += traitstats[trait]->getSumPhe(eco);
+            traitstats[trait]->ssqgen += traitstats[trait]->getSsqGen(eco);
+            traitstats[trait]->ssqphe += traitstats[trait]->getSsqPhe(eco);
+        }
+        assert(traitstats[trait]->ssqgen >= 0.0);
+        assert(traitstats[trait]->ssqphe >= 0.0);
+    }
+}
+
+void Stats::scanGenome(const vecPop &pops, const vecUns &traits)
+{
+
+    for (size_t locus = 0u; locus < genomescan.size(); ++locus) {
+
+        genomescan[locus]->accumulate(pops);
+        genomescan[locus]->regress();
+        genomescan[locus]->setEcotypes();
+        genomescan[locus]->setVarG();
+        genomescan[locus]->setVarP();
+        genomescan[locus]->setVarA();
+        genomescan[locus]->setVarD();
+        genomescan[locus]->setVarI();
+        genomescan[locus]->setVarN();
+        genomescan[locus]->setPst();
+        genomescan[locus]->setGst();
+        genomescan[locus]->setQst();
+        genomescan[locus]->setCst();
+        genomescan[locus]->setFst();
+
+        contributeVarA(genomescan[locus]->varA, traits[locus]);
+        contributeVarD(genomescan[locus]->varD, traits[locus]);
+        contributeVarI(genomescan[locus]->varI, traits[locus]);
+        contributeVarN(genomescan[locus]->varN, traits[locus]);
+        contributeVarS(genomescan[locus]->varS, traits[locus]);
+        contributeVarT(genomescan[locus]->varT, traits[locus]);
+
+        for (size_t e : { 0u, 1u }) {
+            contributeEcoVarA(genomescan[locus]->getVarA(e), e, traits[locus]);
+            contributeEcoVarN(genomescan[locus]->getVarN(e), e, traits[locus]);
+        }
+    }
+}
+
+void Stats::contributeVarA(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varA += x;
+}
+
+void Stats::contributeVarD(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varD += x;
+}
+
+void Stats::contributeVarI(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varI += x;
+}
+
+void Stats::contributeVarN(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varN += x;
+}
+
+void Stats::contributeVarS(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varS += x;
+}
+
+void Stats::contributeVarT(const double &x, const size_t &trait)
+{
+    traitstats[trait]->varT += x;
+}
+
+void Stats::contributeEcoVarA(const double &x, const size_t &eco,
+ const size_t &trait)
+{
+    traitstats[trait]->ecostats[eco].varA = x;
+}
+
+void Stats::contributeEcoVarN(const double &x, const size_t &eco,
+ const size_t &trait)
+{
+    traitstats[trait]->ecostats[eco].varN = x;
+}
+
+void Stats::setVariance()
+{
+    for (size_t trait : { x, y, z }) {
+
+        for (size_t eco : { 0u, 1u }) {
+            traitstats[trait]->setVarG(eco);
+            traitstats[trait]->setVarP(eco);
+        }
+
+        traitstats[trait]->setVarP();
+        traitstats[trait]->setVarG();
+        traitstats[trait]->setPst();
+        traitstats[trait]->setGst();
+        traitstats[trait]->setQst();
+        traitstats[trait]->setCst();
+        traitstats[trait]->setFst();
+
+    }
 }
 
 void Stats::setEcoIsolation()
 {
-    EI = traitstats[0u].Pst;
+    EI = traitstats[0u]->Pst;
 }
 
 void Stats::setSpatialIsolation(const vecPop &pops)
@@ -146,6 +301,8 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
 }
 
 
+// Record the data
+
 void Stats::save(Output &out)
 {
 
@@ -170,20 +327,20 @@ void Stats::save(Output &out)
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        write(traitstats[trait].getMeanP(0u), out.files[f]); ++f;
-        write(traitstats[trait].getMeanP(1u), out.files[f]); ++f;
-        write(traitstats[trait].getMeanP(), out.files[f]); ++f;
-        write(traitstats[trait].varP, out.files[f]); ++f;
-        write(traitstats[trait].varG, out.files[f]); ++f;
-        write(traitstats[trait].varA, out.files[f]); ++f;
-        write(traitstats[trait].varD, out.files[f]); ++f;
-        write(traitstats[trait].varI, out.files[f]); ++f;
-        write(traitstats[trait].varN, out.files[f]); ++f;
-        write(traitstats[trait].Pst, out.files[f]); ++f;
-        write(traitstats[trait].Gst, out.files[f]); ++f;
-        write(traitstats[trait].Qst, out.files[f]); ++f;
-        write(traitstats[trait].Cst, out.files[f]); ++f;
-        write(traitstats[trait].Fst, out.files[f]); ++f;
+        write(traitstats[trait]->getMeanP(0u), out.files[f]); ++f;
+        write(traitstats[trait]->getMeanP(1u), out.files[f]); ++f;
+        write(traitstats[trait]->getMeanP(), out.files[f]); ++f;
+        write(traitstats[trait]->varP, out.files[f]); ++f;
+        write(traitstats[trait]->varG, out.files[f]); ++f;
+        write(traitstats[trait]->varA, out.files[f]); ++f;
+        write(traitstats[trait]->varD, out.files[f]); ++f;
+        write(traitstats[trait]->varI, out.files[f]); ++f;
+        write(traitstats[trait]->varN, out.files[f]); ++f;
+        write(traitstats[trait]->Pst, out.files[f]); ++f;
+        write(traitstats[trait]->Gst, out.files[f]); ++f;
+        write(traitstats[trait]->Qst, out.files[f]); ++f;
+        write(traitstats[trait]->Cst, out.files[f]); ++f;
+        write(traitstats[trait]->Fst, out.files[f]); ++f;
     }
 
     // Speciation metrics
@@ -222,133 +379,15 @@ void Stats::write(const vecDbl &vec, std::ofstream * &out)
 }
 
 
-void Stats::accumulate(const vecPop &pops)
-{
-    for (auto pop : pops) {
-        for (size_t ind = 0u; ind < pop->getPopSize(); ++ind) {
-
-            const size_t eco = pop->getEcotype(ind);
-            ++ecocounts[eco];
-
-            for (size_t trait : { x, y, z }) {
-                const double gen = pop->getGenValue(ind, trait);
-                const double phe = pop->getTraitValue(ind, trait);
-                traitstats[trait].ecostats[eco].sumgen += gen;
-                traitstats[trait].ecostats[eco].sumphe += phe;
-                traitstats[trait].ecostats[eco].ssqgen += utl::sqr(gen);
-                traitstats[trait].ecostats[eco].ssqphe += utl::sqr(phe);
-            }
-        }
-    }
-
-    for (size_t trait : { x, y, z }) {
-        for (size_t eco : { 0u, 1u }) {
-            traitstats[trait].sumgen += traitstats[trait].ecostats[eco].sumgen;
-            traitstats[trait].sumphe += traitstats[trait].ecostats[eco].sumphe;
-            traitstats[trait].ssqgen += traitstats[trait].ecostats[eco].ssqgen;
-            traitstats[trait].ssqphe += traitstats[trait].ecostats[eco].ssqphe;
-        }
-    }
-}
-
-void Stats::scanGenome(const vecPop &pops, const vecUns &traits)
-{
-
-    for (size_t locus = 0u; locus < genomescan.size(); ++locus) {
-
-        genomescan[locus]->accumulate(pops);
-        genomescan[locus]->regress();
-        genomescan[locus]->setEcotypes();
-        genomescan[locus]->setVarG();
-        genomescan[locus]->setVarP();
-        genomescan[locus]->setVarA();
-        genomescan[locus]->setVarD();
-        genomescan[locus]->setVarI();
-        genomescan[locus]->setVarN();
-        genomescan[locus]->setPst();
-        genomescan[locus]->setGst();
-        genomescan[locus]->setQst();
-        genomescan[locus]->setCst();
-        genomescan[locus]->setFst();
-
-        contributeVarA(genomescan[locus]->varA, traits[locus]);
-        contributeVarD(genomescan[locus]->varD, traits[locus]);
-        contributeVarI(genomescan[locus]->varI, traits[locus]);
-        contributeVarN(genomescan[locus]->varN, traits[locus]);
-
-        for (size_t e : { 0u, 1u }) {
-            contributeEcoVarA(genomescan[locus]->getVarA(e), e, traits[locus]);
-            contributeEcoVarN(genomescan[locus]->getVarN(e), e, traits[locus]);
-        }
-
-    }
-}
-
-void Stats::setVariance()
-{
-    for (size_t zyg : { x, y, z }) {
-
-        for (size_t eco : { 0u, 1u }) {
-            traitstats[zyg].ecostats[eco].setVarP(ecocounts[eco]);
-            traitstats[zyg].ecostats[eco].setVarG(ecocounts[eco]);
-        }
-
-        traitstats[zyg].setVarP();
-        traitstats[zyg].setVarG();
-    }
-}
 
 
-void Stats::contributeVarA(const double &x, const size_t &trait)
-{
-    traitstats[trait].varA += x;
-}
 
-void Stats::contributeVarD(const double &x, const size_t &trait)
-{
-    traitstats[trait].varD += x;
-}
 
-void Stats::contributeVarI(const double &x, const size_t &trait)
-{
-    traitstats[trait].varI += x;
-}
 
-void Stats::contributeVarN(const double &x, const size_t &trait)
-{
-    traitstats[trait].varN += x;
-}
 
-void Stats::contributeEcoVarA(const double &x, const size_t &eco,
- const size_t &trait)
-{
-    traitstats[trait].ecostats[eco].varA = x;
-}
 
-void Stats::contributeEcoVarN(const double &x, const size_t &eco,
- const size_t &trait)
-{
-    traitstats[trait].ecostats[eco].varN = x;
-}
 
-std::vector<Stats::Trait> Stats::makeEmptyTraits()
-{
-    std::vector<Stats::Trait> traits(totcount);
-    for (size_t i = 0u; i < 3u; ++i)
-        traits[i] = Stats::Trait();
-    return traits;
-}
 
-std::vector<Stats::Locus *> Stats::makeEmptyGenomeScan(const GenArch &arch)
-{
-    std::vector<Stats::Locus *> scan(arch.nLoci);
-    for (size_t locus = 0u; locus < arch.nLoci; ++locus) {
-        const size_t trait = arch.traits[locus];
-        const double envar = arch.locusVarE[trait];
-        scan[locus] = new Stats::Locus(locus, envar);
-    }
-    return scan;
-}
 
 
 

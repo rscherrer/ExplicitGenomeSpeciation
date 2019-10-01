@@ -52,7 +52,7 @@ void tst::makeValidParamFile()
         << "interactionWeightShape" << '\t' << 5.0 << '\n'
         << "interactionWeightScale" << '\t' << 1.0 << '\n'
         << "dominanceVariance" << '\t' << 1.0 << '\n'
-        << "tBurnIn" << '\t' << 1 << '\n'
+        << "tBurnIn" << '\t' << 10 << '\n'
         << "tEndSim" << '\t' << 5 << '\n'
         << "tSave" << '\t' << 1 << '\n'
         << "seed" << '\t' << 42 << '\n'

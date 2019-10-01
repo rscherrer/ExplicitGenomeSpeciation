@@ -105,6 +105,19 @@ void Stats::Locus::setVarN()
     varN = varD + 0.5 * varI;
 }
 
+void Stats::Locus::setVarS()
+{
+    varS += ecocounts[0u] * utl::sqr(ecostats[0u].p);
+    varS += ecocounts[1u] * utl::sqr(ecostats[1u].p);
+    varS /= totcount;
+    varS -= utl::sqr(p);
+}
+
+void Stats::Locus::setVarT()
+{
+    varT += p * (1.0 - p);
+}
+
 void Stats::Locus::setPst()
 {
     const double v0 = getVarP(0u);

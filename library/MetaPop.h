@@ -18,7 +18,7 @@ class MetaPop
 public:
 
     MetaPop(const vecUns& popSizes, const Param &pars,
-     const GenArch &arch) :
+     const GenArch &arch, const bool &isburnin) :
         pops({ }),
         popsizes(popSizes),
         dispersal(pars.getDispersalRate()),
@@ -51,7 +51,7 @@ public:
             const double max = maxfeed;
             const vecDbl k = resources[p];
             const vecDbl r = replenish[p];
-            pops.push_back(new Deme(n, ecosel, max, k, r, arch, true));
+            pops.push_back(new Deme(n, ecosel, max, k, r, arch, isburnin));
         }
     }
 
@@ -64,9 +64,11 @@ public:
     double getEcoIsolation() const { return stats.getEcoIsolation(); }
     double getSpatialIsolation() const { return stats.getSpatialIsolation(); }
     double getMatingIsolation() const { return stats.getMatingIsolation(); }
+    double getPst(const size_t &trait) const { return stats.getPst(trait); }
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
+    void consume();
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);

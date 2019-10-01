@@ -30,6 +30,12 @@ void MetaPop::analyze(const GenArch& arch)
     stats.setMatingIsolation(pops, matingcost, sexsel);
 }
 
+void MetaPop::consume()
+{
+    for (size_t p = 0u; p < 2u; ++p)
+        pops[p]->consume();
+}
+
 int MetaPop::evolve(const GenArch &arch)
 {
     bool isBurnin = true;
@@ -53,7 +59,6 @@ int MetaPop::evolve(const GenArch &arch)
 
         // Analyze and record
         if (record && t % tsave == 0u && t > 0) {
-
             analyze(arch);
             stats.save(out);
         }

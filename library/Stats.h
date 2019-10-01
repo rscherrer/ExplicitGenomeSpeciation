@@ -57,6 +57,8 @@ public:
             varD(0.0),
             varI(0.0),
             varN(0.0),
+            varS(0.0),
+            varT(0.0),
             Pst(0.0),
             Gst(0.0),
             Qst(0.0),
@@ -126,6 +128,8 @@ public:
         void setVarD();
         void setVarI();
         void setVarN();
+        void setVarS();
+        void setVarT();
         void setPst();
         void setGst();
         void setQst();
@@ -167,6 +171,8 @@ public:
         double varD;
         double varI;
         double varN;
+        double varS;
+        double varT;
         double Pst;
         double Gst;
         double Qst;
@@ -201,6 +207,8 @@ public:
             varD(0.0),
             varI(0.0),
             varN(0.0),
+            varS(0.0),
+            varT(0.0),
             Pst(0.0),
             Gst(0.0),
             Qst(0.0),
@@ -246,9 +254,24 @@ public:
 
         double getMeanP() const;
         double getMeanP(const size_t&) const;
+        double getSumGen(const size_t&) const;
+        double getSumPhe(const size_t&) const;
+        double getSsqGen(const size_t&) const;
+        double getSsqPhe(const size_t&) const;
+        double getVarP(const size_t&) const;
+        double getVarG(const size_t&) const;
+        double getVarA(const size_t&) const;
+        double getVarN(const size_t&) const;
 
         void setVarG();
         void setVarP();
+        void setVarG(const size_t&);
+        void setVarP(const size_t&);
+        void setPst();
+        void setGst();
+        void setQst();
+        void setCst();
+        void setFst();
 
         void setTotCount(const double&);
         void setEcoCounts(const vecUns&);
@@ -270,6 +293,8 @@ public:
         double varD;
         double varI;
         double varN;
+        double varS;
+        double varT;
         double Pst;
         double Gst;
         double Qst;
@@ -280,9 +305,11 @@ public:
         static vecUns ecocounts;
     };
 
+    // Used for testing
     double getEcoIsolation() const { return EI; }
     double getSpatialIsolation() const { return SI; }
     double getMatingIsolation() const { return RI; }
+    double getPst(const size_t &t) const { return traitstats[t]->Pst; }
 
     void reset(const size_t&, const GenArch&);
     void analyze(const vecPop&, const GenArch&);
@@ -301,19 +328,21 @@ private:
     void contributeVarD(const double&, const size_t&);
     void contributeVarI(const double&, const size_t&);
     void contributeVarN(const double&, const size_t&);
+    void contributeVarS(const double&, const size_t&);
+    void contributeVarT(const double&, const size_t&);
     void contributeEcoVarA(const double&, const size_t&, const size_t&);
     void contributeEcoVarN(const double&, const size_t&, const size_t&);
 
     void write(const double&, std::ofstream *&);
     void write(const vecDbl&, std::ofstream *&);
 
-    std::vector<Stats::Trait> makeEmptyTraits();
+    std::vector<Stats::Trait *> makeEmptyTraits();
     std::vector<Stats::Locus *> makeEmptyGenomeScan(const GenArch&);
 
     size_t time;
 
     std::vector<Stats::Locus *> genomescan;
-    std::vector<Stats::Trait> traitstats;
+    std::vector<Stats::Trait *> traitstats;
 
     Matrix resources;
     vecUns popcounts;
