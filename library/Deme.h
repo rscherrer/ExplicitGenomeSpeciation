@@ -7,7 +7,7 @@
 #include "Utilities.h"
 #include "Types.h"
 #include <cassert>
-// #include <stddef.h> // maybe this was making travis unhappy
+#include <stddef.h> // maybe this was making travis unhappy
 
 
 class Individual;

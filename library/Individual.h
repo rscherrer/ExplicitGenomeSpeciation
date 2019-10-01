@@ -12,7 +12,7 @@
 //#include <cmath> // exponential?
 #include <cassert>
 //#include <algorithm>
-//#include <stddef.h>
+#include <stddef.h>
 #include <boost/dynamic_bitset.hpp>
 
 typedef boost::dynamic_bitset<> Haplotype;
