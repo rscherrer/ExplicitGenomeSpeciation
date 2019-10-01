@@ -14,7 +14,7 @@ Crowd Deme::populate(const size_t &n, const double &ecosel,
     Crowd indivs;
 
     for (size_t ind = 0u; ind < n; ++ind) {
-        auto indiv = new Individual(arch, ecosel, maxfeeding, arch.snpFreq);
+        auto indiv = Individual(arch, ecosel, maxfeeding, arch.snpFreq);
         indivs.push_back(indiv);
     }
 
@@ -39,11 +39,11 @@ void Deme::sortSexes()
     males.shrink_to_fit();
 
     // Sort out moms and dads
-    for (auto ind : individuals)
-        if (ind->getGender())
-            females.push_back(ind);
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+        if (individuals[ind].getGender())
+            females.push_back(individuals[ind]);
         else
-            males.push_back(ind);
+            males.push_back(individuals[ind]);
 }
 
 Crowd Deme::emigrate(const double &rate)
@@ -84,8 +84,8 @@ Crowd Deme::emigrate(const double &rate)
 
 void Deme::immigrate(const Crowd &newcomers)
 {
-    for (auto ind : newcomers)
-        individuals.push_back(ind);
+    for (size_t ind = 0u; ind < newcomers.size(); ++ind)
+        individuals.push_back(newcomers[ind]);
 }
 
 void Deme::consume()
@@ -98,11 +98,9 @@ void Deme::consume()
 
     // Calculate the total amount of food consumed
     vecDbl consumed{0.0, 0.0};
-    for (auto ind : individuals) {
-        vecDbl rates = ind->getFeedingRates();
-        if (burnin) rates[1u] = 0.0;
-        for (size_t res = 0u; res < 2u; ++res)
-            consumed[res] += rates[res];
+    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
+        consumed[0u] += individuals[ind].getFeedingRate(0u);
+        if (!burnin) consumed[1u] += individuals[ind].getFeedingRate(1u);
     }
 
     assert(consumed[0u] >= 0.0);
@@ -118,8 +116,8 @@ void Deme::consume()
     assert(resources[1u] >= 0.0);
 
     // Split the resource among the individuals
-    for (auto ind : individuals) {
-        ind->feed(resources);
+    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
+        individuals[ind].feed(resources);
     }
 
 }
@@ -133,9 +131,9 @@ void Deme::reproduce(const double &birth, const double &sexsel,
 
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
-    for (auto male : males) {
-        double fit = male->getFitness();
-        if (burnin) fit *= exp(- ecosel * utl::sqr(male->getMatePref()));
+    for (size_t male = 0u; male < males.size(); ++male) {
+        double fit = males[male].getFitness();
+        if (burnin) fit *= exp(- ecosel * utl::sqr(males[male].getMatePref()));
         successes.push_back(fit);
     }    
 
@@ -147,11 +145,12 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     const size_t seasonEnd = rnd::geometric(cost);
 
     // Every mom gets a chance to produce babies
-    for (auto mom : females) {
+    for (size_t mom = 0u; mom < females.size(); ++mom) {
 
         // Produce a certain number of offspring
-        double fecundity = birth * mom->getFitness();
-        if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom->getMatePref()));
+        double fecundity = birth * females[mom].getFitness();
+        if (burnin)
+            fecundity *= exp(- ecosel * utl::sqr(females[mom].getMatePref()));
         size_t nOffspring = rnd::poisson(fecundity);
 
         size_t time = 0u;
@@ -171,19 +170,19 @@ void Deme::reproduce(const double &birth, const double &sexsel,
             auto dad = males[encounter];
 
             // Upon mating...
-            if (mom->acceptMate(dad->getEcoTrait(), sexsel)) {
+            if (females[mom].acceptMate(dad.getEcoTrait(), sexsel)) {
 
                 while (nOffspring) {
 
                     // Produce gametes
-                    Haplotype egg = mom->recombine(arch);
-                    mom->mutate(egg);
+                    Haplotype egg = females[mom].recombine(arch);
+                    females[mom].mutate(egg);
 
-                    Haplotype sperm = dad->recombine(arch);
-                    dad->mutate(sperm);
+                    Haplotype sperm = dad.recombine(arch);
+                    dad.mutate(sperm);
 
                     // And a baby
-                    auto off = new Individual(arch, egg, sperm, ecosel,
+                    auto off = Individual(arch, egg, sperm, ecosel,
                      maxfeeding);
                     offspring.push_back(off);
                     --nOffspring;
@@ -202,11 +201,12 @@ bool Deme::survive(const double &survival)
 {
 
     // Sample life or death for every adult
-    for (auto ind : individuals)
+    for (size_t ind = 0u; ind < individuals.size(); ++ind)
         if (rnd::bernoulli(survival))
-            survivors.push_back(ind);
+            survivors.push_back(individuals[ind]);
 
     individuals.clear();
+    individuals.shrink_to_fit();
     assert(individuals.size() == 0u);
 
     const size_t nSurvivors = survivors.size();
@@ -214,22 +214,23 @@ bool Deme::survive(const double &survival)
 
     // Survivors make it to the next generation
     if (isAlive) {
-        for (auto ind : survivors)
-            individuals.push_back(ind);
+        for (size_t ind = 0u; ind < survivors.size(); ++ind)
+            individuals.push_back(survivors[ind]);
         survivors.clear();
+        survivors.shrink_to_fit();
     }
 
     // Offspring make it to the next generation
-    const size_t nOffspring = offspring.size();
-    if (nOffspring != 0u) {
-        for (auto ind : offspring)
-            individuals.push_back(ind);
-        offspring.clear();
-    }
+    const size_t noff = offspring.size();
+    if (noff > 0u)
+        for (size_t ind = 0u; ind < noff; ++ind)
+            individuals.push_back(offspring[ind]);
+    offspring.clear();
+    offspring.shrink_to_fit();
 
     assert(survivors.size() == 0u);
     assert(offspring.size() == 0u);
-    assert(individuals.size() == nSurvivors + nOffspring);
+    assert(individuals.size() == nSurvivors + noff);
 
     return isAlive;
 }
@@ -239,27 +240,27 @@ bool Deme::survive(const double &survival)
 
 size_t Deme::getEcotype(const size_t &i) const
 {
-    return individuals[i]->getEcotype();
+    return individuals[i].getEcotype();
 }
 
 double Deme::getGenValue(const size_t &i, const size_t &t) const
 {
-    return individuals[i]->getGenValue(t);
+    return individuals[i].getGenValue(t);
 }
 
 double Deme::getTraitValue(const size_t &i, const size_t &t) const
 {
-    return individuals[i]->getTraitValue(t);
+    return individuals[i].getTraitValue(t);
 }
 
 double Deme::getLocusValue(const size_t &i, const size_t &l) const
 {
-    return individuals[i]->getLocusValue(l);
+    return individuals[i].getLocusValue(l);
 }
 
 size_t Deme::getZygosity(const size_t &i, const size_t &l) const
 {
-    return individuals[i]->getZygosity(l);
+    return individuals[i].getZygosity(l);
 }
 
 
@@ -269,25 +270,25 @@ void Deme::resetEcoTraits(const double &value, const double &sel,
  const double &max)
 {
     for (auto ind : individuals)
-        ind->setEcoTrait(value, sel, max);
+        ind.setEcoTrait(value, sel, max);
 }
 
 void Deme::resetMatePrefs(const double &value)
 {
     for (auto ind : individuals)
-        ind->setMatePref(value);
+        ind.setMatePref(value);
 }
 
 void Deme::resetGenders(const bool &sex)
 {
     for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        individuals[ind]->setGender(sex);
+        individuals[ind].setGender(sex);
     }
 }
 
 void Deme::resetEcotypes(const size_t &ecotype)
 {
     for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        individuals[ind]->resetEcotype(ecotype);
+        individuals[ind].resetEcotype(ecotype);
 }
 

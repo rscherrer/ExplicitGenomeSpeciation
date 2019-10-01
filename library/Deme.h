@@ -12,8 +12,7 @@
 
 class Individual;
 
-typedef Individual * PInd;
-typedef std::vector<PInd> Crowd;
+typedef std::vector<Individual> Crowd;
 
 class Deme {
 
@@ -46,9 +45,9 @@ public:
     size_t getNFemales() const { return females.size(); }
     size_t getNMales() const { return males.size(); }
     double getResource(const size_t &r) const { return resources[r]; }
-    PInd getInd(const size_t &i) const { return individuals[i]; }
-    PInd getMale(const size_t &i) const { return males[i]; }
-    PInd getFemale(const size_t &i) const { return females[i]; }
+    Individual getInd(const size_t &i) const { return individuals[i]; }
+    Individual getMale(const size_t &i) const { return males[i]; }
+    Individual getFemale(const size_t &i) const { return females[i]; }
     size_t getEcotype(const size_t&) const;
     double getGenValue(const size_t&, const size_t&) const;
     double getTraitValue(const size_t&, const size_t&) const;
@@ -90,6 +89,5 @@ private:
     bool burnin;
 
 };
-
 
 #endif

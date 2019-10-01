@@ -278,8 +278,8 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
             size_t nencounters = rnd::poisson(1.0 / matingcost);
             while (nencounters) {
                 auto candidate = allMales[rnd::random(allMales.size())];
-                if (fem->acceptMate(candidate->getEcoTrait(), sexsel))
-                    ++m[fem->getEcotype()][candidate->getEcotype()];
+                if (fem.acceptMate(candidate.getEcoTrait(), sexsel))
+                    ++m[fem.getEcotype()][candidate.getEcotype()];
                 --nencounters;
             }
         }

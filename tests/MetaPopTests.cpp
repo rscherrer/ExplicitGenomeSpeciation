@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     std::clog << "Testing an immortal population...\n";
 
     Param pars;
-    pars.setTEndSim(100u);
+    pars.setTEndSim(10u);
     pars.setTSave(1u);
     pars.setInitialPopSize(10u);
     pars.setDispersalRate(0.0);

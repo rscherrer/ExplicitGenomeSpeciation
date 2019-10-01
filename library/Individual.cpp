@@ -312,12 +312,12 @@ void Individual::mutate(Haplotype &gamete, const double &rate)
 
 }
 
-size_t Individual::getZygosity(const size_t &locus)
+size_t Individual::getZygosity(const size_t &locus) const
 {
     return genome[0u][locus] + genome[1u][locus];
 }
 
-double Individual::getLocusValue(const size_t &locus)
+double Individual::getLocusValue(const size_t &locus) const
 {
     return locivalues[locus];
 }

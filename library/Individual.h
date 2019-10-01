@@ -23,7 +23,7 @@ class Individual {
     friend class Population;
     friend class MetaPop;
 
-    typedef Individual const * PInd;
+    typedef Individual PInd;
 
 public:
 
@@ -78,13 +78,13 @@ public:
     double getTraitValue(const size_t &t) const { return traitvalues[t]; }
     double getGenValue(const size_t &t) const { return genvalues[t]; }
     vecDbl getTraits() const { return traitvalues; }
-    vecDbl getFeedingRates() const { return feedingRates; }
+    double getFeedingRate(const size_t &r) const { return feedingRates[r]; }
     vecDbl getGenValues() const { return genvalues; }
     Haplotype getSequence(const size_t &i) const { return genome[i]; }
     vecDbl getExpression() const { return transcriptome; }
     size_t getEcotype() const { return ecotype; }
-    size_t getZygosity(const size_t&);
-    double getLocusValue(const size_t&);
+    size_t getZygosity(const size_t&) const;
+    double getLocusValue(const size_t&) const;
     size_t getAlleleSum(const size_t&);
     bool acceptMate(const double&, const double&) const;
     Haplotype recombine(const GenArch&);
