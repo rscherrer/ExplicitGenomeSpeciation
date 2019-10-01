@@ -47,6 +47,7 @@ Crowd Deme::emigrate(const double &rate)
     assert(residents.size() <= individuals.size());
 
     individuals.clear();
+    individuals.shrink_to_fit();
     individuals = residents;
 
     return migrants;
@@ -108,6 +109,8 @@ void Deme::sortSexes()
 
     females.clear();
     males.clear();
+    females.shrink_to_fit();
+    males.shrink_to_fit();
 
     // Sort out moms and dads
     for (auto ind : individuals)
