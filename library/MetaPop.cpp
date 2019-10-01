@@ -1,40 +1,7 @@
 #include "MetaPop.h"
 
-void MetaPop::resetEcoTraits(const size_t &p, const double &x)
-{
-    pops[p]->resetEcoTraits(x, ecosel, maxfeed);
-}
 
-void MetaPop::resetMatePrefs(const size_t &p, const double &y)
-{
-    pops[p]->resetMatePrefs(y);
-}
-
-void MetaPop::resetEcotypes(const size_t &p, const size_t &e)
-{
-    pops[p]->resetEcotypes(e);
-}
-
-void MetaPop::resetGenders(const size_t &p, const bool &sex)
-{
-    pops[p]->resetGenders(sex);
-    pops[p]->sortSexes();
-}
-
-void MetaPop::analyze(const GenArch& arch)
-{
-    stats.reset(t, arch);
-    stats.analyze(pops, arch);
-    stats.setEcoIsolation();
-    stats.setSpatialIsolation(pops);
-    stats.setMatingIsolation(pops, matingcost, sexsel);
-}
-
-void MetaPop::consume()
-{
-    for (size_t p = 0u; p < 2u; ++p)
-        pops[p]->consume();
-}
+// Main function
 
 int MetaPop::evolve(const GenArch &arch)
 {
@@ -90,6 +57,18 @@ int MetaPop::evolve(const GenArch &arch)
     return t;
 }
 
+void MetaPop::analyze(const GenArch& arch)
+{
+    stats.reset(t, arch);
+    stats.analyze(pops, arch);
+    stats.setEcoIsolation();
+    stats.setSpatialIsolation(pops);
+    stats.setMatingIsolation(pops, matingcost, sexsel);
+}
+
+
+// Getters
+
 size_t MetaPop::getNOffspring(const size_t &p) const
 {
     return pops[p]->getNOffspring();
@@ -98,4 +77,34 @@ size_t MetaPop::getNOffspring(const size_t &p) const
 double MetaPop::getResource(const size_t &p, const size_t &r) const
 {
     return pops[p]->getResource(r);
+}
+
+
+// Resetters used in tests
+
+void MetaPop::consume() // metapopulation-level fitness/ecotype resetter
+{
+    for (size_t p = 0u; p < 2u; ++p)
+        pops[p]->consume();
+}
+
+void MetaPop::resetEcoTraits(const size_t &p, const double &x)
+{
+    pops[p]->resetEcoTraits(x, ecosel, maxfeed);
+}
+
+void MetaPop::resetMatePrefs(const size_t &p, const double &y)
+{
+    pops[p]->resetMatePrefs(y);
+}
+
+void MetaPop::resetEcotypes(const size_t &p, const size_t &e)
+{
+    pops[p]->resetEcotypes(e);
+}
+
+void MetaPop::resetGenders(const size_t &p, const bool &sex)
+{
+    pops[p]->resetGenders(sex);
+    pops[p]->sortSexes();
 }

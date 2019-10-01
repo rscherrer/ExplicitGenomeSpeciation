@@ -9,6 +9,96 @@ vecUns Stats::Trait::ecocounts = { 0u, 0u };
 // Module for trait-specific statistics
 //-//////////////////////////////////////
 
+
+// Variance calculations
+
+void Stats::Trait::setVarG()
+{
+    varG = ssqgen / totcount - utl::sqr(sumgen / totcount);
+    assert(varG >= 0.0);
+}
+
+void Stats::Trait::setVarP()
+{
+    varP = ssqphe / totcount - utl::sqr(sumphe / totcount);
+    assert(varP >= 0.0);
+}
+
+void Stats::Trait::setVarG(const size_t &eco)
+{
+    ecostats[eco].setVarG(ecocounts[eco]);
+}
+
+void Stats::Trait::setVarP(const size_t &eco)
+{
+    ecostats[eco].setVarP(ecocounts[eco]);
+}
+
+void Stats::Trait::setPst()
+{
+    const double v0 = getVarP(0u);
+    const double v1 = getVarP(1u);
+    const double v = varP;
+    const size_t n0 = ecocounts[0u];
+    const size_t n1 = ecocounts[1u];
+    const size_t n = totcount;
+
+    Pst = utl::Xst(v0, v1, v, n0, n1, n);
+    assert(Pst >= 0.0);
+    assert(Pst <= 1.0);
+}
+
+void Stats::Trait::setGst()
+{
+    const double v0 = getVarG(0u);
+    const double v1 = getVarG(1u);
+    const double v = varG;
+    const size_t n0 = ecocounts[0u];
+    const size_t n1 = ecocounts[1u];
+    const size_t n = totcount;
+
+    Gst = utl::Xst(v0, v1, v, n0, n1, n);
+    assert(Gst >= 0.0);
+    assert(Gst <= 1.0);
+}
+
+void Stats::Trait::setQst()
+{
+    const double v0 = getVarA(0u);
+    const double v1 = getVarA(1u);
+    const double v = varA;
+    const size_t n0 = ecocounts[0u];
+    const size_t n1 = ecocounts[1u];
+    const size_t n = totcount;
+
+    Qst = utl::Xst(v0, v1, v, n0, n1, n);
+    assert(Qst >= 0.0);
+    assert(Qst <= 1.0);
+}
+
+void Stats::Trait::setCst()
+{
+    const double v0 = getVarN(0u);
+    const double v1 = getVarN(1u);
+    const double v = varN;
+    const size_t n0 = ecocounts[0u];
+    const size_t n1 = ecocounts[1u];
+    const size_t n = totcount;
+
+    Cst = utl::Xst(v0, v1, v, n0, n1, n);
+    assert(Cst >= 0.0);
+    assert(Cst <= 1.0);
+}
+
+void Stats::Trait::setFst()
+{
+    if (varT == 0.0) return;
+    Fst = varS / varT;
+    assert(Fst <= 1.0); // Fst can be negative
+}
+
+
+
 // Getters
 
 double Stats::Trait::getMeanP() const
@@ -60,91 +150,6 @@ double Stats::Trait::getVarN(const size_t &eco) const
 {
     return ecostats[eco].varN;
 }
-
-
-// Variance calculations
-
-void Stats::Trait::setVarG()
-{
-    if (totcount == 0u) return;
-    varG = ssqgen / totcount - utl::sqr(sumgen / totcount);
-    assert(varG >= 0.0);
-}
-
-void Stats::Trait::setVarP()
-{
-    if (totcount == 0u) return;
-    varP = ssqphe / totcount - utl::sqr(sumphe / totcount);
-    assert(varP >= 0.0);
-}
-
-void Stats::Trait::setVarG(const size_t &eco)
-{
-    ecostats[eco].setVarG(ecocounts[eco]);
-}
-
-void Stats::Trait::setVarP(const size_t &eco)
-{
-    ecostats[eco].setVarP(ecocounts[eco]);
-}
-
-void Stats::Trait::setPst()
-{
-    const double v0 = getVarP(0u);
-    const double v1 = getVarP(1u);
-    const double v = varP;
-    const size_t n0 = ecocounts[0u];
-    const size_t n1 = ecocounts[1u];
-    const size_t n = totcount;
-
-    Pst = utl::Xst(v0, v1, v, n0, n1, n);
-}
-
-void Stats::Trait::setGst()
-{
-    const double v0 = getVarG(0u);
-    const double v1 = getVarG(1u);
-    const double v = varG;
-    const size_t n0 = ecocounts[0u];
-    const size_t n1 = ecocounts[1u];
-    const size_t n = totcount;
-
-    Gst = utl::Xst(v0, v1, v, n0, n1, n);
-}
-
-void Stats::Trait::setQst()
-{
-    const double v0 = getVarA(0u);
-    const double v1 = getVarA(1u);
-    const double v = varA;
-    const size_t n0 = ecocounts[0u];
-    const size_t n1 = ecocounts[1u];
-    const size_t n = totcount;
-
-    Qst = utl::Xst(v0, v1, v, n0, n1, n);
-}
-
-void Stats::Trait::setCst()
-{
-    const double v0 = getVarN(0u);
-    const double v1 = getVarN(1u);
-    const double v = varN;
-    const size_t n0 = ecocounts[0u];
-    const size_t n1 = ecocounts[1u];
-    const size_t n = totcount;
-
-    Cst = utl::Xst(v0, v1, v, n0, n1, n);
-}
-
-void Stats::Trait::setFst()
-{
-    if (varT == 0.0) return;
-    Fst = varS / varT;
-}
-
-
-
-
 
 
 
