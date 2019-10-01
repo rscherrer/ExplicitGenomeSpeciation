@@ -22,36 +22,36 @@ double utl::sqr(const double &number)
 
 vecDbl utl::ones(const size_t &n)
 {
-    vecDbl ones;
+    vecDbl ones(n);
     for (size_t i = 0u; i < n; ++i)
-        ones.push_back(1.0);
+        ones[i] = 1.0;
     return ones;
 }
 
 
 vecDbl utl::zeros(const size_t &n)
 {
-    vecDbl zeros;
+    vecDbl zeros(n);
     for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0.0);
+        zeros[i] = 0.0;
     return zeros;
 }
 
 
 vecUns utl::uzeros(const size_t &n)
 {
-    vecUns zeros;
+    vecUns zeros(n);
     for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0u);
+        zeros[i] = 0u;
     return zeros;
 }
 
 
 Matrix utl::matzeros(const size_t &ncol, const size_t &nrow)
 {
-    Matrix mat;
+    Matrix mat(ncol);
     for (size_t i = 0u; i < ncol; ++i)
-        mat.push_back(zeros(nrow));
+        mat[i] = zeros(nrow);
     return mat;
 }
 

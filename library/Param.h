@@ -8,7 +8,7 @@
 #include <chrono>
 //#include <sstream>
 #include <cassert>
-//#include <cstdint>
+#include <cstdint>
 
 class Param {
 
