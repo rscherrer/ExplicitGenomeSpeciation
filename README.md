@@ -9,9 +9,11 @@ An individual based simulation of adaptive speciation with explicit genome, addi
 
 # Compile
 
+```
 module load Qt5
 qmake EGS.pro
 make --silent release
+```
 
 # Run
 
