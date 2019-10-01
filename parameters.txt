@@ -1,7 +1,7 @@
 maxResourceCapacity 5000.0
 maxResourceGrowth 1.0
-habitatSymmetry 0.0
-ecoSelCoeff 1.0
+habitatSymmetry 1.0
+ecoSelCoeff 2.0
 initialPopSize 100
 dispersalRate 0.001
 birthRate 4.0
@@ -9,12 +9,12 @@ survivalProb 0.8
 matePreferenceStrength 10.0
 mateEvalutationCost 0.01
 maxFeedingRate 0.0004
-nEcoLoci 100
-nMatLoci 100
-nNtrLoci 100
-nEcoEdges 50
-nMatEdges 50
-nNtrEdges 50
+nEcoLoci 300
+nMatLoci 300
+nNtrLoci 300
+nEcoEdges 0
+nMatEdges 0
+nNtrEdges 0
 nChromosomes 3
 mutationRate 0.001
 recombinationRate 0.01
@@ -31,7 +31,6 @@ interactionWeightShape 5.0
 interactionWeightScale 1.0
 dominanceVariance 1.0
 tBurnIn 1000
-tEndSim 100000
+tEndSim 10000
 tSave 100
 record 1
-seed 42
