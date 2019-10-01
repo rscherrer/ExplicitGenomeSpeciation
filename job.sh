@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --time=00:10:00
-#SBATCH --mem=10Gb
-#SBATCH --partition=short
+#SBATCH --time=00:30:00
+#SBATCH --mem=32Gb
+#SBATCH --partition=gelifes
 
 ./EGS parameters.txt
