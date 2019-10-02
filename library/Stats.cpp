@@ -5,7 +5,7 @@
 //-/////////////////////////////
 
 
-// Reset the statistics
+// Initialization
 
 void Stats::reset(const size_t &t, const GenArch &arch)
 {
@@ -377,6 +377,13 @@ void Stats::write(const vecDbl &vec, std::ofstream * &out)
             write(x, out);
 }
 
+
+// Getters
+
+double Stats::getVarP(const size_t &trait, const size_t &eco) const
+{
+    return traitstats[trait]->getVarP(eco);
+}
 
 
 

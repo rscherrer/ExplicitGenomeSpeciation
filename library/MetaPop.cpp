@@ -106,6 +106,10 @@ double MetaPop::getResource(const size_t &p, const size_t &r) const
     return pops[p].getResource(r);
 }
 
+double MetaPop::getVarP(const size_t &trait, const size_t &eco) const
+{
+    return stats.getVarP(trait, eco);
+}
 
 // Resetters used in tests
 

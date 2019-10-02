@@ -116,6 +116,22 @@ BOOST_AUTO_TEST_CASE(XstDoesItsJob)
 
 }
 
+// Test that monomorphic ecotypes indeed have zero variance
+BOOST_AUTO_TEST_CASE(monomorphicEcotypesHaveZeroVariance)
+{
+    std::clog << "Checking that monomorphic ecotypes have zero variance...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0);
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0);
+    meta.resetEcoTraits(1u, 1.0);
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getVarP(0u, 0u), 0.0);
+    BOOST_CHECK_EQUAL(meta.getVarP(0u, 1u), 0.0);
+}
+
 // Test case: a population with ecological isolation = 1
 BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
 {

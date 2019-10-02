@@ -52,6 +52,7 @@ public:
     double getSpatialIsolation() const { return stats.getSpatialIsolation(); }
     double getMatingIsolation() const { return stats.getMatingIsolation(); }
     double getPst(const size_t &trait) const { return stats.getPst(trait); }
+    double getVarP(const size_t&, const size_t&) const;
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);

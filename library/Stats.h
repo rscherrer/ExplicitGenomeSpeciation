@@ -310,6 +310,7 @@ public:
     double getSpatialIsolation() const { return SI; }
     double getMatingIsolation() const { return RI; }
     double getPst(const size_t &t) const { return traitstats[t]->Pst; }
+    double getVarP(const size_t&, const size_t&) const;
 
     void reset(const size_t&, const GenArch&);
     void analyze(const vecPop&, const GenArch&);
