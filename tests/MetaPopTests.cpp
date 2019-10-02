@@ -137,12 +137,9 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
     meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.resetMatePrefs(0u, 1.0); // assortative mating everywhere
     meta.resetMatePrefs(1u, 1.0);
-    meta.sortSexes();
     meta.consume();
+    meta.sortSexes();
     meta.analyze(arch);
-
-    // add diagnostic tests here
-
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
 
 }

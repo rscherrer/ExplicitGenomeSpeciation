@@ -262,7 +262,7 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
         return;
 
     // Table of crossings
-    MatUns m = { utl::uzeros(2u), utl::uzeros(2u) };
+    MatUns m = utl::matuzeros(2u, 2u);
 
     // Make a vector with all males of the metapop
     Crowd allMales;
@@ -271,14 +271,15 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
             allMales.push_back(pops[p].getMale(i));
 
     // Loop through the females of the metapop and test their preference
-    for (size_t p = 0u; p < 2u; ++p) {
-        for (size_t i = 0u; i < pops[p].getNFemales(); ++i) {
-            auto fem = pops[p].getFemale(i);
+    for (auto &pop : pops) {
+        for (size_t i = 0u; i < pop.getNFemales(); ++i) {
+            Individual fem = pop.getFemale(i);
             size_t nencounters = rnd::poisson(1.0 / matingcost);
             while (nencounters) {
-                auto candidate = allMales[rnd::random(allMales.size())];
-                if (fem.acceptMate(candidate.getEcoTrait(), sexsel))
-                    ++m[fem.getEcotype()][candidate.getEcotype()];
+                const size_t cand = rnd::random(allMales.size()); // candidate
+                const double maletrait = allMales[cand].getEcoTrait();
+                if (fem.acceptMate(maletrait, sexsel))
+                    ++m[fem.getEcotype()][allMales[cand].getEcotype()];
                 --nencounters;
             }
         }

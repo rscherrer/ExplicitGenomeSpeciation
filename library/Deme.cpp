@@ -244,6 +244,13 @@ size_t Deme::getSumEcotypes() const
     return sum;
 }
 
+size_t Deme::getSumFemEcotypes() const
+{
+    size_t sum = 0u;
+    for (auto &fem : females) sum += fem.getEcotype();
+    return sum;
+}
+
 double Deme::getGenValue(const size_t &i, const size_t &t) const
 {
     return individuals[i].getGenValue(t);

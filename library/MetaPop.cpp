@@ -101,6 +101,13 @@ size_t MetaPop::getSumEcotypes(const size_t &p) const
     return pops[p].getSumEcotypes();
 }
 
+size_t MetaPop::getSumFemEcotypes() const
+{
+    double sum = 0.0;
+    for (auto &pop : pops) sum += pop.getSumFemEcotypes();
+    return sum;
+}
+
 double MetaPop::getResource(const size_t &p, const size_t &r) const
 {
     return pops[p].getResource(r);

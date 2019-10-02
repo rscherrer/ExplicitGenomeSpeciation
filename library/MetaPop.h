@@ -47,6 +47,7 @@ public:
     size_t getNFemales(const size_t &p) const { return pops[p].getNFemales(); }
     size_t getNOffspring(const size_t&) const;
     size_t getSumEcotypes(const size_t&) const;
+    size_t getSumFemEcotypes() const;
     size_t getEcoCount(const size_t &e) const { return stats.getEcoCount(e); }
     double getResource(const size_t&, const size_t&) const;
     double getEcoIsolation() const { return stats.getEcoIsolation(); }
@@ -57,6 +58,7 @@ public:
     double getSsqPhe(const size_t&, const size_t&) const;
     double getSumPhe(const size_t&, const size_t&) const;
     double getSumTrait(const size_t&, const size_t&) const;
+
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);

@@ -45,6 +45,7 @@ public:
     size_t getNFemales() const { return females.size(); }
     size_t getNMales() const { return males.size(); }
     size_t getSumEcotypes() const;
+    size_t getSumFemEcotypes() const;
     double getResource(const size_t &r) const { return resources[r]; }
     Individual getInd(const size_t &i) const { return individuals[i]; }
     Individual getMale(const size_t &i) const { return males[i]; }
