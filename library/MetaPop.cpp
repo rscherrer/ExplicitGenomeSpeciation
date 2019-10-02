@@ -44,13 +44,7 @@ int MetaPop::evolve(const GenArch &arch)
         if (t > 0 && isBurnin) {
             isBurnin = false;
             for (auto &pop : pops) pop.exitBurnIn();
-        }
-
-        // Analyze and record
-        if (record && t % tsave == 0u && t > 0) {
-            analyze(arch);
-            stats.save(out);
-        }
+        }        
 
         // Dispersal (only if not burnin)
         if (t > 0) {
@@ -71,6 +65,12 @@ int MetaPop::evolve(const GenArch &arch)
         if (isExtant == 0u) {
             std::clog << "The population went extinct at t = " << t << '\n';
             break;
+        }
+
+        // Analyze and record
+        if (record && t % tsave == 0u && t > 0) {
+            analyze(arch);
+            stats.save(out);
         }
     }
 

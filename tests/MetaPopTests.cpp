@@ -86,50 +86,60 @@ BOOST_AUTO_TEST_CASE(individualsEcotypesAreCorrectIfOnlyOneResource)
 
 }
 
+// Test case: a population with ecological isolation = 1
+BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
+{
+
+    std::clog << "Testing full ecological isolation...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0);
+    meta.resetEcoTraits(1u, 1.0);
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
+
+}
+
+// Test case: a population with spatial isolation = 1
+BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
+{
+    std::clog << "Testing full spatial isolation...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
+    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
+
+}
+
+// Test case: a population with mating isolation = 1
+BOOST_AUTO_TEST_CASE(fullMatingIsolation)
+{
+    std::clog << "Testing full mating isolation...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0);
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0);
+    meta.resetEcoTraits(1u, 1.0);
+    meta.resetMatePrefs(0u, 1.0);
+    meta.resetMatePrefs(1u, 1.0);
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
+
+}
+
 BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
 
-    // Test case: a population with ecological isolation = 1
-    BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
-    {
 
-        std::clog << "Testing full ecological isolation...\n";
-        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, false);
-        meta.resetEcoTraits(0u, -1.0);
-        meta.resetEcoTraits(1u, 1.0);
-        meta.consume();
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
-
-    }
-
-    // Test case: a population with spatial isolation = 1
-    BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
-    {
-        std::clog << "Testing full spatial isolation...\n";
-        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, false);
-        meta.resetEcoTraits(0u, -1.0);
-        meta.resetEcoTraits(1u, 1.0);
-        meta.consume();
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
-
-    }
-
-    // Test case: a population with mating isolation = 1
-    BOOST_AUTO_TEST_CASE(fullMatingIsolation)
-    {
-
-        std::clog << "Testing full mating isolation...\n";
-        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, false);
-        meta.resetEcoTraits(0u, -1.0);
-        meta.resetEcoTraits(1u, 1.0);
-        meta.resetMatePrefs(0u, 1.0);
-        meta.resetMatePrefs(1u, 1.0);
-        meta.consume();
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
-
-    }
 
     BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
     {
