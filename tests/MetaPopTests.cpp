@@ -144,53 +144,56 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
 
 }
 
-BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
+BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
+{
+    std::clog << "Testing spatial isolation with only one population...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0);
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+}
 
-    BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
-    {
-        std::clog << "Testing spatial isolation with only one population...\n";
-        MetaPop meta = MetaPop({ n0, 0u }, pars, arch, false);
-        meta.resetEcoTraits(0u, -1.0);
-        meta.consume();
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
-    }
+BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
+{
 
-    BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
-    {
+    std::clog << "Testing spatial isolation with only one ecotype...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.consume();
+    meta.resetEcotypes(0u, 1u);
+    meta.resetEcotypes(1u, 1u);
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+}
 
-        std::clog << "Testing spatial isolation with only one ecotype...\n";
-        MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, false);
-        meta.consume();
-        meta.resetEcotypes(0u, 1u);
-        meta.resetEcotypes(1u, 1u);
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
-    }
+BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
+{
 
-    BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
-    {
+    std::clog << "Testing mating isolation when only one sex...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    MetaPop meta = MetaPop({ 100u, 0 }, pars, arch, false);
+    meta.consume();
+    meta.resetGenders(0u, true);
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+}
 
-        std::clog << "Testing mating isolation when only one sex...\n";
-        MetaPop meta = MetaPop({ n0, 0 }, pars, arch, false);
-        meta.consume();
-        meta.resetGenders(0u, true);
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
-    }
+BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
+{
 
-    BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
-    {
-
-        std::clog << "Testing mating isolation when one ecotype...\n";
-        MetaPop meta = MetaPop({ n0, 0u }, pars, arch, false);
-        meta.consume();
-        meta.resetEcotypes(0u, 1u);
-        meta.analyze(arch);
-        BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
-    }
-
-
-BOOST_AUTO_TEST_SUITE_END()
+    std::clog << "Testing mating isolation when one ecotype...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);
+    meta.consume();
+    meta.resetEcotypes(0u, 1u);
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+}
 
 
