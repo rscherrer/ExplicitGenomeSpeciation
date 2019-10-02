@@ -309,8 +309,11 @@ public:
     double getEcoIsolation() const { return EI; }
     double getSpatialIsolation() const { return SI; }
     double getMatingIsolation() const { return RI; }
-    double getPst(const size_t &t) const { return traitstats[t]->Pst; }
+    double getPst(const size_t &t) const { return traitstats[t].Pst; }
     double getVarP(const size_t&, const size_t&) const;
+    double getSsqPhe(const size_t&, const size_t&) const;
+    double getSumPhe(const size_t&, const size_t&) const;
+    double getEcoCount(const size_t &eco) const { return ecocounts[eco]; }
 
     void reset(const size_t&, const GenArch&);
     void analyze(const vecPop&, const GenArch&);
@@ -337,13 +340,13 @@ private:
     void write(const double&, std::ofstream *&);
     void write(const vecDbl&, std::ofstream *&);
 
-    std::vector<Stats::Trait *> makeEmptyTraits();
-    std::vector<Stats::Locus *> makeEmptyGenomeScan(const GenArch&);
+    std::vector<Stats::Trait> makeEmptyTraits();
+    std::vector<Stats::Locus> makeEmptyGenomeScan(const GenArch&);
 
     size_t time;
 
-    std::vector<Stats::Locus *> genomescan;
-    std::vector<Stats::Trait *> traitstats;
+    std::vector<Stats::Locus> genomescan;
+    std::vector<Stats::Trait> traitstats;
 
     Matrix resources;
     vecUns popcounts;

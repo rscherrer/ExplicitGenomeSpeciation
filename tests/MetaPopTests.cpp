@@ -70,41 +70,6 @@ BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
 
 }
 
-// Test that individuals get assigned the right ecotype
-BOOST_AUTO_TEST_CASE(individualsEcotypesAreCorrectIfOnlyOneResource)
-{
-    std::clog << "Testing ecotype classification...\n";
-    Param pars;
-    GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0); // change individual's phenotypes
-    meta.resetEcoTraits(1u, 1.0);
-    meta.consume(); // assign fitnesses
-    BOOST_CHECK_EQUAL(meta.getSumEcotypes(0u), 0u);
-    BOOST_CHECK_EQUAL(meta.getSumEcotypes(1u), meta.getPopSize(1u));
-
-}
-
-// Test that genome-wide Pst for the ecological trait should be 1
-// if all members of ecotype 0 have trait -1 and all members of ecotype 1
-// have trait 1
-BOOST_AUTO_TEST_CASE(ecologicalPstOfFullyDivergedPops)
-{
-
-    std::clog << "Testing Pst of diverged ecotypes...\n";
-    Param pars;
-    GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
-    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
-    meta.consume();
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getPst(0u), 1.0);
-
-}
-
 // Test that Xst should be 1 if ecotypic variances are zero
 BOOST_AUTO_TEST_CASE(XstDoesItsJob)
 {
@@ -117,26 +82,9 @@ BOOST_AUTO_TEST_CASE(XstDoesItsJob)
 }
 
 // Test that monomorphic ecotypes indeed have zero variance
-BOOST_AUTO_TEST_CASE(monomorphicEcotypesHaveZeroVariance)
-{
-    std::clog << "Checking that monomorphic ecotypes have zero variance...\n";
-    Param pars;
-    GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0);
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0);
-    meta.resetEcoTraits(1u, 1.0);
-    meta.consume();
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getVarP(0u, 0u), 0.0);
-    BOOST_CHECK_EQUAL(meta.getVarP(0u, 1u), 0.0);
-}
-
-// Test case: a population with ecological isolation = 1
 BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
 {
-
-    std::clog << "Testing full ecological isolation...\n";
+    std::clog << "Checking full ecological isolation...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
@@ -145,7 +93,17 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.consume();
     meta.analyze(arch);
+
     BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
+    BOOST_CHECK_EQUAL(meta.getPst(0u), 1.0);
+    BOOST_CHECK_EQUAL(meta.getVarP(0u, 0u), 0.0);
+    BOOST_CHECK_EQUAL(meta.getVarP(0u, 1u), 0.0);
+    BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 0u), meta.getEcoCount(0u));
+    BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 1u), meta.getEcoCount(1u));
+    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 0u), meta.getEcoCount(0u));
+    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 1u), meta.getEcoCount(1u));
+    BOOST_CHECK_EQUAL(meta.getSumEcotypes(0u), 0u);
+    BOOST_CHECK_EQUAL(meta.getSumEcotypes(1u), meta.getPopSize(1u));
 
 }
 

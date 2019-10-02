@@ -111,6 +111,17 @@ double MetaPop::getVarP(const size_t &trait, const size_t &eco) const
     return stats.getVarP(trait, eco);
 }
 
+double MetaPop::getSsqPhe(const size_t &trait, const size_t &eco) const
+{
+    return stats.getSsqPhe(trait, eco);
+}
+
+double MetaPop::getSumPhe(const size_t &trait, const size_t &eco) const
+{
+    return stats.getSumPhe(trait, eco);
+}
+
+
 // Resetters used in tests
 
 void MetaPop::consume() // metapopulation-level fitness/ecotype resetter
