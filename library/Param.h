@@ -61,6 +61,7 @@ public:
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
     void setInitialPopSize(const size_t &n) { initialPopSize = n; }
+    void setHabitatSymmetry(const double &h) { habitatSymmetry = h; }
     void setDispersalRate(const double &d) { dispersalRate = d; }
     void setSurvivalProb(const double &p) { survivalProb = p; }
     void setBirthRate(const double &b) { birthRate = b; }

@@ -96,6 +96,11 @@ size_t MetaPop::getNOffspring(const size_t &p) const
     return pops[p].getNOffspring();
 }
 
+size_t MetaPop::getSumEcotypes(const size_t &p) const
+{
+    return pops[p].getSumEcotypes();
+}
+
 double MetaPop::getResource(const size_t &p, const size_t &r) const
 {
     return pops[p].getResource(r);

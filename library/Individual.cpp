@@ -182,7 +182,7 @@ void Individual::setFeeding(const size_t &res, const double &sel,
 void Individual::feed(const vecDbl &food)
 {
     fitness = feeding[0u] * food[0u] + feeding[1u] * food[1u];
-    ecotype = feeding[1u] * food[1u] > feeding[0u] * food[0u];
+    ecotype = feeding[1u] * food[1u] > feeding[0u] * food[0u] ? 1u : 0u;
 
     assert(fitness >= 0.0);
 }

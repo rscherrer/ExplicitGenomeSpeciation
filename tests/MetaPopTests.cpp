@@ -54,6 +54,38 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     BOOST_CHECK(meta.getPopSize(1u) == 0u);
 }
 
+// Test that habitats are initialized with only one resource if
+// habitat symmetry is zero
+BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
+{
+    std::clog << "Testing habitat asymmetry...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    BOOST_CHECK_EQUAL(meta.getResource(0u, 0u), pars.getMaxResourceCapacity());
+    BOOST_CHECK_EQUAL(meta.getResource(1u, 1u), pars.getMaxResourceCapacity());
+    BOOST_CHECK_EQUAL(meta.getResource(0u, 1u), 0.0);
+    BOOST_CHECK_EQUAL(meta.getResource(1u, 0u), 0.0);
+
+}
+
+// Test that individuals get assigned the right ecotype
+BOOST_AUTO_TEST_CASE(individualsEcotypesAreCorrectIfOnlyOneResource)
+{
+    std::clog << "Testing ecotype classification...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0); // change individual's phenotypes
+    meta.resetEcoTraits(1u, 1.0);
+    meta.consume(); // assign fitnesses
+    BOOST_CHECK_EQUAL(meta.getSumEcotypes(0u), 0u);
+    BOOST_CHECK_EQUAL(meta.getSumEcotypes(1u), meta.getPopSize(1u));
+
+}
+
 BOOST_FIXTURE_TEST_SUITE(analysisTestSuite, PopFixture)
 
     // Test case: a population with ecological isolation = 1

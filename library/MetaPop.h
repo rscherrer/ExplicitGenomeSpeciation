@@ -46,6 +46,7 @@ public:
     size_t getPopSize(const size_t &p) const { return pops[p].getPopSize(); }
     size_t getNFemales(const size_t &p) const { return pops[p].getNFemales(); }
     size_t getNOffspring(const size_t&) const;
+    size_t getSumEcotypes(const size_t&) const;
     double getResource(const size_t&, const size_t&) const;
     double getEcoIsolation() const { return stats.getEcoIsolation(); }
     double getSpatialIsolation() const { return stats.getSpatialIsolation(); }
