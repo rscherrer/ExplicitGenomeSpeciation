@@ -17,7 +17,6 @@ BOOST_AUTO_TEST_CASE(testUseNoArgs)
     BOOST_CHECK_EQUAL(simulate({ "EGS_test" }), 0);
 }
 
-
 // Check that the program cannot run with more than one argument
 BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 {

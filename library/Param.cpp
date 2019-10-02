@@ -49,7 +49,21 @@ uint64_t _(const std::string& s)
 
 
 // Read parameters from a file
-void Param::readParams(std::ifstream &file)
+
+void Param::read(const std::string &filename)
+{
+    std::ifstream inputfile;
+    inputfile.open(filename);
+    if (!inputfile.is_open()) {
+        std::string msg = "Unable to open parameter file ";
+        throw std::runtime_error(msg + filename);
+    }
+
+    update(inputfile);
+    inputfile.close();
+}
+
+void Param::update(std::ifstream &file)
 {
 
     std::string input;

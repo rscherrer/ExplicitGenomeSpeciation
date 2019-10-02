@@ -62,7 +62,7 @@ public:
     vecDbl getScaleE() const { return scaleE; }
 
     // Setters
-    void readParams(std::ifstream&);
+    void read(const std::string&);
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
     void setInitialPopSize(const size_t &n) { initialPopSize = n; }
@@ -81,15 +81,13 @@ public:
     void setSeed(const size_t &number) { seed = number; }
     void capEdges();
     void setEffectSizeScale(const double &x) { effectSizeScale = x; }
-    void setInteractionWeightScale(const double&);
-
-    // Makers
-    size_t makeDefaultSeed();
-
-    // Checkers
-    void checkParams();
+    void setInteractionWeightScale(const double&);    
 
 private:
+
+    void update(std::ifstream&);
+    void checkParams();
+    size_t makeDefaultSeed();
 
     // Ecological parameters
     double maxResourceCapacity     = 500.0;

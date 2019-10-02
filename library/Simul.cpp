@@ -13,20 +13,7 @@ int simulate(const vecStrings &args)
         Param pars;
 
         // Read parameters from a file if supplied
-        if (args.size() == 2u) {            
-
-            std::string filename = args[1u];
-            std::ifstream inputfile;
-            inputfile.open(filename);
-            if (!inputfile.is_open()) {
-                std::string msg = "Unable to open parameter file ";
-                throw std::runtime_error(msg + filename);
-            }
-
-            pars.readParams(inputfile);            
-            inputfile.close();
-
-        }
+        if (args.size() == 2) pars.read(args[1u]);
 
         // Random number generator
         rnd::rng.seed(pars.getSeed());

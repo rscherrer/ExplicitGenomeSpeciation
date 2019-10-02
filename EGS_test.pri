@@ -1,6 +1,7 @@
-SOURCES += $$PWD/tests/doMainTests.cpp \
+SOURCES += \
     $$PWD/tests/GenArchTests.cpp \
-    $$PWD/tests/DemeTests.cpp
+    $$PWD/tests/DemeTests.cpp \
+    $$PWD/tests/SimulTests.cpp
 SOURCES +=
 SOURCES += $$PWD/tests/MetaPopTests.cpp
 SOURCES +=
