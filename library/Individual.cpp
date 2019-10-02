@@ -173,8 +173,8 @@ void Individual::develop(const GenArch &arch, const double &ecosel,
 void Individual::setFeeding(const size_t &res, const double &sel,
  const double &max)
 {
-    const size_t opt = res == 0u ? 1.0 : -1.0; // ecological optimum
-    feeding[res] = max * exp(- sel * utl::sqr(ecotrait + opt));
+    const double opt = res == 0u ? -1.0 : 1.0; // ecological optimum
+    feeding[res] = max * exp(- sel * utl::sqr(ecotrait - opt));
     assert(feeding[res] >= 0.0);
 }
 
