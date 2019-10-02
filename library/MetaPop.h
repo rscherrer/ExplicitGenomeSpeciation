@@ -9,7 +9,7 @@
 #include "Stats.h"
 #include <cassert>
 
-typedef std::vector<Deme *> vecPop;
+typedef std::vector<Deme> vecPop;
 typedef std::vector<std::ofstream *> vecStreams;
 
 class MetaPop
@@ -19,7 +19,6 @@ public:
 
     MetaPop(const vecUns& popSizes, const Param &pars,
      const GenArch &arch, const bool &isburnin) :
-        pops({ }),
         popsizes(popSizes),
         dispersal(pars.getDispersalRate()),
         survival(pars.getSurvivalProb()),
@@ -38,27 +37,14 @@ public:
         tsave(pars.getTSave()),
         tburnin(pars.getTBurnIn()),
         record(pars.getRecord()),
+        pops(makeDemes(arch, isburnin)),
         stats(Stats(arch))
-    {
-        // Create the demes
-        for (size_t p = 0u; p < 2u; ++p) {
-            for (size_t res = 0u; res < 2u; ++res) {
-                resources[p][res] = maxresources;
-                if (p != res) resources[p][res] *= symmetry;
-                replenish[p][res] = maxreplenish;
-            }
-            const size_t n = popsizes[p];
-            const double max = maxfeed;
-            const vecDbl k = resources[p];
-            const vecDbl r = replenish[p];
-            pops.push_back(new Deme(n, ecosel, max, k, r, arch, isburnin));
-        }
-    }
+    {}
 
     ~MetaPop() {}
 
-    size_t getPopSize(const size_t &p) const { return pops[p]->getPopSize(); }
-    size_t getNFemales(const size_t &p) const { return pops[p]->getNFemales(); }
+    size_t getPopSize(const size_t &p) const { return pops[p].getPopSize(); }
+    size_t getNFemales(const size_t &p) const { return pops[p].getNFemales(); }
     size_t getNOffspring(const size_t&) const;
     double getResource(const size_t&, const size_t&) const;
     double getEcoIsolation() const { return stats.getEcoIsolation(); }
@@ -77,7 +63,8 @@ public:
 
 private:
 
-    vecPop pops;
+    vecPop makeDemes(const GenArch&, const bool&);
+
     vecUns popsizes;
     double dispersal;
     double survival;
@@ -97,6 +84,7 @@ private:
     int tburnin;
     bool record;
 
+    vecPop pops;
     Stats stats;
 
     static constexpr size_t x = 0u;

@@ -32,6 +32,7 @@ public:
         snpFreq(pars.getSNPFreq()),
         femHeterogamy(pars.getIsFemaleHeterogamy()),
         recombinationRate(pars.getRecombinationRate()),
+        mutationRate(pars.getMutationRate()),
         scaleA(pars.getScaleA()),
         scaleD(pars.getScaleD()),
         scaleI(pars.getScaleI()),
@@ -68,6 +69,7 @@ public:
     double snpFreq;
     bool femHeterogamy;
     double recombinationRate;
+    double mutationRate;
 
     vecDbl scaleA;
     vecDbl scaleD;

@@ -10,7 +10,8 @@ SOURCES += $$PWD/library/doMain.cpp \
     $$PWD/library/MetaPop.cpp \
     $$PWD/library/Stats.cpp \
     $$PWD/library/Locus.cpp \
-    $$PWD/library/Trait.cpp 
+    $$PWD/library/Trait.cpp \
+    $$PWD/library/Gamete.cpp
 HEADERS += $$PWD/library/doMain.h \
     $$PWD/library/GenArch.h \
     $$PWD/library/Param.h \
@@ -22,4 +23,5 @@ HEADERS += $$PWD/library/doMain.h \
     $$PWD/library/Individual.h \
     $$PWD/library/MetaPop.h \
     $$PWD/library/Types.h \
-    $$PWD/library/Stats.h
+    $$PWD/library/Stats.h \
+    $$PWD/library/Gamete.h

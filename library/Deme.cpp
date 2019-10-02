@@ -39,11 +39,11 @@ void Deme::sortSexes()
     males.shrink_to_fit();
 
     // Sort out moms and dads
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        if (individuals[ind].getGender())
-            females.push_back(individuals[ind]);
+    for (auto &ind : individuals)
+        if (ind.getGender())
+            females.push_back(ind);
         else
-            males.push_back(individuals[ind]);
+            males.push_back(ind);
 }
 
 Crowd Deme::emigrate(const double &rate)
@@ -84,8 +84,8 @@ Crowd Deme::emigrate(const double &rate)
 
 void Deme::immigrate(const Crowd &newcomers)
 {
-    for (size_t ind = 0u; ind < newcomers.size(); ++ind)
-        individuals.push_back(newcomers[ind]);
+    for (auto &ind : newcomers)
+        individuals.push_back(ind);
 }
 
 void Deme::consume()
@@ -97,10 +97,10 @@ void Deme::consume()
     // dR/dt = r (1 - R / K) - C R, where C is the consumption
 
     // Calculate the total amount of food consumed
-    vecDbl consumed{0.0, 0.0};
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        consumed[0u] += individuals[ind].getFeedingRate(0u);
-        if (!burnin) consumed[1u] += individuals[ind].getFeedingRate(1u);
+    vecDbl consumed = utl::zeros(2u);
+    for (auto &ind : individuals) {
+        consumed[0u] += ind.getFeeding(0u);
+        if (!burnin) consumed[1u] += ind.getFeeding(1u);
     }
 
     assert(consumed[0u] >= 0.0);
@@ -116,10 +116,9 @@ void Deme::consume()
     assert(resources[1u] >= 0.0);
 
     // Split the resource among the individuals
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        individuals[ind].feed(resources);
+    for (auto &ind : individuals) {
+        ind.feed(resources);
     }
-
 }
 
 void Deme::reproduce(const double &birth, const double &sexsel,
@@ -131,9 +130,9 @@ void Deme::reproduce(const double &birth, const double &sexsel,
 
     // Prepare a weighted lottery based on male mating successes
     vecDbl successes;
-    for (size_t male = 0u; male < males.size(); ++male) {
-        double fit = males[male].getFitness();
-        if (burnin) fit *= exp(- ecosel * utl::sqr(males[male].getMatePref()));
+    for (auto &male : males) {
+        double fit = male.getFitness();
+        if (burnin) fit *= exp(- ecosel * utl::sqr(male.getMatePref()));
         successes.push_back(fit);
     }    
 
@@ -145,12 +144,11 @@ void Deme::reproduce(const double &birth, const double &sexsel,
     const size_t seasonEnd = rnd::geometric(cost);
 
     // Every mom gets a chance to produce babies
-    for (size_t mom = 0u; mom < females.size(); ++mom) {
+    for (auto &mom : females) {
 
         // Produce a certain number of offspring
-        double fecundity = birth * females[mom].getFitness();
-        if (burnin)
-            fecundity *= exp(- ecosel * utl::sqr(females[mom].getMatePref()));
+        double fecundity = birth * mom.getFitness();
+        if (burnin) fecundity *= exp(- ecosel * utl::sqr(mom.getMatePref()));
         size_t nOffspring = rnd::poisson(fecundity);
 
         size_t time = 0u;
@@ -167,22 +165,19 @@ void Deme::reproduce(const double &birth, const double &sexsel,
             // Sample a male
             const size_t encounter = maleMarket(rnd::rng);
             assert(encounter < males.size());
-            auto dad = males[encounter];
 
             // Upon mating...
-            if (females[mom].acceptMate(dad.getEcoTrait(), sexsel)) {
+            if (mom.acceptMate(males[encounter].getEcoTrait(), sexsel)) {
 
                 while (nOffspring) {
 
                     // Produce gametes
-                    Haplotype egg = females[mom].recombine(arch);
-                    females[mom].mutate(egg);
-
-                    Haplotype sperm = dad.recombine(arch);
-                    dad.mutate(sperm);
+                    Gamete egg = Gamete(mom.recombine(arch), arch.mutationRate);
+                    Gamete sperm = Gamete(males[encounter].recombine(arch),
+                     arch.mutationRate);
 
                     // And a baby
-                    auto off = Individual(arch, egg, sperm, ecosel,
+                    auto off = Individual(arch, egg.seq, sperm.seq, ecosel,
                      maxfeeding);
                     offspring.push_back(off);
                     --nOffspring;
@@ -201,9 +196,9 @@ bool Deme::survive(const double &survival)
 {
 
     // Sample life or death for every adult
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
+    for (auto &ind : individuals)
         if (rnd::bernoulli(survival))
-            survivors.push_back(individuals[ind]);
+            survivors.push_back(ind);
 
     individuals.clear();
     individuals.shrink_to_fit();
@@ -214,8 +209,7 @@ bool Deme::survive(const double &survival)
 
     // Survivors make it to the next generation
     if (isAlive) {
-        for (size_t ind = 0u; ind < survivors.size(); ++ind)
-            individuals.push_back(survivors[ind]);
+        individuals = survivors;
         survivors.clear();
         survivors.shrink_to_fit();
     }
@@ -223,8 +217,8 @@ bool Deme::survive(const double &survival)
     // Offspring make it to the next generation
     const size_t noff = offspring.size();
     if (noff > 0u)
-        for (size_t ind = 0u; ind < noff; ++ind)
-            individuals.push_back(offspring[ind]);
+        for (auto &ind : offspring)
+            individuals.push_back(ind);
     offspring.clear();
     offspring.shrink_to_fit();
 
@@ -289,6 +283,6 @@ void Deme::resetGenders(const bool &sex)
 void Deme::resetEcotypes(const size_t &ecotype)
 {
     for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        individuals[ind].resetEcotype(ecotype);
+        individuals[ind].setEcotype(ecotype);
 }
 

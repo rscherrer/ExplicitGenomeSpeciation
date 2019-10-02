@@ -6,7 +6,7 @@
 #include "Deme.h"
 #include "Output.h"
 
-typedef std::vector<Deme *> vecPop;
+typedef std::vector<Deme> vecPop;
 
 class Stats
 {

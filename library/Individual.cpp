@@ -1,9 +1,7 @@
 #include "Individual.h"
 
-size_t Individual::getAlleleSum(const size_t &hap)
-{
-    return genome[hap].count();
-}
+
+// Check upon construction
 
 bool Individual::checkIndividual(const size_t &nLoci)
 {
@@ -16,22 +14,15 @@ bool Individual::checkIndividual(const size_t &nLoci)
     assert(traitvalues.size() == 3u);
     assert(fitness > 0.0);
     for (size_t res = 0u; res < 2u; ++res)
-        assert(feedingRates[res] > 0.0);
+        assert(feeding[res] > 0.0);
 
     // For the sake of not breaking in release mode
     const double out = nLoci;
     return nLoci == out;
 }
 
-vecDbl Individual::calcFeedingRates(const double &sel, const double &trait,
- const double &maxi)
-{
-    const double rate1 = maxi * exp(- sel * utl::sqr(trait + 1.0));
-    const double rate2 = maxi * exp(- sel * utl::sqr(trait - 1.0));
-    assert(rate1 >= 0.0);
-    assert(rate2 >= 0.0);
-    return { rate1, rate2 };
-}
+
+// Life cycle
 
 Genome Individual::generateGenome(const GenArch &arch, double prob)
 {
@@ -90,7 +81,8 @@ Genome Individual::fecundate(const Haplotype &egg, const Haplotype &sperm)
     return zygote;
 }
 
-void Individual::develop(const GenArch &arch)
+void Individual::develop(const GenArch &arch, const double &ecosel,
+ const double &maxfeed)
 {
 
     // Development reads the genome and computes trait values
@@ -172,18 +164,28 @@ void Individual::develop(const GenArch &arch)
     ecotrait = traitvalues[0u];
     matepref = traitvalues[1u];
     neutrait = traitvalues[2u];
+
+    setFeeding(0u, ecosel, maxfeed);
+    setFeeding(1u, ecosel, maxfeed);
+
 }
 
+void Individual::setFeeding(const size_t &res, const double &sel,
+ const double &max)
+{
+    const size_t opt = res == 0u ? 1.0 : -1.0; // ecological optimum
+    feeding[res] = max * exp(- sel * utl::sqr(ecotrait + opt));
+    assert(feeding[res] >= 0.0);
+}
 
 /// Feed and get a fitness value
 void Individual::feed(const vecDbl &food)
 {
-    fitness = feedingRates[0u] * food[0u] + feedingRates[1u] * food[1u];
-    ecotype = feedingRates[1u] * food[1u] > feedingRates[0u] * food[0u];
+    fitness = feeding[0u] * food[0u] + feeding[1u] * food[1u];
+    ecotype = feeding[1u] * food[1u] > feeding[0u] * food[0u];
 
     assert(fitness >= 0.0);
 }
-
 
 /// Function to calculate mating probability under homogamy
 double calcAssortProb(const double &y, const double &xi,
@@ -225,7 +227,7 @@ bool Individual::acceptMate(const double &xj, const double &sexsel) const
 }
 
 
-Haplotype Individual::recombine(const GenArch &arch)
+Haplotype Individual::recombine(const GenArch &arch) const
 {
 
     // Choose a random haplotype
@@ -293,23 +295,21 @@ Haplotype Individual::recombine(const GenArch &arch)
 }
 
 
-void Individual::mutate(Haplotype &gamete, const double &rate)
+
+
+// Getters
+
+size_t Individual::getAlleleSum(const size_t &hap) const
 {
+    return genome[hap].count();
+}
 
-    // Sample a number of mutations from a poisson
-    // Sample the mutated targets
-    // Flip the alleles
-
-    size_t nmut = rnd::poisson(rate * gamete.size());
-
-    while (nmut) {
-
-        size_t target = rnd::random(gamete.size());
-        gamete[target] = gamete[target] ? 0u : 1u;
-
-        --nmut;
-    }
-
+double Individual::getExpression() const
+{
+    double sum = 0.0;
+    for (auto x : transcriptome)
+        sum += x;
+    return sum;
 }
 
 size_t Individual::getZygosity(const size_t &locus) const
@@ -322,12 +322,16 @@ double Individual::getLocusValue(const size_t &locus) const
     return locivalues[locus];
 }
 
+
+// Setters used in tests
+
 void Individual::setEcoTrait(const double &value, const double &sel,
  const double &max)
 {
     ecotrait = value;
     traitvalues[0u] = value;
-    feedingRates = calcFeedingRates(sel, value, max);
+    setFeeding(0u, sel, max);
+    setFeeding(1u, sel, max);
 }
 void Individual::setMatePref(const double &value)
 {

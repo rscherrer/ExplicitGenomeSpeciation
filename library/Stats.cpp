@@ -51,10 +51,10 @@ void Stats::analyze(const vecPop &pops, const GenArch &arch)
 
     for (size_t p = 0u; p < 2u; ++p) {
         for (size_t r = 0u; r < 2u; ++r) {
-            resources[p][r] = pops[p]->getResource(r);
+            resources[p][r] = pops[p].getResource(r);
         }
-        popcounts[p] = pops[p]->getPopSize();
-        nfemales[p] = pops[p]->getNFemales();
+        popcounts[p] = pops[p].getPopSize();
+        nfemales[p] = pops[p].getNFemales();
     }
 
     totcount = popcounts[0u] + popcounts[1u];
@@ -75,14 +75,14 @@ void Stats::analyze(const vecPop &pops, const GenArch &arch)
 void Stats::accumulate(const vecPop &pops)
 {
     for (auto pop : pops) {
-        for (size_t ind = 0u; ind < pop->getPopSize(); ++ind) {
+        for (size_t ind = 0u; ind < pop.getPopSize(); ++ind) {
 
-            const size_t eco = pop->getEcotype(ind);
+            const size_t eco = pop.getEcotype(ind);
             ++ecocounts[eco];
 
             for (size_t trait : { x, y, z }) {
-                const double gen = pop->getGenValue(ind, trait);
-                const double phe = pop->getTraitValue(ind, trait);
+                const double gen = pop.getGenValue(ind, trait);
+                const double phe = pop.getTraitValue(ind, trait);
                 traitstats[trait]->ecostats[eco].sumgen += gen;
                 traitstats[trait]->ecostats[eco].sumphe += phe;
                 traitstats[trait]->ecostats[eco].ssqgen += utl::sqr(gen);
@@ -215,8 +215,8 @@ void Stats::setSpatialIsolation(const vecPop &pops)
 
     for (size_t p = 0u; p < 2u; ++p) {
         auto pop = pops[p];
-        for (size_t ind = 0u; ind < pop->getPopSize(); ++ind) {
-            size_t ecotype = pop->getEcotype(ind);
+        for (size_t ind = 0u; ind < pop.getPopSize(); ++ind) {
+            size_t ecotype = pop.getEcotype(ind);
             ++n[p][ecotype];
         }
     }
@@ -254,9 +254,8 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
     size_t nmal = 0u;
 
     for (size_t p = 0u; p < 2u; ++p) {
-        pops[p]->sortSexes();
-        nfem += pops[p]->getNFemales();
-        nmal += pops[p]->getNMales();
+        nfem += pops[p].getNFemales();
+        nmal += pops[p].getNMales();
     }
 
     if (nfem == 0u || nmal == 0u)
@@ -268,13 +267,13 @@ void Stats::setMatingIsolation(const vecPop &pops, const double &matingcost,
     // Make a vector with all males of the metapop
     Crowd allMales;
     for (size_t p = 0u; p < 2u; ++p)
-        for (size_t i = 0u; i < pops[p]->getNMales(); ++i)
-            allMales.push_back(pops[p]->getMale(i));
+        for (size_t i = 0u; i < pops[p].getNMales(); ++i)
+            allMales.push_back(pops[p].getMale(i));
 
     // Loop through the females of the metapop and test their preference
     for (size_t p = 0u; p < 2u; ++p) {
-        for (size_t i = 0u; i < pops[p]->getNFemales(); ++i) {
-            auto fem = pops[p]->getFemale(i);
+        for (size_t i = 0u; i < pops[p].getNFemales(); ++i) {
+            auto fem = pops[p].getFemale(i);
             size_t nencounters = rnd::poisson(1.0 / matingcost);
             while (nencounters) {
                 auto candidate = allMales[rnd::random(allMales.size())];

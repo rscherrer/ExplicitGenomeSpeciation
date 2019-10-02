@@ -1,17 +1,17 @@
 #ifndef EXPLICITGENOMESPECIATION_DEME_H
 #define EXPLICITGENOMESPECIATION_DEME_H
 
+#include "Gamete.h"
 #include "GenArch.h"
 #include "Random.h"
 #include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
 #include <cassert>
-#include <stddef.h> // maybe this was making travis unhappy
+#include <stddef.h>
 
 
 class Individual;
-
 typedef std::vector<Individual> Crowd;
 
 class Deme {

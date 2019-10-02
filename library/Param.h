@@ -47,6 +47,7 @@ public:
     double getMaxResourceGrowth() const { return maxResourceGrowth; }
     double getHabitatSymmetry() const { return habitatSymmetry; }
     double getRecombinationRate() const { return recombinationRate; }
+    double getMutationRate() const { return mutationRate; }
     double getMaxFeedingRate() const { return maxFeedingRate; }
     bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
     bool getRecord() const { return record; }

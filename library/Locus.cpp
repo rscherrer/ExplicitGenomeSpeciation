@@ -15,11 +15,11 @@ vecUns Stats::Locus::ecocounts = { 0u, 0u };
 void Stats::Locus::accumulate(const vecPop& pops)
 {
     for (auto pop : pops) {
-        for (size_t ind = 0u; ind < pop->getPopSize(); ++ind) {
+        for (size_t ind = 0u; ind < pop.getPopSize(); ++ind) {
 
-            const size_t eco = pop->getEcotype(ind);
-            const size_t gen = pop->getLocusValue(ind, id);
-            const size_t zyg = pop->getZygosity(ind, id);
+            const size_t eco = pop.getEcotype(ind);
+            const size_t gen = pop.getLocusValue(ind, id);
+            const size_t zyg = pop.getZygosity(ind, id);
 
             ++ecostats[eco].genocounts[zyg];
             ecostats[eco].genosumgens[zyg] += gen;

@@ -5,6 +5,7 @@
 #include "GenArch.h"
 #include "Utilities.h"
 #include "Types.h"
+#include "Gamete.h"
 //#include "Deme.h"
 #include "Random.h"
 //#include <vector>
@@ -13,23 +14,17 @@
 #include <cassert>
 //#include <algorithm>
 #include <stddef.h>
-#include <boost/dynamic_bitset.hpp>
 
-typedef boost::dynamic_bitset<> Haplotype;
 typedef std::vector<Haplotype> Genome;
 
+
 class Individual {
-
-    friend class Population;
-    friend class MetaPop;
-
-    typedef Individual PInd;
 
 public:
 
     /// Spontaneous creation
     Individual(const GenArch &arch, const double &ecosel,
-     const double &maxfeeding, const double &snpFreq) :
+     const double &maxfeed, const double &snpFreq) :
         genome(generateGenome(arch, snpFreq)),
         transcriptome(utl::zeros(arch.nLoci)),
         locivalues(utl::zeros(arch.nLoci)),
@@ -40,10 +35,10 @@ public:
         matepref(0.0),
         neutrait(0.0),
         fitness(1.0),
-        feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
+        feeding(utl::zeros(2u)),
         ecotype(0u)
     {
-        develop(arch);
+        develop(arch, ecosel, maxfeed);
         checkIndividual(arch.nLoci);
     }
 
@@ -61,10 +56,10 @@ public:
         matepref(0.0),
         neutrait(0.0),
         fitness(1.0),
-        feedingRates(calcFeedingRates(ecosel, ecotrait, maxfeeding)),
+        feeding(utl::zeros(2u)),
         ecotype(0u)
     {
-        develop(arch);
+        develop(arch, ecosel, maxfeeding);
         checkIndividual(arch.nLoci);
     }
 
@@ -77,32 +72,32 @@ public:
     double getFitness() const { return fitness; }
     double getTraitValue(const size_t &t) const { return traitvalues[t]; }
     double getGenValue(const size_t &t) const { return genvalues[t]; }
-    vecDbl getTraits() const { return traitvalues; }
-    double getFeedingRate(const size_t &r) const { return feedingRates[r]; }
-    vecDbl getGenValues() const { return genvalues; }
-    Haplotype getSequence(const size_t &i) const { return genome[i]; }
-    vecDbl getExpression() const { return transcriptome; }
+    double getFeeding(const size_t &r) const { return feeding[r]; }
+    double getExpression(const size_t &l) const { return transcriptome[l]; }
+    double getExpression() const;
+    double getLocusValue(const size_t&) const;
     size_t getEcotype() const { return ecotype; }
     size_t getZygosity(const size_t&) const;
-    double getLocusValue(const size_t&) const;
-    size_t getAlleleSum(const size_t&);
+    size_t getAlleleSum(const size_t&) const;
+
     bool acceptMate(const double&, const double&) const;
-    Haplotype recombine(const GenArch&);
-    vecDbl calcFeedingRates(const double&, const double&, const double&);
+    Haplotype recombine(const GenArch&) const;
+
+    void feed(const vecDbl&);
 
     void setEcoTrait(const double&, const double&, const double&);
     void setMatePref(const double&);
-    void resetEcotype(const size_t &e) { ecotype = e; }
+    void setEcotype(const size_t &e) { ecotype = e; }
     void setGender(const bool&);
-    void feed(const vecDbl&);
-    void mutate(Haplotype&, const double& = 1.0e-5);
 
 private:
 
     Genome generateGenome(const GenArch&, double = -1.0);
     Genome fecundate(const Haplotype&, const Haplotype&);
 
-    void develop(const GenArch&);
+    void develop(const GenArch&, const double&, const double&);
+    void setFeeding(const size_t&, const double&, const double&);
+
     bool checkIndividual(const size_t&);
 
     Genome genome;
@@ -115,7 +110,7 @@ private:
     double matepref;
     double neutrait;
     double fitness;
-    vecDbl feedingRates;
+    vecDbl feeding;
     size_t ecotype;
 
 };

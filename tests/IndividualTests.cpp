@@ -83,18 +83,16 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
     {
         std::clog << "Testing absence of mutations...\n";
         Individual ind = Individual(arch, 1.0, 4.0E-4, 0.0);
-        Haplotype gamete = ind.recombine(arch);
-        ind.mutate(gamete, 0.0);
-        BOOST_CHECK_EQUAL(gamete.count(), 0u);
+        Gamete gamete = Gamete(ind.recombine(arch), 0.0);
+        BOOST_CHECK_EQUAL(gamete.getAlleleSum(), 0u);
     }
 
     BOOST_AUTO_TEST_CASE(checkHighMutation)
     {
         std::clog << "Testing high mutation rate...\n";
         Individual ind = Individual(arch, 1.0, 4.0E-4, 0.0);
-        Haplotype gamete = ind.recombine(arch);
-        ind.mutate(gamete, 100.0);
-        BOOST_CHECK(gamete.count() != 0u);
+        Gamete gamete = Gamete(ind.recombine(arch), 100.0);
+        BOOST_CHECK(gamete.getAlleleSum() != 0u);
     }
 
     BOOST_AUTO_TEST_CASE(checkHighRecombination)
@@ -106,20 +104,20 @@ BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
         Haplotype sperm = dad.recombine(arch);
         Individual baby = Individual(arch, egg, sperm, 1.0, 4.0E-4);
         arch.recombinationRate = 10.0;
-        Haplotype gamete = baby.recombine(arch);
-        BOOST_CHECK(gamete.count() != 0u);
-        BOOST_CHECK(gamete.count() != arch.nLoci);
+        Gamete gamete = Gamete(baby.recombine(arch), 0.0);
+        BOOST_CHECK(gamete.getAlleleSum() != 0u);
+        BOOST_CHECK(gamete.getAlleleSum() != arch.nLoci);
     }
 
     BOOST_AUTO_TEST_CASE(checkExpression)
     {
         std::clog << "Testing gene expression...\n";
         Individual ind1 = Individual(arch, 1.0, 4.0E-4, 0.0);
-        vecDbl expression1 = ind1.getExpression();
-        BOOST_CHECK_EQUAL(utl::sum(expression1), -1.0 * arch.nLoci);
+        double expression1 = ind1.getExpression();
+        BOOST_CHECK_EQUAL(expression1, -1.0 * arch.nLoci);
         Individual ind2 = Individual(arch, 1.0, 4.0E-4, 1.0);
-        vecDbl expression2 = ind2.getExpression();
-        BOOST_CHECK_EQUAL(utl::sum(expression2), arch.nLoci);
+        double expression2 = ind2.getExpression();
+        BOOST_CHECK_EQUAL(expression2, arch.nLoci);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -136,8 +134,8 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     Haplotype egg = mom.recombine(arch);
     Haplotype sperm = dad.recombine(arch);
     Individual baby = Individual(arch, egg, sperm, 1.0, 4.0E-4);
-    Haplotype gam = baby.recombine(arch);
-    BOOST_CHECK_EQUAL(gam.count() / arch.nLoci, gam[0u]);
+    Gamete gam = Gamete(baby.recombine(arch), 0.0);
+    BOOST_CHECK_EQUAL(gam.getAlleleSum() / arch.nLoci, gam.getAllele(0u));
 }
 
 BOOST_AUTO_TEST_CASE(checkDevelopment)
