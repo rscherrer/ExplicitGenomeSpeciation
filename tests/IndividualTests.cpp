@@ -128,6 +128,7 @@ BOOST_AUTO_TEST_CASE(checkNoRecombination)
     std::clog << "Testing meiosis without recombination...\n";
     Param pars;
     pars.setNChromosomes(1u); // to avoid free recombination
+    pars.setRecombinationRate(0.0);
     GenArch arch = GenArch(pars);
     Individual mom = Individual(arch, 1.0, 4.0E-4, 0.0);
     Individual dad = Individual(arch, 1.0, 4.0E-4, 1.0);

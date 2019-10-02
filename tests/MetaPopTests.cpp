@@ -195,5 +195,3 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
     meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
 }
-
-

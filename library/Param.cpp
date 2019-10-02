@@ -1,5 +1,16 @@
 #include "Param.h"
 
+
+// Create a default seed based on clock
+size_t Param::makeDefaultSeed()
+{
+    return static_cast<size_t>(std::chrono::high_resolution_clock::now().
+     time_since_epoch().count());
+}
+
+
+// Make sure that the numbers of edges of the genetic networks do not go above
+// their theoretical maximum, given the number of loci in each network
 void Param::capEdges()
 {
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -13,12 +24,9 @@ void Param::capEdges()
     }
 }
 
-/// Function to create a default seed based on what time it is
-size_t Param::makeDefaultSeed()
-{
-    return static_cast<size_t>(std::chrono::high_resolution_clock::now().
-     time_since_epoch().count());
-}
+
+// Functions to convert characters into integers
+// Used to read parameters in
 
 namespace fnv
 {
@@ -40,6 +48,89 @@ uint64_t _(const std::string& s)
 }
 
 
+// Read parameters from a file
+void Param::readParams(std::ifstream &file)
+{
+
+    std::string input;
+    while (file >> input) {
+
+        switch (_(input)) {
+
+        case _("maxResourceCapacity"): file >> maxResourceCapacity; break;
+        case _("maxResourceGrowth"): file >> maxResourceGrowth; break;
+        case _("habitatSymmetry"): file >> habitatSymmetry; break;
+        case _("ecoSelCoeff"): file >> ecoSelCoeff; break;
+        case _("initialPopSize"): file >> initialPopSize; break;
+        case _("dispersalRate"): file >> dispersalRate; break;
+        case _("birthRate"): file >> birthRate; break;
+        case _("survivalProb"): file >> survivalProb; break;
+        case _("matePreferenceStrength"):
+            file >> matePreferenceStrength; break;
+        case _("mateEvalutationCost"): file >> mateEvaluationCost; break;
+        case _("maxFeedingRate"): file >> maxFeedingRate; break;
+        case _("nEcoLoci"): file >> nEcoLoci; break;
+        case _("nMatLoci"): file >> nMatLoci; break;
+        case _("nNtrLoci"): file >> nNtrLoci; break;
+        case _("nEcoEdges"): file >> nEcoEdges; break;
+        case _("nMatEdges"): file >> nMatEdges; break;
+        case _("nNtrEdges"): file >> nNtrEdges; break;
+        case _("nChromosomes"): file >> nChromosomes; break;
+        case _("mutationRate"): file >> mutationRate; break;
+        case _("recombinationRate"): file >> recombinationRate; break;
+        case _("freqSNP"): file >> freqSNP; break;
+        case _("isFemaleHeterogamy"): file >> isFemaleHeterogamy; break;
+        case _("scaleA"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
+            break;
+        case _("scaleD"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
+            break;
+        case _("scaleI"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleI[i];
+            break;
+        case _("scaleE"):
+            for (size_t i = 0u; i < 3u; ++i) file >> scaleE[i];
+            break;
+        case _("skewnesses"):
+            for (size_t i = 0u; i < 3u; ++i) file >> skewnesses[i];
+            break;
+        case _("effectSizeShape"): file >> effectSizeShape; break;
+        case _("effectSizeScale"): file >> effectSizeScale; break;
+        case _("interactionWeightShape"):
+            file >> interactionWeightShape; break;
+        case _("interactionWeightScale"):
+            file >> interactionWeightScale; break;
+        case _("dominanceVariance"): file >> dominanceVariance; break;
+        case _("tBurnIn"): file >> tBurnIn; break;
+        case _("tEndSim"): file >> tEndSim; break;
+        case _("tSave"): file >> tSave; break;
+        case _("record"): file >> record; break;
+        case _("seed"): file >> seed; break;
+
+        default:
+            throw std::runtime_error("Invalid parameter name: " + input); break;
+
+        }
+    }
+
+    // Now update interactive parameters
+    nLoci = nEcoLoci + nMatLoci + nNtrLoci;
+    nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
+    nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
+
+    // Make sure genetic networks do not have more edges than feasible
+    capEdges();
+
+    // Check validity of parameter values
+    checkParams();
+
+    std::clog << "Parameters were read in succesfully.\n";
+
+}
+
+
+// Check that the parameter values are valid
 void Param::checkParams()
 {
     std::string msg = "No error detected";
@@ -118,82 +209,7 @@ void Param::checkParams()
 }
 
 
-void Param::readParams(std::ifstream &file)
-{
-
-    std::string input;
-    while (file >> input) {
-
-        switch (_(input)) {
-
-        case _("maxResourceCapacity"): file >> maxResourceCapacity; break;
-        case _("maxResourceGrowth"): file >> maxResourceGrowth; break;
-        case _("habitatSymmetry"): file >> habitatSymmetry; break;
-        case _("ecoSelCoeff"): file >> ecoSelCoeff; break;
-        case _("initialPopSize"): file >> initialPopSize; break;
-        case _("dispersalRate"): file >> dispersalRate; break;
-        case _("birthRate"): file >> birthRate; break;
-        case _("survivalProb"): file >> survivalProb; break;
-        case _("matePreferenceStrength"):
-            file >> matePreferenceStrength; break;
-        case _("mateEvalutationCost"): file >> mateEvaluationCost; break;
-        case _("maxFeedingRate"): file >> maxFeedingRate; break;
-        case _("nEcoLoci"): file >> nEcoLoci; break;
-        case _("nMatLoci"): file >> nMatLoci; break;
-        case _("nNtrLoci"): file >> nNtrLoci; break;
-        case _("nEcoEdges"): file >> nEcoEdges; break;
-        case _("nMatEdges"): file >> nMatEdges; break;
-        case _("nNtrEdges"): file >> nNtrEdges; break;
-        case _("nChromosomes"): file >> nChromosomes; break;
-        case _("mutationRate"): file >> mutationRate; break;
-        case _("recombinationRate"): file >> recombinationRate; break;
-        case _("freqSNP"): file >> freqSNP; break;
-        case _("isFemaleHeterogamy"): file >> isFemaleHeterogamy; break;
-        case _("scaleA"):
-            for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
-            break;
-        case _("scaleD"):
-            for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
-            break;
-        case _("scaleI"):
-            for (size_t i = 0u; i < 3u; ++i) file >> scaleI[i];
-            break;
-        case _("scaleE"):
-            for (size_t i = 0u; i < 3u; ++i) file >> scaleE[i];
-            break;
-        case _("skewnesses"):
-            for (size_t i = 0u; i < 3u; ++i) file >> skewnesses[i];
-            break;
-        case _("effectSizeShape"): file >> effectSizeShape; break;
-        case _("effectSizeScale"): file >> effectSizeScale; break;
-        case _("interactionWeightShape"):
-            file >> interactionWeightShape; break;
-        case _("interactionWeightScale"):
-            file >> interactionWeightScale; break;
-        case _("dominanceVariance"): file >> dominanceVariance; break;
-        case _("tBurnIn"): file >> tBurnIn; break;
-        case _("tEndSim"): file >> tEndSim; break;
-        case _("tSave"): file >> tSave; break;
-        case _("record"): file >> record; break;
-        case _("seed"): file >> seed; break;
-
-        default:
-            throw std::runtime_error("Invalid parameter name: " + input); break;
-
-        }
-    }
-
-    // Now update interactive parameters
-    nLoci = nEcoLoci + nMatLoci + nNtrLoci;
-    nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
-    nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
-
-    capEdges();
-    checkParams();
-
-    std::clog << "Parameters were read in succesfully.\n";
-
-}
+// Setters used in testing
 
 void Param::setMatePreferenceStrength(const double &alpha)
 {
@@ -217,7 +233,3 @@ void Param::setInteractionWeightScale(const double &x)
 {
     interactionWeightScale = x;
 }
-
-
-
-

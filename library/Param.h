@@ -2,13 +2,15 @@
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
 #include "Types.h"
-//#include <vector>
 #include <fstream>
 #include <iostream>
 #include <chrono>
-//#include <sstream>
 #include <cassert>
 #include <cstdint>
+
+// Parameter set. Contains values of the parameters of the simulation.
+// All parameters have default values that can be modified by calling
+// the program with a parameter file name as unique argument.
 
 class Param {
 
@@ -16,11 +18,14 @@ public:
 
     Param() : seed(makeDefaultSeed())
     {
+        // Make sure there are no more edges than feasible
         capEdges();
+
+        // Make sure parameter values make sense
         checkParams();
     }
 
-    /// Getters
+    // Getters
     size_t getNChromosomes() const { return nChromosomes; }
     size_t getNLoci() const { return nLoci; }
     vecUns getNLociPerTrait() const { return nLociPerTrait; }
@@ -56,7 +61,7 @@ public:
     vecDbl getScaleI() const { return scaleI; }
     vecDbl getScaleE() const { return scaleE; }
 
-    /// Setters
+    // Setters
     void readParams(std::ifstream&);
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
@@ -67,6 +72,7 @@ public:
     void setBirthRate(const double &b) { birthRate = b; }
     void setMatePreferenceStrength(const double &);
     void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
+    void setRecombinationRate(const double &r) { recombinationRate = r; }
     void setNLociPerTrait(const vecUns&);
     void setNEdgesPerTrait(const vecUns&);
     void setSkewnesses(const vecDbl &skews) { skewnesses = skews; }
@@ -77,10 +83,10 @@ public:
     void setEffectSizeScale(const double &x) { effectSizeScale = x; }
     void setInteractionWeightScale(const double&);
 
-    /// Makers
+    // Makers
     size_t makeDefaultSeed();
 
-    /// Checkers
+    // Checkers
     void checkParams();
 
 private:
