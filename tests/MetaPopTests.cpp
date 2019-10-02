@@ -86,6 +86,36 @@ BOOST_AUTO_TEST_CASE(individualsEcotypesAreCorrectIfOnlyOneResource)
 
 }
 
+// Test that genome-wide Pst for the ecological trait should be 1
+// if all members of ecotype 0 have trait -1 and all members of ecotype 1
+// have trait 1
+BOOST_AUTO_TEST_CASE(ecologicalPstOfFullyDivergedPops)
+{
+
+    std::clog << "Testing Pst of diverged ecotypes...\n";
+    Param pars;
+    GenArch arch = GenArch(pars);
+    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
+    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
+    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
+    meta.consume();
+    meta.analyze(arch);
+    BOOST_CHECK_EQUAL(meta.getPst(0u), 1.0);
+
+}
+
+// Test that Xst should be 1 if ecotypic variances are zero
+BOOST_AUTO_TEST_CASE(XstDoesItsJob)
+{
+
+    std::clog << "Checking that variance is correctly partitioned...\n";
+    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 42.0, 10u, 10u, 20u), 1.0);
+    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 2.0, 10u, 10u, 20u), 1.0);
+    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 1.0, 10u, 10u, 20u), 1.0);
+
+}
+
 // Test case: a population with ecological isolation = 1
 BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
 {
@@ -95,8 +125,8 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
     MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0);
-    meta.resetEcoTraits(1u, 1.0);
+    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
+    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.consume();
     meta.analyze(arch);
     BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
