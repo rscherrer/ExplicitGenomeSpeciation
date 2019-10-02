@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 
-#include "library/doMain.h"
+#include "library/Simul.h"
 #include "library/Deme.h"
 #include "library/MetaPop.h"
 #include "tests/GenFixture.h"
@@ -14,45 +14,39 @@ typedef std::vector<Network> MultiNet;
 // Check that the program can run without arguments
 BOOST_AUTO_TEST_CASE(testUseNoArgs)
 {
-    std::clog << "Testing that the main runs without arguments...\n";
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test" }), 0);
+    BOOST_CHECK_EQUAL(simulate({ "EGS_test" }), 0);
 }
 
 
 // Check that the program cannot run with more than one argument
 BOOST_AUTO_TEST_CASE(testAbuseTooManyArgs)
 {
-    std::clog << "Testing providing too many arguments to the main...\n";
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "arg1", "arg2" }), 1);
+    BOOST_CHECK_EQUAL(simulate({ "EGS_test", "arg1", "arg2" }), 1);
 }
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidFilename)
 {
-    std::clog << "Testing invalid parameter file name...\n";
     tst::makeValidParamFile();
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "nonsense.txt" }), 1);
+    BOOST_CHECK_EQUAL(simulate({ "EGS_test", "nonsense.txt" }), 1);
 }
 
 
 BOOST_AUTO_TEST_CASE(testUseValidFilename)
 {
-    std::clog << "Testing valid parameter file name...\n";
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "valid_paramfile_test.txt" }), 0);
+    BOOST_CHECK_EQUAL(simulate({ "EGS_test", "valid_paramfile_test.txt" }), 0);
 }
 
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamName)
 {
-    std::clog << "Testing invalid parameter name...\n";
     tst::makeInvalidParamName();
-    BOOST_CHECK_EQUAL(doMain({ "EGS_test", "invalid_paramname_test.txt" }), 1);
+    BOOST_CHECK_EQUAL(simulate({ "EGS_test", "invalid_paramname_test.txt" }), 1);
 }
 
 BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
 {
-    std::clog << "Testing invalid parameter value...\n";
     tst::makeInvalidParamValue();
-    BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test.txt"}), 1);
+    BOOST_CHECK_EQUAL(simulate({"EGS_test", "invalid_paramvalue_test.txt"}), 1);
     tst::makeInvalidParamValue2();
-    BOOST_CHECK_EQUAL(doMain({"EGS_test", "invalid_paramvalue_test2.txt"}), 1);
+    BOOST_CHECK_EQUAL(simulate({"EGS_test", "invalid_paramvalue_test2.txt"}), 1);
 }

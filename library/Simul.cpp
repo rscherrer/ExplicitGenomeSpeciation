@@ -1,6 +1,6 @@
-#include "doMain.h"
+#include "Simul.h"
 
-int doMain(const vecStrings &args)
+int simulate(const vecStrings &args)
 {
 
     try

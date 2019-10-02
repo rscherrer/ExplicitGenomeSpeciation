@@ -1,5 +1,5 @@
-#ifndef EXPLICITGENOMESPECIATION_DOMAIN_H
-#define EXPLICITGENOMESPECIATION_DOMAIN_H
+#ifndef EXPLICITGENOMESPECIATION_SIMUL_H
+#define EXPLICITGENOMESPECIATION_SIMUL_H
 
 #include "Param.h"
 #include "GenArch.h"
@@ -9,6 +9,6 @@
 #include <stddef.h>
 #include <iostream>
 
-int doMain(const vecStrings&);
+int simulate(const vecStrings&);
 
 #endif

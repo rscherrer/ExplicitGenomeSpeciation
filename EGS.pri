@@ -1,4 +1,4 @@
-SOURCES += $$PWD/library/doMain.cpp \
+SOURCES += \
     $$PWD/library/GenArch.cpp \
     $$PWD/library/Param.cpp \
     $$PWD/library/Deme.cpp \
@@ -11,8 +11,9 @@ SOURCES += $$PWD/library/doMain.cpp \
     $$PWD/library/Stats.cpp \
     $$PWD/library/Locus.cpp \
     $$PWD/library/Trait.cpp \
-    $$PWD/library/Gamete.cpp
-HEADERS += $$PWD/library/doMain.h \
+    $$PWD/library/Gamete.cpp \
+    $$PWD/library/Simul.cpp
+HEADERS += \
     $$PWD/library/GenArch.h \
     $$PWD/library/Param.h \
     $$PWD/library/Deme.h \
@@ -24,4 +25,5 @@ HEADERS += $$PWD/library/doMain.h \
     $$PWD/library/MetaPop.h \
     $$PWD/library/Types.h \
     $$PWD/library/Stats.h \
-    $$PWD/library/Gamete.h
+    $$PWD/library/Gamete.h \
+    $$PWD/library/Simul.h

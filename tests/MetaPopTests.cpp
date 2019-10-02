@@ -6,9 +6,6 @@
 // Simulation should reach tmax in the absence of mortality
 BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 {
-
-    std::clog << "Testing an immortal population...\n";
-
     Param pars;
     pars.setTEndSim(10u);
     pars.setTSave(1u);
@@ -32,9 +29,6 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
 // Simulation should end prematurely with high mortality
 BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 {
-
-    std::clog << "Testing progressive extinction...\n";
-
     Param pars;
     pars.setTEndSim(100u);
     pars.setTSave(1u);
@@ -58,7 +52,6 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
 // habitat symmetry is zero
 BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
 {
-    std::clog << "Testing habitat asymmetry...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
@@ -73,8 +66,6 @@ BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
 // Test that Xst should be 1 if ecotypic variances are zero
 BOOST_AUTO_TEST_CASE(XstDoesItsJob)
 {
-
-    std::clog << "Checking that variance is correctly partitioned...\n";
     BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 42.0, 10u, 10u, 20u), 1.0);
     BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 2.0, 10u, 10u, 20u), 1.0);
     BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 1.0, 10u, 10u, 20u), 1.0);
@@ -84,7 +75,6 @@ BOOST_AUTO_TEST_CASE(XstDoesItsJob)
 // Test that monomorphic ecotypes indeed have zero variance
 BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
 {
-    std::clog << "Checking full ecological isolation...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
@@ -112,7 +102,6 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
 // Test case: a population with spatial isolation = 1
 BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
 {
-    std::clog << "Testing full spatial isolation...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
@@ -128,7 +117,6 @@ BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
 // Test case: a population with mating isolation = 1
 BOOST_AUTO_TEST_CASE(fullMatingIsolation)
 {
-    std::clog << "Testing full mating isolation...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0);
@@ -146,7 +134,6 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
 
 BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
 {
-    std::clog << "Testing spatial isolation with only one population...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);
@@ -158,8 +145,6 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
 
 BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
 {
-
-    std::clog << "Testing spatial isolation with only one ecotype...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
@@ -172,8 +157,6 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
 
 BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
 {
-
-    std::clog << "Testing mating isolation when only one sex...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     MetaPop meta = MetaPop({ 100u, 0 }, pars, arch, false);
@@ -185,8 +168,6 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
 
 BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
 {
-
-    std::clog << "Testing mating isolation when one ecotype...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);

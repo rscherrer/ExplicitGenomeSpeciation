@@ -7,7 +7,6 @@
 
 BOOST_AUTO_TEST_CASE(checkNoNetworks)
 {
-    std::clog << "Testing empty networks...\n";
     Param pars;
     pars.setNLociPerTrait(utl::repUns(100u, 3u));
     pars.setNEdgesPerTrait(utl::uzeros(3u));
@@ -19,7 +18,6 @@ BOOST_AUTO_TEST_CASE(checkNoNetworks)
 
 BOOST_AUTO_TEST_CASE(checkSmallNetworks)
 {
-    std::clog << "Testing small networks...\n";
     Param pars;
     pars.setNLociPerTrait(utl::repUns(100u, 3u));
     pars.setNEdgesPerTrait({ 1u, 0u, 0u });
@@ -33,7 +31,6 @@ BOOST_AUTO_TEST_CASE(checkSmallNetworks)
 
 BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
 {
-    std::clog << "Testing that network size is capped...\n";
     Param pars;
     pars.setNLociPerTrait({ 10u, 5u, 2u });
     pars.setNEdgesPerTrait(utl::repUns(1000u, 3u));
@@ -45,7 +42,6 @@ BOOST_AUTO_TEST_CASE(checkTooBigNetworks)
 
 BOOST_AUTO_TEST_CASE(checkInteractionWeights)
 {
-    std::clog << "Testing interaction weights...\n";
     Param pars;
     pars.setInteractionWeightScale(0.0);
     GenArch arch = GenArch(pars);
