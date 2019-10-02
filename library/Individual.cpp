@@ -307,7 +307,7 @@ size_t Individual::getAlleleSum(const size_t &hap) const
 double Individual::getExpression() const
 {
     double sum = 0.0;
-    for (auto x : transcriptome)
+    for (auto &x : transcriptome)
         sum += x;
     return sum;
 }

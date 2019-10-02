@@ -131,8 +131,14 @@ double MetaPop::getSumTrait(const size_t &trait, const size_t &pop) const
 
 void MetaPop::consume() // metapopulation-level fitness/ecotype resetter
 {
-    for (size_t p = 0u; p < 2u; ++p)
-        pops[p].consume();
+    for (auto &pop : pops)
+        pop.consume();
+}
+
+void MetaPop::sortSexes() // metapopulation level sex-vectors resetter
+{
+    for (auto &pop : pops)
+        pop.sortSexes();
 }
 
 void MetaPop::resetEcoTraits(const size_t &p, const double &x)

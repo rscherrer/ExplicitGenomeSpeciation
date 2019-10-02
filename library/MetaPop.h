@@ -61,6 +61,7 @@ public:
     int evolve(const GenArch&);
     void analyze(const GenArch&);
     void consume();
+    void sortSexes();
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);
