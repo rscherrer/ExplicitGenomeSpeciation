@@ -91,11 +91,11 @@ private:
     double ecoSelCoeff             = 1.0;
     size_t initialPopSize          = 100u;
     double dispersalRate           = 1.0e-3;
-    double birthRate               = 4.0;
-    double survivalProb            = 0.8;
+    double birthRate               = 2.0;
+    double survivalProb            = 0.6;
     double matePreferenceStrength  = 10.0;
     double mateEvaluationCost      = 0.01;
-    double maxFeedingRate          = 4.0E-3;
+    double maxFeedingRate          = 4.0E-4;
 
     // Genetic parameters
     size_t nEcoLoci = 10;
