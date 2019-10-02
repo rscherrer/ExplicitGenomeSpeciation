@@ -94,13 +94,15 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     meta.consume();
     meta.analyze(arch);
 
+    BOOST_CHECK_EQUAL(meta.getSumTrait(0u, 0u), -1.0 * meta.getPopSize(0u));
+    BOOST_CHECK_EQUAL(meta.getSumTrait(0u, 1u), meta.getPopSize(1u));
     BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
     BOOST_CHECK_EQUAL(meta.getPst(0u), 1.0);
     BOOST_CHECK_EQUAL(meta.getVarP(0u, 0u), 0.0);
     BOOST_CHECK_EQUAL(meta.getVarP(0u, 1u), 0.0);
     BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 0u), meta.getEcoCount(0u));
     BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 1u), meta.getEcoCount(1u));
-    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 0u), meta.getEcoCount(0u));
+    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 0u), -1.0 * meta.getEcoCount(0u));
     BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 1u), meta.getEcoCount(1u));
     BOOST_CHECK_EQUAL(meta.getSumEcotypes(0u), 0u);
     BOOST_CHECK_EQUAL(meta.getSumEcotypes(1u), meta.getPopSize(1u));

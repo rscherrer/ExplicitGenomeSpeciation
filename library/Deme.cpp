@@ -264,32 +264,39 @@ size_t Deme::getZygosity(const size_t &i, const size_t &l) const
     return individuals[i].getZygosity(l);
 }
 
+double Deme::getSumTrait(const size_t &trait) const
+{
+    double sum = 0.0;
+    for (auto &ind : individuals) sum += ind.getTraitValue(trait);
+    return sum;
+}
+
 
 // Resetters used in testing
 
 void Deme::resetEcoTraits(const double &value, const double &sel,
  const double &max)
 {
-    for (auto ind : individuals)
+    for (auto &ind : individuals)
         ind.setEcoTrait(value, sel, max);
 }
 
 void Deme::resetMatePrefs(const double &value)
 {
-    for (auto ind : individuals)
+    for (auto &ind : individuals)
         ind.setMatePref(value);
 }
 
 void Deme::resetGenders(const bool &sex)
 {
-    for (size_t ind = 0u; ind < individuals.size(); ++ind) {
-        individuals[ind].setGender(sex);
+    for (auto &ind : individuals) {
+        ind.setGender(sex);
     }
 }
 
 void Deme::resetEcotypes(const size_t &ecotype)
 {
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        individuals[ind].setEcotype(ecotype);
+    for (auto &ind : individuals)
+        ind.setEcotype(ecotype);
 }
 

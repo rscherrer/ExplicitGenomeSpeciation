@@ -121,6 +121,11 @@ double MetaPop::getSumPhe(const size_t &trait, const size_t &eco) const
     return stats.getSumPhe(trait, eco);
 }
 
+double MetaPop::getSumTrait(const size_t &trait, const size_t &pop) const
+{
+    return pops[pop].getSumTrait(trait);
+}
+
 
 // Resetters used in tests
 

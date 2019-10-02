@@ -54,6 +54,7 @@ public:
     double getTraitValue(const size_t&, const size_t&) const;
     double getLocusValue(const size_t&, const size_t&) const;
     size_t getZygosity(const size_t&, const size_t&) const;
+    double getSumTrait(const size_t&) const;
 
     // Life cycle
     void sortSexes();

@@ -56,6 +56,7 @@ public:
     double getVarP(const size_t&, const size_t&) const;
     double getSsqPhe(const size_t&, const size_t&) const;
     double getSumPhe(const size_t&, const size_t&) const;
+    double getSumTrait(const size_t&, const size_t&) const;
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
