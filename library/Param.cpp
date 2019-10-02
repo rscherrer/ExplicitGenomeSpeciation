@@ -75,7 +75,10 @@ void Param::update(std::ifstream &file)
         case _("maxResourceGrowth"): file >> maxResourceGrowth; break;
         case _("habitatSymmetry"): file >> habitatSymmetry; break;
         case _("ecoSelCoeff"): file >> ecoSelCoeff; break;
-        case _("initialPopSize"): file >> initialPopSize; break;
+        case _("nPops"): file >> nPops; break;
+        case _("initialPopSizes"):
+            for (size_t i = 0u; i < nPops; ++i) file >> initialPopSizes[i];
+            break;
         case _("dispersalRate"): file >> dispersalRate; break;
         case _("birthRate"): file >> birthRate; break;
         case _("survivalProb"): file >> survivalProb; break;

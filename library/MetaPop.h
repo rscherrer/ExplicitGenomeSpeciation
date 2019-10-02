@@ -17,9 +17,8 @@ class MetaPop
 
 public:
 
-    MetaPop(const vecUns& popSizes, const Param &pars,
-     const GenArch &arch, const bool &isburnin) :
-        popsizes(popSizes),
+    MetaPop(const Param &pars, const GenArch &arch, const bool &isburnin) :
+        popsizes(pars.getInitialPopSizes()),
         dispersal(pars.getDispersalRate()),
         survival(pars.getSurvivalProb()),
         birth(pars.getBirthRate()),

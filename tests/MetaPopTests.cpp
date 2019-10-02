@@ -9,15 +9,14 @@ BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
     Param pars;
     pars.setTEndSim(10u);
     pars.setTSave(1u);
-    pars.setInitialPopSize(10u);
+    pars.setInitialPopSizes({ 10u, 10u });
     pars.setDispersalRate(0.0);
     pars.setSurvivalProb(1.0);
     pars.setBirthRate(0.0);
     pars.setMatePreferenceStrength(0.0);
 
     GenArch arch = GenArch(pars);
-    const size_t n0 = pars.getInitialPopSize();
-    MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, true);
+    MetaPop meta = MetaPop(pars, arch, true);
     int t = meta.evolve(arch);
 
     BOOST_CHECK_EQUAL(t, pars.getTEndSim());
@@ -32,15 +31,14 @@ BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
     Param pars;
     pars.setTEndSim(100u);
     pars.setTSave(1u);
-    pars.setInitialPopSize(10u);
+    pars.setInitialPopSizes({ 10u, 10u });
     pars.setDispersalRate(0.0);
     pars.setSurvivalProb(0.1);
     pars.setBirthRate(0.0);
     pars.setMatePreferenceStrength(0.0);
 
     GenArch arch = GenArch(pars);
-    const size_t n0 = pars.getInitialPopSize();
-    MetaPop meta = MetaPop(utl::repUns(n0, 2u), pars, arch, true);
+    MetaPop meta = MetaPop(pars, arch, true);
     int t = meta.evolve(arch);
 
     BOOST_CHECK(t < pars.getTEndSim());
@@ -55,7 +53,8 @@ BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    pars.setInitialPopSizes( {100u, 100u} );
+    MetaPop meta = MetaPop(pars, arch, false);
     BOOST_CHECK_EQUAL(meta.getResource(0u, 0u), pars.getMaxResourceCapacity());
     BOOST_CHECK_EQUAL(meta.getResource(1u, 1u), pars.getMaxResourceCapacity());
     BOOST_CHECK_EQUAL(meta.getResource(0u, 1u), 0.0);
@@ -78,7 +77,8 @@ BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 100u });
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
     meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.consume();
@@ -105,7 +105,8 @@ BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 100u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
     meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.consume();
@@ -120,7 +121,8 @@ BOOST_AUTO_TEST_CASE(fullMatingIsolation)
     Param pars;
     GenArch arch = GenArch(pars);
     pars.setHabitatSymmetry(0.0);
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 100u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
     meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
     meta.resetMatePrefs(0u, 1.0); // assortative mating everywhere
@@ -136,7 +138,8 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 0u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.resetEcoTraits(0u, -1.0);
     meta.consume();
     meta.analyze(arch);
@@ -147,7 +150,8 @@ BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop(utl::repUns(100u, 2u), pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 100u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.consume();
     meta.resetEcotypes(0u, 1u);
     meta.resetEcotypes(1u, 1u);
@@ -159,7 +163,8 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop({ 100u, 0 }, pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 0u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.consume();
     meta.resetGenders(0u, true);
     meta.analyze(arch);
@@ -170,7 +175,8 @@ BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop({ 100u, 0u }, pars, arch, false);
+    pars.setInitialPopSizes({ 100u, 0u});
+    MetaPop meta = MetaPop(pars, arch, false);
     meta.consume();
     meta.resetEcotypes(0u, 1u);
     meta.analyze(arch);

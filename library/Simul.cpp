@@ -22,8 +22,7 @@ int simulate(const vecStrings &args)
         GenArch arch = GenArch(pars);
 
         // Create a metapopulation with two demes, one of which is empty
-        const vecUns popsizes = { pars.getInitialPopSize(), 0u };
-        MetaPop metapop = MetaPop(popsizes, pars, arch, true);
+        MetaPop metapop = MetaPop(pars, arch, true);
 
         // Evolve the metapopulation
         std::clog << "Simulation started\n";

@@ -41,7 +41,7 @@ public:
     int getTEndSim() const { return tEndSim; }
     int getTSave() const { return tSave; }
     int getTBurnIn() const { return tBurnIn; }
-    size_t getInitialPopSize() const { return initialPopSize; }
+    vecUns getInitialPopSizes() const { return initialPopSizes; }
     double getDispersalRate() const { return dispersalRate; }
     double getSurvivalProb() const { return survivalProb; }
     double getBirthRate() const { return birthRate; }
@@ -65,7 +65,7 @@ public:
     void read(const std::string&);
     void setTEndSim(const size_t &t) { tEndSim = t; }
     void setTSave(const size_t &t) { tSave = t; }
-    void setInitialPopSize(const size_t &n) { initialPopSize = n; }
+    void setInitialPopSizes(const vecUns &v) { initialPopSizes = v; }
     void setHabitatSymmetry(const double &h) { habitatSymmetry = h; }
     void setDispersalRate(const double &d) { dispersalRate = d; }
     void setSurvivalProb(const double &p) { survivalProb = p; }
@@ -94,7 +94,8 @@ private:
     double maxResourceGrowth       = 1.0;
     double habitatSymmetry         = 1.0;
     double ecoSelCoeff             = 1.0;
-    size_t initialPopSize          = 100u;
+    vecUns initialPopSizes         = { 100u, 0u };
+    size_t nPops                   = initialPopSizes.size();
     double dispersalRate           = 1.0e-3;
     double birthRate               = 2.0;
     double survivalProb            = 0.6;
