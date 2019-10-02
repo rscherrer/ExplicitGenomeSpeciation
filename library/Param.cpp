@@ -152,6 +152,10 @@ void Param::checkParams()
 {
     std::string msg = "No error detected";
 
+    if (initialPopSizes.size() == 0u)
+        msg = "No initial populations";
+    if (initialPopSizes.size() != nPops)
+        msg = "The number of populations is not as declared";
     if (dispersalRate < 0.0)
         msg = "Dispersal rate should be positive";
     if (dispersalRate > 1.0)
