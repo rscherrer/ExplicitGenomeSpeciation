@@ -21,8 +21,8 @@ int simulate(const vecStrings &args)
         // Create a genetic architecture
         GenArch arch = GenArch(pars);
 
-        // Create a metapopulation with two demes
-        const vecUns popsizes = utl::repUns(pars.getInitialPopSize(), 2u);
+        // Create a metapopulation with two demes, one of which is empty
+        const vecUns popsizes = { pars.getInitialPopSize(), 0u };
         MetaPop metapop = MetaPop(popsizes, pars, arch, true);
 
         // Evolve the metapopulation
