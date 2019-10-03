@@ -46,47 +46,7 @@ void Deme::sortSexes()
             males.push_back(ind);
 }
 
-Crowd Deme::emigrate(const double &rate)
-{
-    // Loop through individuals in the pop
-    // Everyone has a change to migrate
 
-    Crowd migrants;
-    Crowd residents;
-
-    size_t nmigrants = rnd::binomial(individuals.size(), rate);
-    vecDbl probs = utl::ones(individuals.size());
-
-    // All individuals that moved
-    while (nmigrants) {
-        const size_t mig = rnd::sample(probs);
-        migrants.push_back(individuals[mig]);
-        probs[mig] = 0.0;
-        --nmigrants;
-    }
-
-    // All individuals that stayed
-    for (size_t ind = 0u; ind < individuals.size(); ++ind)
-        if (probs[ind] == 1.0)
-            residents.push_back(individuals[ind]);
-
-    assert(residents.size() + migrants.size() == individuals.size());
-    assert(migrants.size() <= individuals.size());
-    assert(residents.size() <= individuals.size());
-
-    individuals.clear();
-    individuals.shrink_to_fit();
-    individuals = residents;
-
-    return migrants;
-
-}
-
-void Deme::immigrate(const Crowd &newcomers)
-{
-    for (auto &ind : newcomers)
-        individuals.push_back(ind);
-}
 
 void Deme::consume()
 {

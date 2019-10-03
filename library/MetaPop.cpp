@@ -48,10 +48,7 @@ int MetaPop::evolve(const GenArch &arch)
 
         // Dispersal (only if not burnin)
         if (t > 0) {
-            Crowd migrants1 = pops[0u].emigrate(dispersal);
-            Crowd migrants2 = pops[1u].emigrate(dispersal);
-            pops[0u].immigrate(migrants2);
-            pops[1u].immigrate(migrants1);
+            // dispersal
         }
 
         size_t isExtant = 0u;

@@ -6,6 +6,7 @@
 
 BOOST_FIXTURE_TEST_SUITE(popTestSuite, PopFixture)
 
+    /*
     BOOST_AUTO_TEST_CASE(checkNoDispersal)
     {
         Deme pop = Deme(10u, s, max, k, r, arch);
@@ -30,6 +31,7 @@ BOOST_FIXTURE_TEST_SUITE(popTestSuite, PopFixture)
         BOOST_CHECK_EQUAL(pop.getPopSize(), 10u);
 
     }
+    */
 
     // Check that zero survival leaves no survivors in the population
     BOOST_AUTO_TEST_CASE(checkNoSurvivors)

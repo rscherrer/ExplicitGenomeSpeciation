@@ -61,6 +61,8 @@ public:
 
     int evolve(const GenArch&);
     void analyze(const GenArch&);
+    void collect(std::vector<vecUns>&) const;
+    void distribute(const std::vector<vecUns>&);
     void consume();
     void sortSexes();
 

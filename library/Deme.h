@@ -59,8 +59,8 @@ public:
 
     // Life cycle
     void sortSexes();
-    Crowd emigrate(const double& = 0.01);
-    void immigrate(const Crowd&);
+    void emigrate(std::vector<vecUns>&, const double&);
+    void immigrate(const std::vector<vecUns>&);
     void consume();
     void reproduce(const double&, const double&, const double&, const double&,
      const double&, const GenArch&);
