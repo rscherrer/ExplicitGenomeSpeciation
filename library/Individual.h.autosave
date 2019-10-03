@@ -6,13 +6,8 @@
 #include "Utilities.h"
 #include "Types.h"
 #include "Gamete.h"
-//#include "Deme.h"
 #include "Random.h"
-//#include <vector>
-//#include <random>
-//#include <cmath> // exponential?
 #include <cassert>
-//#include <algorithm>
 #include <stddef.h>
 
 typedef std::vector<Haplotype> Genome;
@@ -23,8 +18,7 @@ class Individual {
 public:
 
     /// Spontaneous creation
-    Individual(const GenArch &arch, const double &ecosel,
-     const double &maxfeed, const double &snpFreq) :
+    Individual(const Param &pars, const GenArch &arch) :
         genome(generateGenome(arch, snpFreq)),
         transcriptome(utl::zeros(arch.nLoci)),
         locivalues(utl::zeros(arch.nLoci)),
@@ -37,7 +31,8 @@ public:
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
-        habitat(0u)
+        habitat(0u),
+        isalive(true)
     {
         develop(arch, ecosel, maxfeed);
         checkIndividual(arch.nLoci);

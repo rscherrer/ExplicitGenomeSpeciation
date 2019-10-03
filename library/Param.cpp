@@ -14,13 +14,13 @@ size_t Param::makeDefaultSeed()
 void Param::capEdges()
 {
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        const size_t n = nLociPerTrait[trait];
+        const size_t n = nvertices[trait];
 
         // Number of edges in a compete graph with N vertices
         const size_t emax = n * (n - 1u) / 2u;
 
         // Cap the number of edges
-        if (nEdgesPerTrait[trait] > emax) nEdgesPerTrait[trait] = emax;
+        if (nedges[trait] > emax) nedges[trait] = emax;
     }
 }
 
@@ -71,32 +71,30 @@ void Param::update(std::ifstream &file)
 
         switch (_(input)) {
 
-        case _("maxResourceCapacity"): file >> maxResourceCapacity; break;
-        case _("maxResourceGrowth"): file >> maxResourceGrowth; break;
-        case _("habitatSymmetry"): file >> habitatSymmetry; break;
-        case _("ecoSelCoeff"): file >> ecoSelCoeff; break;
-        case _("nPops"): file >> nPops; break;
-        case _("initialPopSizes"):
-            for (size_t i = 0u; i < nPops; ++i) file >> initialPopSizes[i];
+        case _("capacity"): file >> capacity; break;
+        case _("replenish"): file >> replenish; break;
+        case _("hsymmetry"): file >> hsymmetry; break;
+        case _("ecosel"): file >> ecosel; break;
+        case _("demesizes"):
+            for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
             break;
-        case _("dispersalRate"): file >> dispersalRate; break;
-        case _("birthRate"): file >> birthRate; break;
-        case _("survivalProb"): file >> survivalProb; break;
-        case _("matePreferenceStrength"):
-            file >> matePreferenceStrength; break;
-        case _("mateEvalutationCost"): file >> mateEvaluationCost; break;
-        case _("maxFeedingRate"): file >> maxFeedingRate; break;
-        case _("nEcoLoci"): file >> nEcoLoci; break;
-        case _("nMatLoci"): file >> nMatLoci; break;
-        case _("nNtrLoci"): file >> nNtrLoci; break;
-        case _("nEcoEdges"): file >> nEcoEdges; break;
-        case _("nMatEdges"): file >> nMatEdges; break;
-        case _("nNtrEdges"): file >> nNtrEdges; break;
-        case _("nChromosomes"): file >> nChromosomes; break;
-        case _("mutationRate"): file >> mutationRate; break;
-        case _("recombinationRate"): file >> recombinationRate; break;
-        case _("freqSNP"): file >> freqSNP; break;
-        case _("isFemaleHeterogamy"): file >> isFemaleHeterogamy; break;
+        case _("dispersal"): file >> dispersal; break;
+        case _("birth"): file >> birth; break;
+        case _("survival"): file >> survival; break;
+        case _("sexsel"):
+            file >> sexsel; break;
+        case _("mateEvalutationCost"): file >> matingcost; break;
+        case _("maxfeed"): file >> maxfeed; break;
+        case _("nvertices"):
+            for (size_t i = 0u; i < 3u; ++i) file >> nvertices[i];
+            break;
+        case _("nedges"):
+            for (size_t i = 0u; i < 3u; ++i) file >> nedges[i];
+            break;
+        case _("nchrom"): file >> nchrom; break;
+        case _("mutation"): file >> mutation; break;
+        case _("recombination"): file >> recombination; break;
+        case _("allfreq"): file >> allfreq; break;
         case _("scaleA"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
             break;
@@ -109,19 +107,19 @@ void Param::update(std::ifstream &file)
         case _("scaleE"):
             for (size_t i = 0u; i < 3u; ++i) file >> scaleE[i];
             break;
-        case _("skewnesses"):
-            for (size_t i = 0u; i < 3u; ++i) file >> skewnesses[i];
+        case _("skews"):
+            for (size_t i = 0u; i < 3u; ++i) file >> skews[i];
             break;
-        case _("effectSizeShape"): file >> effectSizeShape; break;
-        case _("effectSizeScale"): file >> effectSizeScale; break;
-        case _("interactionWeightShape"):
-            file >> interactionWeightShape; break;
-        case _("interactionWeightScale"):
-            file >> interactionWeightScale; break;
-        case _("dominanceVariance"): file >> dominanceVariance; break;
-        case _("tBurnIn"): file >> tBurnIn; break;
-        case _("tEndSim"): file >> tEndSim; break;
-        case _("tSave"): file >> tSave; break;
+        case _("effectshape"): file >> effectshape; break;
+        case _("effectscale"): file >> effectscale; break;
+        case _("interactionshape"):
+            file >> interactionshape; break;
+        case _("interactionscale"):
+            file >> interactionscale; break;
+        case _("dominancevar"): file >> dominancevar; break;
+        case _("tburnin"): file >> tburnin; break;
+        case _("tend"): file >> tend; break;
+        case _("tsave"): file >> tsave; break;
         case _("record"): file >> record; break;
         case _("seed"): file >> seed; break;
 
@@ -132,9 +130,7 @@ void Param::update(std::ifstream &file)
     }
 
     // Now update interactive parameters
-    nLoci = nEcoLoci + nMatLoci + nNtrLoci;
-    nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
-    nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
+    nloci = utl::sumu(nvertices);
 
     // Make sure genetic networks do not have more edges than feasible
     capEdges();
@@ -152,58 +148,56 @@ void Param::checkParams()
 {
     std::string msg = "No error detected";
 
-    if (initialPopSizes.size() == 0u)
-        msg = "No initial populations";
-    if (initialPopSizes.size() != nPops)
-        msg = "The number of populations is not as declared";
-    if (dispersalRate < 0.0)
+    if (demesizes.size() != 2u)
+        msg = "There should be two demes";
+    if (dispersal < 0.0)
         msg = "Dispersal rate should be positive";
-    if (dispersalRate > 1.0)
+    if (dispersal > 1.0)
         msg = "Dispersal rate should be at most one";
-    if (birthRate < 0.0)
+    if (birth < 0.0)
         msg = "Birth rate should be positive";
-    if (habitatSymmetry < 0.0)
+    if (hsymmetry < 0.0)
         msg = "Habitat symmetry should be positive";
-    if (habitatSymmetry > 1.0)
+    if (hsymmetry > 1.0)
         msg = "Habitat symmetry should be at most one";
-    if (survivalProb < 0.0)
+    if (survival < 0.0)
         msg = "Survival probability should be positive";
-    if (survivalProb > 1.0)
+    if (survival > 1.0)
         msg = "Survival probability should be at most one";
-    if (ecoSelCoeff < 0.0)
+    if (ecosel < 0.0)
         msg = "Selection coefficient should be positive";
-    if (matePreferenceStrength < 0.0)
+    if (sexsel < 0.0)
         msg = "Mate preference strength should be positive";
-    if (mateEvaluationCost < 0.0)
+    if (matingcost < 0.0)
         msg = "Mate evaluation cost should be positive";
-    if (maxFeedingRate < 0.0)
+    if (maxfeed < 0.0)
         msg = "Maximum feeding rate should be positive";
-    if (maxResourceCapacity < 0.0)
+    if (capacity < 0.0)
         msg = "Maximum resource capacity should be positive";
-    if (maxResourceGrowth < 0.0)
+    if (replenish < 0.0)
         msg = "Maximum resource growth should be positive";
-    if (nEcoLoci <= 1u)
+    if (nvertices[0u] <= 1u)
         msg = "Numer of ecological loci should be at least two";
-    if (nMatLoci <= 1u)
+    if (nvertices[1u] <= 1u)
         msg = "Number of mating loci should be at least two";
-    if (nNtrLoci <= 1u)
+    if (nvertices[2u] <= 1u)
         msg = "Number of neutral loci should be at least two";
-    if (nChromosomes == 0u)
+    if (nchrom == 0u)
         msg = "Number of chromosomes should be at least one";
-    if (nLoci <= 5u)
+    if (nloci <= 5u)
         msg = "Total number of loci should be at least six";
-    if (freqSNP < 0.0)
+    if (allfreq < 0.0)
         msg = "Frequency of SNPs should be positive";
-    if (freqSNP > 1.0)
+    if (allfreq > 1.0)
         msg = "Frequency of SNPs should be at most one";
-    if (mutationRate < 0.0)
+    if (mutation < 0.0)
         msg = "Mutation rate should be positive";
-    if (mutationRate > 1.0)
+    if (mutation > 1.0)
         msg = "Mutation rate should be at most one";
-    if (recombinationRate < 0.0)
+    if (recombination < 0.0)
         msg = "Recombination rate should be positive";
     for (size_t i = 0u; i < 3u; ++i) {
-        if (skewnesses[i] < 0.0)
+        if (skews[i] < 0.0)
             msg = "Skewness should be positive";
         if (scaleA[i] < 0.0)
             msg = "Additive scaling should be positive";
@@ -214,43 +208,17 @@ void Param::checkParams()
         if (scaleE[i] < 0.0)
             msg = "Environmental scaling should be positive";
     }
-    if (effectSizeShape < 0.0)
+    if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
-    if (effectSizeScale < 0.0)
+    if (effectscale < 0.0)
         msg = "Effect size scale should be positive";
-    if (interactionWeightShape < 0.0)
+    if (interactionshape < 0.0)
         msg = "Interaction weight shape should be positive";
-    if (interactionWeightScale < 0.0)
+    if (interactionscale < 0.0)
         msg = "Interaction weight scale should be positive";
-    if (dominanceVariance < 0.0)
+    if (dominancevar < 0.0)
         msg = "Dominance variance should be positive";
 
     if(msg != "No error detected")
         throw std::runtime_error(msg);
-}
-
-
-// Setters used in testing
-
-void Param::setMatePreferenceStrength(const double &alpha)
-{
-    matePreferenceStrength = alpha;
-}
-
-void Param::setNLociPerTrait(const vecUns &locipertrait)
-{
-    nLociPerTrait = locipertrait;
-    nLoci = nLociPerTrait[0u] + nLociPerTrait[1u] + nLociPerTrait[2u];
-    capEdges();
-}
-
-void Param::setNEdgesPerTrait(const vecUns &edgespertrait)
-{
-    nEdgesPerTrait = edgespertrait;
-    capEdges();
-}
-
-void Param::setInteractionWeightScale(const double &x)
-{
-    interactionWeightScale = x;
 }

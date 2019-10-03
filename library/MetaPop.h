@@ -3,7 +3,6 @@
 
 #include "Deme.h"
 #include "Output.h"
-//#include "Individual.h"
 #include "Utilities.h"
 #include "Types.h"
 #include "Stats.h"
@@ -18,31 +17,21 @@ class MetaPop
 public:
 
     MetaPop(const Param &pars, const GenArch &arch, const bool &isburnin) :
-        popsizes(pars.getInitialPopSizes()),
-        dispersal(pars.getDispersalRate()),
-        survival(pars.getSurvivalProb()),
-        birth(pars.getBirthRate()),
-        matingcost(pars.getMateEvaluationCost()),
-        sexsel(pars.getMatePreferenceStrength()),
-        ecosel(pars.getEcoSelCoeff()),
-        symmetry(pars.getHabitatSymmetry()),
-        maxfeed(pars.getMaxFeedingRate()),
-        maxresources(pars.getMaxResourceCapacity()),
-        maxreplenish(pars.getMaxResourceGrowth()),
-        resources(utl::matzeros(2u, 2u)),
-        replenish(utl::matzeros(2u, 2u)),
-        t(0),
-        tmax(pars.getTEndSim()),
-        tsave(pars.getTSave()),
-        tburnin(pars.getTBurnIn()),
-        record(pars.getRecord()),
-        pops(makeDemes(arch, isburnin)),
-        stats(Stats(arch))
-    {}
+        population(populate(pars, arch))
+    {
+
+        // There should be the right number of individuals in each habitat
+        assert(getDemeSize(0u) == pars.demesizes[0u]);
+        assert(getDemeSize(1u) == pars.demesizes[1u]);
+
+        // The population should be of a certain size
+        assert(population.size() == pars.getInitPopSize());
+    }
 
     ~MetaPop() {}
 
     size_t getPopSize(const size_t &p) const { return pops[p].getPopSize(); }
+    size_t getDemeSize(const size_t&) const;
     size_t getNFemales(const size_t &p) const { return pops[p].getNFemales(); }
     size_t getNOffspring(const size_t&) const;
     size_t getSumEcotypes(const size_t&) const;
@@ -58,13 +47,7 @@ public:
     double getSumPhe(const size_t&, const size_t&) const;
     double getSumTrait(const size_t&, const size_t&) const;
 
-
-    int evolve(const GenArch&);
-    void analyze(const GenArch&);
-    void collect(std::vector<vecUns>&) const;
-    void distribute(const std::vector<vecUns>&);
-    void consume();
-    void sortSexes();
+    void cycle();
 
     void resetEcoTraits(const size_t&, const double&);
     void resetMatePrefs(const size_t&, const double&);
@@ -73,33 +56,14 @@ public:
 
 private:
 
-    vecPop makeDemes(const GenArch&, const bool&);
+    Crowd populate(const Param&, const GenArch&);
 
-    vecUns popsizes;
-    double dispersal;
-    double survival;
-    double birth;
-    double matingcost;
-    double sexsel;
-    double ecosel;
-    double symmetry;
-    double maxfeed;
-    double maxresources;
-    double maxreplenish;
-    Matrix resources;
-    Matrix replenish;
-    int t;
-    int tmax;
-    int tsave;
-    int tburnin;
-    bool record;
+    void disperse();
+    void consume();
+    void reproduce();
+    void survive();
 
-    vecPop pops;
-    Stats stats;
-
-    static constexpr size_t x = 0u;
-    static constexpr size_t y = 1u;
-    static constexpr size_t z = 2u;
+    Crowd population;
 
 };
 
