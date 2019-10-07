@@ -21,13 +21,12 @@ class Network
 
 public:
 
-    Network(const size_t &character, const Param &pars, const vecDbl &locations,
-     const vecUns &traits) :
+    Network(const size_t &character, const Param &pars, const vecUns &traits) :
         trait(character),
-        map(makeMap()),
-        loci(makeUnderlyingLoci(locations, traits)),
-        edges(makeEdges()),
-        weights(makeWeights(pars.effectshape, pars.effectscale))
+        map(makeMap(pars)),
+        loci(makeUnderlyingLoci(pars, traits)),
+        edges(makeEdges(pars)),
+        weights(makeWeights(pars))
     {
         assert(map.size() == pars.nedges[character]);
         assert(loci.size() == pars.nvertices[character]);
@@ -43,13 +42,11 @@ public:
     vecDbl weights;
 
     // Makers
-    vecEdg makeMap();
-    vecUns makeUnderlyingLoci(const vecDbl&, const vecUns&);
-    vecEdg makeEdges();
-    vecDbl makeWeights(const double&, const double&);
+    vecEdg makeMap(const Param&) const;
+    vecUns makeUnderlyingLoci(const Param&, const vecUns&) const;
+    vecEdg makeEdges(const Param&) const;
+    vecDbl makeWeights(const Param&) const;
 
 };
-
-
 
 #endif

@@ -1,27 +1,5 @@
 #include "GenArch.h"
 
-/// Function to make a vector of interacting partner loci for each trait
-MultiNet GenArch::makeNetworks(const Param &p)
-{
-    MultiNet multinet;
-    multinet.reserve(3u);
-
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        multinet.push_back(Network(trait, p, locations, traits));
-
-    // The indices in these network maps are indices among the loci underlying
-    // a given trait,
-    // not absolute loci indices across the genome
-
-    assert(multinet.size() == 3u);
-
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        assert(multinet[trait].map.size() == p.nvertices[trait]);
-    }
-
-    return multinet;
-}
-
 vecDbl GenArch::makeChromosomes(const Param &p)
 {
 
@@ -135,4 +113,19 @@ vecDbl GenArch::makeDominances(const Param &p)
     return coefficients;
 }
 
+MultiNet GenArch::makeNetworks(const Param &p)
+{
+    MultiNet multinet;
+    multinet.reserve(3u);
 
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        multinet.push_back(Network(trait, p, traits));
+
+    // The indices in these network maps are indices among the loci underlying
+    // a given trait,
+    // not absolute loci indices across the genome
+
+    assert(multinet.size() == 3u);
+
+    return multinet;
+}

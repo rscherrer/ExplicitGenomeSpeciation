@@ -1,13 +1,6 @@
-SOURCES += \
-    $$PWD/tests/GenArchTests.cpp \
-    $$PWD/tests/DemeTests.cpp \
-    $$PWD/tests/SimulTests.cpp
-SOURCES +=
+SOURCES += $$PWD/tests/SimulTests.cpp
+SOURCES += $$PWD/tests/GenArchTests.cpp
 SOURCES += $$PWD/tests/MetaPopTests.cpp
-SOURCES +=
 SOURCES += $$PWD/tests/IndividualTests.cpp
-SOURCES += $$PWD/tests/NetworkTests.cpp
-HEADERS += $$PWD/tests/TestUtilities.h \
-    $$PWD/tests/DemeFixture.h
-HEADERS += $$PWD/tests/GenFixture.h
-HEADERS +=
+SOURCES += $$PWD/tests/CollectorTests.cpp
+HEADERS += $$PWD/tests/TestUtilities.h

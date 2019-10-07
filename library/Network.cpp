@@ -2,7 +2,7 @@
 
 typedef std::discrete_distribution<size_t> Discrete;
 
-vecEdg Network::makeMap(const Param& p)
+vecEdg Network::makeMap(const Param& p) const
 {
 
     // There is a total number of vertices
@@ -68,8 +68,7 @@ vecEdg Network::makeMap(const Param& p)
 
 }
 
-vecUns Network::makeUnderlyingLoci(const Param &p, const vecDbl &locs,
- const vecUns &traits)
+vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 {
     vecUns underlying;
     underlying.reserve(p.nvertices[trait]);
@@ -87,7 +86,7 @@ vecUns Network::makeUnderlyingLoci(const Param &p, const vecDbl &locs,
     return underlying;
 }
 
-vecEdg Network::makeEdges(const Param &p)
+vecEdg Network::makeEdges(const Param &p) const
 {
 
     vecEdg mapped;
@@ -107,7 +106,7 @@ vecEdg Network::makeEdges(const Param &p)
 
 }
 
-vecDbl Network::makeWeights(const Param &p)
+vecDbl Network::makeWeights(const Param &p) const
 {
     if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
         return utl::zeros(p.nedges[trait]);

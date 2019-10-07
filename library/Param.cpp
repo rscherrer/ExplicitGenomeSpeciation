@@ -75,16 +75,15 @@ void Param::update(std::ifstream &file)
         case _("replenish"): file >> replenish; break;
         case _("hsymmetry"): file >> hsymmetry; break;
         case _("ecosel"): file >> ecosel; break;
-        case _("demesizes"):
-            for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
-            break;
         case _("dispersal"): file >> dispersal; break;
         case _("birth"): file >> birth; break;
         case _("survival"): file >> survival; break;
-        case _("sexsel"):
-            file >> sexsel; break;
-        case _("mateEvalutationCost"): file >> matingcost; break;
+        case _("sexsel"): file >> sexsel; break;
+        case _("matingcost"): file >> matingcost; break;
         case _("maxfeed"): file >> maxfeed; break;
+        case _("demesizes"):
+            for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
+            break;
         case _("nvertices"):
             for (size_t i = 0u; i < 3u; ++i) file >> nvertices[i];
             break;
@@ -112,10 +111,8 @@ void Param::update(std::ifstream &file)
             break;
         case _("effectshape"): file >> effectshape; break;
         case _("effectscale"): file >> effectscale; break;
-        case _("interactionshape"):
-            file >> interactionshape; break;
-        case _("interactionscale"):
-            file >> interactionscale; break;
+        case _("interactionshape"): file >> interactionshape; break;
+        case _("interactionscale"): file >> interactionscale; break;
         case _("dominancevar"): file >> dominancevar; break;
         case _("tburnin"): file >> tburnin; break;
         case _("tend"): file >> tend; break;
@@ -218,6 +215,12 @@ void Param::checkParams()
         msg = "Interaction weight scale should be positive";
     if (dominancevar < 0.0)
         msg = "Dominance variance should be positive";
+    if (tburnin < 0)
+        msg = "Burn-in time should be positive";
+    if (tend <= 0)
+        msg = "End time should be positive";
+    if (tsave <= 0)
+        msg = "Save time should be positive";
 
     if(msg != "No error detected")
         throw std::runtime_error(msg);

@@ -6,6 +6,7 @@
 #include "Random.h"
 #include "Types.h"
 #include "MetaPop.h"
+#include "Collector.h"
 #include <stddef.h>
 #include <iostream>
 

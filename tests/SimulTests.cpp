@@ -2,14 +2,11 @@
 #define BOOST_TEST_MAIN
 
 #include "library/Simul.h"
-#include "library/Deme.h"
-#include "library/MetaPop.h"
-#include "tests/GenFixture.h"
 #include "tests/TestUtilities.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-typedef std::vector<Network> MultiNet;
+// Black box testing of the proper run of the main function
 
 // Check that the program can run without arguments
 BOOST_AUTO_TEST_CASE(testUseNoArgs)

@@ -2,7 +2,7 @@
 
 bool timetosave(const int &t,const Param &p)
 {
-    return t > 0 && p.record && t & p.tsave == 0u;
+    return (t > 0 && p.record && t % p.tsave == 0u);
 }
 
 int simulate(const vecStrings &args)
@@ -30,21 +30,21 @@ int simulate(const vecStrings &args)
         MetaPop metapop = MetaPop(pars, arch);
 
         // Create an analytical module
-        StatBag collector;
+        Collector collector = Collector(arch);
 
         // Loop through time
-        for (size_t t = -pars.tburnin; t < pars.tend; ++t) {
+        for (int t = -pars.tburnin; t < pars.tend; ++t) {
 
-            if (t == 0u) metapop.exitburnin();
+            if (t == 0) metapop.exitburnin();
 
             // Life cycle of the metapopulation
-            metapop.cycle();
+            metapop.cycle(pars, arch);
 
             // Is the population still there?
             if (metapop.isextinct()) break;
 
             // Analyze the metapopulation if needed
-            if (timetosave(t, pars)) collector.analyze(metapop);
+            if (timetosave(t, pars)) collector.analyze(metapop, pars);
 
         }
     }

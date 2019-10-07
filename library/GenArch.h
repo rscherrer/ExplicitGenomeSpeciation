@@ -9,7 +9,6 @@
 #include <cassert>
 #include <stddef.h>
 #include <cstddef>
-//#include <algorithm>
 
 typedef std::pair<size_t, size_t> Edge;
 typedef std::vector<Network> MultiNet;
@@ -20,6 +19,8 @@ typedef std::vector<Network> MultiNet;
 // larger than the Param class.
 
 class GenArch {
+
+    friend class Collector;
 
 public:
 
@@ -39,14 +40,29 @@ public:
         assert(networks.size() == 3u);
     }
 
-    Network getNetwork(const size_t &i) const { return networks[i]; }
+    vecDbl chromosomes; // per chromosome
+    vecUns traits; // per locus
+    vecDbl locations; // per locus
+    vecDbl effects; // per locus
+    vecDbl dominances; // per locus
+    MultiNet networks; // per trait
 
-    vecDbl chromosomes;
-    vecUns traits;
-    vecDbl locations;
-    vecDbl effects;
-    vecDbl dominances;
-    MultiNet networks;
+    // Getters called from outside
+    size_t getNetworkSize(const size_t &trait) const
+    {
+        return networks[trait].map.size();
+    }
+    Edge getEdge(const size_t &trait, const size_t &edge) const
+    {
+        return networks[trait].map[edge];
+    }
+    double getSumWeights(const size_t &trait) const
+    {
+        double sum = 0.0;
+        for (size_t edge = 0u; edge < networks[trait].weights.size(); ++edge)
+            sum += networks[trait].weights[edge];
+        return sum;
+    }
 
 private:
 
@@ -58,8 +74,5 @@ private:
     vecDbl makeDominances(const Param&);
 
 };
-
-
-
 
 #endif

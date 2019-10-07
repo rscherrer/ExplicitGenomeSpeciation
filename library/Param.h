@@ -16,7 +16,7 @@
 struct Param {
 
     Param() :
-        capacity(500.0),
+        capacity(5000.0),
         replenish(1.0),
         hsymmetry(1.0),
         ecosel(1.0),
@@ -27,7 +27,7 @@ struct Param {
         matingcost(0.01),
         maxfeed(4.0E-4),
         demesizes({ 100u, 0u }),
-        nloci(900u),
+        nloci(900u), // cannot be provided
         nvertices({ 300u, 300u, 300u }),
         nedges({ 0u, 0u, 0u }),
         nchrom(3u),
@@ -38,16 +38,16 @@ struct Param {
         scaleD({ 0.0, 0.0, 0.0 }),
         scaleI({ 0.0, 0.0, 0.0 }),
         scaleE({ 0.0, 0.0, 0.0 }),
-        locusE({ 0.0, 0.0, 0.0 }),
+        locusE({ 0.0, 0.0, 0.0 }), // cannot be provided
         skews({ 1.0, 1.0, 1.0 }),
         effectshape(2.0),
         effectscale(1.0),
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(10u),
-        tend(10u),
-        tsave(10u),
+        tburnin(10),
+        tend(10),
+        tsave(10),
         record(true),
         seed(makeDefaultSeed())
     {
