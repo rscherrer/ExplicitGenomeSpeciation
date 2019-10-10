@@ -75,22 +75,19 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-
+    pars.capacity = 100.0;
     pars.hsymmetry = 0.0; // full habitat asymmetry
     pars.demesizes = {100u, 100u };
     pars.tburnin = 0;
-
+    pars.maxfeed = 0.0; // no consumption
     MetaPop metapop = MetaPop(pars, arch);
-
+    metapop.cycle(pars, arch);
     BOOST_CHECK_EQUAL(metapop.getResource(0u, 0u), pars.capacity);
     BOOST_CHECK_EQUAL(metapop.getResource(1u, 1u), pars.capacity);
     BOOST_CHECK_EQUAL(metapop.getResource(0u, 1u), 0.0);
     BOOST_CHECK_EQUAL(metapop.getResource(1u, 0u), 0.0);
 
 }
-
-
-// To implement
 
 BOOST_AUTO_TEST_CASE(NoDispersalLeavesHabitatsWithSameNumberOfIndividuals)
 {
@@ -100,6 +97,7 @@ BOOST_AUTO_TEST_CASE(NoDispersalLeavesHabitatsWithSameNumberOfIndividuals)
     pars.dispersal = 0.0; // no dispersal
     pars.survival = 1.0; // no death
     pars.birth = 0.0; // no birth
+    pars.tburnin = 0;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
@@ -114,6 +112,7 @@ BOOST_AUTO_TEST_CASE(AllIndividualsMigrateIfDispersalIsMax)
     pars.dispersal = 1.0; // 100% chance dispersal
     pars.survival = 1.0; // no death
     pars.birth = 0.0; // no birth
+    pars.tburnin = 0;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
@@ -125,9 +124,13 @@ BOOST_AUTO_TEST_CASE(AllIndividualsMigrateIfDispersalIsMax)
 BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
 {
     Param pars;
+    pars.capacity = 100.0;
+    pars.maxfeed = 1.0;
+    pars.dispersal = 0.0;
     pars.birth = 4.0; // relatively high birth rate
     pars.demesizes = { 100u, 0u };
     pars.survival = 1.0; // 100% chance survival
+    pars.tburnin = 0u;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
@@ -170,3 +173,35 @@ BOOST_AUTO_TEST_CASE(ResourceIsDepletedAfterConsumption)
     BOOST_CHECK(metapop.getResource(1u, 1u) < 1000.0);
 }
 
+
+// Test fitness function
+BOOST_AUTO_TEST_CASE(KnownResourceAndFitnessIfPopulationIsMonomorphic)
+{
+    Param pars;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.capacity = 10.0;
+    pars.hsymmetry = 0.0;
+    pars.replenish = 1.0;
+    pars.demesizes = { 10u, 0u };
+    pars.ecosel = 1.0;
+    pars.maxfeed = 1.0;
+    pars.tburnin = 0;
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
+    metapop.cycle(pars, arch);
+
+    // Predict resource equilibrium after consumption
+    const double R0 = utl::round(10.0 * exp(-10.0), 4u);
+    const double R1 = 0.0;
+
+    // Fitness should sum up to the amount of food consumed
+    const double sumw = utl::round(10.0 * (1.0 - exp(-10.0)), 4u);
+
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 0u), 4u), R0);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getSumFitness(), 4u), sumw);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getVarFitness(), 4u), 0.0);
+}

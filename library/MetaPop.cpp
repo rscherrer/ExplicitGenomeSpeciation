@@ -61,43 +61,70 @@ void MetaPop::disperse(const Param &p)
 
 void MetaPop::consume(const Param &p)
 {
-    // Calculate the total amount of food consumed in each habitat
-    Matrix consumed = utl::zeros(2u, 2u);
+
+    // Calculate the sum of feeding efficiencies in each habitat
+    Matrix sumfeed = utl::zeros(2u, 2u);
     for (size_t i = 0u; i < population.size(); ++i) {
         const size_t hab = population[i].getHabitat();
-        consumed[hab][0u] += population[i].getFeeding(0u);
-        if (!isburnin) consumed[hab][1u] += population[i].getFeeding(1u);
+        sumfeed[hab][0u] += population[i].getFeeding(0u);
+
+        // Feed only on resource 0 during burnin
+        if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
     }
 
-    assert(consumed[0u][0u] >= 0.0);
-    assert(consumed[0u][1u] >= 0.0);
-    assert(consumed[1u][0u] >= 0.0);
-    assert(consumed[1u][1u] >= 0.0);
-
-    // Update the resource equilibria
+    // Convert sums of feeding efficiencies into relative consumed food (C)
+    Matrix consumed = utl::zeros(2u, 2u);
     for (size_t hab = 0u; hab < 2u; ++hab) {
         for (size_t res = 0u; res < 2u; ++res) {
-            if (res == 1u && isburnin) {
-                resources[hab][res] = 0.0;
-            }
-            else {
-                resources[hab][res] = p.capacity;
-                if (hab == res) resources[hab][res] *= p.hsymmetry;
-                resources[hab][res] *= (1.0 - consumed[hab][res] / p.replenish);
-                if (resources[hab][res] < 0.0) resources[hab][res] = 0.0;
-            }
+            consumed[hab][res] = 1.0;
+            consumed[hab][res] -= exp(-p.maxfeed * sumfeed[hab][res]);
+            assert(consumed[hab][res] >= 0.0);
+            assert(consumed[hab][res] <= 1.0);
         }
     }
 
-    // Could the resources be negative? If too much consumption?
-    assert(resources[0u][0u] >= 0.0) ;
-    assert(resources[0u][1u] >= 0.0);
-    assert(resources[1u][0u] >= 0.0);
-    assert(resources[1u][1u] >= 0.0);
+    // Resource capacity without consumption (K)
+    resources = utl::zeros(2u, 2u);
+    resources[0u][0u] = p.capacity;
+    resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
+    resources[1u][0u] = p.capacity * p.hsymmetry;
+    resources[1u][1u] = isburnin ? 0.0 : p.capacity;
+    for (size_t hab : { 0u, 1u })
+        for (size_t res : { 0u, 1u })
+            assert(resources[hab][res] >= 0.0);
+
+    // Absolute amount of food consumed (C K / r)
+    for (size_t hab = 0u; hab < 2u; ++hab) {
+        for (size_t res = 0u; res < 2u; ++res) {
+            consumed[hab][res] *= resources[hab][res] / p.replenish;
+            assert(consumed[hab][res] >= 0.0);
+            assert(consumed[hab][res] <= resources[hab][res]);
+        }
+    }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i)
-        population[i].feed(resources[population[i].getHabitat()]);
+    for (size_t i = 0u; i < population.size(); ++i) {
+        const size_t hab = population[i].getHabitat();
+        double fitness = 0.0;
+        vecDbl food = utl::zeros(2u);
+        for (size_t res = 0u; res < 2u; ++res) {
+            const double feed = population[i].getFeeding(res);
+            if (sumfeed[hab][res])
+                food[res] = consumed[hab][res] * feed / sumfeed[hab][res];
+            fitness += food[res];
+        }
+        size_t ecotype = food[1u] > food[0u];
+        assert(fitness >= 0.0);
+        assert(ecotype == 0u || ecotype == 1u);
+        population[i].feed(fitness, ecotype);
+    }
+
+    // Update the resource equilibrium (K - C K / r)
+    for (size_t hab = 0u; hab < 2u; ++hab) {
+        for (size_t res = 0u; res < 2u; ++res) {
+            resources[hab][res] -= consumed[hab][res];
+        }
+    }
 }
 
 void MetaPop::reproduce(const Param &p, const GenArch &arch)
@@ -134,8 +161,10 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     if (!seasonend) return;
 
-    // For each individual...
-    for (size_t mom = 0u; mom < population.size(); ++mom) {
+    const size_t nparents = population.size();
+
+    // For each parent...
+    for (size_t mom = 0u; mom < nparents; ++mom) {
 
         const size_t sex = population[mom].getGender();
         const size_t hab = population[mom].getHabitat();
@@ -153,8 +182,8 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 const size_t dad = rnd::sample(probs[hab]);
                 const double maletrait = population[dad].getEcoTrait();
 
-                // If the female accepts to mate
-                if (population[mom].accept(maletrait, p)) {
+                // If the female accepts to mate                
+                if (rnd::bernoulli(population[mom].mate(maletrait, p))) {
 
                     // Determine fecundity
                     double fecundity = p.birth * population[mom].getFitness();
@@ -181,7 +210,6 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
             }
         }
     }
-
 }
 
 // Lambda for removing dead individuals
@@ -193,13 +221,18 @@ auto burry = [&](Individual ind) -> bool
 void MetaPop::survive(const Param &p)
 {
     // Sample survival for each individual
-    for (size_t i = 0u; i < population.size(); ++i)
+    size_t nsurv = 0u;
+    for (size_t i = 0u; i < population.size(); ++i) {
         population[i].survive(rnd::bernoulli(p.survival));
+        if (population[i].isalive()) ++nsurv;
+    }
 
     // Remove dead individuals
     auto it = std::remove_if(population.begin(), population.end(), burry);
     population.erase(it, population.end());
     population.shrink_to_fit();
+    assert(population.size() == nsurv);
+
 }
 
 
@@ -213,56 +246,4 @@ bool MetaPop::isextinct() const
 void MetaPop::exitburnin()
 {
     isburnin = false;
-}
-
-
-// For analysis
-
-MatUns MetaPop::matingtrials(const Param &p) const
-{
-    // Count homogamic and heterogamic crossings
-
-    // Table of crossings
-    MatUns m = utl::uzeros(2u, 2u);
-
-    const size_t nmal = sexcounts[0u][0u] + sexcounts[1u][0u];
-    const size_t nfem = sexcounts[0u][1u] + sexcounts[1u][1u];
-
-    if (nfem == 0u || nmal == 0u) return m;
-
-    vecUns males;
-    males.reserve(nmal);
-    for (size_t i = 0u; i < population.size(); ++i)
-        if (!population[i].getGender()) males.push_back(i);
-
-    assert(males.size() == nmal);
-
-    // For each female in the metapopulation...
-    for (size_t fem = 0u; fem < population.size(); ++fem) {
-        if (population[fem].getGender()) {
-
-            const size_t ecofem = population[fem].getEcotype();
-
-            // Determine the number of males encountered
-            size_t nencounters = rnd::poisson(1.0 / p.matingcost);
-
-            // For each male encountered...
-            while (nencounters) {
-
-                // Sample the male with replacement
-                const size_t candidate = males[rnd::random(nmal)];
-                const size_t maletrait = population[candidate].getEcoTrait();
-                const size_t ecomal = population[candidate].getEcotype();
-
-                // Evaluate the male and update the crossings accordingly
-                if (population[fem].accept(maletrait, p)) {
-                    ++m[ecofem][ecomal];
-                }
-
-                --nencounters;
-            }
-        }
-    }
-
-    return m;
 }

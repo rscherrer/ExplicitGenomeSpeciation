@@ -2,6 +2,11 @@
 
 typedef std::discrete_distribution<size_t> Discrete;
 
+bool checkedges(const double &e, const double &n)
+{
+    return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes
+}
+
 vecEdg Network::makeMap(const Param& p) const
 {
 
@@ -14,6 +19,7 @@ vecEdg Network::makeMap(const Param& p) const
     // The number of edges still to be made is updated
 
     assert(p.nvertices[trait] > 1u);
+    assert(checkedges(p.nedges[trait], p.nvertices[trait]));
 
     vecEdg connexions;
     if (!p.nedges[trait]) return connexions;

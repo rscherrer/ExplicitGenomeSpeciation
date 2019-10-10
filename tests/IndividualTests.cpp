@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(GenerateOnlyOneAlleles)
     pars.allfreq = 1.0;
     GenArch arch = GenArch(pars);
     Individual ind = Individual(pars, arch);
-    BOOST_CHECK_EQUAL(ind.getAlleleSum(), pars.nloci);
+    BOOST_CHECK_EQUAL(ind.getAlleleSum(), 2u * pars.nloci);
 }
 
 // Test mate choice
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(HomogamousFemaleAcceptsIdenticalMale)
     Individual ind = Individual(pars, arch);
     ind.resetEcoTrait(0.0, pars);
     ind.resetMatePref(1.0); // full assortative mating
-    BOOST_CHECK(ind.accept(0.0, pars));
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
 }
 
 BOOST_AUTO_TEST_CASE(HeterogamousFemaleRejectsIdenticalMale)
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(HeterogamousFemaleRejectsIdenticalMale)
     Individual ind = Individual(pars, arch);
     ind.resetEcoTrait(0.0, pars);
     ind.resetMatePref(-1.0); // full disassortative mating
-    BOOST_CHECK(!ind.accept(0.0, pars));
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 0.0);
 }
 
 BOOST_AUTO_TEST_CASE(RandomMatingFemaleAcceptsAnyone)
@@ -60,23 +60,9 @@ BOOST_AUTO_TEST_CASE(RandomMatingFemaleAcceptsAnyone)
     Individual ind = Individual(pars, arch);
     ind.resetEcoTrait(0.0, pars);
     ind.resetMatePref(0.0); // random mating
-    BOOST_CHECK(ind.accept(0.0, pars));
-    BOOST_CHECK(ind.accept(1.0, pars));
-    BOOST_CHECK(ind.accept(-1.0, pars));
-}
-
-// Test fitness function
-BOOST_AUTO_TEST_CASE(FitnessCalculationIsCorrect)
-{
-    Param pars;
-    pars.allfreq = 0.5;
-    pars.maxfeed = 4.0E-4;
-    pars.ecosel = 1.0;
-    GenArch arch = GenArch(pars);
-    Individual ind = Individual(pars, arch);
-    ind.resetEcoTrait(-1.0, pars);
-    ind.feed({ 100.0, 100.0 }); // get fitness from food
-    BOOST_CHECK(ind.getFitness() == 0.04 + 4.0E-4 * exp(-4.0) * 100.0);
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
+    BOOST_CHECK_EQUAL(ind.mate(1.0, pars), 1.0);
+    BOOST_CHECK_EQUAL(ind.mate(-1.0, pars), 1.0);
 }
 
 // Test fecundation

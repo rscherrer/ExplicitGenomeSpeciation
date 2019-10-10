@@ -41,12 +41,16 @@ int simulate(const vecStrings &args)
             metapop.cycle(pars, arch);
 
             // Is the population still there?
-            if (metapop.isextinct()) break;
+            if (metapop.isextinct()) {
+                std::cout << "The population went extinct at t = " << t << '\n';
+                break;
+            }
 
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) collector.analyze(metapop, pars);
 
         }
+
     }
     catch (const std::runtime_error &err)
     {

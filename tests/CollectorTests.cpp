@@ -23,20 +23,20 @@ BOOST_AUTO_TEST_CASE(DivergenceIsZeroIfTotalVarianceIsZero)
 BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
 {
     Param pars;
-    pars.hsymmetry = 1.0; // habitats are symmetric in resources
+    pars.hsymmetry = 0.0; // habitats are asymmetric in resources
     pars.demesizes = { 100u, 100u };
     pars.survival = 1.0;
     pars.birth = 0.0;
     pars.tburnin = 0u;
+    pars.dispersal = 0.0;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-    metapop.resetEcoTraits(0u, 1.0, pars); // only trait 1 in habitat 1
-    pars.dispersal = 0.5; // shuffle randomly the trait values across habitats
+    metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
     collector.analyze(metapop, pars);
-    BOOST_CHECK_EQUAL(collector.getEI(), 1.0);
+    BOOST_CHECK_EQUAL(collector.getEI(), 1.0);    
 }
 
 // Test case: a population with spatial isolation = 1
@@ -63,21 +63,21 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsOneIfEcotypesAreSeparated)
 BOOST_AUTO_TEST_CASE(MatingIsolationIsOneIfMatingIsAssortative)
 {
     Param pars;
-    pars.hsymmetry = 1.0; // habitats are symmetric in resources
+    pars.hsymmetry = 0.0; // habitats are asymmetric in resources
     pars.demesizes = { 100u, 100u };
     pars.survival = 1.0;
     pars.birth = 0.0;
     pars.tburnin = 0u;
+    pars.dispersal = 0.0;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-    metapop.resetEcoTraits(0u, 1.0, pars); // only trait 1 in habitat 1
+    metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
     metapop.resetMatePrefs(1.0); // assortative mating
-    pars.dispersal = 0.5; // shuffle randomly the trait values across habitats
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
     collector.analyze(metapop, pars);
-    BOOST_CHECK_EQUAL(collector.getRI(), 1.0);
+    BOOST_CHECK_EQUAL(utl::round(collector.getRI(), 4u), 1.0);
 }
 
 BOOST_AUTO_TEST_CASE(SpatialIsolationIsZeroIfOneHabitatIsEmpty)

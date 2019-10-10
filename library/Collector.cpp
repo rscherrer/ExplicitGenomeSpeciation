@@ -29,12 +29,23 @@ vecLoci Collector::emptyloci(const GenArch &arch) const
 
 double Xst(const vecDbl &v, const vecUns &n)
 {
+
+    // If there is only one ecotype, there is no divergence
+    if (!n[0u]) return 0.0;
+    if (!n[1u]) return 0.0;
+
+    // Check that variances are positive
+    for (auto &x : v) assert(x >= 0.0);
+
+    // If there is no variance, there is no divergence
     if (v[2u] == 0.0) return 0.0;
 
-    const double xst = 1.0 - (n[0u] * v[0u] + n[1u] * v[1u]) / (n[2u] * v[2u]);
+    double xst = 1.0 - (n[0u] * v[0u] + n[1u] * v[1u]) / (n[2u] * v[2u]);
+
+    xst = utl::round(xst, 10u); // avoid very small negatives by imprecision
 
     assert(xst >= 0.0);
-    assert(xst <= 1.0);
+    assert(xst <= 1.0);    
 
     return xst;
 }
@@ -63,6 +74,9 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     Qst = utl::zeros(3u); // per trait
     Cst = utl::zeros(3u); // per trait
     Fst = utl::zeros(3u); // per trait
+    EI = 0.0;
+    SI = 0.0;
+    RI = 0.0;
 
     // Create tables for counts
     Matx3d sumgen = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
@@ -170,25 +184,14 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
         }
 
-        // Calculate sums across genotypes
-        for (size_t eco = 0u; eco < 2u; ++eco) {
-            for (size_t zyg : { aa, Aa, AA }) {
-                gcounts[eco][all] += gcounts[eco][zyg];
-                gsumgen[eco][all] += gsumgen[eco][zyg];
-                gssqgen[eco][all] += gssqgen[eco][zyg];
-            }
-        }
-
-        // Calculate sums across ecotypes
-        for (size_t zyg : { aa, Aa, AA }) {
-            gcounts[tot][zyg] = gcounts[0u][zyg] + gcounts[1u][zyg];
-            gsumgen[tot][zyg] = gsumgen[0u][zyg] + gsumgen[1u][zyg];
-            gssqgen[tot][zyg] = gssqgen[0u][zyg] + gssqgen[1u][zyg];
-        }
+        // Calculate sums over ecotypes and genotypes
+        utl::marginalize(gcounts);
+        utl::marginalize(gsumgen);
+        utl::marginalize(gssqgen);
 
         // Check sums of squares
         for (size_t eco = 0u; eco < 3u; ++eco) {
-            for (size_t zyg : { aa, Aa, AA } ) {
+            for (size_t zyg = 0u; zyg < 4u; ++zyg) {
                 assert(gssqgen[eco][zyg] >= 0.0);
             }
         }
@@ -196,7 +199,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         // Calculate allele frequencies within and across ecotypes
         vecDbl allfreq = utl::zeros(3u);
         for (size_t eco = 0u; eco < 3u; ++eco) {
-            if (ecounts[0u]) {
+            if (ecounts[eco]) {
                 allfreq[eco] = gcounts[eco][AA] + 0.5 * gcounts[eco][Aa];
                 allfreq[eco] /= ecounts[eco];
             }
@@ -205,44 +208,84 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         }
 
         // Regress genetic values on allele counts
+
+        // meanq = mean allele count
+
         const double meanq = 2.0 * allfreq[tot];
+        assert(meanq >= 0.0);
+        assert(meanq <= 2.0);
+
+        // meang = mean genetic value
+
         const double meang = gsumgen[tot][all] / ecounts[tot];
+
+        // varq = variance in allele count
+
+        // varq = E(q2) - E(q)2
+        // using ssq(q) = 4 nAA + nAa
+
         double varq;
         varq = (4.0 * gcounts[tot][AA] + gcounts[tot][Aa]) / ecounts[tot];
         varq -= utl::sqr(meanq);
         assert(varq >= 0.0);
+
+        // covqg = covariance between allele count and genetic value
+
+        // covqg = E(qg) - E(q)E(g)
+        // using sum(qg) = sum_Aa(g) + 2 sum_AA(g)
+
         double covqg;
         covqg = (2.0 * gsumgen[tot][AA] + gsumgen[tot][Aa]) / ecounts[tot];
         covqg -= meanq * meang;
+
+        // alpha = average effect of a mutation
+
         double alpha = 0.0;
         if (varq != 0.0) alpha = covqg / varq;
 
         // Calculate genotype-specific statistics
+
+        // delta = deviation in genetic value due to dominance
+        // expec = expected genetic value under additivity
+        // beta = breeding value
+        // = deviation from population mean genetic value due to additivity
+
+        // delta(AA) = meang(AA) - expec(AA)
+        // expec(AA) = meang(all) + beta(AA)
+        // beta(AA) = alpha (AA - meanq)
+
         vecDbl gbeta = utl::zeros(3u); // per genotype
         vecDbl gexpec = utl::zeros(3u); // per genotype
+        vecDbl gmeans = utl::zeros(3u); // per genotype
         vecDbl gdelta = utl::zeros(3u); // per genotype
         for (size_t zyg : { aa, Aa, AA }) {
-            if (gcounts[tot][zyg] == 0u) {
+            if (gcounts[tot][zyg]) {
                 gbeta[zyg] = alpha * (zyg - meanq);
-                gexpec[zyg] = meang - gbeta[zyg];
-                gdelta[zyg] = gsumgen[all][zyg] / gcounts[all][zyg];
-                gdelta[zyg] -= gexpec[zyg];
+                gexpec[zyg] = meang + gbeta[zyg];
+                gmeans[zyg] = gsumgen[tot][zyg] / gcounts[tot][zyg];
+                gdelta[zyg] = gmeans[zyg] - gexpec[zyg];
             }
         }
 
-        // Calculate variance components within ecotypes
-        for (size_t eco = 0u; eco < 2u; ++eco) {
+        // Calculate variance components within and across ecotypes
+        for (size_t eco = 0u; eco < 3u; ++eco) {
 
-            // Genetic variance
+            if (!ecounts[eco]) continue;
+
+            // Genetic variance = V(g)
             genomescan[l].varG[eco] = gssqgen[eco][all] / ecounts[eco];
-            genomescan[l].varG[eco] -= utl::sqr(gsumgen[eco][all] / ecounts[eco]);
+            const double emean = gsumgen[eco][all] / ecounts[eco];
+            genomescan[l].varG[eco] -= utl::sqr(emean);
+            utl::correct(genomescan[l].varG[eco]);
             assert(genomescan[l].varG[eco] >= 0.0);
 
             // Phenotypic variance
             genomescan[l].varP[eco] = genomescan[l].varG[eco] + locusvarE;
+            utl::correct(genomescan[l].varP[eco]);
             assert(genomescan[l].varP[eco] >= 0.0);
 
-            // Additive variance
+            // Additive variance = V(beta)
+            // Variance in breeding values
             genomescan[l].varA[eco] = gcounts[eco][aa] * utl::sqr(gbeta[aa]);
             genomescan[l].varA[eco] += gcounts[eco][Aa] * utl::sqr(gbeta[Aa]);
             genomescan[l].varA[eco] += gcounts[eco][AA] * utl::sqr(gbeta[AA]);
@@ -252,39 +295,34 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             meanb += gcounts[eco][AA] * gbeta[AA];
             meanb /= ecounts[eco];
             genomescan[l].varA[eco] -= utl::sqr(meanb);
+            utl::correct(genomescan[l].varA[eco]);
             assert(genomescan[l].varA[eco] >= 0.0);
+
+            // Simpler equation for the whole pop
+            // Stopped using it because makes bugs harder to detect
+            // (asserts may fail just because of this assumption)
+            // genomescan[l].varA[tot] = utl::sqr(alpha) * varq;
 
             // Contribute to genome-wide additive variance
             varA[genomescan[l].trait][eco] += genomescan[l].varA[eco];
 
-            // Non-additive variance
-            for (size_t zyg : { aa, Aa, AA }) {
-                if (gcounts[eco][zyg]) {
-                    double x = gsumgen[tot][zyg] * gsumgen[eco][zyg];
-                    x /= gcounts[eco][zyg];
-                    genomescan[l].varN[eco] += x;
-                }
-            }
+            // Non-additive variance = V(gamma)
+            genomescan[l].varN[eco] = gexpec[aa] * gsumgen[eco][aa];
+            genomescan[l].varN[eco] += gexpec[Aa] * gsumgen[eco][Aa];
+            genomescan[l].varN[eco] += gexpec[AA] * gsumgen[eco][AA];
             genomescan[l].varN[eco] *= -2.0;
+            genomescan[l].varN[eco] += gcounts[eco][aa] * utl::sqr(gexpec[aa]);
+            genomescan[l].varN[eco] += gcounts[eco][Aa] * utl::sqr(gexpec[Aa]);
+            genomescan[l].varN[eco] += gcounts[eco][AA] * utl::sqr(gexpec[AA]);
             genomescan[l].varN[eco] += gssqgen[eco][all];
-            for (size_t zyg : { aa, Aa, AA }) {
-                if (gcounts[tot][zyg]) {
-                    double x = gcounts[eco][zyg] * utl::sqr(gsumgen[tot][zyg]);
-                    x /= gcounts[tot][zyg];
-                    genomescan[l].varN[eco] += x;
-                }
-            }
             genomescan[l].varN[eco] /= ecounts[eco];
             double meandev = gsumgen[eco][all];
-            for (size_t zyg : { aa, Aa, AA }) {
-                if (gcounts[tot][zyg]) {
-                    double x = gcounts[eco][zyg] * gsumgen[tot][zyg];
-                    x /= gcounts[tot][zyg];
-                    meandev -= x;
-                }
-            }
+            meandev -= gcounts[eco][aa] * gexpec[aa];
+            meandev -= gcounts[eco][Aa] * gexpec[Aa];
+            meandev -= gcounts[eco][AA] * gexpec[AA];
             meandev /= ecounts[eco];
             genomescan[l].varN[eco] -= utl::sqr(meandev);
+            utl::correct(genomescan[l].varN[eco]);
             assert(genomescan[l].varN[eco] >= 0.0);
 
             // Contribute to genome-wide non-additive variance
@@ -292,58 +330,37 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
         }
 
-        // Calculate variance components across ecotypes
-
-        // Genetic variance
-        genomescan[l].varG[tot] = gssqgen[tot][all] / ecounts[tot] - utl::sqr(meang);
-        assert(genomescan[l].varG[tot] >= 0.0);
-
-        // Phenotypic variance
-        genomescan[l].varP[tot] = genomescan[l].varG[tot] + locusvarE;
-        assert(genomescan[l].varP[tot] >= 0.0);
-
-        // Additive variance
-        genomescan[l].varA[tot] = utl::sqr(alpha) * varq;
-        assert(genomescan[l].varA[tot] >= 0.0);
-
-        // Contribute to genome-wide additive variance
-        varA[genomescan[l].trait][tot] += genomescan[l].varA[tot];
-
-        // Dominance variance
+        // Dominance variance (across ecotypes only) = V(delta)
         genomescan[l].varD = gcounts[tot][aa] * utl::sqr(gdelta[aa]);
         genomescan[l].varD += gcounts[tot][Aa] * utl::sqr(gdelta[Aa]);
         genomescan[l].varD += gcounts[tot][AA] * utl::sqr(gdelta[AA]);
         genomescan[l].varD /= ecounts[tot];
+        utl::correct(genomescan[l].varI);
         assert(genomescan[l].varD >= 0.0);
 
         // Contribute to genome-wide dominance variance
         varD[genomescan[l].trait] += genomescan[l].varD;
 
-        // Interaction variance
-        genomescan[l].varI = 0.0;
-        for (size_t zyg : { aa, Aa, AA }) {
-            if (gcounts[tot][zyg]) {
-                double x = gssqgen[tot][zyg];
-                x -= utl::sqr(gsumgen[tot][zyg]) / gcounts[tot][zyg];
-                genomescan[l].varI += x;
-            }
-        }
+        // Interaction variance (across ecotypes only) = V(epsilon)
+        genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
+        genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
+        genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
+        genomescan[l].varI *= 2.0;
+        genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
+        genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);
+        genomescan[l].varI += gcounts[tot][AA] * utl::sqr(gmeans[AA]);
+        genomescan[l].varI += gssqgen[tot][all];
         genomescan[l].varI /= ecounts[tot];
+        utl::correct(genomescan[l].varI);
         assert(genomescan[l].varI >= 0.0);
 
         // Contribute to genome-wide interaction variance
         varI[genomescan[l].trait] += genomescan[l].varI;
 
-        // Non-additive variance
-        genomescan[l].varN[tot] = genomescan[l].varD + 0.5 * genomescan[l].varI;
-        assert(genomescan[l].varN[tot] >= 0.0);
-
-        // Contribute to genome-wide non-additive variance
-        varN[genomescan[l].trait][tot] += genomescan[l].varN[tot];
-
         // Variance in within-ecotype heterozygosity
         double lvarS = ecounts[0u] * utl::sqr(allfreq[0u]);
         lvarS += ecounts[1u] * utl::sqr(allfreq[1u]);
+        lvarS /= ecounts[tot];
         lvarS -= utl::sqr(allfreq[tot]);
 
         varS[genomescan[l].trait] += lvarS;
@@ -367,7 +384,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].Gst = Xst(genomescan[l].varG, ecounts);
         genomescan[l].Qst = Xst(genomescan[l].varA, ecounts);
         genomescan[l].Cst = Xst(genomescan[l].varN, ecounts);
-        genomescan[l].Fst = 1.0 - h / H;
+        genomescan[l].Fst = H > 0.0 ? 1.0 - h / H : 0.0;
 
         // Check divergence metrics
         assert(genomescan[l].Pst <= 1.0);
@@ -388,14 +405,18 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         // Within and across ecotypes
         for (size_t eco = 0u; eco < 3u; ++eco) {
 
+            if (!ecounts[eco]) continue;
+
             // Genetic variance
             varG[trait][eco] = essqgen[trait][eco] / ecounts[eco];
             varG[trait][eco] -= utl::sqr(esumgen[trait][eco] / ecounts[eco]);
+            utl::correct(varG[trait][eco]);
             assert(varG[trait][eco] >= 0.0);
 
             // Phenotypic variance
             varP[trait][eco] = essqphe[trait][eco] / ecounts[eco];
             varP[trait][eco] -= utl::sqr(esumphe[trait][eco] / ecounts[eco]);
+            utl::correct(varP[trait][eco]);
             assert(varP[trait][eco] >= 0.0);
 
         }
@@ -425,27 +446,121 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     EI = Pst[0u];
 
     // Spatial isolation
-    SI = counts[0u][0u] * counts[1u][1u] - counts[0u][1u] * counts[1u][0u];
+
     double norm = counts[0u][0u] + counts[0u][1u];
     norm *= counts[1u][0u] + counts[1u][1u];
     norm *= counts[0u][0u] + counts[1u][0u];
     norm *= counts[0u][1u] + counts[1u][1u];
-    if (norm == 0.0) SI /= sqrt(norm);
+    assert(norm >= 0.0);
+    if (norm == 0.0) {
+        SI = 0.0; // if an ecotype or a habitat is empty
+    }
+    else {
+        SI = counts[0u][0u] * counts[1u][1u] - counts[0u][1u] * counts[1u][0u];
+        SI /= sqrt(norm);
+    }
     assert(SI >= 0.0);
     assert(SI <= 1.0);
 
-    // Perform mating trials
-    mating = m.matingtrials(p);
-
     // Mating isolation
-    RI = mating[0u][0u] * mating[1u][1u] - mating[0u][1u] * mating[1u][0u];
-    norm = mating[0u][0u] + mating[0u][1u];
-    norm *= mating[1u][0u] + mating[1u][1u];
-    norm *= mating[0u][0u] + mating[1u][0u];
-    norm *= mating[0u][1u] + mating[1u][1u];
-    if (norm == 0.0) RI /= sqrt(norm);
-    assert(RI >= 0.0);
-    assert(RI <= 1.0);
+
+    // Make a vector of IDs for males of both ecotypes
+    std::vector<vecUns> males(2u);
+    for (size_t eco = 0u; eco < 2u; ++eco)
+        males[eco].reserve(m.getSize());
+
+    // Females no matter what ecotype
+    vecUns females;
+    females.reserve(m.population.size());
+
+    // Count the sexes in each ecotype
+    MatUns esexes = utl::uzeros(2u, 2u); // per ecotype per sex
+
+    for (size_t i = 0u; i < m.population.size(); ++i) {
+        const size_t sex = m.population[i].getGender();
+        const size_t eco = m.population[i].getEcotype();
+        ++esexes[eco][sex];
+        if (!sex)
+            males[eco].push_back(i);
+        else
+            females.push_back(i);
+    }
+
+    for (size_t eco = 0u; eco < 2u; ++eco)
+        males[eco].shrink_to_fit();
+
+    females.shrink_to_fit();
+
+    // RI = 0.0 if a sex is missing from an ecotype
+
+    // Perform mating trials
+    if (esexes[0u][0u] && esexes[0u][1u] && esexes[1u][0u] && esexes[1u][1u]) {
+
+        // Loop through the females
+        for (size_t f = 0u; f < females.size(); ++f) {
+
+            const size_t fem = females[f];
+
+            // Record ecotype
+            const size_t eco = m.population[fem].getEcotype();
+            const size_t alt = eco == 0u ? 1u : 0u;
+
+            size_t ntrials = p.ntrials;
+
+            // Repeat x times and perform the average
+            while (ntrials) {
+
+                // Sample a male from each ecotype
+                const size_t i = males[eco][rnd::random(males[eco].size())];
+                const size_t j = males[alt][rnd::random(males[alt].size())];
+
+                assert(m.population[i].getEcotype() == eco);
+                assert(m.population[j].getEcotype() == alt);
+
+                // Record male ecological trait values
+                const double xi = m.population[i].getEcoTrait();
+                const double xj = m.population[j].getEcoTrait();
+
+                // Calculate probabilities of mating with each male
+                const double hom = m.population[fem].mate(xi, p); // homogamy
+                const double het = m.population[fem].mate(xj, p); // heterogamy
+
+                assert(hom >= 0.0);
+                assert(het >= 0.0);
+                assert(hom <= 1.0);
+                assert(het <= 1.0);
+
+                // Assortment score (from -1 to +1)
+                double assort = 0.0;
+                if (hom + het) assort = (hom - het) / (hom + het);
+
+                assert(assort >= -1.0);
+                assert(assort <= 1.0);
+
+                RI += assort;
+
+                --ntrials;
+            }
+       }
+
+       RI /= p.ntrials * females.size();
+
+       assert(RI >= -1.0);
+       assert(RI <= 1.0);
+
+    }
+
+    // This way involves giving a choice between the two ecotypes to the female
+    // Another way would be to assess homogamy and heterogamy by sampling
+    // random males from the whole populations and count the number of crossings
+    // The two should give similar results, except if an ecotype is rare
+    // (across the whole population)
+    // If an ecotype is rare, it will be rarely encountered in the second
+    // algorithm and mating isolation will be high
+    // In the first algorithm, mating isolation will depend only on difference
+    // in trait and mating preference, not on densities
+    // Good to keep in mind
+
 }
 
 namespace stf // save to file

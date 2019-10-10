@@ -32,6 +32,7 @@ public:
         dominances(makeDominances(pars)),
         networks(makeNetworks(pars))
     {
+        assert(utl::sumu(pars.nvertices) == pars.nloci);
         assert(chromosomes.size() == pars.nchrom);
         assert(traits.size() == pars.nloci);
         assert(effects.size() == pars.nloci);

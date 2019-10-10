@@ -59,11 +59,11 @@ void Param::read(const std::string &filename)
         throw std::runtime_error(msg + filename);
     }
 
-    update(inputfile);
+    import(inputfile);
     inputfile.close();
 }
 
-void Param::update(std::ifstream &file)
+void Param::import(std::ifstream &file)
 {
 
     std::string input;
@@ -119,6 +119,7 @@ void Param::update(std::ifstream &file)
         case _("tsave"): file >> tsave; break;
         case _("record"): file >> record; break;
         case _("seed"): file >> seed; break;
+        case _("ntrials"): file >> ntrials; break;
 
         default:
             throw std::runtime_error("Invalid parameter name: " + input); break;
@@ -139,6 +140,12 @@ void Param::update(std::ifstream &file)
 
 }
 
+void Param::update()
+{
+    nloci = utl::sumu(nvertices);
+    capEdges();
+    checkParams();
+}
 
 // Check that the parameter values are valid
 void Param::checkParams()
@@ -221,6 +228,8 @@ void Param::checkParams()
         msg = "End time should be positive";
     if (tsave <= 0)
         msg = "Save time should be positive";
+    if (ntrials == 0u)
+        msg = "Number of mating trials should be at least one";
 
     if(msg != "No error detected")
         throw std::runtime_error(msg);

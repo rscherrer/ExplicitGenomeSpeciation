@@ -42,11 +42,71 @@ public:
     }
     size_t getDemeSize(const size_t &h) const
     {
-        return sexcounts[h][0u] + sexcounts[h][1u];
+        size_t size = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++size;
+            }
+        }
+        return size;
     }
     double getResource(const size_t &h, const size_t &r) const
     {
         return resources[h][r];
+    }
+    double getSumFitness() const
+    {
+        double sum = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            sum += population[i].getFitness();
+        }
+        return sum;
+    }
+    double getVarFitness() const
+    {
+        double sum = 0.0;
+        double ssq = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            sum += population[i].getFitness();
+            ssq += utl::sqr(population[i].getFitness());
+        }
+        const size_t n = population.size();
+        return ssq / n - utl::sqr(sum / n);
+    }
+    double getMeanEcoTrait(const size_t &h) const // can be removed
+    {
+        double mean = 0.0;
+        size_t n = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++n;
+                mean += population[i].getEcoTrait();
+            }
+        }
+        mean /= n;
+        return mean;
+    }
+    double getMeanEcotype(const size_t &h) const // can be removed
+    {
+        double mean = 0.0;
+        size_t n = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++n;
+                mean += population[i].getEcotype();
+            }
+        }
+        mean /= n;
+        return mean;
+    }
+    double getMeanMatePref() const // can be removed
+    {
+        double mean = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            mean += population[i].getMatePref();
+        }
+        mean /= population.size();
+        return mean;
     }
 
     // Resetters used in tests
@@ -85,8 +145,6 @@ private:
     void consume(const Param&);
     void reproduce(const Param&, const GenArch&);
     void survive(const Param&);
-
-    MatUns matingtrials(const Param&) const;
 
     Crowd population;
     bool isburnin;

@@ -171,25 +171,23 @@ void utl::marginalize(MatUns &m)
 Matrix utl::dividemat(const Matrix &m1, const MatUns &m2)
 {
 
-    const size_t nrow1 = m1.size();
-    const size_t nrow2 = m2.size();
-    const size_t ncol1 = m1[0u].size();
-    const size_t ncol2 = m2[0u].size();
+    const size_t nrow = m1.size();
+    const size_t ncol = m1[0u].size();
 
     // Check dimensions
-    assert(nrow1 == nrow2);
-    assert(ncol1 == ncol2);
-    for (size_t i = 0u; i < nrow1; ++i) {
-        assert(m1[i].size() == ncol1);
-        assert(m2[i].size() == ncol2);
+    assert(nrow == m2.size());
+    assert(ncol == m1[0u].size());
+    for (size_t i = 0u; i < nrow; ++i) {
+        assert(m1[i].size() == ncol);
+        assert(m2[i].size() == m2[0u].size());
     }
 
     // Make an empty matrix
-    Matrix res = utl::zeros(nrow1, ncol1);
+    Matrix res = utl::zeros(nrow, ncol);
 
     // Fill it in with pairwise ratios
-    for (size_t i = 0u; i < nrow1; ++i) {
-        for (size_t j = 0u; j < ncol1; ++j) {
+    for (size_t i = 0u; i < nrow; ++i) {
+        for (size_t j = 0u; j < ncol; ++j) {
             if (m2[i][j] != 0u) {
                 res[i][j] = m1[i][j] / m2[i][j];
             }
@@ -197,6 +195,21 @@ Matrix utl::dividemat(const Matrix &m1, const MatUns &m2)
     }
 
     return res;
+}
+
+// Bring very small values to zero to correct for numerical imprecision
+void utl::correct(double &x)
+{
+    const double tiny = 1.0E-15;
+    if (x < tiny && x > - tiny) x = 0.0;
+}
+
+// Round to the ith decimal
+double utl::round(const double &x, const size_t &i)
+{
+    double p = 1.0;
+    for (size_t j = 0u; j < i; ++j) p *= 10.0;
+    return std::round(x * p) / p;
 }
 
 // Convert unsigned integer to double

@@ -55,7 +55,6 @@ public:
         filenames(whattosave()),
         files({ }),
         counts(utl::uzeros(3u, 3u)),
-        mating(utl::uzeros(2u, 2u)),
         means(utl::zeros(3u, 3u, 3u)),
         varG(utl::zeros(3u, 3u)),
         varP(utl::zeros(3u, 3u)),
@@ -122,7 +121,6 @@ private:
     vecStreams files;
 
     MatUns counts; // per habitat per ecotype
-    MatUns mating; // per male ecotype per female ecotype
 
     Matx3d means; // per trait per habitat per ecotype
 

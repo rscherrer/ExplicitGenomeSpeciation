@@ -32,16 +32,18 @@ public:
         habitat(0u),
         gender(rnd::bernoulli(0.5)),
         alive(true),
-        adult(false)
+        adult(true)
     {
         develop(pars, arch);
 
         assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
-        assert(fitness > 0.0);
-        assert(feeding[0u] > 0.0);
-        assert(feeding[1u] > 0.0);
+        assert(fitness >= 0.0);
+        assert(feeding[0u] >= 0.0);
+        assert(feeding[1u] >= 0.0);
+        assert(feeding[0u] <= 1.0);
+        assert(feeding[1u] <= 1.0);
     }
 
 
@@ -69,9 +71,11 @@ public:
         assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
-        assert(fitness > 0.0);
-        assert(feeding[0u] > 0.0);
-        assert(feeding[1u] > 0.0);
+        assert(fitness >= 0.0);
+        assert(feeding[0u] >= 0.0);
+        assert(feeding[1u] >= 0.0);
+        assert(feeding[0u] <= 1.0);
+        assert(feeding[1u] <= 1.0);
     }
 
     ~Individual() {}
@@ -79,8 +83,8 @@ public:
     // Life history
     bool isalive() const;
     void disperse();
-    void feed(const vecDbl&);
-    bool accept(const double&, const Param&) const;
+    void feed(const double&, const size_t&);
+    double mate(const double&, const Param&) const;
     void survive(const bool&);
 
     // Getters called from outside
@@ -153,12 +157,12 @@ public:
     {
         ecotrait = x;
         traitvalues[0u] = x;
-        feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+        feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+        feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
         assert(feeding[0u] >= 0.0);
         assert(feeding[1u] >= 0.0);
-        assert(feeding[0u] <= p.maxfeed);
-        assert(feeding[1u] <= p.maxfeed);
+        assert(feeding[0u] <= 1.0);
+        assert(feeding[1u] <= 1.0);
     }
     void resetMatePref(const double &y)
     {

@@ -17,7 +17,7 @@ namespace tst
 void tst::makeValidParamFile()
 {
     std::ofstream file;
-    file.open("valid_paramfile_test.txt");
+    file.open("validparamfile_test.txt");
     if (!file.is_open())
         std::cout << "Unable to open valid parameter test file.\n";
 
@@ -52,7 +52,8 @@ void tst::makeValidParamFile()
          << "tend" << '\t' << 5 << '\n'
          << "tsave" << '\t' << 1 << '\n'
          << "record" << '\t' << 1 << '\n'
-         << "seed" << '\t' << 42 << '\n';
+         << "seed" << '\t' << 42 << '\n'
+         << "ntrials" << '\t' << 20 << '\n';
 
     file.close();
 }
@@ -60,7 +61,7 @@ void tst::makeValidParamFile()
 void tst::makeInvalidParamName()
 {
     std::ofstream file;
-    file.open("invalid_paramname_test.txt");
+    file.open("invalidparamname_test.txt");
     if (!file.is_open())
         std::cout << "Unable to open invalid parameter name test file.\n";
     file << "nonsense" << '\t' << 3.0 << '\n';
@@ -70,7 +71,7 @@ void tst::makeInvalidParamName()
 void tst::makeInvalidParamValue()
 {
     std::ofstream file;
-    file.open("invalid_paramvalue_test.txt");
+    file.open("invalidparamvalue_test.txt");
     if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
@@ -99,7 +100,8 @@ void tst::makeInvalidParamValue()
          << "effectscale" << '\t' << -1.0 << '\n'
          << "interactionshape" << '\t' << -5.0 << '\n'
          << "interactionscale" << '\t' << -1.0 << '\n'
-         << "dominancevar" << '\t' << -1.0 << '\n';
+         << "dominancevar" << '\t' << -1.0 << '\n'
+         << "ntrials" << '\t' << 0 << '\n';
 
     file.close();
 }
@@ -107,7 +109,7 @@ void tst::makeInvalidParamValue()
 void tst::makeInvalidParamValue2()
 {
     std::ofstream file;
-    file.open("invalid_paramvalue_test2.txt");
+    file.open("invalidparamvalue_test2.txt");
     if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
