@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
 #include "Types.h"
+#include "Utilities.h"
 #include <fstream>
 #include <iostream>
 #include <chrono>
@@ -12,11 +13,44 @@
 // All parameters have default values that can be modified by calling
 // the program with a parameter file name as unique argument.
 
-class Param {
+struct Param {
 
-public:
-
-    Param() : seed(makeDefaultSeed())
+    Param() :
+        capacity(100.0),
+        replenish(10.0),
+        hsymmetry(1.0),
+        ecosel(1.0),
+        dispersal(1.0E-3),
+        birth(4.0),
+        survival(0.6),
+        sexsel(10.0),
+        matingcost(0.01),
+        maxfeed(1.0),
+        demesizes({ 10u, 0u }),        
+        nloci(300u), // cannot be provided
+        nvertices({ 100u, 100u, 100u }),
+        nedges({ 0u, 0u, 0u }),
+        nchrom(3u),
+        mutation(1.0E-6),
+        recombination(0.01),
+        allfreq(0.2),
+        scaleA({ 1.0, 1.0, 1.0 }),
+        scaleD({ 0.0, 0.0, 0.0 }),
+        scaleI({ 0.0, 0.0, 0.0 }),
+        scaleE({ 0.0, 0.0, 0.0 }),
+        locusE({ 0.0, 0.0, 0.0 }), // cannot be provided
+        skews({ 1.0, 1.0, 1.0 }),
+        effectshape(2.0),
+        effectscale(1.0),
+        interactionshape(5.0),
+        interactionscale(1.0),
+        dominancevar(1.0),
+        tburnin(10),
+        tend(10),
+        tsave(10),
+        record(true),
+        seed(makeDefaultSeed()),
+        ntrials(10u)
     {
         // Make sure there are no more edges than feasible
         capEdges();
@@ -25,120 +59,56 @@ public:
         checkParams();
     }
 
-    // Getters
-    size_t getNChromosomes() const { return nChromosomes; }
-    size_t getNLoci() const { return nLoci; }
-    vecUns getNLociPerTrait() const { return nLociPerTrait; }
-    vecUns getNEdgesPerTrait() const { return nEdgesPerTrait; }
-    vecDbl getSkewnesses() const { return skewnesses; }
-    double getEffectSizeShape() const { return effectSizeShape; }
-    double getEffectSizeScale() const { return effectSizeScale; }
-    double getInteractionWeightShape() const { return interactionWeightShape; }
-    double getInteractionWeightScale() const { return interactionWeightScale; }
-    double getDominanceVariance() const { return dominanceVariance; }
-    double getSNPFreq() const { return freqSNP; }
-    size_t getSeed() const { return seed; }
-    int getTEndSim() const { return tEndSim; }
-    int getTSave() const { return tSave; }
-    int getTBurnIn() const { return tBurnIn; }
-    vecUns getInitialPopSizes() const { return initialPopSizes; }
-    double getDispersalRate() const { return dispersalRate; }
-    double getSurvivalProb() const { return survivalProb; }
-    double getBirthRate() const { return birthRate; }
-    double getEcoSelCoeff() const { return ecoSelCoeff; }
-    double getMatePreferenceStrength() const { return matePreferenceStrength; }
-    double getMateEvaluationCost() const { return mateEvaluationCost; }
-    double getMaxResourceCapacity() const { return maxResourceCapacity; }
-    double getMaxResourceGrowth() const { return maxResourceGrowth; }
-    double getHabitatSymmetry() const { return habitatSymmetry; }
-    double getRecombinationRate() const { return recombinationRate; }
-    double getMutationRate() const { return mutationRate; }
-    double getMaxFeedingRate() const { return maxFeedingRate; }
-    bool getIsFemaleHeterogamy() const { return isFemaleHeterogamy; }
-    bool getRecord() const { return record; }
-    vecDbl getScaleA() const { return scaleA; }
-    vecDbl getScaleD() const { return scaleD; }
-    vecDbl getScaleI() const { return scaleI; }
-    vecDbl getScaleE() const { return scaleE; }
-
-    // Setters
     void read(const std::string&);
-    void setTEndSim(const size_t &t) { tEndSim = t; }
-    void setTSave(const size_t &t) { tSave = t; }
-    void setInitialPopSizes(const vecUns &v) { initialPopSizes = v; }
-    void setHabitatSymmetry(const double &h) { habitatSymmetry = h; }
-    void setDispersalRate(const double &d) { dispersalRate = d; }
-    void setSurvivalProb(const double &p) { survivalProb = p; }
-    void setBirthRate(const double &b) { birthRate = b; }
-    void setMatePreferenceStrength(const double &);
-    void setNChromosomes(const size_t &nchrom) { nChromosomes = nchrom; }
-    void setRecombinationRate(const double &r) { recombinationRate = r; }
-    void setNLociPerTrait(const vecUns&);
-    void setNEdgesPerTrait(const vecUns&);
-    void setSkewnesses(const vecDbl &skews) { skewnesses = skews; }
-    void setDominanceVariance(const double &x) { dominanceVariance = x; }
-    void setNLoci(const size_t &nloci) { nLoci = nloci; }
-    void setSeed(const size_t &number) { seed = number; }
+    void update();
+
+    void import(std::ifstream&);
     void capEdges();
-    void setEffectSizeScale(const double &x) { effectSizeScale = x; }
-    void setInteractionWeightScale(const double&);    
-
-private:
-
-    void update(std::ifstream&);
     void checkParams();
     size_t makeDefaultSeed();
 
-    // Ecological parameters
-    double maxResourceCapacity     = 500.0;
-    double maxResourceGrowth       = 1.0;
-    double habitatSymmetry         = 1.0;
-    double ecoSelCoeff             = 1.0;
-    vecUns initialPopSizes         = { 100u, 0u };
-    size_t nPops                   = initialPopSizes.size();
-    double dispersalRate           = 1.0e-3;
-    double birthRate               = 2.0;
-    double survivalProb            = 0.6;
-    double matePreferenceStrength  = 10.0;
-    double mateEvaluationCost      = 0.01;
-    double maxFeedingRate          = 4.0E-4;
+    // Ecological parameters    
+    double capacity;
+    double replenish;
+    double hsymmetry;
+    double ecosel;
+    double dispersal;
+    double birth;
+    double survival;
+    double sexsel;
+    double matingcost;
+    double maxfeed;
+    vecUns demesizes;
 
     // Genetic parameters
-    size_t nEcoLoci = 10;
-    size_t nMatLoci = 10u;
-    size_t nNtrLoci = 10u;
-    size_t nEcoEdges = 0u;
-    size_t nMatEdges = 0u;
-    size_t nNtrEdges = 0u;
-    size_t nChromosomes = 3u;
-
-    size_t nLoci = nEcoLoci + nMatLoci + nNtrLoci;
-    vecUns nLociPerTrait = { nEcoLoci, nMatLoci, nNtrLoci };
-    vecUns nEdgesPerTrait = { nEcoEdges, nMatEdges, nNtrEdges };
-
-    double  mutationRate            = 1.0e-5;
-    double  recombinationRate       = 0.01;
-    double  freqSNP                 = 0.5;
-    bool    isFemaleHeterogamy      = false;
+    size_t nloci;
+    vecUns nvertices;
+    vecUns nedges;
+    size_t nchrom;
+    double  mutation;
+    double  recombination;
+    double  allfreq;
 
     // Genotype-phenotype map
-    vecDbl scaleA = {1.0, 1.0, 1.0};
-    vecDbl scaleD = {0.0, 0.0, 0.0};
-    vecDbl scaleI = {0.0, 0.0, 0.0};
-    vecDbl scaleE = {0.0, 0.0, 0.0};
-    vecDbl skewnesses = { 1.0, 1.0, 1.0 };
-    double effectSizeShape = 2.0;
-    double effectSizeScale = 1.0;
-    double interactionWeightShape = 5.0;
-    double interactionWeightScale = 1.0;
-    double dominanceVariance = 1.0;
+    vecDbl scaleA;
+    vecDbl scaleD;
+    vecDbl scaleI;
+    vecDbl scaleE;
+    vecDbl locusE;
+    vecDbl skews;
+    double effectshape;
+    double effectscale;
+    double interactionshape;
+    double interactionscale;
+    double dominancevar;
 
     // Simulation parameters
-    int  tBurnIn = 10;
-    int  tEndSim = 10;
-    int  tSave = 10;
-    bool record = true;
+    int  tburnin;
+    int  tend;
+    int  tsave;
+    bool record;
     size_t seed;
+    size_t ntrials;
 
 };
 

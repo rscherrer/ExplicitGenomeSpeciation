@@ -1,184 +1,207 @@
 #include "library/MetaPop.h"
 #include "library/Utilities.h"
-#include "tests/DemeFixture.h"
 #include <boost/test/unit_test.hpp>
 
+// Tests of the good behavior of a metapopulation object
+
 // Simulation should reach tmax in the absence of mortality
-BOOST_AUTO_TEST_CASE(checkImmortalPopulation)
+BOOST_AUTO_TEST_CASE(ConstantPopSizeWhenNoBirthNoDeath)
 {
     Param pars;
-    pars.setTEndSim(10u);
-    pars.setTSave(1u);
-    pars.setInitialPopSizes({ 10u, 10u });
-    pars.setDispersalRate(0.0);
-    pars.setSurvivalProb(1.0);
-    pars.setBirthRate(0.0);
-    pars.setMatePreferenceStrength(0.0);
+    pars.tend = 10;
+    pars.tburnin = 0;
+    pars.demesizes = { 10u, 10u };
+    pars.dispersal = 0.0;
+    pars.survival = 1.0; //  no death
+    pars.birth = 0.0; // no birth
+    pars.sexsel = 0.0;
 
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop(pars, arch, true);
-    int t = meta.evolve(arch);
+    MetaPop metapop = MetaPop(pars, arch);
+    for (int t = 0; t < pars.tend; ++t)
+        metapop.cycle(pars, arch);
 
-    BOOST_CHECK_EQUAL(t, pars.getTEndSim());
-    BOOST_CHECK(meta.getPopSize(0u) > 0u);
-    BOOST_CHECK(meta.getPopSize(1u) > 0u);
+    BOOST_CHECK_EQUAL(metapop.getSize(), 20u);
 }
 
-
-// Simulation should end prematurely with high mortality
-BOOST_AUTO_TEST_CASE(checkProgressiveExtinction)
+BOOST_AUTO_TEST_CASE(InstantExtinctionIfSurvivalIsZero)
 {
     Param pars;
-    pars.setTEndSim(100u);
-    pars.setTSave(1u);
-    pars.setInitialPopSizes({ 10u, 10u });
-    pars.setDispersalRate(0.0);
-    pars.setSurvivalProb(0.1);
-    pars.setBirthRate(0.0);
-    pars.setMatePreferenceStrength(0.0);
+    pars.tend = 100;
+    pars.tburnin = 0;
+    pars.demesizes = { 10u, 10u };
+    pars.dispersal = 0.0;
+    pars.survival = 0.0; // 0% chance of survival
+    pars.birth = 0.0; // no birth
+    pars.sexsel = 0.0;
 
     GenArch arch = GenArch(pars);
-    MetaPop meta = MetaPop(pars, arch, true);
-    int t = meta.evolve(arch);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK(metapop.isextinct());
+}
 
-    BOOST_CHECK(t < pars.getTEndSim());
-    BOOST_CHECK(meta.getPopSize(0u) == 0u);
-    BOOST_CHECK(meta.getPopSize(1u) == 0u);
+// Simulation should end prematurely with high mortality
+BOOST_AUTO_TEST_CASE(ProgressiveExtinctionWhenLowSurvival)
+{
+    Param pars;
+    pars.tend = 100;
+    pars.tburnin = 0;
+    pars.demesizes = { 10u, 10u };
+    pars.dispersal = 0.0;
+    pars.survival = 0.1; // 10% chance of survival
+    pars.birth = 0.0; // no birth
+    pars.sexsel = 0.0;
+
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+
+    bool extinction = false;
+
+    for (int t = 0; t < pars.tend; ++t) {
+        metapop.cycle(pars, arch);
+        if (metapop.isextinct()) {
+            extinction = true;
+            break;
+        }
+    }
+
+    BOOST_CHECK(extinction);
 }
 
 // Test that habitats are initialized with only one resource if
 // habitat symmetry is zero
-BOOST_AUTO_TEST_CASE(habitatsHaveOneResourceIfCompleteAsymmetry)
+BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
 {
     Param pars;
     GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    pars.setInitialPopSizes( {100u, 100u} );
-    MetaPop meta = MetaPop(pars, arch, false);
-    BOOST_CHECK_EQUAL(meta.getResource(0u, 0u), pars.getMaxResourceCapacity());
-    BOOST_CHECK_EQUAL(meta.getResource(1u, 1u), pars.getMaxResourceCapacity());
-    BOOST_CHECK_EQUAL(meta.getResource(0u, 1u), 0.0);
-    BOOST_CHECK_EQUAL(meta.getResource(1u, 0u), 0.0);
+    pars.capacity = 100.0;
+    pars.hsymmetry = 0.0; // full habitat asymmetry
+    pars.demesizes = {100u, 100u };
+    pars.tburnin = 0;
+    pars.maxfeed = 0.0; // no consumption
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK_EQUAL(metapop.getResource(0u, 0u), pars.capacity);
+    BOOST_CHECK_EQUAL(metapop.getResource(1u, 1u), pars.capacity);
+    BOOST_CHECK_EQUAL(metapop.getResource(0u, 1u), 0.0);
+    BOOST_CHECK_EQUAL(metapop.getResource(1u, 0u), 0.0);
 
 }
 
-// Test that Xst should be 1 if ecotypic variances are zero
-BOOST_AUTO_TEST_CASE(XstDoesItsJob)
+BOOST_AUTO_TEST_CASE(NoDispersalLeavesHabitatsWithSameNumberOfIndividuals)
 {
-    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 42.0, 10u, 10u, 20u), 1.0);
-    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 2.0, 10u, 10u, 20u), 1.0);
-    BOOST_CHECK_EQUAL(utl::Xst(0.0, 0.0, 1.0, 10u, 10u, 20u), 1.0);
 
+    Param pars;
+    pars.demesizes = { 15u, 10u };
+    pars.dispersal = 0.0; // no dispersal
+    pars.survival = 1.0; // no death
+    pars.birth = 0.0; // no birth
+    pars.tburnin = 0;
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(0u), 15u);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 10u);
 }
 
-// Test that monomorphic ecotypes indeed have zero variance
-BOOST_AUTO_TEST_CASE(fullEcologicalIsolation)
+BOOST_AUTO_TEST_CASE(AllIndividualsMigrateIfDispersalIsMax)
 {
     Param pars;
+    pars.demesizes = { 10u, 0u };
+    pars.dispersal = 1.0; // 100% chance dispersal
+    pars.survival = 1.0; // no death
+    pars.birth = 0.0; // no birth
+    pars.tburnin = 0;
     GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    pars.setInitialPopSizes({ 100u, 100u });
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
-    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
-    meta.consume();
-    meta.analyze(arch);
-
-    BOOST_CHECK_EQUAL(meta.getSumTrait(0u, 0u), -1.0 * meta.getPopSize(0u));
-    BOOST_CHECK_EQUAL(meta.getSumTrait(0u, 1u), meta.getPopSize(1u));
-    BOOST_CHECK_EQUAL(meta.getEcoIsolation(), 1.0);
-    BOOST_CHECK_EQUAL(meta.getPst(0u), 1.0);
-    BOOST_CHECK_EQUAL(meta.getVarP(0u, 0u), 0.0);
-    BOOST_CHECK_EQUAL(meta.getVarP(0u, 1u), 0.0);
-    BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 0u), meta.getEcoCount(0u));
-    BOOST_CHECK_EQUAL(meta.getSsqPhe(0u, 1u), meta.getEcoCount(1u));
-    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 0u), -1.0 * meta.getEcoCount(0u));
-    BOOST_CHECK_EQUAL(meta.getSumPhe(0u, 1u), meta.getEcoCount(1u));
-    BOOST_CHECK_EQUAL(meta.getSumEcotypes(0u), 0u);
-    BOOST_CHECK_EQUAL(meta.getSumEcotypes(1u), meta.getPopSize(1u));
-
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(0u), 0u);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 10u);
 }
 
-// Test case: a population with spatial isolation = 1
-BOOST_AUTO_TEST_CASE(fullSpatialIsolation)
+// Check that a population has grown after reproduction
+BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
 {
     Param pars;
+    pars.capacity = 100.0;
+    pars.maxfeed = 1.0;
+    pars.dispersal = 0.0;
+    pars.birth = 4.0; // relatively high birth rate
+    pars.demesizes = { 100u, 0u };
+    pars.survival = 1.0; // 100% chance survival
+    pars.tburnin = 0u;
     GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0); // full habitat asymmetry
-    pars.setInitialPopSizes({ 100u, 100u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
-    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
-    meta.consume();
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 1.0);
-
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK(metapop.getSize() > 100u);
+    BOOST_CHECK(metapop.getDemeSize(0u) > 100u);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 
-// Test case: a population with mating isolation = 1
-BOOST_AUTO_TEST_CASE(fullMatingIsolation)
+
+// Newborns should not die
+BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
 {
     Param pars;
+    pars.birth = 4.0; // relatively high birth rate
+    pars.demesizes = { 100u, 0u };
+    pars.survival = 0.0; // all adults should die
     GenArch arch = GenArch(pars);
-    pars.setHabitatSymmetry(0.0);
-    pars.setInitialPopSizes({ 100u, 100u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0); // only trait -1 in habitat 0
-    meta.resetEcoTraits(1u, 1.0); // only trait 1 in habitat 1
-    meta.resetMatePrefs(0u, 1.0); // assortative mating everywhere
-    meta.resetMatePrefs(1u, 1.0);
-    meta.consume();
-    meta.sortSexes();
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 1.0);
-
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK(metapop.getSize() > 0u);
+    BOOST_CHECK(metapop.getDemeSize(0u) > 0u);
+    BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 
-BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOnePop)
+// After feeding, the resources should be depleted
+BOOST_AUTO_TEST_CASE(ResourceIsDepletedAfterConsumption)
 {
     Param pars;
+    pars.hsymmetry = 1.0;
+    pars.capacity = 1000.0;
+    pars.demesizes = { 100u, 100u };
+    pars.dispersal = 0.0; // everybody feeds in one habitat only
+    pars.tburnin = 0;
     GenArch arch = GenArch(pars);
-    pars.setInitialPopSizes({ 100u, 0u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.resetEcoTraits(0u, -1.0);
-    meta.consume();
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    BOOST_CHECK(metapop.getResource(0u, 0u) < 1000.0);
+    BOOST_CHECK(metapop.getResource(0u, 1u) < 1000.0);
+    BOOST_CHECK(metapop.getResource(1u, 0u) < 1000.0);
+    BOOST_CHECK(metapop.getResource(1u, 1u) < 1000.0);
 }
 
-BOOST_AUTO_TEST_CASE(abuseSpatialIsolationOneEcotype)
-{
-    Param pars;
-    GenArch arch = GenArch(pars);
-    pars.setInitialPopSizes({ 100u, 100u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.consume();
-    meta.resetEcotypes(0u, 1u);
-    meta.resetEcotypes(1u, 1u);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getSpatialIsolation(), 0.0);
-}
 
-BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneSex)
+// Test fitness function
+BOOST_AUTO_TEST_CASE(KnownResourceAndFitnessIfPopulationIsMonomorphic)
 {
     Param pars;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.capacity = 10.0;
+    pars.hsymmetry = 0.0;
+    pars.replenish = 1.0;
+    pars.demesizes = { 10u, 0u };
+    pars.ecosel = 1.0;
+    pars.maxfeed = 1.0;
+    pars.tburnin = 0;
     GenArch arch = GenArch(pars);
-    pars.setInitialPopSizes({ 100u, 0u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.consume();
-    meta.resetGenders(0u, true);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
-}
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
+    metapop.cycle(pars, arch);
 
-BOOST_AUTO_TEST_CASE(abuseMatingIsolationOneEcotype)
-{
-    Param pars;
-    GenArch arch = GenArch(pars);
-    pars.setInitialPopSizes({ 100u, 0u});
-    MetaPop meta = MetaPop(pars, arch, false);
-    meta.consume();
-    meta.resetEcotypes(0u, 1u);
-    meta.analyze(arch);
-    BOOST_CHECK_EQUAL(meta.getMatingIsolation(), 0.0);
+    // Predict resource equilibrium after consumption
+    const double R0 = utl::round(10.0 * exp(-10.0), 4u);
+    const double R1 = 0.0;
+
+    // Fitness should sum up to the amount of food consumed
+    const double sumw = utl::round(10.0 * (1.0 - exp(-10.0)), 4u);
+
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 0u), 4u), R0);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getSumFitness(), 4u), sumw);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getVarFitness(), 4u), 0.0);
 }

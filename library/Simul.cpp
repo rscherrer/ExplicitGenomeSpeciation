@@ -1,5 +1,10 @@
 #include "Simul.h"
 
+bool timetosave(const int &t,const Param &p)
+{
+    return (t > 0 && p.record && t % p.tsave == 0u);
+}
+
 int simulate(const vecStrings &args)
 {
 
@@ -16,18 +21,35 @@ int simulate(const vecStrings &args)
         if (args.size() == 2) pars.read(args[1u]);
 
         // Random number generator
-        rnd::rng.seed(pars.getSeed());
+        rnd::rng.seed(pars.seed);
 
         // Create a genetic architecture
         GenArch arch = GenArch(pars);
 
-        // Create a metapopulation with two demes, one of which is empty
-        MetaPop metapop = MetaPop(pars, arch, true);
+        // Create a metapopulation with two demes
+        MetaPop metapop = MetaPop(pars, arch);
 
-        // Evolve the metapopulation
-        std::clog << "Simulation started\n";
-        metapop.evolve(arch);
-        std::clog << "Simulation ended\n";
+        // Create an analytical module
+        Collector collector = Collector(arch);
+
+        // Loop through time
+        for (int t = -pars.tburnin; t < pars.tend; ++t) {
+
+            if (t == 0) metapop.exitburnin();
+
+            // Life cycle of the metapopulation
+            metapop.cycle(pars, arch);
+
+            // Is the population still there?
+            if (metapop.isextinct()) {
+                std::cout << "The population went extinct at t = " << t << '\n';
+                break;
+            }
+
+            // Analyze the metapopulation if needed
+            if (timetosave(t, pars)) collector.analyze(metapop, pars);
+
+        }
 
     }
     catch (const std::runtime_error &err)

@@ -2,7 +2,7 @@
 #include "library/GenArch.h"
 #include "library/Deme.h"
 #include "library/Random.h"
-#include "library/doMain.h"
+#include "library/Simul.h"
 #include <cassert>
 #include <iostream>
 #include <chrono>
@@ -17,6 +17,6 @@ int main(int argc, char * argv[])
     const vecStrings args(argv, argv + argc);
 
     // Run the program
-    return doMain(args);
+    return simulate(args);
 
 }

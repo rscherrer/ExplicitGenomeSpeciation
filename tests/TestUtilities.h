@@ -16,116 +16,110 @@ namespace tst
 
 void tst::makeValidParamFile()
 {
-    std::ofstream out;
-    out.open("valid_paramfile_test.txt");
-    if (!out.is_open())
+    std::ofstream file;
+    file.open("validparamfile_test.txt");
+    if (!file.is_open())
         std::cout << "Unable to open valid parameter test file.\n";
 
-    out << "maxResourceCapacity" << '\t' << 100.0 << '\n'
-        << "maxResourceGrowth" << '\t' << 1.0 << '\n'
-        << "habitatSymmetry" << '\t' << 1.0 << '\n'
-        << "ecoSelCoeff" << '\t' << 1.0 << '\n'
-        << "nPops" << '\t' << 2 << '\n'
-        << "initialPopSizes" << '\t' << 100 << '\t' << 100 << '\n'
-        << "dispersalRate" << '\t' << 1.0e-3 << '\n'
-        << "birthRate" << '\t' << 4.0 << '\n'
-        << "survivalProb" << '\t' << 0.8 << '\n'
-        << "matePreferenceStrength" << '\t' << 10.0 << '\n'
-        << "mateEvalutationCost" << '\t' << 0.01 << '\n'
-        << "nEcoLoci" << '\t' << 400 << '\n'
-        << "nMatLoci" << '\t' << 200 << '\n'
-        << "nNtrLoci" << '\t' << 400 << '\n'
-        << "nEcoEdges" << '\t' << 1000 << '\n'
-        << "nMatEdges" << '\t' << 500 << '\n'
-        << "nNtrEdges" << '\t' << 0 << '\n'
-        << "nChromosomes" << '\t' << 3 << '\n'
-        << "mutationRate" << '\t' << 1.0e-5 << '\n'
-        << "recombinationRate" << '\t' << 0.01 << '\n'
-        << "freqSNP" << '\t' << 0.02 << '\n'
-        << "isFemaleHeterogamy" << '\t' << 0 << '\n'
-        << "scaleA" << '\t' << 1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
-        << "scaleD" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "scaleI" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "scaleE" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "skewnesses" << '\t' << 1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
-        << "effectSizeShape" << '\t' << 2.0 << '\n'
-        << "effectSizeScale" << '\t' << 1.0 << '\n'
-        << "interactionWeightShape" << '\t' << 5.0 << '\n'
-        << "interactionWeightScale" << '\t' << 1.0 << '\n'
-        << "dominanceVariance" << '\t' << 1.0 << '\n'
-        << "tBurnIn" << '\t' << 10 << '\n'
-        << "tEndSim" << '\t' << 5 << '\n'
-        << "tSave" << '\t' << 1 << '\n'
-        << "seed" << '\t' << 42 << '\n'
-        << "record" << '\t' << 1 << '\n';
+    file << "capacity" << '\t' << 100.0 << '\n'
+         << "replenish" << '\t' << 1.0 << '\n'
+         << "hsymmetry" << '\t' << 1.0 << '\n'
+         << "ecosel" << '\t' << 1.0 << '\n'
+         << "dispersal" << '\t' << 1.0e-3 << '\n'
+         << "birth" << '\t' << 4.0 << '\n'
+         << "survival" << '\t' << 0.8 << '\n'
+         << "sexsel" << '\t' << 10.0 << '\n'
+         << "matingcost" << '\t' << 0.01 << '\n'
+         << "maxfeed" << '\t' << 4.0E-4 << '\n'
+         << "demesizes" << '\t' << 100 << '\t' << 100 << '\n'
+         << "nvertices" << '\t' << 400 << '\t' << 200 << '\t' << 400 << '\n'
+         << "nedges" << '\t' << 1000 << '\t' << 500 << '\t' << 0 << '\n'
+         << "nchrom" << '\t' << 3 << '\n'
+         << "mutation" << '\t' << 1.0e-5 << '\n'
+         << "recombination" << '\t' << 0.01 << '\n'
+         << "allfreq" << '\t' << 0.02 << '\n'
+         << "scaleA" << '\t' << 1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+         << "scaleD" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "scaleI" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "scaleE" << '\t' << 0.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "skews" << '\t' << 1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+         << "effectshape" << '\t' << 2.0 << '\n'
+         << "effectscale" << '\t' << 1.0 << '\n'
+         << "interactionshape" << '\t' << 5.0 << '\n'
+         << "interactionscale" << '\t' << 1.0 << '\n'
+         << "dominancevar" << '\t' << 1.0 << '\n'
+         << "tburnin" << '\t' << 10 << '\n'
+         << "tend" << '\t' << 5 << '\n'
+         << "tsave" << '\t' << 1 << '\n'
+         << "record" << '\t' << 1 << '\n'
+         << "seed" << '\t' << 42 << '\n'
+         << "ntrials" << '\t' << 20 << '\n';
 
-    out.close();
+    file.close();
 }
 
 void tst::makeInvalidParamName()
 {
-    std::ofstream out;
-    out.open("invalid_paramname_test.txt");
-    if (!out.is_open())
+    std::ofstream file;
+    file.open("invalidparamname_test.txt");
+    if (!file.is_open())
         std::cout << "Unable to open invalid parameter name test file.\n";
-    out << "nonsense" << '\t' << 3.0 << '\n';
-    out.close();
+    file << "nonsense" << '\t' << 3.0 << '\n';
+    file.close();
 }
 
 void tst::makeInvalidParamValue()
 {
-    std::ofstream out;
-    out.open("invalid_paramvalue_test.txt");
-    if (!out.is_open())
+    std::ofstream file;
+    file.open("invalidparamvalue_test.txt");
+    if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
-    out << "maxResourceCapacity" << '\t' << -1.0 << '\n'
-        << "maxResourceGrowth" << '\t' << -1.0 << '\n'
-        << "habitatSymmetry" << '\t' << -1.0 << '\n'
-        << "ecoSelCoeff" << '\t' << -1.0 << '\n'
-        << "nPops" << 2 << '\n'
-        << "initialPopSizes" << '\t' << -100 << '\t' << -100 << '\n'
-        << "dispersalRate" << '\t' << 10 << '\n'
-        << "birthRate" << '\t' << -4.0 << '\n'
-        << "survivalProb" << '\t' << -0.8 << '\n'
-        << "matePreferenceStrength" << '\t' << -10.0 << '\n'
-        << "mateEvalutationCost" << '\t' << -0.01 << '\n'
-        << "maxFeedingRate" << '\t' << -1.0 << '\n'
-        << "nEcoLoci" << '\t' << 1 << '\n'
-        << "nMatLoci" << '\t' << 1 << '\n'
-        << "nNtrLoci" << '\t' << 1 << '\n'
-        << "nChromosomes" << '\t' << 0 << '\n'
-        << "mutationRate" << '\t' << -1.0e-5 << '\n'
-        << "recombinationRate" << '\t' << -0.01 << '\n'
-        << "freqSNP" << '\t' << -0.02 << '\n'
-        << "scaleA" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
-        << "scaleD" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "scaleI" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "scaleE" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
-        << "skewnesses" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
-        << "effectSizeShape" << '\t' << -2.0 << '\n'
-        << "effectSizeScale" << '\t' << -1.0 << '\n'
-        << "interactionWeightShape" << '\t' << -5.0 << '\n'
-        << "interactionWeightScale" << '\t' << -1.0 << '\n'
-        << "dominanceVariance" << '\t' << -1.0 << '\n';
+    file << "capacity" << '\t' << -1.0 << '\n'
+         << "replenish" << '\t' << -1.0 << '\n'
+         << "hsymmetry" << '\t' << -1.0 << '\n'
+         << "ecosel" << '\t' << -1.0 << '\n'
+         << "dispersal" << '\t' << 10 << '\n'
+         << "birth" << '\t' << -4.0 << '\n'
+         << "survival" << '\t' << -0.8 << '\n'
+         << "sexsel" << '\t' << -10.0 << '\n'
+         << "matingcost" << '\t' << -0.01 << '\n'
+         << "maxfeed" << '\t' << -1.0 << '\n'
+         << "demesizes" << '\t' << -100 << '\t' << -100 << '\n'
+         << "nvertices" << '\t' << 1 << '\t' << 1 << '\t' << 1 << '\n'
+         << "nchrom" << '\t' << 0 << '\n'
+         << "mutation" << '\t' << -1.0e-5 << '\n'
+         << "recombination" << '\t' << -0.01 << '\n'
+         << "allfreq" << '\t' << -0.02 << '\n'
+         << "scaleA" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+         << "scaleD" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "scaleI" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "scaleE" << '\t' << -1.0 << '\t' << 0.0 << '\t' << 0.0 << '\n'
+         << "skews" << '\t' << -1.0 << '\t' << 1.0 << '\t' << 1.0 << '\n'
+         << "effectshape" << '\t' << -2.0 << '\n'
+         << "effectscale" << '\t' << -1.0 << '\n'
+         << "interactionshape" << '\t' << -5.0 << '\n'
+         << "interactionscale" << '\t' << -1.0 << '\n'
+         << "dominancevar" << '\t' << -1.0 << '\n'
+         << "ntrials" << '\t' << 0 << '\n';
 
-    out.close();
+    file.close();
 }
 
 void tst::makeInvalidParamValue2()
 {
-    std::ofstream out;
-    out.open("invalid_paramvalue_test2.txt");
-    if (!out.is_open())
+    std::ofstream file;
+    file.open("invalidparamvalue_test2.txt");
+    if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
-    out << "dispersalRate" << '\t' << -1.0e-3 << '\n'
-        << "survivalProb" << '\t' << 2.0 << '\n'
-        << "mutationRate" << '\t' << 10 << '\n'
-        << "habitatSymmetry" << '\t' << 2.0 << '\n'
-        << "freqSNP" << '\t' << 10 << '\n';
+    file << "dispersal" << '\t' << -1.0e-3 << '\n'
+         << "survival" << '\t' << 2.0 << '\n'
+         << "mutation" << '\t' << 10 << '\n'
+         << "hsymmetry" << '\t' << 2.0 << '\n'
+         << "allfreq" << '\t' << 10 << '\n';
 
-    out.close();
+    file.close();
 }
 
 #endif
