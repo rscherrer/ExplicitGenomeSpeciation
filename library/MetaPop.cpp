@@ -89,9 +89,11 @@ void MetaPop::consume(const Param &p)
     resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
     resources[1u][0u] = p.capacity * p.hsymmetry;
     resources[1u][1u] = isburnin ? 0.0 : p.capacity;
-    for (size_t hab : { 0u, 1u })
-        for (size_t res : { 0u, 1u })
-            assert(resources[hab][res] >= 0.0);
+
+    assert(resources[0u][0u] >= 0.0);
+    assert(resources[0u][1u] >= 0.0);
+    assert(resources[1u][0u] >= 0.0);
+    assert(resources[1u][1u] >= 0.0);
 
     // Absolute amount of food consumed (C K / r)
     for (size_t hab = 0u; hab < 2u; ++hab) {

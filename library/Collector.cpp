@@ -30,12 +30,17 @@ vecLoci Collector::emptyloci(const GenArch &arch) const
 double Xst(const vecDbl &v, const vecUns &n)
 {
 
+    assert(v.size() == 3u);
+    assert(n.size() == 3u);
+
     // If there is only one ecotype, there is no divergence
     if (!n[0u]) return 0.0;
     if (!n[1u]) return 0.0;
 
     // Check that variances are positive
-    for (auto &x : v) assert(x >= 0.0);
+    assert(v[0u] >= 0.0);
+    assert(v[1u] >= 0.0);
+    assert(v[2u] >= 0.0);
 
     // If there is no variance, there is no divergence
     if (v[2u] == 0.0) return 0.0;
