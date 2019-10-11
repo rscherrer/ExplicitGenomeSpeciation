@@ -53,7 +53,7 @@ struct Param {
         tsave(10),
         record(true),
         seed(makeDefaultSeed()),
-        ntrials(10u)
+        ntrials(100u)
     {
         // Make sure there are no more edges than feasible
         capEdges();

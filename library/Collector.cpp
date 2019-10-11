@@ -456,114 +456,68 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     norm *= counts[0u][0u] + counts[1u][0u];
     norm *= counts[0u][1u] + counts[1u][1u];
     assert(norm >= 0.0);
-    if (norm == 0.0) {
-        SI = 0.0; // if an ecotype or a habitat is empty
-    }
-    else {
-        SI = counts[0u][0u] * counts[1u][1u] - counts[0u][1u] * counts[1u][0u];
+    if (norm != 0.0) {
+        SI = counts[0u][0u] * counts[1u][1u];
+        SI -= counts[0u][1u] * counts[1u][0u];
         SI /= sqrt(norm);
     }
-    assert(SI >= 0.0);
+    assert(SI >= -1.0);
     assert(SI <= 1.0);
 
     // Mating isolation
 
-    // Make a vector of IDs for males of both ecotypes
-    std::vector<vecUns> males(2u);
-    for (size_t eco = 0u; eco < 2u; ++eco)
-        males[eco].reserve(m.getSize());
-
-    // Females no matter what ecotype
+    // Sort males and females in the population
+    vecUns males;
     vecUns females;
+    males.reserve(m.population.size());
     females.reserve(m.population.size());
-
-    // Count the sexes in each ecotype
-    MatUns esexes = utl::uzeros(2u, 2u); // per ecotype per sex
-
-    for (size_t i = 0u; i < m.population.size(); ++i) {
+    for (size_t i =0u; i < m.population.size(); ++i) {
         const size_t sex = m.population[i].getGender();
-        const size_t eco = m.population[i].getEcotype();
-        ++esexes[eco][sex];
-        if (!sex)
-            males[eco].push_back(i);
-        else
-            females.push_back(i);
+        if (sex) females.push_back(i); else males.push_back(i);
     }
-
-    for (size_t eco = 0u; eco < 2u; ++eco)
-        males[eco].shrink_to_fit();
-
+    males.shrink_to_fit();
     females.shrink_to_fit();
 
-    // RI = 0.0 if a sex is missing from an ecotype
+    if (females.size() && males.size()) {
 
-    // Perform mating trials
-    if (esexes[0u][0u] && esexes[0u][1u] && esexes[1u][0u] && esexes[1u][1u]) {
+        MatUns crosses = utl::uzeros(2u, 2u);
+        size_t ntrials = p.ntrials;
 
-        // Loop through the females
-        for (size_t f = 0u; f < females.size(); ++f) {
+        // Sample many pairs of males and females with replacement
+        while (ntrials) {
 
-            const size_t fem = females[f];
+            const size_t fem = females[rnd::random(females.size())];
+            const size_t mal = males[rnd::random(males.size())];
 
-            // Record ecotype
-            const size_t eco = m.population[fem].getEcotype();
-            const size_t alt = eco == 0u ? 1u : 0u;
+            // See if the female accepts the male or not
+            const double maletrait = m.population[mal].getEcoTrait();
+            const double prob = m.population[fem].mate(maletrait, p);
 
-            size_t ntrials = p.ntrials;
+            const size_t ecof = m.population[fem].getEcotype();
+            const size_t ecom = m.population[mal].getEcotype();
 
-            // Repeat x times and perform the average
-            while (ntrials) {
+            // Count the homogamic and heterogamic crosses
+            if (rnd::bernoulli(prob)) ++crosses[ecof][ecom];
 
-                // Sample a male from each ecotype
-                const size_t i = males[eco][rnd::random(males[eco].size())];
-                const size_t j = males[alt][rnd::random(males[alt].size())];
+            --ntrials;
+        }
 
-                assert(m.population[i].getEcotype() == eco);
-                assert(m.population[j].getEcotype() == alt);
+        // Compute mating isolation statistic
+        norm = crosses[0u][0u] + crosses[0u][1u];
+        norm *= crosses[1u][0u] + crosses[1u][1u];
+        norm *= crosses[0u][0u] + crosses[1u][0u];
+        norm *= crosses[0u][1u] + crosses[1u][1u];
+        assert(norm >= 0.0);
 
-                // Record male ecological trait values
-                const double xi = m.population[i].getEcoTrait();
-                const double xj = m.population[j].getEcoTrait();
-
-                // Calculate probabilities of mating with each male
-                const double hom = m.population[fem].mate(xi, p); // homogamy
-                const double het = m.population[fem].mate(xj, p); // heterogamy
-
-                assert(hom >= 0.0);
-                assert(het >= 0.0);
-                assert(hom <= 1.0);
-                assert(het <= 1.0);
-
-                // Assortment score (from -1 to +1)
-                double assort = 0.0;
-                if (hom + het) assort = (hom - het) / (hom + het);
-
-                assert(assort >= -1.0);
-                assert(assort <= 1.0);
-
-                RI += assort;
-
-                --ntrials;
-            }
-       }
-
-       RI /= p.ntrials * females.size();
-
-       assert(RI >= -1.0);
-       assert(RI <= 1.0);
-
+        if (norm != 0.0) {
+            RI = crosses[0u][0u] * crosses[1u][1u];
+            RI -= crosses[0u][1u] * crosses[1u][0u];
+            RI /= sqrt(norm);
+        }
     }
 
-    // This way involves giving a choice between the two ecotypes to the female
-    // Another way would be to assess homogamy and heterogamy by sampling
-    // random males from the whole populations and count the number of crossings
-    // The two should give similar results, except if an ecotype is rare
-    // (across the whole population)
-    // If an ecotype is rare, it will be rarely encountered in the second
-    // algorithm and mating isolation will be high
-    // In the first algorithm, mating isolation will depend only on difference
-    // in trait and mating preference, not on densities
-    // Good to keep in mind
+    assert(RI >= -1.0);
+    assert(RI <= 1.0);
 
 }
 

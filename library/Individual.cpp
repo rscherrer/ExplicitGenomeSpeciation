@@ -194,8 +194,6 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
 }
 
-
-
 bool Individual::isalive() const
 {
     return alive;
