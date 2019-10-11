@@ -1,83 +1,236 @@
 #include "MetaPop.h"
-#include <iostream>
-#include <fstream>
 
 
-size_t MetaPop::evolve(const Genome &genome, const MultiNet &networks)
+// Initialization
+
+Crowd MetaPop::populate(const Param &p, const GenArch &arch)
 {
-    size_t t = 0u;
 
-    std::ofstream output;
-    output.open("record.txt", std::ios::binary);
-    if (!output.is_open())
-        throw std::runtime_error("Unable to open file record.dat\n");
+    // Generate a pool of individuals
+    const size_t n = utl::sumu(p.demesizes);
+    size_t n0 = p.demesizes[0u];
+    assert(n0 <= n);
+    Crowd indivs;
+    indivs.reserve(n); // seems to be causing trouble
 
-    for (; t < tmax; ++t) {
-
-        if (t % tsave == 0u) {
-
-            loadBuffer(t);
-            buffer.write(output);
-
-        }
-
-        // Dispersal
-        Crowd migrants1 = pops[0u].emigrate(dispersal);
-        Crowd migrants2 = pops[1u].emigrate(dispersal);
-        pops[0u].immigrate(migrants2);
-        pops[1u].immigrate(migrants1);
-
-        // Resource acquisition
-        pops[0u].consume();
-        pops[1u].consume();
-
-        // Reproduction
-        pops[0u].reproduce(birth, mating, genome, networks);
-        pops[1u].reproduce(birth, mating, genome, networks);
-
-        // Survival
-        if (!pops[0u].survive(survival) && !pops[1u].survive(survival)) {
-            std::cout << "The population went extinct at t = " << t << '\n';
-            break;
-        }
+    for (size_t ind = 0u; ind < n; ++ind) {
+        indivs.push_back(Individual(p, arch));
+        if (ind >= n0) indivs.back().disperse();
     }
 
-    output.close();
+    assert(indivs.size() == n);
 
-    /* // Turn the following into a test
-    std::ifstream input;
-    int size = 0;
-    char elt0[25];
-    char elt1[25];
-    char elt2[25];
-    input.open("record.txt", std::ios::binary);
-    input.seekg(0, std::ios::end);
-    size = (int) input.tellg();
-    input.seekg(0, std::ios::beg);
-    while(input.tellg() < size)
-    {
-        input.read((char *) elt0, sizeof(elt0));
-        input.read((char *) elt1, sizeof(elt1));
-        input.read((char *) elt2, sizeof(elt2));
-    }
-    input.close();
-    std::cout << elt0 << '\t' << elt1 << '\t' << elt2 << '\n';
-    */
+    return indivs;
 
-    return t;
 }
 
 
-void MetaPop::loadBuffer(const size_t &t)
+// Life cycle of the population
+
+void MetaPop::cycle(const Param &p, const GenArch &arch)
 {
-    sprintf(buffer.time, "%lu", t);
-    sprintf(buffer.popsize0, "%lu", pops[0u].getPopSize());
-    sprintf(buffer.popsize1, "%lu", pops[1u].getPopSize());
+
+    // Dispersal
+    if (!isburnin) disperse(p);
+
+    // Consumption
+    consume(p);
+
+    // Reproduction
+    reproduce(p, arch);
+
+    // Survival
+    survive(p);
+
 }
 
-void Buffer::write(std::ofstream &out)
+void MetaPop::disperse(const Param &p)
 {
-    out.write((char *) &time, sizeof(time));
-    out.write((char *) &popsize0, sizeof(popsize0));
-    out.write((char *) &popsize1, sizeof(popsize1));
+    // Sample migrants across the population
+    // Change the habitat attribute of these migrants
+
+    vecDbl probs = utl::ones(population.size());
+    size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
+    while (nmigrants) {
+        const size_t mig = rnd::sample(probs);
+        probs[mig] = 0.0;
+        population[mig].disperse();
+        --nmigrants;
+    }
+}
+
+void MetaPop::consume(const Param &p)
+{
+
+    // Calculate the sum of feeding efficiencies in each habitat
+    Matrix sumfeed = utl::zeros(2u, 2u);
+    for (size_t i = 0u; i < population.size(); ++i) {
+        const size_t hab = population[i].getHabitat();
+        sumfeed[hab][0u] += population[i].getFeeding(0u);
+
+        // Feed only on resource 0 during burnin
+        if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
+    }
+
+    resources = utl::zeros(2u, 2u);
+
+    if (!p.rdynamics) {
+
+        // LOGISTIC
+
+        // Calculate the resource equilibrium = K (1 - C / r)
+        resources[0u][0u] = p.capacity;
+        resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
+        resources[1u][0u] = p.capacity * p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : p.capacity;
+        for (size_t hab = 0u; hab < 2u; ++hab) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[hab][res] *= 1.0 - sumfeed[hab][res] / p.replenish;
+                if (resources[hab][res] < 0.0) resources[hab][res] = 0.0;
+                assert(resources[hab][res] >= 0.0);
+            }
+        }
+    }
+    else {
+
+        // CHEMOSTAT
+
+        // Calculate the resource equilibrium = a / (b + C)
+        resources[0u][0u] = p.inflow;
+        resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
+        resources[1u][0u] = p.inflow * p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : p.inflow;
+        for (size_t hab = 0u; hab < 2u; ++hab) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
+                assert(resources[hab][res] >= 0.0);
+            }
+        }
+    }
+
+    // Assign individual fitness and ecotypes
+    for (size_t i = 0u; i < population.size(); ++i)
+        population[i].feed(resources[population[i].getHabitat()]);
+
+}
+
+void MetaPop::reproduce(const Param &p, const GenArch &arch)
+{
+
+    // Table to count the sexes in both habitats
+    sexcounts = utl::uzeros(2u, 2u);
+
+    // Males' fitness determine their encounter probabilities
+    Matrix probs = utl::zeros(2u, population.size());
+    for (size_t i = 0u; i < population.size(); ++i) {
+
+        const size_t sex = population[i].getGender();
+        const size_t hab = population[i].getHabitat();
+        ++sexcounts[hab][sex];
+
+        if (!sex) {
+
+            probs[hab][i] = population[i].getFitness();
+
+            // Modify mating success during burnin
+            if (isburnin) {
+                const double y = population[i].getMatePref();
+                probs[hab][i] *= exp(-p.ecosel * utl::sqr(y));
+            }
+        }
+    }
+
+    if (!(sexcounts[0u][0u] + sexcounts[1u][0u])) return; // exit if no males
+    if (!(sexcounts[0u][1u] + sexcounts[1u][1u])) return; // exit if no females
+
+    // Determine the length of the mating season
+    const size_t seasonend = rnd::geometric(p.matingcost);
+
+    if (!seasonend) return;
+
+    const size_t nparents = population.size();
+
+    // For each parent...
+    for (size_t mom = 0u; mom < nparents; ++mom) {
+
+        const size_t sex = population[mom].getGender();
+        const size_t hab = population[mom].getHabitat();
+
+        // Is it a female and are there males around?
+        if (sex && sexcounts[hab][0u]) {
+
+            // Progress throughout the mating season
+            size_t timeleft = seasonend;
+            while (timeleft) {
+
+                --timeleft;
+
+                // And encounters males one at a time with replacement
+                const size_t dad = rnd::sample(probs[hab]);
+                const double maletrait = population[dad].getEcoTrait();
+
+                // If the female accepts to mate                
+                if (rnd::bernoulli(population[mom].mate(maletrait, p))) {
+
+                    // Determine fecundity
+                    double fecundity = p.birth * population[mom].getFitness();
+
+                    // Modify fecundity during burnin
+                    if (isburnin) {
+                        const size_t y = population[mom].getMatePref();
+                        fecundity *= exp(-p.ecosel * utl::sqr(y));
+                    }
+
+                    // Sample clutch size
+                    size_t noffspring = rnd::poisson(fecundity);
+                    while (noffspring) {
+
+                        // Give birth
+                        population.push_back(Individual(p, arch,
+                         population[mom], population[dad]));
+                        --noffspring;
+                    }
+
+                    // End the mating season if female has mated
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// Lambda for removing dead individuals
+auto burry = [&](Individual ind) -> bool
+{
+    return !ind.isalive();
+};
+
+void MetaPop::survive(const Param &p)
+{
+    // Sample survival for each individual
+    size_t nsurv = 0u;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        population[i].survive(rnd::bernoulli(p.survival));
+        if (population[i].isalive()) ++nsurv;
+    }
+
+    // Remove dead individuals
+    auto it = std::remove_if(population.begin(), population.end(), burry);
+    population.erase(it, population.end());
+    population.shrink_to_fit();
+    assert(population.size() == nsurv);
+
+}
+
+
+// Others
+
+bool MetaPop::isextinct() const
+{
+    return population.size() == 0u;
+}
+
+void MetaPop::exitburnin()
+{
+    isburnin = false;
 }

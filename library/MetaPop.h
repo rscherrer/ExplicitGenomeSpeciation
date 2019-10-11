@@ -1,59 +1,164 @@
 #ifndef EXPLICITGENOMESPECIATION_METAPOP_H
 #define EXPLICITGENOMESPECIATION_METAPOP_H
 
-#include "Population.h"
+#include "Param.h"
+#include "GenArch.h"
+#include "Individual.h"
+#include "Utilities.h"
+#include "Types.h"
+#include <cassert>
 
-typedef std::vector<Population> vecPop;
-
-class Buffer
-{
-
-    friend class MetaPop;
-
-private:
-    char time[25];
-    char popsize0[25];
-    char popsize1[25];
-
-public:
-    Buffer() {}
-    ~Buffer() {}
-    void load(const size_t&);
-    void write(std::ofstream&);
-};
+typedef std::vector<Individual> Crowd;
 
 class MetaPop
 {
 
+    friend class Collector;
+
 public:
 
-    MetaPop(const vecPop &populations, const ParameterSet &pars) :
-        pops(populations),
-        dispersal(pars.getDispersalRate()),
-        survival(pars.getSurvivalProb()),
-        birth(pars.getBirthRate()),
-        mating(pars.getMatePreferenceStrength()),
-        tmax(pars.getTEndSim()),
-        tsave(pars.getTSave()),
-        buffer(Buffer())
-    {}
+    MetaPop(const Param &pars, const GenArch &arch) :
+        population(populate(pars, arch)),
+        isburnin(pars.tburnin > 0),
+        resources(utl::zeros(2u, 2u)),
+        sexcounts(utl::uzeros(2u, 2u))
+    {
+
+        // Test right number of individuals
+        // Test right number of individuals in each habitat
+
+    }
+
     ~MetaPop() {}
 
-    vecPop getPops() const { return pops; }
+    void cycle(const Param&, const GenArch&);
+    void exitburnin();
+    bool isextinct() const;
 
-    size_t evolve(const Genome&, const MultiNet&);
-    void loadBuffer(const size_t &t);
+    // Getters called from outside
+    size_t getSize() const
+    {
+        return population.size();
+    }
+    size_t getDemeSize(const size_t &h) const
+    {
+        size_t size = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++size;
+            }
+        }
+        return size;
+    }
+    double getResource(const size_t &h, const size_t &r) const
+    {
+        return resources[h][r];
+    }
+    double getSumFitness() const
+    {
+        double sum = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            sum += population[i].getFitness();
+        }
+        return sum;
+    }
+    double getVarFitness() const
+    {
+        double sum = 0.0;
+        double ssq = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            sum += population[i].getFitness();
+            ssq += utl::sqr(population[i].getFitness());
+        }
+        const size_t n = population.size();
+        return ssq / n - utl::sqr(sum / n);
+    }
+    double getMeanEcoTrait(const size_t &h) const // can be removed
+    {
+        double mean = 0.0;
+        size_t n = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++n;
+                mean += population[i].getEcoTrait();
+            }
+        }
+        mean /= n;
+        return mean;
+    }
+    double getMeanEcotype(const size_t &h) const // can be removed
+    {
+        double mean = 0.0;
+        size_t n = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                ++n;
+                mean += population[i].getEcotype();
+            }
+        }
+        mean /= n;
+        return mean;
+    }
+    double getMeanMatePref() const // can be removed
+    {
+        double mean = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            mean += population[i].getMatePref();
+        }
+        mean /= population.size();
+        return mean;
+    }
+    double getFitness(const size_t &i) const // can be removed
+    {
+        return population[i].getFitness();
+    }
+    double getFeeding(const size_t &i, const size_t &r) const // can be removed
+    {
+        return population[i].getFeeding(r);
+    }
+
+    // Resetters used in tests
+    void resetEcoTraits(const double &x, const Param &p)
+    {
+        for (size_t i = 0u; i < population.size(); ++i){
+            population[i].resetEcoTrait(x, p);
+        }
+    }
+    void resetEcoTraits(const size_t &h, const double &x, const Param &p)
+    {
+        for (size_t i = 0u; i < population.size(); ++i) {
+            if (population[i].getHabitat() == h) {
+                population[i].resetEcoTrait(x, p);
+            }
+        }
+    }
+    void resetMatePrefs(const double &x)
+    {
+        for (size_t i = 0u; i < population.size(); ++i) {
+            population[i].resetMatePref(x);
+        }
+    }
+    void resetGenders(const bool &sex)
+    {
+        for (size_t i = 0u; i < population.size(); ++i) {
+            population[i].resetGender(sex);
+        }
+    }
 
 private:
 
-    vecPop pops;
-    double dispersal;
-    double survival;
-    double birth;
-    double mating;
-    size_t tmax;
-    size_t tsave;
-    Buffer buffer;
+    Crowd populate(const Param&, const GenArch&);
+
+    void disperse(const Param&);
+    void consume(const Param&);
+    void reproduce(const Param&, const GenArch&);
+    void survive(const Param&);
+
+    Crowd population;
+    bool isburnin;
+
+    Matrix resources; // per habitat per resource
+    MatUns sexcounts; // per habitat per sex
 
 };
 

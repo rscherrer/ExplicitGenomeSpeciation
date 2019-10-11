@@ -1,29 +1,21 @@
-SOURCES += $$PWD/library/doMain.cpp
-HEADERS += $$PWD/library/doMain.h
-
-SOURCES += $$PWD/library/GeneticArchitecture.cpp
-HEADERS += $$PWD/library/GeneticArchitecture.h
-
-SOURCES += $$PWD/library/ParameterSet.cpp
-HEADERS += $$PWD/library/ParameterSet.h
-
-SOURCES += $$PWD/library/Random.cpp
-HEADERS += $$PWD/library/Random.h
-
-SOURCES += $$PWD/library/utils.cpp
-HEADERS += $$PWD/library/utils.h
-
-SOURCES += $$PWD/library/Network.cpp
-HEADERS += $$PWD/library/Network.h
-
-SOURCES += $$PWD/library/Genome.cpp
-HEADERS += $$PWD/library/Genome.h
-
-SOURCES += $$PWD/library/Population.cpp
-HEADERS += $$PWD/library/Population.h
-
-SOURCES += $$PWD/library/Individual.cpp
-HEADERS += $$PWD/library/Individual.h
-
-SOURCES += $$PWD/library/MetaPop.cpp
-HEADERS += $$PWD/library/MetaPop.h
+SOURCES += \
+    $$PWD/library/GenArch.cpp \
+    $$PWD/library/Param.cpp \
+    $$PWD/library/Utilities.cpp \
+    $$PWD/library/Random.cpp \
+    $$PWD/library/Network.cpp \
+    $$PWD/library/Individual.cpp \
+    $$PWD/library/MetaPop.cpp \
+    $$PWD/library/Simul.cpp \
+    $$PWD/library/Collector.cpp
+HEADERS += \
+    $$PWD/library/GenArch.h \
+    $$PWD/library/Param.h \
+    $$PWD/library/Utilities.h \
+    $$PWD/library/Random.h \
+    $$PWD/library/Network.h \
+    $$PWD/library/Individual.h \
+    $$PWD/library/MetaPop.h \
+    $$PWD/library/Types.h \
+    $$PWD/library/Simul.h \
+    $$PWD/library/Collector.h

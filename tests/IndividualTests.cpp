@@ -1,166 +1,175 @@
 #include "library/Individual.h"
-#include "library/utils.h"
-#include "tests/GenFixture.h"
+#include "library/Utilities.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-BOOST_FIXTURE_TEST_SUITE(indTestSuite, GenFixture)
+// Test functions associated with individual
 
-    // Check the genome generation function
-    BOOST_AUTO_TEST_CASE(checkOnlyAllelesZero)
-    {
-        std::cout << "Testing generating a sequence of only zeros...\n";
-        Individual ind = Individual(genome, networks, 0.0);
-        Diplotype seq = ind.getSequence();
-        BOOST_CHECK_EQUAL(sumbool(seq[0u]), 0u);
-        BOOST_CHECK_EQUAL(sumbool(seq[1u]), 0u);
-    }
+// Test genome generation
 
-    // Check the genome generation function
-    BOOST_AUTO_TEST_CASE(checkOnlyAllelesOne)
-    {
-        std::cout << "Testing generating a sequence of only ones...\n";
-        Individual ind = Individual(genome, networks, 1.0);
-        Diplotype seq = ind.getSequence();
-        BOOST_CHECK_EQUAL(sumbool(seq[0u]), genome.nloci);
-        BOOST_CHECK_EQUAL(sumbool(seq[1u]), genome.nloci);
-    }
-
-    // Check that a fully homogamous female will always accept identical mate
-    BOOST_AUTO_TEST_CASE(checkAssortative)
-    {
-        std::cout << "Testing homogamous female...\n";
-        Individual ind = Individual(genome, networks);
-        ind.setEcoTrait(0.0, 1.0);
-        ind.setMatePref(1.0);
-        BOOST_CHECK(ind.acceptMate(0.0, 1.0));
-    }
-
-    // Check that a fully heterogamous female will always reject identical mate
-    BOOST_AUTO_TEST_CASE(checkDisassortative)
-    {
-        std::cout << "Testing heterogamous female...\n";
-        Individual ind = Individual(genome, networks);
-        ind.setEcoTrait(0.0, 1.0);
-        ind.setMatePref(-1.0);
-        BOOST_CHECK(!ind.acceptMate(0.0, 1.0));
-    }
-
-    // Check that a random mating female will accept everybody
-    BOOST_AUTO_TEST_CASE(checkRandomMating)
-    {
-        std::cout << "Testing random mating female...\n";
-        Individual ind = Individual(genome, networks);
-        ind.setEcoTrait(0.0, 1.0);
-        ind.setMatePref(0.0);
-        BOOST_CHECK(ind.acceptMate(0.0, 1.0));
-        BOOST_CHECK(ind.acceptMate(1.0, 1.0));
-        BOOST_CHECK(ind.acceptMate(-1.0, 1.0));
-    }
-
-    // We know exactly the fitness that a default individual should get
-    BOOST_AUTO_TEST_CASE(checkFeeding)
-    {
-        std::cout << "Testing fitness obtained by feeding...\n";
-        Individual ind = Individual(genome, networks);
-        ind.setEcoTrait(-1.0, 1.0);
-        ind.feed({ 100.0, 100.0 });
-        BOOST_CHECK(ind.getFitness() == 0.04 + 0.0004 * exp(-4.0) * 100);
-    }
-
-    // Check that fecundation fuses the two gametes
-    BOOST_AUTO_TEST_CASE(checkFecundation)
-    {
-        std::cout << "Testing that fecundation fuses two gametes...\n";
-        Individual mom = Individual(genome, networks, 0.0);
-        Individual dad = Individual(genome, networks, 1.0);
-        Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
-        Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
-        Individual baby = Individual(genome, networks, egg, sperm);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[0u]), 0u);
-        BOOST_CHECK_EQUAL(sumbool(baby.getSequence()[1u]), genome.nloci);
-    }
-
-    BOOST_AUTO_TEST_CASE(checkNoMutation)
-    {
-        std::cout << "Testing absence of mutations...\n";
-        Individual ind = Individual(genome, networks, 0.0);
-        Haplotype gamete = ind.recombine(genome.locations, genome.chromosomes);
-        ind.mutate(gamete, 0.0);
-        BOOST_CHECK_EQUAL(sumbool(gamete), 0u);
-    }
-
-    BOOST_AUTO_TEST_CASE(checkHighMutation)
-    {
-        std::cout << "Testing high mutation rate...\n";
-        Individual ind = Individual(genome, networks, 0.0);
-        Haplotype gamete = ind.recombine(genome.locations, genome.chromosomes);
-        ind.mutate(gamete, 100.0);
-        BOOST_CHECK(sumbool(gamete) != 0u);
-    }
-
-    BOOST_AUTO_TEST_CASE(checkHighRecombination)
-    {
-        std::cout << "Testing high recombination rate...\n";
-        Individual mom = Individual(genome, networks, 0.0);
-        Individual dad = Individual(genome, networks, 1.0);
-        Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
-        Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
-        Individual baby = Individual(genome, networks, egg, sperm);
-        Haplotype gamete = baby.recombine(genome.locations, genome.chromosomes,
-         10.0);
-        BOOST_CHECK(sumbool(gamete) != 0u);
-        BOOST_CHECK(sumbool(gamete) != genome.nloci);
-    }
-
-    BOOST_AUTO_TEST_CASE(checkExpression)
-    {
-        std::cout << "Testing gene expression...\n";
-        Individual ind1 = Individual(genome, networks, 0.0);
-        std::vector<double> expression1 = ind1.getExpression();
-        BOOST_CHECK_EQUAL(sum(expression1), -1.0 * genome.nloci);
-        Individual ind2 = Individual(genome, networks, 1.0);
-        std::vector<double> expression2 = ind2.getExpression();
-        BOOST_CHECK_EQUAL(sum(expression2), genome.nloci);
-    }
-
-BOOST_AUTO_TEST_SUITE_END()
-
-// Check the absence of recombination
-BOOST_AUTO_TEST_CASE(checkNoRecombination)
+BOOST_AUTO_TEST_CASE(GenerateOnlyZeroAlleles)
 {
-    std::cout << "Testing meiosis without recombination...\n";
-    ParameterSet pars;
-    pars.setNChromosomes(1u); // to avoid free recombination
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Individual mom = Individual(genome, networks, 0.0);
-    Individual dad = Individual(genome, networks, 1.0);
-    Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
-    Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
-    Individual baby = Individual(genome, networks, egg, sperm);
-    Haplotype gam = baby.recombine(genome.locations, genome.chromosomes, 0.0);
-    BOOST_CHECK_EQUAL(sumbool(gam) / genome.nloci, gam[0u]);
+    Param pars;
+    pars.allfreq = 0.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    BOOST_CHECK_EQUAL(ind.getAlleleSum(), 0u);
 }
 
-BOOST_AUTO_TEST_CASE(checkDevelopment)
+BOOST_AUTO_TEST_CASE(GenerateOnlyOneAlleles)
 {
-    std::cout << "Testing developing individual...\n";
-    ParameterSet pars;
-    pars.setDominanceVariance(0.0);
-    GeneticArchitecture arch = GeneticArchitecture(pars);
-    Genome genome = arch.getGenome();
-    MultiNet networks = arch.getNetworks();
-    Individual mom = Individual(genome, networks, 0.0);
-    Individual dad = Individual(genome, networks, 1.0);
-    Haplotype egg = mom.recombine(genome.locations, genome.chromosomes);
-    Haplotype sperm = dad.recombine(genome.locations, genome.chromosomes);
-    Individual baby = Individual(genome, networks, egg, sperm);
+    Param pars;
+    pars.allfreq = 1.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    BOOST_CHECK_EQUAL(ind.getAlleleSum(), 2u * pars.nloci);
+}
+
+// Test mate choice
+
+BOOST_AUTO_TEST_CASE(HomogamousFemaleAcceptsIdenticalMale)
+{
+    Param pars;
+    pars.allfreq = 0.5;
+    pars.sexsel = 1.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    ind.resetEcoTrait(0.0, pars);
+    ind.resetMatePref(1.0); // full assortative mating
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
+}
+
+BOOST_AUTO_TEST_CASE(HeterogamousFemaleRejectsIdenticalMale)
+{
+    Param pars;
+    pars.allfreq = 0.5;
+    pars.sexsel = 1.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    ind.resetEcoTrait(0.0, pars);
+    ind.resetMatePref(-1.0); // full disassortative mating
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(RandomMatingFemaleAcceptsAnyone)
+{
+    Param pars;
+    pars.allfreq = 0.5;
+    pars.sexsel = 1.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    ind.resetEcoTrait(0.0, pars);
+    ind.resetMatePref(0.0); // random mating
+    BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
+    BOOST_CHECK_EQUAL(ind.mate(1.0, pars), 1.0);
+    BOOST_CHECK_EQUAL(ind.mate(-1.0, pars), 1.0);
+}
+
+// Test fecundation
+// (this is also a test of no mutation)
+BOOST_AUTO_TEST_CASE(MatingBetweenAlternativeHomozygotesGivesHeterozygoteNoMut)
+{
+    Param pars;
+    pars.mutation = 0.0; // no mutation
+    GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    Individual mom = Individual(pars, arch);
+    pars.allfreq = 1.0;
+    Individual dad = Individual(pars, arch);
+    Individual baby = Individual(pars, arch, mom, dad);
+    BOOST_CHECK_EQUAL(baby.getAlleleSum(), pars.nloci);
+}
+
+// Test mutation
+BOOST_AUTO_TEST_CASE(MutationAltersTheGenome)
+{
+    Param pars;
+    pars.mutation = 100.0; // high mutation
+    GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    Individual mom = Individual(pars, arch);
+    Individual dad = Individual(pars, arch);
+    Individual baby = Individual(pars, arch, mom, dad);
+    BOOST_CHECK(baby.getAlleleSum() > 0u);
+}
+
+// Test recombination
+
+BOOST_AUTO_TEST_CASE(BackcrossPredictableIfNoRecombination)
+{
+    Param pars;
+    pars.nchrom = 1u; // one chromosome to avoid free recombination
+    pars.mutation = 0.0; // no mutation
+    pars.recombination = 0.0; // no recombination
+    GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    Individual mom = Individual(pars, arch); // aa
+    pars.allfreq = 1.0;
+    Individual dad = Individual(pars, arch); // AA
+    Individual f1 = Individual(pars, arch, mom, dad); // Aa
+    Individual backcross = Individual(pars, arch, mom, f1);
+
+    // Backcross should be either full aa or full Aa if no recombination
+    const size_t allsum = backcross.getAlleleSum();
+    BOOST_CHECK(allsum == 0u || allsum == pars.nloci);
+}
+
+BOOST_AUTO_TEST_CASE(BackcrossUnpredictableIfRecombination)
+{
+    Param pars;
+    pars.mutation = 0.0; // no mutation
+    pars.recombination = 10.0; // high recombination
+    GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    Individual mom = Individual(pars, arch); // aa
+    pars.allfreq = 1.0;
+    Individual dad = Individual(pars, arch); // AA
+    Individual f1 = Individual(pars, arch, mom, dad); // Aa
+    Individual backcross = Individual(pars, arch, mom, f1);
+
+    // Backcross should be either full aa or full Aa if no recombination
+    const size_t allsum = backcross.getAlleleSum();
+    BOOST_CHECK(allsum > 0u && allsum != pars.nloci);
+}
+
+// Test gene expression
+
+BOOST_AUTO_TEST_CASE(AlleleZeroInhibitsGeneExpression)
+{
+    Param pars;
+    pars.allfreq = 0.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    BOOST_CHECK_EQUAL(ind.getExpression(), -1.0 * pars.nloci);
+}
+
+BOOST_AUTO_TEST_CASE(AlleleOneEnhancesGeneExpression)
+{
+    Param pars;
+    pars.allfreq = 1.0;
+    GenArch arch = GenArch(pars);
+    Individual ind = Individual(pars, arch);
+    BOOST_CHECK_EQUAL(ind.getExpression(), pars.nloci);
+}
+
+// Test development
+BOOST_AUTO_TEST_CASE(HybridDevelopsWithZeroTraitValuesIfCodominance)
+{
+    Param pars;
+    pars.dominancevar = 0.0; // codominance
+    GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    Individual mom = Individual(pars, arch);
+    pars.allfreq = 1.0;
+    Individual dad = Individual(pars, arch);
+    Individual baby = Individual(pars, arch, mom, dad);
+
+    // Without dominance the expression of each trait should be zero
     BOOST_CHECK_EQUAL(baby.getEcoTrait(), 0.0);
     BOOST_CHECK_EQUAL(baby.getMatePref(), 0.0);
     BOOST_CHECK_EQUAL(baby.getNeutral(), 0.0);
 }
+
 
 
 

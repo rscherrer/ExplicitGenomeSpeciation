@@ -1,11 +1,10 @@
 #ifndef EXPLICITGENOMESPECIATION_RANDOM_H
 #define EXPLICITGENOMESPECIATION_RANDOM_H
 
+#include "Types.h"
 #include <random>
-#include <vector>
+//#include <vector>
 #include <stddef.h>
-
-typedef std::vector<double> vecDbl;
 
 namespace rnd
 {

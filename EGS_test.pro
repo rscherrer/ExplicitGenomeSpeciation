@@ -1,6 +1,6 @@
 # Files
 include(EGS.pri)
-include(EGS_test.pri) # did not really understand what richel did here
+include(EGS_test.pri)
 
 # C++14
 CONFIG += c++14

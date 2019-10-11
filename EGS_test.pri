@@ -1,9 +1,6 @@
-SOURCES += $$PWD/tests/doMainTests.cpp
-SOURCES += $$PWD/tests/ParameterSetTests.cpp
-SOURCES += $$PWD/tests/GeneticArchitectureTests.cpp
-SOURCES += $$PWD/tests/PopulationTests.cpp
+SOURCES += $$PWD/tests/SimulTests.cpp
+SOURCES += $$PWD/tests/GenArchTests.cpp
+SOURCES += $$PWD/tests/MetaPopTests.cpp
 SOURCES += $$PWD/tests/IndividualTests.cpp
-SOURCES += $$PWD/tests/GenomeTests.cpp
-SOURCES += $$PWD/tests/NetworkTests.cpp
-HEADERS += $$PWD/tests/testUtilities.h
-HEADERS += $$PWD/tests/GenFixture.h
+SOURCES += $$PWD/tests/CollectorTests.cpp
+HEADERS += $$PWD/tests/TestUtilities.h

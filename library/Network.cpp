@@ -1,33 +1,13 @@
-#include "GeneticArchitecture.h"
-#include "utils.h"
-#include <cassert>
-#include <algorithm>
-#include <iostream>
+#include "Network.h"
 
 typedef std::discrete_distribution<size_t> Discrete;
 
-/// Network constructor
-Network::Network(const size_t &character, const size_t &nVertices,
- const size_t &nEdges, const double &skew, const double &shape,
-  const double &scale, const Genome &genome) :
-    trait(character),
-    nvertices(nVertices),
-    nedges(nEdges),
-    skewness(skew),
-    map(makeMap()),
-    loci(makeLoci(genome)),
-    edges(makeEdges()),
-    weights(makeWeights(shape, scale))
+bool checkedges(const double &e, const double &n)
 {
-    assert(map.size() == nedges);
-    assert(loci.size() == nvertices);
-    assert(edges.size() == nedges);
-    assert(weights.size() == nedges);
+    return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes
 }
 
-
-/// Make a map of pairwise connexions
-vecEdg Network::makeMap()
+vecEdg Network::makeMap(const Param& p) const
 {
 
     // There is a total number of vertices
@@ -38,39 +18,41 @@ vecEdg Network::makeMap()
     // The partners of that vertex are sampled without replacement
     // The number of edges still to be made is updated
 
-    assert(nvertices > 1u);
+    assert(p.nvertices[trait] > 1u);
+    assert(checkedges(p.nedges[trait], p.nvertices[trait]));
 
     vecEdg connexions;
-    if (!nedges) return connexions;
-    vecUns degrees = uzeros(nvertices);
+    if (!p.nedges[trait]) return connexions;
+    connexions.reserve(p.nedges[trait]);
+    vecUns degrees = utl::uzeros(p.nvertices[trait]);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
     ++degrees[0u];
     ++degrees[1u];
 
-    size_t nleft = nedges - 1; // number edges left to make
+    size_t nleft = p.nedges[trait] - 1u; // number edges left to make
 
-    // For each vertex
-    for (size_t vertex = 2u; nleft && vertex < nvertices; ++vertex) {
+    // For each vertex...
+    for (size_t vertex = 2u; nleft && vertex < p.nvertices[trait]; ++vertex) {
 
         // Sample number of partners
         size_t npartners = nleft;
-        const double prob = 1.0 / (nvertices - vertex);
+        const double prob = 1.0 / (p.nvertices[trait] - vertex);
         assert(prob >= 0.0);
         assert(prob <= 1.0);
-        if (vertex == nvertices - 1u)
+        if (vertex == p.nvertices[trait] - 1u)
             npartners = rnd::binomial(nleft, prob);
 
         // Assign attachment probabilities
         vecDbl probs(vertex);
         for (size_t node = 0u; node < vertex; ++node)
-            probs[node] = pow(degrees[node], skewness);
+            probs[node] = pow(degrees[node], p.skews[trait]);
 
         // For each edge of that vertex
         for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
 
-            if (sum(probs) < 1.0) break;
+            if (utl::sum(probs) < 1.0) break;
 
             // Make a bond without replacement and update degree distribution
             const size_t partner = rnd::sample(probs);
@@ -79,44 +61,42 @@ vecEdg Network::makeMap()
             probs[partner] = 0.0;
             ++degrees[vertex];
             ++degrees[partner];
-            assert(degrees[vertex] < nedges);
-            assert(degrees[partner] < nedges);
+            assert(degrees[vertex] < p.nedges[trait]);
+            assert(degrees[partner] < p.nedges[trait]);
             --nleft;
         }
     }
 
     assert(nleft == 0u);
-    assert(connexions.size() == nedges);
+    assert(connexions.size() == p.nedges[trait]);
 
     return connexions;
 
 }
 
-
-/// Function to detect the loci underlying a trait
-vecUns Network::makeLoci(const Genome& genome)
+vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 {
     vecUns underlying;
+    underlying.reserve(p.nvertices[trait]);
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
     // Record all loci that encode the current trait
 
-    for (size_t locus = 0u; locus < genome.nloci; ++locus)
-        if (genome.traits[locus] == trait)
+    for (size_t locus = 0u; locus < p.nloci; ++locus)
+        if (traits[locus] == trait)
             underlying.push_back(locus);
 
-    assert(underlying.size() == nvertices);
+    assert(underlying.size() == p.nvertices[trait]);
 
     return underlying;
 }
 
-
-/// Function to map the network to the genome
-vecEdg Network::makeEdges()
+vecEdg Network::makeEdges(const Param &p) const
 {
 
     vecEdg mapped;
+    mapped.reserve(p.nedges[trait]);
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
@@ -132,28 +112,27 @@ vecEdg Network::makeEdges()
 
 }
 
-
-/// Sample interaction weights
-vecDbl Network::makeWeights(const double &shape,
- const double &scale)
+vecDbl Network::makeWeights(const Param &p) const
 {
-    if (shape == 0.0 || scale == 0.0) return zeros(nedges);
+    if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
+        return utl::zeros(p.nedges[trait]);
 
     vecDbl intweights;
+    intweights.reserve(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
 
     // For each edge in the network...
-    for (size_t edge = 0u; edge < nedges; ++edge) {
+    for (size_t edge = 0u; edge < p.nedges[trait]; ++edge) {
 
         // Two-sided Gamma distribution
-        const double weight = rnd::bigamma(shape, scale);
-        intweights.push_back(weight);
-        sss += sqr(weight);
+        const double w = rnd::bigamma(p.interactionshape, p.interactionscale);
+        intweights.push_back(w);
+        sss += utl::sqr(w);
     }
 
     // Normalize
     sss = sss > 0.0 ? sqrt(sss) : 1.0;
-    for (size_t edge = 0u; edge < nedges; ++edge)
+    for (size_t edge = 0u; edge < p.nedges[trait]; ++edge)
         intweights[edge] /= sss;
 
     return intweights;
