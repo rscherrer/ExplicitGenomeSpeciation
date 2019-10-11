@@ -1,6 +1,7 @@
 #include "maindialog.h"
 #include "ui_maindialog.h"
 #include "library/Simul.h"
+#include <sstream>
 
 MainDialog::MainDialog(QWidget *parent) :
   QDialog(parent),
@@ -27,6 +28,13 @@ void MainDialog::on_run_button_clicked()
     {
         // Create the parameters from the GUI
         Param pars = createPars();
+
+        //Show params in output
+        {
+            std::stringstream s;
+            s << "seed: " << pars.seed << '\n';
+            ui->output->setPlainText(QString::fromStdString(s.str()));
+        }
 
         // Random number generator
         rnd::rng.seed(pars.seed);
@@ -58,7 +66,16 @@ void MainDialog::on_run_button_clicked()
             if (timetosave(t, pars)) collector.analyze(metapop, pars);
 
         }
-
+        // Show output
+        {
+            std::stringstream s;
+            s
+              << "EI: " << collector.getEI() << '\n'
+              << "RI: " << collector.getRI() << '\n'
+              << "SI: " << collector.getSI() << '\n'
+            ;
+            ui->output->appendPlainText(QString::fromStdString(s.str()));
+        }
     }
     catch (const std::runtime_error &err)
     {
