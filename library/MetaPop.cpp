@@ -72,38 +72,39 @@ void MetaPop::consume(const Param &p)
         if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
     }
 
-    /*
-
-    // CHEMOSTAT
-
-    // Calculate the resource equilibrium = a / (b + C)
     resources = utl::zeros(2u, 2u);
-    resources[0u][0u] = p.inflow;
-    resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
-    resources[1u][0u] = p.inflow * p.hsymmetry;
-    resources[1u][1u] = isburnin ? 0.0 : p.inflow;
-    for (size_t hab = 0u; hab < 2u; ++hab) {
-        for (size_t res = 0u; res < 2u; ++res) {
-            resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
-            assert(resources[hab][res] >= 0.0);
+
+    if (!p.rdynamics) {
+
+        // LOGISTIC
+
+        // Calculate the resource equilibrium = K (1 - C / r)
+        resources[0u][0u] = p.capacity;
+        resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
+        resources[1u][0u] = p.capacity * p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : p.capacity;
+        for (size_t hab = 0u; hab < 2u; ++hab) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[hab][res] *= 1.0 - sumfeed[hab][res] / p.replenish;
+                if (resources[hab][res] < 0.0) resources[hab][res] = 0.0;
+                assert(resources[hab][res] >= 0.0);
+            }
         }
     }
+    else {
 
-    */
+        // CHEMOSTAT
 
-    // LOGISTIC
-
-    // Calculate the resource equilibrium = K (1 - C / r)
-    resources = utl::zeros(2u, 2u);
-    resources[0u][0u] = p.capacity;
-    resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
-    resources[1u][0u] = p.capacity * p.hsymmetry;
-    resources[1u][1u] = isburnin ? 0.0 : p.capacity;
-    for (size_t hab = 0u; hab < 2u; ++hab) {
-        for (size_t res = 0u; res < 2u; ++res) {
-            resources[hab][res] *= 1.0 - sumfeed[hab][res] / p.replenish;
-            if (resources[hab][res] < 0.0) resources[hab][res] = 0.0;
-            assert(resources[hab][res] >= 0.0);
+        // Calculate the resource equilibrium = a / (b + C)
+        resources[0u][0u] = p.inflow;
+        resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
+        resources[1u][0u] = p.inflow * p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : p.inflow;
+        for (size_t hab = 0u; hab < 2u; ++hab) {
+            for (size_t res = 0u; res < 2u; ++res) {
+                resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
+                assert(resources[hab][res] >= 0.0);
+            }
         }
     }
 

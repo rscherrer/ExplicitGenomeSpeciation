@@ -208,11 +208,10 @@ void Individual::disperse()
 
 void Individual::feed(const vecDbl &food)
 {
-    fitness = feeding[0u] * food[0u] + feeding[1u] + food[1u];
-    ecotype = feeding[1u] * food[1u] > feeding[0u] + food[0u];
 
-    if (!(fitness >= 0.0)) std::clog << feeding[0u] << '\t' << feeding[1u] << '\n';
-    if (!(fitness >= 0.0)) std::clog << food[0u] << '\t' << food[1u] << '\n';
+    fitness = feeding[0u] * food[0u] + feeding[1u] * food[1u];
+    ecotype = feeding[1u] * food[1u] > feeding[0u] * food[0u];
+
     assert(fitness >= 0.0);
     assert(ecotype == 0u || ecotype == 1u);
 }

@@ -134,14 +134,14 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
     pars.maxfeed = 1.0;
     pars.dispersal = 0.0;
     pars.birth = 4.0; // relatively high birth rate
-    pars.demesizes = { 100u, 0u };
+    pars.demesizes = { 10u, 0u };
     pars.survival = 1.0; // 100% chance survival
     pars.tburnin = 0u;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
-    BOOST_CHECK(metapop.getSize() > 100u);
-    BOOST_CHECK(metapop.getDemeSize(0u) > 100u);
+    BOOST_CHECK(metapop.getSize() > 10u);
+    BOOST_CHECK(metapop.getDemeSize(0u) > 10u);
     BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 
@@ -184,11 +184,12 @@ BOOST_AUTO_TEST_CASE(ResourceIsDepletedAfterConsumption)
 }
 
 
-// Test fitness function
-BOOST_AUTO_TEST_CASE(KnownResourceAndFitnessIfPopulationIsMonomorphic)
+// Test logistic resource dynamics
+BOOST_AUTO_TEST_CASE(KnownLogisticResourceEquilibrium)
 {
-    std::clog << "Testing resource equilibrium and consumption...\n";
+    std::clog << "Testing logistic resource equilibrium...\n";
     Param pars;
+    pars.rdynamics = 0u;
     pars.dispersal = 0.0;
     pars.birth = 0.0;
     pars.survival = 1.0;
@@ -210,6 +211,40 @@ BOOST_AUTO_TEST_CASE(KnownResourceAndFitnessIfPopulationIsMonomorphic)
 
     // Fitness should sum up to the amount of food consumed
     const double sumw = utl::round(0.1 * R0, 2u);
+
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 0u), 4u), R0);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getSumFitness(), 2u), sumw);
+    BOOST_CHECK_EQUAL(utl::round(metapop.getVarFitness(), 4u), 0.0);
+}
+
+// Test logistic resource dynamics
+BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
+{
+    std::clog << "Testing chemostat resource equilibrium...\n";
+    Param pars;
+    pars.rdynamics = 1u;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.inflow = 10.0;
+    pars.outflow = 1.0;
+    pars.hsymmetry = 0.0;
+    pars.demesizes = { 10u, 0u };
+    pars.ecosel = 1.0;
+    pars.maxfeed = 1.0;
+    pars.tburnin = 0;
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
+    metapop.cycle(pars, arch);
+
+    // Predict resource equilibrium after consumption
+    const double R0 = utl::round(10.0 / 11.0, 4u);
+    const double R1 = 0.0;
+
+    // Fitness should sum up to the amount of food consumed
+    const double sumw = utl::round(10.0 * R0, 2u);
 
     BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 0u), 4u), R0);
     BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);

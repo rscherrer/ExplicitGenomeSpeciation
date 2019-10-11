@@ -188,7 +188,6 @@ private:
     void recombine(Genome&, const Param&, const GenArch&) const;
     void mutate(Genome&, const Param&) const;
     void develop(const Param&, const GenArch&);
-    void setFeeding(const size_t&, const double&, const double&);
 
     Genome genome;
     vecDbl transcriptome;

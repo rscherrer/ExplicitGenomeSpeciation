@@ -16,6 +16,7 @@
 struct Param {
 
     Param() :
+        rdynamics(0u),
         inflow(1.0),
         outflow(1000.0),
         capacity(100.0),
@@ -70,6 +71,7 @@ struct Param {
     size_t makeDefaultSeed();
 
     // Ecological parameters    
+    size_t rdynamics;
     double inflow;
     double outflow;
     double capacity;

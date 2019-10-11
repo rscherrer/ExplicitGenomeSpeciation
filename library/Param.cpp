@@ -71,6 +71,7 @@ void Param::import(std::ifstream &file)
 
         switch (_(input)) {
 
+        case _("rdynamics"): file >> rdynamics; break;
         case _("inflow"): file >> inflow; break;
         case _("outflow"): file >> outflow; break;
         case _("capacity"): file >> capacity; break;
@@ -182,6 +183,8 @@ void Param::checkParams()
         msg = "Maximum resource capacity should be positive";
     if (replenish <= 0.0)
         msg = "Maximum resource growth should be positive";
+    if (rdynamics > 1u)
+        msg = "Resource dynamics is either 0 (logistic) or 1 (chemostat)";
     if (inflow <= 0.0)
         msg = "Resource inflow rate should be positive";
     if (outflow <= 0.0)
