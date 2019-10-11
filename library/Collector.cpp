@@ -47,7 +47,7 @@ double Xst(const vecDbl &v, const vecUns &n)
 
     double xst = 1.0 - (n[0u] * v[0u] + n[1u] * v[1u]) / (n[2u] * v[2u]);
 
-    xst = utl::round(xst, 10u); // avoid very small negatives by imprecision
+    utl::correct(xst, 0.0, 1.0E-5);
 
     assert(xst >= 0.0);
     assert(xst <= 1.0);    
@@ -281,12 +281,12 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             genomescan[l].varG[eco] = gssqgen[eco][all] / ecounts[eco];
             const double emean = gsumgen[eco][all] / ecounts[eco];
             genomescan[l].varG[eco] -= utl::sqr(emean);
-            utl::correct(genomescan[l].varG[eco]);
+            utl::correct(genomescan[l].varG[eco], 0.0, 1.0E-5);
             assert(genomescan[l].varG[eco] >= 0.0);
 
             // Phenotypic variance
             genomescan[l].varP[eco] = genomescan[l].varG[eco] + locusvarE;
-            utl::correct(genomescan[l].varP[eco]);
+            utl::correct(genomescan[l].varP[eco], 0.0, 1.0E-5);
             assert(genomescan[l].varP[eco] >= 0.0);
 
             // Additive variance = V(beta)
@@ -300,7 +300,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             meanb += gcounts[eco][AA] * gbeta[AA];
             meanb /= ecounts[eco];
             genomescan[l].varA[eco] -= utl::sqr(meanb);
-            utl::correct(genomescan[l].varA[eco]);
+            utl::correct(genomescan[l].varA[eco], 0.0, 1.0E-5);
             assert(genomescan[l].varA[eco] >= 0.0);
 
             // Simpler equation for the whole pop
@@ -327,7 +327,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             meandev -= gcounts[eco][AA] * gexpec[AA];
             meandev /= ecounts[eco];
             genomescan[l].varN[eco] -= utl::sqr(meandev);
-            utl::correct(genomescan[l].varN[eco]);
+            utl::correct(genomescan[l].varN[eco], 0.0, 1.0E-5);
             assert(genomescan[l].varN[eco] >= 0.0);
 
             // Contribute to genome-wide non-additive variance
@@ -340,7 +340,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].varD += gcounts[tot][Aa] * utl::sqr(gdelta[Aa]);
         genomescan[l].varD += gcounts[tot][AA] * utl::sqr(gdelta[AA]);
         genomescan[l].varD /= ecounts[tot];
-        utl::correct(genomescan[l].varI);
+        utl::correct(genomescan[l].varD, 0.0, 1.0E-5);
         assert(genomescan[l].varD >= 0.0);
 
         // Contribute to genome-wide dominance variance
@@ -356,7 +356,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].varI += gcounts[tot][AA] * utl::sqr(gmeans[AA]);
         genomescan[l].varI += gssqgen[tot][all];
         genomescan[l].varI /= ecounts[tot];
-        utl::correct(genomescan[l].varI);
+        utl::correct(genomescan[l].varI, 0.0, 1.0E-5);
         assert(genomescan[l].varI >= 0.0);
 
         // Contribute to genome-wide interaction variance
@@ -415,13 +415,13 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             // Genetic variance
             varG[trait][eco] = essqgen[trait][eco] / ecounts[eco];
             varG[trait][eco] -= utl::sqr(esumgen[trait][eco] / ecounts[eco]);
-            utl::correct(varG[trait][eco]);
+            utl::correct(varG[trait][eco], 0.0, 1.0E-5);
             assert(varG[trait][eco] >= 0.0);
 
             // Phenotypic variance
             varP[trait][eco] = essqphe[trait][eco] / ecounts[eco];
             varP[trait][eco] -= utl::sqr(esumphe[trait][eco] / ecounts[eco]);
-            utl::correct(varP[trait][eco]);
+            utl::correct(varP[trait][eco], 0.0, 1.0E-5);
             assert(varP[trait][eco] >= 0.0);
 
         }
@@ -450,8 +450,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     // Ecological isolation
     EI = Pst[0u];
 
-    // Spatial isolation
-
+    // Spatial isolation    
     double norm = counts[0u][0u] + counts[0u][1u];
     norm *= counts[1u][0u] + counts[1u][1u];
     norm *= counts[0u][0u] + counts[1u][0u];

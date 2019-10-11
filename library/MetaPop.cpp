@@ -72,61 +72,45 @@ void MetaPop::consume(const Param &p)
         if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
     }
 
-    // Convert sums of feeding efficiencies into relative consumed food (C)
-    Matrix consumed = utl::zeros(2u, 2u);
+    /*
+
+    // CHEMOSTAT
+
+    // Calculate the resource equilibrium = a / (b + C)
+    resources = utl::zeros(2u, 2u);
+    resources[0u][0u] = p.inflow;
+    resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
+    resources[1u][0u] = p.inflow * p.hsymmetry;
+    resources[1u][1u] = isburnin ? 0.0 : p.inflow;
     for (size_t hab = 0u; hab < 2u; ++hab) {
         for (size_t res = 0u; res < 2u; ++res) {
-            consumed[hab][res] = 1.0;
-            consumed[hab][res] -= exp(-p.maxfeed * sumfeed[hab][res]);
-            assert(consumed[hab][res] >= 0.0);
-            assert(consumed[hab][res] <= 1.0);
+            resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
+            assert(resources[hab][res] >= 0.0);
         }
     }
 
-    // Resource capacity without consumption (K)
+    */
+
+    // LOGISTIC
+
+    // Calculate the resource equilibrium = K (1 - C / r)
     resources = utl::zeros(2u, 2u);
     resources[0u][0u] = p.capacity;
     resources[0u][1u] = isburnin ? 0.0 : p.capacity * p.hsymmetry;
     resources[1u][0u] = p.capacity * p.hsymmetry;
     resources[1u][1u] = isburnin ? 0.0 : p.capacity;
-
-    assert(resources[0u][0u] >= 0.0);
-    assert(resources[0u][1u] >= 0.0);
-    assert(resources[1u][0u] >= 0.0);
-    assert(resources[1u][1u] >= 0.0);
-
-    // Absolute amount of food consumed (C K / r)
     for (size_t hab = 0u; hab < 2u; ++hab) {
         for (size_t res = 0u; res < 2u; ++res) {
-            consumed[hab][res] *= resources[hab][res] / p.replenish;
-            assert(consumed[hab][res] >= 0.0);
-            assert(consumed[hab][res] <= resources[hab][res]);
+            resources[hab][res] *= 1.0 - sumfeed[hab][res] / p.replenish;
+            if (resources[hab][res] < 0.0) resources[hab][res] = 0.0;
+            assert(resources[hab][res] >= 0.0);
         }
     }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i) {
-        const size_t hab = population[i].getHabitat();
-        double fitness = 0.0;
-        vecDbl food = utl::zeros(2u);
-        for (size_t res = 0u; res < 2u; ++res) {
-            const double feed = population[i].getFeeding(res);
-            if (sumfeed[hab][res])
-                food[res] = consumed[hab][res] * feed / sumfeed[hab][res];
-            fitness += food[res];
-        }
-        size_t ecotype = food[1u] > food[0u];
-        assert(fitness >= 0.0);
-        assert(ecotype == 0u || ecotype == 1u);
-        population[i].feed(fitness, ecotype);
-    }
+    for (size_t i = 0u; i < population.size(); ++i)
+        population[i].feed(resources[population[i].getHabitat()]);
 
-    // Update the resource equilibrium (K - C K / r)
-    for (size_t hab = 0u; hab < 2u; ++hab) {
-        for (size_t res = 0u; res < 2u; ++res) {
-            resources[hab][res] -= consumed[hab][res];
-        }
-    }
 }
 
 void MetaPop::reproduce(const Param &p, const GenArch &arch)

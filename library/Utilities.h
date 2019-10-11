@@ -28,9 +28,9 @@ namespace utl
     void marginalize(Matrix&);
     void marginalize(MatUns&);
     Matrix dividemat(const Matrix&, const MatUns&);
-    void correct(double&);
     double size2dbl(const size_t&);
     double round(const double&, const size_t&);
+    void correct(double&, const double&, const double&);
 
 }
 

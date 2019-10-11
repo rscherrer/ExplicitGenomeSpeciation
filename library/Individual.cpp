@@ -184,8 +184,8 @@ void Individual::develop(const Param &p, const GenArch &arch)
     neutrait = traitvalues[2u];
 
     // Feeding rates
-    feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-    feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+    feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+    feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);
@@ -206,12 +206,15 @@ void Individual::disperse()
     habitat = habitat == 0u ? 1u : 0u;
 }
 
-void Individual::feed(const double &fit, const size_t &eco)
+void Individual::feed(const vecDbl &food)
 {
-    fitness = fit;
-    ecotype = eco;
+    fitness = feeding[0u] * food[0u] + feeding[1u] + food[1u];
+    ecotype = feeding[1u] * food[1u] > feeding[0u] + food[0u];
 
+    if (!(fitness >= 0.0)) std::clog << feeding[0u] << '\t' << feeding[1u] << '\n';
+    if (!(fitness >= 0.0)) std::clog << food[0u] << '\t' << food[1u] << '\n';
     assert(fitness >= 0.0);
+    assert(ecotype == 0u || ecotype == 1u);
 }
 
 double calcAssortProb(const double &y, const double &xi,

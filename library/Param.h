@@ -16,6 +16,8 @@
 struct Param {
 
     Param() :
+        inflow(1.0),
+        outflow(1000.0),
         capacity(100.0),
         replenish(10.0),
         hsymmetry(1.0),
@@ -25,7 +27,7 @@ struct Param {
         survival(0.6),
         sexsel(10.0),
         matingcost(0.01),
-        maxfeed(1.0),
+        maxfeed(4.0E-4),
         demesizes({ 10u, 0u }),        
         nloci(300u), // cannot be provided
         nvertices({ 100u, 100u, 100u }),
@@ -68,6 +70,8 @@ struct Param {
     size_t makeDefaultSeed();
 
     // Ecological parameters    
+    double inflow;
+    double outflow;
     double capacity;
     double replenish;
     double hsymmetry;
