@@ -32,6 +32,8 @@ int simulate(const vecStrings &args)
         // Create an analytical module
         Collector collector = Collector(arch);
 
+        std::clog << "Simulation started.\n";
+
         // Loop through time
         for (int t = -pars.tburnin; t < pars.tend; ++t) {
 
@@ -50,6 +52,8 @@ int simulate(const vecStrings &args)
             if (timetosave(t, pars)) collector.analyze(metapop, pars);
 
         }
+
+        std::clog << "Simulation ended.\n";
 
     }
     catch (const std::runtime_error &err)
