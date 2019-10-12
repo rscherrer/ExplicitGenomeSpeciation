@@ -39,6 +39,7 @@ script:
  - travis_wait 60 ./EGS_test
   
  # Build the GUI
+ - make clean
  - qmake ./EGS_gui.pro
  - make --silent debug
   
