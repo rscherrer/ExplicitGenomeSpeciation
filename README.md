@@ -75,4 +75,6 @@ python plotter.py <variable_name>.dat
 
 Talk about genetic sex determination.
 
+# Downloads
 
+ * [Windows executable](http://richelbilderbeek.nl/EGS_gui.zip)
