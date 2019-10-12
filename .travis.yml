@@ -1,8 +1,6 @@
 language: cpp
 dist: xenial
-compiler: 
-  - gcc
-  - clang
+compiler: gcc
 
 addons:
  apt:
@@ -39,6 +37,10 @@ script:
  - qmake ./EGS_test.pro
  - make --silent debug
  - travis_wait 60 ./EGS_test
+  
+ # Build the GUI
+ - qmake ./EGS_gui.pro
+ - make --silent debug
   
  # helgrind
  - travis_wait 60 valgrind --tool=helgrind --log-file=helgrind.log -v ./EGS_test
