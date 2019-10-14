@@ -22,6 +22,8 @@ We assume that the resource dynamics are fast relative to the population dynamic
 
 ![equation](http://www.sciweavers.org/tex2img.php?eq=%5Cfrac%7BdR%7D%7Bdt%7D%20%3D%20r%20%5CBig%281%20-%20%5Cfrac%7BR%7D%7BK%7D%5CBig%29%20R%20%5C%2C%20-%20%5C%2C%20C%20%5C%2C%20R&bc=White&fc=Black&im=jpg&fs=12&ff=concmath&edit=0)
 
+![equation](img/logistic.jpg)
+
 where *R* is the concentration of a given resource in a given habitat, *r* is the replenishment rate of the resource, *K* is the carrying capacity, and *C* is the consumption rate from the population. *C* is calculated as the sum of attack rates on this resource of all individuals in the present habitat. The chemostat dynamics are characterized by the equation:
 
 ![eq2](http://www.sciweavers.org/tex2img.php?eq=%5Cfrac%7BdR%7D%7Bdt%7D%20%3D%20a%20-%20b%20%5C%2C%20R%20-%20%5C%2C%20C%20%5C%2C%20R&bc=White&fc=Black&im=jpg&fs=12&ff=concmath&edit=0)
