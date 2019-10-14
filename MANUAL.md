@@ -64,7 +64,7 @@ Each phenotypic trait is encoded by multiple genes. The number of genes underlyi
 
 ![equation](img/genetic.jpg)
 
-where ![equation](img/etai.jpg) is the effect size of locus *i* on its own, ![equation](img/omegaij.jpg) is the effect size of the epistatic interaction between gene *i* and *j* (both genes code for the same trait), and *e<sub>ik</sub>* is the gene expression level of locus *i* in individual *k*.
+where ![equation](img/etai.jpg) is the effect size of locus *i* on its own, ![equation](img/omegaij.jpg) is the effect size of the epistatic interaction between gene *i* and *j* (both genes code for the same trait), and *e<sub>ik</sub>* is the gene expression level of locus *i* in individual *k*. The first term of the equation can be seen as the independent contribution of locus *i*, while the second term incorporates the effect of interactions with other genes in the genome. Parameters ![equation](img/sigmaA.jpg) and ![equation](img/sigmaI.jpg) are scaling parameters for both the independent part and the epistatic part, and are given by `scaleA` and `scaleI` (they both are vectors of length three, one value per trait).
 
 ## Parameters
 
