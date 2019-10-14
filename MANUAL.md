@@ -44,9 +44,9 @@ The probability to accept a given male depends on the female's mate preference *
 
 ![equation](img/assortative.jpg)
 
-where... The mating probability in case *y < 0* is;
+where ![equation](img/alpha.jpg) is the strength of sexual selection exerted by the females, controlled by parameter `sexsel` in the simulation. The mating probability in case *y < 0* is:
 
-![equation](img/disassortative.jpg).
+![equation](img/disassortative.jpg)
 
 #### Survival
 
