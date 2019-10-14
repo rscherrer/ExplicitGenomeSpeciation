@@ -96,6 +96,10 @@ We measure the ecological differentiation between the ecotypes as the partitioni
 
 ![equation](img/Pst.jpg)
 
+where *n<sub>j</sub>* and *v<sub>j</sub>* are the number of individuals and phenotypic variance, respectively, within ecotype *j*, and *n* and *v* are the size and the phenotypic variance of the whole population. As ecotypes specialize on the two alternative resources and evolve towards trait values of -1 (for specialists of resource 0) and 1 (for specialists of resource 1), the variance within ecotype will become small relative to the variance aross ecotypes and *P<sub>ST</sub>* will converge to 1.  
+
+The spatial differentiation between the two ecotypes is calculated as:
+
 ## Parameters
 
 Name | Definition
