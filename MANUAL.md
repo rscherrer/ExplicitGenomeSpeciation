@@ -36,7 +36,17 @@ where *e<sub>0</sub>* and *e<sub>1</sub>* are the attack rates of the individual
 
 #### Reproduction
 
-The fitness of individuals is taken as a measure of reproductive success.
+The fitness of individuals determines their reproductive success. At every generation, a mating seasons occurs for a number of discrete rounds, where females can choose males to mate with. It is possible that females remain unmated at the end of a mating season. The duration of the mating season is sampled each generation from a geometric distribution with parameter `matingcost`, which is the probability that the mating season will end after a given round. We recommend low values of `matingcost`, as to not strongly select against choosy females (who run high chances of not finding a mate if the mating season is too short).  
+
+At each round of the mating season, females are presented with a male to assess. The probability of a male to encounter and being assessed by a females relative to other males is proportional to its fitness. Once encountered, the male is evaluated by the female, who can either accept or reject him as a mate. Once a female accepts a mate, the mating season ends for her and she produces a number of offspring sampled from a Poisson distribution with mean *f* `birth`, where `birth` is a baseline birth rate and *f* the fitness of the female.  
+
+The probability to accept a given male depends on the female's mate preference *y* and on the male's ecological trait *x* value relative to her own. Positive values of *y* will favor assortative mating, i.e. with males that are more similar in ecological trait, while negative values will favor disassortative mating, i.e. with males that are more dissimilar in ecological trait. Mating is random if *y = 0*. Specifically, the mating probability of female *i* with male *j* is given, for *y > 0*, by:
+
+![equation](img/assortative.jpg)
+
+where... The mating probability in case *y < 0* is;
+
+![equation](img/disassortative.jpg).
 
 #### Survival
 
