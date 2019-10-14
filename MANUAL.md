@@ -100,6 +100,12 @@ where *n<sub>j</sub>* and *v<sub>j</sub>* are the number of individuals and phen
 
 The spatial differentiation between the two ecotypes is calculated as:
 
+![equation](img/SI.jpg)
+
+where *n<sub>ij</sub>* is the number of individuals in habitat *i* from ecotype *j*. This statistic will be close to 0 when both ecotypes are evenly distributed between the two habitats, but close to 1 if the two ecotypes each specialize in one habitat.
+
+Mating differentiation is calculated
+
 ## Parameters
 
 Name | Definition
