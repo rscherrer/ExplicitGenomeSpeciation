@@ -90,6 +90,8 @@ Adult individuals have a probability `survival` to survive to the next generatio
 
 ## Analysis
 
+### Speciation continuum
+
 A number of statistics are computed and written to output data files every `tsave` generation, if parameter `record` is set to 1 and if the burn-in period is over. In order to track the adaptive speciation process, we classify individuals in two ecotypes based on the resource they get the highest payoff from. If the left term of equation ![equation](img/fitness.jpg) is higher than the right term, the individual is classified as belonging to ecotype 0, otherwise to ecotype 1. Through time, we locate the progression of the two ecotypes along three axes of the speciation continuum, by tracking their differentiation in terms of ecological specialization, spatial distribution and (prezygotic, or behavioral) reproductive isolation.  
 
 We measure the ecological differentiation between the ecotypes as the partitioning of the variance in ecological trait values *x* between the two ecotypes. This partitioning is measured by the *P<sub>ST</sub>* statistic, a type of *F*-statistic quantifying the differentiation in phenotype between two groups, and calculated as:
@@ -109,6 +111,26 @@ To compute the mating differentiation statistic, mating trials are conducted whe
 ![equation](img/RI.jpg)
 
 where *m<sub>ij</sub>* is the number of mating events between females of ecotype *i* and males of ecotypes *j*. Similar to the spatial isolation statistic, RI should be close to 0 if mating is random with respect to ecotype, and close to 1 if females strongly prefer their own ecotype. However, while SI is strictly positive, RI can become negative and will be close to -1 if the females have strong preferences for the alternative ecotype rather than their own.
+
+### Variance decomposition
+
+In addition to the *P<sub>ST</sub>* statistic used on trait *x* to infer ecological differentiation between the ecotypes, we calculated a series of analogous statistics to track, for each trait, how different portions of the phenotypic variance partition between the two ecotypes.  
+
+Following the framework of quantitative genetics, phenotypic variance can be statistically decomposed into a variance explained by the environment and a variance explained by genetic differences, the latter of which can be further decomposed into a variance explained by additive genetics, a variance explained by dominance, and a variance explained by epistatic interactions, as follows:
+
+![equation](img/decomposition.jpg)
+
+Knowing the genotype, genetic and phenotypic value of every individual at every locus, we measured the different variance components on a per-locus and on a genome-wide basis. While the genome-wide genetic variance, *V<sub>G</sub>*, and phenotypic variance, *V<sub>P</sub>*, can be calculated from individuals' genetic and trait values, the genome-wide additive, dominance and interaction variance are the sums of locus-specific additive, dominance and interaction variances across all loci underlying the trait under consideration, because the decomposition of genetic variance requires a linear regression of genetic value on allele count, or genotype, which is a locus-specific property of an individual.  
+
+For any given locus *i*, the genetic values *g<sub>i</sub>* are regressed against the allele counts at this locus, *q<sub>i</sub>* (which can be 0 for genotype *00*, 1 for genotype *01* or 2 for genotype *11*), according to the linear model:
+
+![equation](img/regression.jpg)
+
+where ![equation](img/gbar.jpg) is the average genetic value across the population at locus *i*. ![equation](img/betaik.jpg) is the breeding value of individual *k* at locus *i*, or in other words, the deviation of individual *k* to the population average genetic value due to additive genetic effects of bearing its genotype *q<sub>ik</sub>*. The breeding value is calculated as ![equation](img/breeding.jpg), where ![equation](img/qbar.jpg) is the average allele count in the population, and ![equation](img/alphai.jpg) is the average effect of an allelic substitution at locus *i*, calculated as ![equation](img/avgeffect.jpg) across the whole population. ![equation](img/deltaik.jpg) is the difference between the mean genetic value of individual *k*'s allele count, or genotype, group and the expected mean of this genotype group under pure additivity, i.e. the deviation from its group to the effect of the breeding value alone reflects the effect of dominance. ![equation](img/epsilonik.jpg) is the residual deviation from individual *k*'s genetic value at locus *i* to the average genetic value of its genotype group, and is attributed to epistatic interaction effects.
+
+Additive variance was calculated as the variance in breeding values, while dominance and interaction variance components were calculated as the variances in deviations due to dominance, and residuals, respectively. These variance components were calculated at the whole population level, but also within ecotypes, in order to quantify variance partitioning between the ecotypes. Dominance and interaction variance were only calculated across ecotypes and not within. This is because we were only interested in measuring the partitioning of non-additive variance as a whole, mainly because within-ecotype variances in dominance and interaction effects are difficult to interpret. Instead, we calculate a non-additive variance component, *V<sub>N</sub>*, across and within ecotypes. Note that within-ecotype variances consider effects that were calculated from a regression performed on the whole population, because we are interested in how variance partitions within ecotypes relative to the whole population. We calculated genome-wide estimates of additive, dominance, interaction and non-additive variances as their respective sums across all loci encoding the trait of interest. Genome-wide variances were measured both within and across ecotypes, to calculate genome-wide differentiation statistics.
+
+Similar to our ecological isolation metric, we used *P<sub>ST</sub>* to measure the extent of partitioning of the phenotypic variance between ecotypes, for each trait *x*, *y* and *z*, based on individuals' phenotypic values and on a per locus basis, where the phenotypic variance attributable to a given locus was the sum of its genetic variance and a small, single-locus environmental variance, defined as `scaleE`<sup>2</sup> / `nvertices` (for the trait under consideration). In an analogous way, we calculated *G<sub>ST</sub>* as the partitioning of the variance in genetic values between the ecotypes, *Q<sub>ST</sub>* as the partitioning of the variance due to additive genetic effects, and *C<sub>ST</sub>* for the variance due to non-additive effects. All these statistics are calculated in the same way as *P<sub>ST</sub>*, albeit with different variance components. All differentiation statistics were calculated one a per-locus and a genome-wide basis.  
 
 ## Parameters
 
