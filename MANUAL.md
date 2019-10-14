@@ -18,21 +18,19 @@ Every individual can migrate to the alternative habitat with probability ```disp
 
 #### Consumption
 
-We assume that the resource dynamics are fast relative to the population dynamics. We calculate the equilibrium concentrations of each resource in each habitat as a steady state of the resource dynamics. We provide two ways to model resource flows: logistic (```rdynamics = 0```) or chemostat (```rdynamics = 1```) dynamics. The logistic dynamics are characterized by the following differential equation: 
-
-![equation](http://www.sciweavers.org/tex2img.php?eq=%5Cfrac%7BdR%7D%7Bdt%7D%20%3D%20r%20%5CBig%281%20-%20%5Cfrac%7BR%7D%7BK%7D%5CBig%29%20R%20%5C%2C%20-%20%5C%2C%20C%20%5C%2C%20R&bc=White&fc=Black&im=jpg&fs=12&ff=concmath&edit=0)
+We assume that the resource dynamics are fast relative to the population dynamics. We calculate the equilibrium concentrations of each resource in each habitat as a steady state of the resource dynamics. We provide two ways to model resource flows: logistic (```rdynamics = 0```) or chemostat (```rdynamics = 1```) dynamics. The logistic dynamics are characterized by the following differential equation:
 
 ![equation](img/logistic.jpg)
 
 where *R* is the concentration of a given resource in a given habitat, *r* is the replenishment rate of the resource, *K* is the carrying capacity, and *C* is the consumption rate from the population. *C* is calculated as the sum of attack rates on this resource of all individuals in the present habitat. The chemostat dynamics are characterized by the equation:
 
-![eq2](http://www.sciweavers.org/tex2img.php?eq=%5Cfrac%7BdR%7D%7Bdt%7D%20%3D%20a%20-%20b%20%5C%2C%20R%20-%20%5C%2C%20C%20%5C%2C%20R&bc=White&fc=Black&im=jpg&fs=12&ff=concmath&edit=0)
+![equation](img/chemostat.jpg)
 
 where *a* is the rate of inflow of resource in the habitat and *b* the rate of outflow. *C* is calculated the same way as for the logistic dynamics.  
 
 The fitness of each individual is calculated as:
 
-![img](http://www.sciweavers.org/tex2img.php?eq=f%20%3D%20e_0%28x%29%20%5C%2C%20R_0%5E%2A%20%2B%20e_1%28x%29%20%5C%2C%20R_1%5E%2A&bc=White&fc=Black&im=jpg&fs=12&ff=concmath&edit=0)
+![equation](img/fitness.jpg)
 
 where *e_0* and *e_1* are the attack rates of the individual on each resource, given its ecological trait value *x*, and *R_0* and *R_1* are the equilibrium concentrations of the two resources in the individual's habitat. Note that only resource 0 is available during the burn-in period.
 
