@@ -40,7 +40,7 @@ The fitness of individuals determines their reproductive success. At every gener
 
 At each round of the mating season, females are presented with a male to assess. The probability of a male to encounter and being assessed by a females relative to other males is proportional to its fitness. Once encountered, the male is evaluated by the female, who can either accept or reject him as a mate. Once a female accepts a mate, the mating season ends for her and she produces a number of offspring sampled from a Poisson distribution with mean *f* `birth`, where `birth` is a baseline birth rate and *f* the fitness of the female.  
 
-The probability to accept a given male depends on the female's mate preference *y* and on the male's ecological trait *x* value relative to her own. Positive values of *y* will favor assortative mating, i.e. with males that are more similar in ecological trait, while negative values will favor disassortative mating, i.e. with males that are more dissimilar in ecological trait. Mating is random if *y = 0*. Specifically, the mating probability of female *i* with male *j* is given, for *y > 0*, by:
+The probability to accept a given male depends on the female's mate preference *y* and on the male's ecological trait *x* value relative to her own. Positive values of *y* will favor assortative mating, i.e. with males that are more similar in ecological trait, while negative values will favor disassortative mating, i.e. with males that are more dissimilar in ecological trait. If *y = 0*, mating is random and the female will accept the first male she encounters. Specifically, the mating probability of female *i* with male *j* is given, for *y > 0*, by:
 
 ![equation](img/assortative.jpg)
 
@@ -49,6 +49,8 @@ where ![equation](img/alpha.jpg) is the strength of sexual selection exerted by 
 ![equation](img/disassortative.jpg)
 
 #### Survival
+
+Adult individuals have a probability `survival` to survive to the next generation. The offspring that are just born in the current generation all survive and become adults at the beginning of the next generation.
 
 ### Initialization
 
