@@ -8,7 +8,7 @@ An individual-based simulation of an adaptive speciation event, with explicit fu
 
 There are two habitats connected by dispersal, labelled 0 and 1. Two resources are present across the lanscape, also labelled 0 and 1. We assume that resource are not necessarily equally distributed between the habitats, but can be asymmetrically distributed. Resource 0 is the most abundant resource in habitat 0, while resource 1 is most abundant in habitat 1. The concentration of the most abundant resource is the same in each habitat. The least abundant resource in each habitat has a concentration that is a proportion `hsymmetry` of that of the most abundant resource, where `hsymmetry` can range from 0 (resources are equally distributed between habitats) to 1 (there is only one resource available in each habitat). The concentration of the least abundant resource is also the same between the habitats.
 
-### Genotype-to-phenotype map
+### Genetic architecture
 
 #### Development
 
@@ -86,7 +86,15 @@ Each offspring is a zygote resulting from the fecundation event between the game
 
 #### Survival
 
-Adult individuals have a probability `survival` to survive to the next generation. The offspring that are just born in the current generation all survive and become adults at the beginning of the next generation.
+Adult individuals have a probability `survival` to survive to the next generation. The offspring that are just born in the current generation all survive and become adults at the beginning of the next generation. If there are no survivors, the population is considered extinct and the simulation ends.
+
+## Analysis
+
+A number of statistics are computed and written to output data files every `tsave` generation, if parameter `record` is set to 1 and if the burn-in period is over. In order to track the adaptive speciation process, we classify individuals in two ecotypes based on the resource they get the highest payoff from. If the left term of equation ![equation](img/fitness.jpg) is higher than the right term, the individual is classified as belonging to ecotype 0, otherwise to ecotype 1. Through time, we locate the progression of the two ecotypes along three axes of the speciation continuum, by tracking their differentiation in terms of ecological specialization, spatial distribution and (prezygotic, or behavioral) reproductive isolation.  
+
+We measure the ecological differentiation between the ecotypes as the partitioning of the variance in ecological trait values *x* between the two ecotypes. This partitioning is measured by the *P<sub>ST</sub>* statistic, a type of *F*-statistic quantifying the differentiation in phenotype between two groups, and calculated as:
+
+![equation](img/Pst.jpg)
 
 ## Parameters
 
