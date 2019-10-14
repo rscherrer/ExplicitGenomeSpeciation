@@ -32,7 +32,7 @@ The fitness of each individual is calculated as:
 
 ![equation](img/fitness.jpg)
 
-where *e_0* and *e_1* are the attack rates of the individual on each resource, given its ecological trait value *x*, and *R_0* and *R_1* are the equilibrium concentrations of the two resources in the individual's habitat. Note that only resource 0 is available during the burn-in period.
+where *e<sub>0</sub>* and *e<sub>1</sub>* are the attack rates of the individual on each resource, given its ecological trait value *x*, and *R<sub>0</sub><sup>*</sup>* and *R<sub>1</sub><sup>*</sup>* are the equilibrium concentrations of the two resources in the individual's habitat. Note that only resource 0 is available during the burn-in period.
 
 #### Reproduction
 
