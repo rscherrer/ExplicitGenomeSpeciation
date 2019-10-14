@@ -104,7 +104,11 @@ The spatial differentiation between the two ecotypes is calculated as:
 
 where *n<sub>ij</sub>* is the number of individuals in habitat *i* from ecotype *j*. This statistic will be close to 0 when both ecotypes are evenly distributed between the two habitats, but close to 1 if the two ecotypes each specialize in one habitat.
 
-Mating differentiation is calculated
+To compute the mating differentiation statistic, mating trials are conducted where `ntrials` male-female pairs are randomly sampled from the whole population (regardless of habitat) with replacement. For each pair, the female assesses and accepts or rejects the male. If the female accepts mating, we record the ecotype of both mates and classify this mating event as either homogamic (both are from the same ecotype) or heterogamic (both are from different ecotypes). From the total counts of homogamic and heterogamic mating events, we caculate a mating isolation statistic as:
+
+![equation](img/RI.jpg)
+
+where *m<sub>ij</sub>* is the number of mating events between females of ecotype *i* and males of ecotypes *j*. Similar to the spatial isolation statistic, RI should be close to 0 if mating is random with respect to ecotype, and close to 1 if females strongly prefer their own ecotype. However, while SI is strictly positive, RI can become negative and will be close to -1 if the females have strong preferences for the alternative ecotype rather than their own.
 
 ## Parameters
 
