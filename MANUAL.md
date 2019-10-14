@@ -8,6 +8,10 @@ An individual-based simulation of an adaptive speciation event, with explicit fu
 
 There are two habitats connected by dispersal, labelled 0 and 1. Two resources are present across the lanscape, also labelled 0 and 1. We assume that resource are not necessarily equally distributed between the habitats, but can be asymmetrically distributed. Resource 0 is the most abundant resource in habitat 0, while resource 1 is most abundant in habitat 1. The concentration of the most abundant resource is the same in each habitat. The least abundant resource in each habitat has a concentration that is a proportion ```hsymmetry``` of that of the most abundant resource, where ```hsymmetry``` can range from 0 (resources are equally distributed between habitats) to 1 (there is only one resource available in each habitat). The concentration of the least abundant resource is also the same between the habitats.
 
+### Initialization
+
+The founder population is populated with a certain number of individuals in each of the two habitats, defined by ```demesizes```. Founder individuals are generated with random genomes and therefore trait values may span a large range in the first time steps. This is not suitable for modelling e.g., a population that colonizes a new ecological niche, or resource, from a niche it is already adapted to. To model this scenario we incorporate a burn-in period in our simulation (of duration ```tburnin```), during which only resource 0 is available for use and there is no dispersal. If the population is initialized with all individuals in habitat 0, the burn-in period should canalize the population to specializing on resource 0, with ecological trait values gathered around -1. Once the burn-in period is over, the simulation runs for ```tend``` time steps where dispersal is allowed and both resources are available.
+
 ### Life cycle
 
 The dynamics of the population unfold in discrete time. At every time step, the following events occur in the corresponding order: dispersal, consumption, reproduction and survival.
@@ -52,13 +56,13 @@ where ![equation](img/alpha.jpg) is the strength of sexual selection exerted by 
 
 Adult individuals have a probability `survival` to survive to the next generation. The offspring that are just born in the current generation all survive and become adults at the beginning of the next generation.
 
-### Initialization
+### Genotype-to-phenotype map
 
-The founder population is populated with a certain number of individuals in each of the two habitats, defined by ```demesizes```. Founder individuals are generated with random genomes and therefore trait values may span a large range in the first time steps. This is not suitable for modelling e.g., a population that colonizes a new ecological niche, or resource, from a niche it is already adapted to. To model this scenario we incorporate a burn-in period in our simulation (of duration ```tburnin```), during which only resource 0 is available for use and there is no dispersal. If the population is initialized with all individuals in habitat 0, the burn-in period should canalize the population to specializing on resource 0, with ecological trait values gathered around -1. Once the burn-in period is over, the simulation runs for ```tend``` time steps where dispersal is allowed and both resources are available. If parameter ```record``` is set to 1, data are recorded every ```tsave``` time step outside the burn-in period.
+Every individual in the simulation is generated with a number of features, including phenotypic traits that are generated from explicit full genomes. We model three traits, *x*, an ecological trait determining the attack rates of an individual on both resources, *y*, a mate preference trait used in reproduction, and *z*, a neutral trait with no particular function, to serve as a control. Each individual bears a full diploid genome of `nloci` genes, where each gene is represented by two bits, one for each haplotype. Each bit is an allele at this particular gene. The possible genotypes at any given gene are therefore *00*, *01* and *11*.  
 
-### Life cycle
+Each phenotypic trait is encoded by multiple genes. The number of genes underlying each trait is given by `nvertices`, a vector of length three. The sum of the elements in `nvertices` is `nloci`. The genes underlying a given trait are scattered uniformly across the genome. This is done by shuffling randomly a vector of length `nloci` with elements indicating encoded traits, where each trait is present in a number of copies determined in `nvertices`. The value of a given trait for a given individual is the sum of an environmental and a genetic effect. The environmental effect is modelled as noise, sampled from a normal distribution with mean zero and standard deviation given by `scaleE` (which is a vector with one value per trait). The genetic effect is calculated as a sum of contributions from all the genes that code for the trait. The contribution of a single gene to the phenotype it encodes is the genetic values of that gene, and is computed as:
 
-The simulation is run for ```tend``` discrete time steps.
+
 
 ## Parameters
 
