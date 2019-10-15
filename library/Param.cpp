@@ -16,7 +16,7 @@ void Param::capEdges()
     for (size_t trait = 0u; trait < 3u; ++trait) {
         const size_t n = nvertices[trait];
 
-        // Number of edges in a compete graph with N vertices
+        // Number of edges in a complete graph with N vertices
         const size_t emax = n * (n - 1u) / 2u;
 
         // Cap the number of edges
