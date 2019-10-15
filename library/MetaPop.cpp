@@ -106,11 +106,21 @@ void MetaPop::consume(const Param &p)
                 assert(resources[hab][res] >= 0.0);
             }
         }
+
     }
 
     // Assign individual fitness and ecotypes
     for (size_t i = 0u; i < population.size(); ++i)
         population[i].feed(resources[population[i].getHabitat()]);
+
+    std::clog << getSize() << '\t';
+    std::clog << resources[0u][0u] << '\t';
+    std::clog << resources[0u][1u] << '\t';
+    std::clog << sumfeed[0u][0u] << '\t';
+    std::clog << sumfeed[0u][1u] << '\t';
+    std::clog << getSumFitness() << '\t';
+    std::clog << getMeanEcoTrait(0u) << '\t';
+    std::clog << getFeeding(0u, 0u) << '\n';
 
 }
 
