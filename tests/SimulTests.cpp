@@ -53,9 +53,11 @@ BOOST_AUTO_TEST_CASE(testAbuseInvalidParamValue)
     BOOST_CHECK_EQUAL(simulate({"EGS_test", "invalidparamvalue2.txt"}), 1);
 }
 
+/*
 BOOST_AUTO_TEST_CASE(testUseLongSim) // takes a while
 {
     std::clog << "Testing run for a hundred generations...\n";
     tst::makeValidParamFile2();
     BOOST_CHECK_EQUAL(simulate({ "EGS_test", "validparamfile2.txt" }), 0);
 }
+*/
