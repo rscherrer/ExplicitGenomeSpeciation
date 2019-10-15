@@ -62,7 +62,7 @@ where *a* is the rate of inflow of resource in the habitat and *b* the rate of o
 
 ![equation](img/equilibrium.jpg)
 
-where ![equation](img/tau.jpg) = *1 / b* is the renewal time of the resource, and *B* = *a* ![equation](img/tau.jpg) is the per capita birth rate of the consumer population. These two parameters are provided to the simulation by `renewal` and `birth`, respectively. In the simulation, the resource equilibrium is actually computed relative to `birth`, as the second factor of the equation only.
+where ![equation](img/tau.jpg) = *1 / b* is the renewal time of the resource, and *B* = *a* ![equation](img/tau.jpg) is the per capita birth rate of the consumer population. These two parameters are provided to the simulation by `renewal` and `birth`, respectively. In the simulation, the resource equilibrium *R<sup>*</sup>* is actually computed relative to `birth`, which will be used later to scale the absolute number of offspring females can produce.
 
 The fitness of each individual is calculated as:
 
