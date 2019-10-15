@@ -143,8 +143,7 @@ Similar to our ecological isolation metric, we used *P<sub>ST</sub>* to measure 
 Name | Definition
 ---|---
 ```rdynamics``` | whether the resources follow logistic (0) or a chemostat (1) dynamics
-```inflow``` | rate of resource inflow in chemostat dynamics
-```outflow``` | rate of resource outflow in chemostat dynamics
+```trenewal``` | resource renewal time in chemostat dynamics
 ```capacity``` | resource carrying capacity in logistic dynamics
 ```replenish``` | resource growth rate in logistic dynamics
 ```hsymmetry``` | symmetry between the two habitats in resource carrying capacity or inflow rate
