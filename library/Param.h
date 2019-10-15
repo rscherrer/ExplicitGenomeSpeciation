@@ -17,8 +17,7 @@ struct Param {
 
     Param() :
         rdynamics(1u),
-        inflow(1.0),
-        outflow(0.001),
+        trenewal(0.001),
         capacity(100.0),
         replenish(1.0),
         hsymmetry(0.0),
@@ -72,8 +71,7 @@ struct Param {
 
     // Ecological parameters    
     size_t rdynamics;
-    double inflow;
-    double outflow;
+    double trenewal;
     double capacity;
     double replenish;
     double hsymmetry;

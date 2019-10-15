@@ -96,13 +96,13 @@ void MetaPop::consume(const Param &p)
         // CHEMOSTAT
 
         // Calculate the resource equilibrium = a / (b + C)
-        resources[0u][0u] = p.inflow;
-        resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
-        resources[1u][0u] = p.inflow * p.hsymmetry;
-        resources[1u][1u] = isburnin ? 0.0 : p.inflow;
+        resources[0u][0u] = 1.0;
+        resources[0u][1u] = isburnin ? 0.0 : 1.0 * p.hsymmetry;
+        resources[1u][0u] = 1.0 * p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : 1.0;
         for (size_t hab = 0u; hab < 2u; ++hab) {
             for (size_t res = 0u; res < 2u; ++res) {
-                resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
+                resources[hab][res] /= (1.0 + p.trenewal + sumfeed[hab][res]);
                 assert(resources[hab][res] >= 0.0);
             }
         }
@@ -112,15 +112,6 @@ void MetaPop::consume(const Param &p)
     // Assign individual fitness and ecotypes
     for (size_t i = 0u; i < population.size(); ++i)
         population[i].feed(resources[population[i].getHabitat()]);
-
-    std::clog << getSize() << '\t';
-    std::clog << resources[0u][0u] << '\t';
-    std::clog << resources[0u][1u] << '\t';
-    std::clog << sumfeed[0u][0u] << '\t';
-    std::clog << sumfeed[0u][1u] << '\t';
-    std::clog << getSumFitness() << '\t';
-    std::clog << getMeanEcoTrait(0u) << '\t';
-    std::clog << getFeeding(0u, 0u) << '\n';
 
 }
 
