@@ -50,7 +50,7 @@ Every individual can migrate to the alternative habitat with probability ```disp
 
 #### Consumption
 
-We assume that the resource dynamics are fast relative to the population dynamics. We calculate the equilibrium concentrations of each resource in each habitat as a steady state of the resource dynamics. We provide two ways to model resource flows: logistic (```rdynamics = 0```) or chemostat (```rdynamics = 1```) dynamics. The logistic dynamics are characterized by the following differential equation:
+We assume that the resource dynamics are fast relative to the population dynamics. We calculate the equilibrium concentrations of each resource in each habitat as a steady state of the resource dynamics. We provide two ways to model resource flows: logistic (`rdynamics` = 0) or chemostat (`rdynamics` = 1) dynamics. The logistic dynamics are characterized by the following differential equation:
 
 ![equation](img/logistic.jpg)
 
@@ -58,7 +58,11 @@ where *R* is the concentration of a given resource in a given habitat, *r* is th
 
 ![equation](img/chemostat.jpg)
 
-where *a* is the rate of inflow of resource in the habitat and *b* the rate of outflow. *C* is calculated the same way as for the logistic dynamics.  
+where *a* is the rate of inflow of resource in the habitat and *b* the rate of outflow. *C* is calculated the same way as for the logistic dynamics. The equilibrium concentration of the resource can be written as:
+
+![equation](img/equilibrium.jpg)
+
+where ![equation](img/tau.jpg) = *1 / b* is the renewal time of the resource, and *B* = *a* ![equation](img/tau.jpg) is the per capita birth rate of the consumer population. These two parameters are provided to the simulation by `renewal` and `birth`, respectively.
 
 The fitness of each individual is calculated as:
 
