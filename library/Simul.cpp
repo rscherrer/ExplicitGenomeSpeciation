@@ -39,8 +39,12 @@ int simulate(const vecStrings &args)
 
             if (t == 0) metapop.exitburnin();
 
+            std::clog << metapop.getSize() << '\n';
+
             // Life cycle of the metapopulation
             metapop.cycle(pars, arch);
+
+
 
             // Is the population still there?
             if (metapop.isextinct()) {

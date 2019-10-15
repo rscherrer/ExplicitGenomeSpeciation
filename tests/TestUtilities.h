@@ -22,8 +22,8 @@ void tst::makeValidParamFile()
     if (!file.is_open())
         std::cout << "Unable to open valid parameter test file.\n";
 
-    file << "inflow" << '\t' << 2.0 << '\n'
-         << "outflow" << '\t' << 10000.0 << '\n'
+    file << "rdynamics" << '\t' << 0 << '\n'
+         << "trenewal" << '\t' << 0.001 << '\n'
          << "capacity" << '\t' << 10.0 << '\n'
          << "replenish" << '\t' << 1.0 << '\n'
          << "hsymmetry" << '\t' << 1.0 << '\n'
@@ -69,8 +69,7 @@ void tst::makeValidParamFile2()
         std::cout << "Unable to open valid parameter test file.\n";
 
     file << "rdynamics" << '\t' << 1 << '\n'
-         << "inflow" << '\t' << 1.0 << '\n'
-         << "outflow" << '\t' << 1000.0 << '\n'
+         << "trenewal" << '\t' << 0.001 << '\n'
          << "capacity" << '\t' << 10.0 << '\n'
          << "replenish" << '\t' << 1.0 << '\n'
          << "hsymmetry" << '\t' << 0.0 << '\n'
@@ -125,8 +124,7 @@ void tst::makeInvalidParamValue()
     if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
-    file << "inflow" << '\t' << -1.0 << '\n'
-         << "outflow" << '\t' << -1.0 << '\n'
+    file << "trenewal" << '\t' << -1.0 << '\n'
          << "capacity" << '\t' << -1.0 << '\n'
          << "replenish" << '\t' << -1.0 << '\n'
          << "hsymmetry" << '\t' << -1.0 << '\n'

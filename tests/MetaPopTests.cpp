@@ -79,6 +79,7 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
     std::clog << "Testing complete habitat asymmetry...\n";
     Param pars;
     GenArch arch = GenArch(pars);
+    pars.rdynamics = 0u;
     pars.capacity = 100.0;
     pars.hsymmetry = 0.0; // full habitat asymmetry
     pars.demesizes = {10u, 10u };

@@ -47,9 +47,9 @@ struct Param {
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(100),
-        tend(100),
-        tsave(50),
+        tburnin(5),
+        tend(5),
+        tsave(5),
         record(true),
         seed(makeDefaultSeed()),
         ntrials(100u)
