@@ -197,19 +197,17 @@ Matrix utl::dividemat(const Matrix &m1, const MatUns &m2)
     return res;
 }
 
-// Bring very small values to zero to correct for numerical imprecision
-void utl::correct(double &x)
-{
-    const double tiny = 1.0E-15;
-    if (x < tiny && x > - tiny) x = 0.0;
-}
-
 // Round to the ith decimal
 double utl::round(const double &x, const size_t &i)
 {
     double p = 1.0;
     for (size_t j = 0u; j < i; ++j) p *= 10.0;
     return std::round(x * p) / p;
+}
+
+void utl::correct(double &x, const double &x0, const double &d)
+{
+    x = x < x0 + d && x > x0 - d ? x0 : x;
 }
 
 // Convert unsigned integer to double

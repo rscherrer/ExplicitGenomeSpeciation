@@ -108,6 +108,14 @@ public:
         mean /= population.size();
         return mean;
     }
+    double getFitness(const size_t &i) const // can be removed
+    {
+        return population[i].getFitness();
+    }
+    double getFeeding(const size_t &i, const size_t &r) const // can be removed
+    {
+        return population[i].getFeeding(r);
+    }
 
     // Resetters used in tests
     void resetEcoTraits(const double &x, const Param &p)

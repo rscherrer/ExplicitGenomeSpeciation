@@ -12,4 +12,6 @@
 
 int simulate(const vecStrings&);
 
+bool timetosave(const int &t, const Param &p);
+
 #endif

@@ -16,6 +16,9 @@
 struct Param {
 
     Param() :
+        rdynamics(0u),
+        inflow(1.0),
+        outflow(1000.0),
         capacity(100.0),
         replenish(10.0),
         hsymmetry(1.0),
@@ -25,7 +28,7 @@ struct Param {
         survival(0.6),
         sexsel(10.0),
         matingcost(0.01),
-        maxfeed(1.0),
+        maxfeed(4.0E-4),
         demesizes({ 10u, 0u }),        
         nloci(300u), // cannot be provided
         nvertices({ 100u, 100u, 100u }),
@@ -50,7 +53,7 @@ struct Param {
         tsave(10),
         record(true),
         seed(makeDefaultSeed()),
-        ntrials(10u)
+        ntrials(100u)
     {
         // Make sure there are no more edges than feasible
         capEdges();
@@ -68,6 +71,9 @@ struct Param {
     size_t makeDefaultSeed();
 
     // Ecological parameters    
+    size_t rdynamics;
+    double inflow;
+    double outflow;
     double capacity;
     double replenish;
     double hsymmetry;
