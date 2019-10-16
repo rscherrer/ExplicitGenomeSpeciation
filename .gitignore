@@ -45,3 +45,6 @@ Makefile.Debug
 Makefile.Release
 EGS_test
 EGS
+*.dat
+egs_gui_plugin_import.cpp
+ui_maindialog.h
