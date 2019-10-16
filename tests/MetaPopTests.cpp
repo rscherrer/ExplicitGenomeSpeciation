@@ -79,6 +79,7 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
     std::clog << "Testing complete habitat asymmetry...\n";
     Param pars;
     GenArch arch = GenArch(pars);
+    pars.rdynamics = 0u;
     pars.capacity = 100.0;
     pars.hsymmetry = 0.0; // full habitat asymmetry
     pars.demesizes = {10u, 10u };
@@ -227,8 +228,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     pars.dispersal = 0.0;
     pars.birth = 0.0;
     pars.survival = 1.0;
-    pars.inflow = 10.0;
-    pars.outflow = 1.0;
+    pars.trenewal = 0.001;
     pars.hsymmetry = 0.0;
     pars.demesizes = { 10u, 0u };
     pars.ecosel = 1.0;
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     metapop.cycle(pars, arch);
 
     // Predict resource equilibrium after consumption
-    const double R0 = utl::round(10.0 / 11.0, 4u);
+    const double R0 = utl::round(1.0 / (1.0 + 0.001 * 10.0), 4u);
     const double R1 = 0.0;
 
     // Fitness should sum up to the amount of food consumed
