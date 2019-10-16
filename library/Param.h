@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "Utilities.h"
+#include "Random.h"
 #include <fstream>
 #include <iostream>
 #include <chrono>
@@ -52,6 +53,7 @@ struct Param {
         tsave(5),
         record(true),
         seed(makeDefaultSeed()),
+        archseed(makeDefaultSeed()),
         ntrials(100u)
     {
         // Make sure there are no more edges than feasible
@@ -59,6 +61,9 @@ struct Param {
 
         // Make sure parameter values make sense
         checkParams();
+
+        // Seed the random number generator
+        rnd::rng.seed(seed);
     }
 
     void read(const std::string&);
@@ -112,6 +117,7 @@ struct Param {
     int  tsave;
     bool record;
     size_t seed;
+    size_t archseed;
     size_t ntrials;
 
 };

@@ -25,6 +25,7 @@ class GenArch {
 public:
 
     GenArch(const Param &pars) :
+        isreset(resetseed(pars.archseed)),
         chromosomes(makeChromosomes(pars)),
         traits(makeEncodedTraits(pars)),
         locations(makeLocations(pars)),
@@ -32,6 +33,13 @@ public:
         dominances(makeDominances(pars)),
         networks(makeNetworks(pars))
     {
+
+        // If we want to use a specific genetic architecture
+        // We can supply a seed just for the architecture
+        // At the end we need to reset the seed back to the original
+
+        rnd::rng.seed(pars.archseed);
+
         assert(utl::sumu(pars.nvertices) == pars.nloci);
         assert(chromosomes.size() == pars.nchrom);
         assert(traits.size() == pars.nloci);
@@ -39,16 +47,22 @@ public:
         assert(dominances.size() == pars.nloci);
         assert(locations.size() == pars.nloci);
         assert(networks.size() == 3u);
+        assert(isreset);
+
+        rnd::rng.seed(pars.seed);
+
     }
 
-    vecDbl chromosomes; // per chromosome
-    vecUns traits; // per locus
-    vecDbl locations; // per locus
-    vecDbl effects; // per locus
-    vecDbl dominances; // per locus
-    MultiNet networks; // per trait
+    bool isreset;
 
-    // Getters called from outside
+    vecDbl chromosomes;     // per chromosome
+    vecUns traits;          // per locus
+    vecDbl locations;       // per locus
+    vecDbl effects;         // per locus
+    vecDbl dominances;      // per locus
+    MultiNet networks;      // per trait
+
+    // Getters called from tests
     size_t getNetworkSize(const size_t &trait) const
     {
         return networks[trait].map.size();
@@ -56,6 +70,24 @@ public:
     Edge getEdge(const size_t &trait, const size_t &edge) const
     {
         return networks[trait].map[edge];
+    }
+    size_t getSumTraits() const
+    {
+        size_t sum = 0u;
+        for (auto x : traits) sum += x;
+        return sum;
+    }
+    double getSumEffects() const
+    {
+        double sum = 0.0;
+        for (auto x : effects) sum += x;
+        return sum;
+    }
+    double getSumDominances() const
+    {
+        double sum = 0.0;
+        for (auto x : dominances) sum += x;
+        return sum;
     }
     double getSumWeights(const size_t &trait) const
     {
@@ -67,6 +99,7 @@ public:
 
 private:
 
+    bool resetseed(const size_t&);
     MultiNet makeNetworks(const Param&);
     vecDbl makeChromosomes(const Param&);
     vecUns makeEncodedTraits(const Param&);

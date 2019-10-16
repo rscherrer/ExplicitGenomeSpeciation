@@ -20,9 +20,6 @@ int simulate(const vecStrings &args)
         // Read parameters from a file if supplied
         if (args.size() == 2) pars.read(args[1u]);
 
-        // Random number generator
-        rnd::rng.seed(pars.seed);
-
         // Create a genetic architecture
         GenArch arch = GenArch(pars);
 
