@@ -1,24 +1,40 @@
-#include "Simul.h"
+#include "maindialog.h"
+#include "ui_maindialog.h"
+#include "library/Simul.h"
+#include <sstream>
 
-bool timetosave(const int &t,const Param &p)
+MainDialog::MainDialog(QWidget *parent) :
+  QDialog(parent),
+  ui(new Ui::MainDialog)
 {
-    return (t > 0 && p.record && t % p.tsave == 0u);
+  ui->setupUi(this);
 }
 
-int simulate(const vecStrings &args)
+MainDialog::~MainDialog()
 {
+  delete ui;
+}
 
+Param MainDialog::createPars()
+{
+    Param pars;
+    pars.seed = static_cast<size_t>(ui->rng_seed->value());
+    return pars;
+}
+
+void MainDialog::on_run_button_clicked()
+{
     try
     {
+        // Create the parameters from the GUI
+        Param pars = createPars();
 
-        if (args.size() > 2u)
-            throw std::runtime_error("More than one argument were supplied");
-
-        // Create a default parameter set
-        Param pars;
-
-        // Read parameters from a file if supplied
-        if (args.size() == 2) pars.read(args[1u]);
+        //Show params in output
+        {
+            std::stringstream s;
+            s << "seed: " << pars.seed << '\n';
+            ui->output->setPlainText(QString::fromStdString(s.str()));
+        }
 
         // Random number generator
         rnd::rng.seed(pars.seed);
@@ -31,8 +47,6 @@ int simulate(const vecStrings &args)
 
         // Create an analytical module
         Collector collector = Collector(arch);
-
-        std::clog << "Simulation started.\n";
 
         // Loop through time
         for (int t = -pars.tburnin; t < pars.tend; ++t) {
@@ -52,15 +66,19 @@ int simulate(const vecStrings &args)
             if (timetosave(t, pars)) collector.analyze(metapop, pars);
 
         }
-
-        std::clog << "Simulation ended.\n";
-
+        // Show output
+        {
+            std::stringstream s;
+            s
+              << "EI: " << collector.getEI() << '\n'
+              << "RI: " << collector.getRI() << '\n'
+              << "SI: " << collector.getSI() << '\n'
+            ;
+            ui->output->appendPlainText(QString::fromStdString(s.str()));
+        }
     }
     catch (const std::runtime_error &err)
     {
         std::cerr << "Exception: " << err.what() << '\n';
-        return 1;
     }
-
-    return 0;
 }

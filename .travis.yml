@@ -38,6 +38,11 @@ script:
  - make --silent debug
  - travis_wait 60 ./EGS_test
   
+ # Build the GUI
+ - make clean
+ - qmake ./EGS_gui.pro
+ - make --silent debug
+  
  # helgrind
  - travis_wait 60 valgrind --tool=helgrind --log-file=helgrind.log -v ./EGS_test
  - cat helgrind.log

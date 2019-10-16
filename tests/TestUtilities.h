@@ -21,18 +21,20 @@ void tst::makeValidParamFile()
     if (!file.is_open())
         std::cout << "Unable to open valid parameter test file.\n";
 
-    file << "capacity" << '\t' << 100.0 << '\n'
+    file << "inflow" << '\t' << 2.0 << '\n'
+         << "outflow" << '\t' << 10000.0 << '\n'
+         << "capacity" << '\t' << 10.0 << '\n'
          << "replenish" << '\t' << 1.0 << '\n'
          << "hsymmetry" << '\t' << 1.0 << '\n'
          << "ecosel" << '\t' << 1.0 << '\n'
-         << "dispersal" << '\t' << 1.0e-3 << '\n'
-         << "birth" << '\t' << 4.0 << '\n'
+         << "dispersal" << '\t' << 1.0E-3 << '\n'
+         << "birth" << '\t' << 1.5 << '\n'
          << "survival" << '\t' << 0.8 << '\n'
          << "sexsel" << '\t' << 10.0 << '\n'
          << "matingcost" << '\t' << 0.01 << '\n'
          << "maxfeed" << '\t' << 4.0E-4 << '\n'
          << "demesizes" << '\t' << 100 << '\t' << 100 << '\n'
-         << "nvertices" << '\t' << 400 << '\t' << 200 << '\t' << 400 << '\n'
+         << "nvertices" << '\t' << 40 << '\t' << 20 << '\t' << 40 << '\n'
          << "nedges" << '\t' << 1000 << '\t' << 500 << '\t' << 0 << '\n'
          << "nchrom" << '\t' << 3 << '\n'
          << "mutation" << '\t' << 1.0e-5 << '\n'
@@ -48,8 +50,8 @@ void tst::makeValidParamFile()
          << "interactionshape" << '\t' << 5.0 << '\n'
          << "interactionscale" << '\t' << 1.0 << '\n'
          << "dominancevar" << '\t' << 1.0 << '\n'
-         << "tburnin" << '\t' << 10 << '\n'
-         << "tend" << '\t' << 5 << '\n'
+         << "tburnin" << '\t' << 5 << '\n'
+         << "tend" << '\t' << 2 << '\n'
          << "tsave" << '\t' << 1 << '\n'
          << "record" << '\t' << 1 << '\n'
          << "seed" << '\t' << 42 << '\n'
@@ -75,7 +77,9 @@ void tst::makeInvalidParamValue()
     if (!file.is_open())
         std::cout << "Unable to open invalid parameter value test file.\n";
 
-    file << "capacity" << '\t' << -1.0 << '\n'
+    file << "inflow" << '\t' << -1.0 << '\n'
+         << "outflow" << '\t' << -1.0 << '\n'
+         << "capacity" << '\t' << -1.0 << '\n'
          << "replenish" << '\t' << -1.0 << '\n'
          << "hsymmetry" << '\t' << -1.0 << '\n'
          << "ecosel" << '\t' << -1.0 << '\n'

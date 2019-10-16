@@ -83,7 +83,7 @@ public:
     // Life history
     bool isalive() const;
     void disperse();
-    void feed(const double&, const size_t&);
+    void feed(const vecDbl&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
 
@@ -157,8 +157,8 @@ public:
     {
         ecotrait = x;
         traitvalues[0u] = x;
-        feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+        feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+        feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
         assert(feeding[0u] >= 0.0);
         assert(feeding[1u] >= 0.0);
         assert(feeding[0u] <= 1.0);
@@ -188,7 +188,6 @@ private:
     void recombine(Genome&, const Param&, const GenArch&) const;
     void mutate(Genome&, const Param&) const;
     void develop(const Param&, const GenArch&);
-    void setFeeding(const size_t&, const double&, const double&);
 
     Genome genome;
     vecDbl transcriptome;

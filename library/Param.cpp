@@ -71,6 +71,9 @@ void Param::import(std::ifstream &file)
 
         switch (_(input)) {
 
+        case _("rdynamics"): file >> rdynamics; break;
+        case _("inflow"): file >> inflow; break;
+        case _("outflow"): file >> outflow; break;
         case _("capacity"): file >> capacity; break;
         case _("replenish"): file >> replenish; break;
         case _("hsymmetry"): file >> hsymmetry; break;
@@ -176,10 +179,16 @@ void Param::checkParams()
         msg = "Mate evaluation cost should be positive";
     if (maxfeed < 0.0)
         msg = "Maximum feeding rate should be positive";
-    if (capacity < 0.0)
+    if (capacity <= 0.0)
         msg = "Maximum resource capacity should be positive";
-    if (replenish < 0.0)
+    if (replenish <= 0.0)
         msg = "Maximum resource growth should be positive";
+    if (rdynamics > 1u)
+        msg = "Resource dynamics is either 0 (logistic) or 1 (chemostat)";
+    if (inflow <= 0.0)
+        msg = "Resource inflow rate should be positive";
+    if (outflow <= 0.0)
+        msg = "Resource outflow rate should be positive";
     if (nvertices[0u] <= 1u)
         msg = "Numer of ecological loci should be at least two";
     if (nvertices[1u] <= 1u)

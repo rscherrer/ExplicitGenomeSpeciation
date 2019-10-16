@@ -9,6 +9,7 @@
 
 BOOST_AUTO_TEST_CASE(ChromosomesHaveEqualLength)
 {
+    std::clog << "Testing chromosome lengths...\n";
     Param pars;
     GenArch arch = GenArch(pars);
     BOOST_CHECK_EQUAL(arch.chromosomes[0u], 1.0 / 3.0);
@@ -18,6 +19,7 @@ BOOST_AUTO_TEST_CASE(ChromosomesHaveEqualLength)
 
 BOOST_AUTO_TEST_CASE(LociEncodeTheRightTraits)
 {
+    std::clog << "Testing genetic encoding of traits...\n";
     Param pars;
     pars.nvertices = { 10u, 2u, 2u };
     pars.update();
@@ -27,6 +29,7 @@ BOOST_AUTO_TEST_CASE(LociEncodeTheRightTraits)
 
 BOOST_AUTO_TEST_CASE(EffectSizesAreZeroIfScaleParamIsZero)
 {
+    std::clog << "Testing locus effect sizes...\n";
     Param pars;
     pars.effectscale = 0.0;
     GenArch arch = GenArch(pars);
@@ -35,6 +38,7 @@ BOOST_AUTO_TEST_CASE(EffectSizesAreZeroIfScaleParamIsZero)
 
 BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
 {
+    std::clog << "Testing dominance coefficients...\n";
     Param pars;
     pars.dominancevar = 0.0;
     GenArch arch = GenArch(pars);
@@ -43,6 +47,7 @@ BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
 
 BOOST_AUTO_TEST_CASE(NetworksAreEmptyIfNoEdges)
 {
+    std::clog << "Testing empty networks...\n";
     Param pars;
     pars.nvertices = utl::repUns(100u, 3u);
     pars.nedges = utl::uzeros(3u);
@@ -56,6 +61,7 @@ BOOST_AUTO_TEST_CASE(NetworksAreEmptyIfNoEdges)
 
 BOOST_AUTO_TEST_CASE(NetworkWithOneEdgeConnectsNodesZeroAndOne)
 {
+    std::clog << "Testing single edge network...\n";
     Param pars;
     pars.nvertices = utl::repUns(100u, 3u);
     pars.nedges = { 1u, 0u, 0u };
@@ -70,6 +76,7 @@ BOOST_AUTO_TEST_CASE(NetworkWithOneEdgeConnectsNodesZeroAndOne)
 
 BOOST_AUTO_TEST_CASE(NetworkWithTooManyEdgesIsCappedAtMaxPossible)
 {
+    std::clog << "Testing too large networks...\n";
     Param pars;
     pars.nvertices = { 10u, 5u, 2u };
     pars.nedges = utl::repUns(1000u, 3u); // very large number of edges
@@ -82,6 +89,7 @@ BOOST_AUTO_TEST_CASE(NetworkWithTooManyEdgesIsCappedAtMaxPossible)
 
 BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
 {
+    std::clog << "Testing interaction weights...\n";
     Param pars;
     pars.interactionscale = 0.0;
     GenArch arch = GenArch(pars);
