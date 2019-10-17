@@ -33,7 +33,7 @@ vecStrings Collector::whattosave() const
      "network_corgen", "network_corbreed", "network_corfreq", "network_avgi",
      "network_avgj",
 
-     "population_ecotype", "population_hab", "population_x", "population_y",
+     "population_ecotype", "population_habitat", "population_x", "population_y",
      "population_z"
 
      };
