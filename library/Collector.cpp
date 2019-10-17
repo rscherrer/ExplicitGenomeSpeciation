@@ -16,7 +16,8 @@ vecStrings Collector::whattosave() const
      "varA_scan", "varD_scan", "varI_scan", "varN_scan", "Pst_scan",
      "Gst_scan", "Qst_scan", "Cst_scan", "Fst_scan", "avgeffect_scan",
      "meangen_scan", "allfreq_scan", "corgen_edges", "corbreed_edges",
-     "corfreq_edges", "ecotype_pop", "habitat_pop", "x_pop", "y_pop", "z_pop"
+     "corfreq_edges", "avgeffecti_edges", "avgeffectj_edges", "ecotype_pop",
+     "habitat_pop", "x_pop", "y_pop", "z_pop"
      };
 }
 
@@ -42,7 +43,7 @@ vecConnex Collector::emptyconnexions(const GenArch &arch) const
         for (size_t edge = 0u; edge < arch.getNetworkSize(trait); ++edge) {
             const size_t i = arch.networks[trait].edges[edge].first;
             const size_t j = arch.networks[trait].edges[edge].second;
-            connexions.push_back(Connexion(i, j, trait));
+            connexions.push_back(Connexion(edge, i, j, trait));
         }
     }
 
@@ -87,6 +88,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     const size_t aa = 0u;
     const size_t Aa = 1u;
     const size_t AA = 2u;
+    const size_t bb = aa;
+    const size_t Bb = Aa;
+    const size_t BB = AA;
 
     // Reset
     counts = utl::uzeros(3u, 3u); // per habitat per ecotype
@@ -186,12 +190,15 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         genomescan[l].varN = utl::zeros(3u); // per ecotype
         genomescan[l].varD = 0.0;
         genomescan[l].varI = 0.0;
+        genomescan[l].varZ = 0.0;
+        genomescan[l].varX = 0.0;
         genomescan[l].Pst = 0.0;
         genomescan[l].Gst = 0.0;
         genomescan[l].Qst = 0.0;
         genomescan[l].Cst = 0.0;
         genomescan[l].Fst = 0.0;
         genomescan[l].alpha = 0.0;
+        genomescan[l].beta = utl::zeros(3u); // per genotype
         genomescan[l].meang = 0.0;
         genomescan[l].freq = 0.0;
 
@@ -263,6 +270,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         varq -= utl::sqr(meanq);
         assert(varq >= 0.0);
 
+        genomescan[l].varZ = varq;
+
         // covqg = covariance between allele count and genetic value
 
         // covqg = E(qg) - E(q)E(g)
@@ -276,6 +285,22 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
         const double alpha = varq == 0.0 ? 0.0 : covqg / varq;
         genomescan[l].alpha = alpha;
+
+        // Variance in gene expression
+
+        const double scaleD = p.scaleD[genomescan[l].trait];
+
+        double varx = gcounts[tot][Aa] * utl::sqr(scaleD * a.dominances[l]);
+        varx += gcounts[tot][AA];
+        varx += gcounts[tot][aa];
+        varx /= ecounts[tot];
+        double meanx = gcounts[tot][Aa] * scaleD * a.dominances[l];
+        meanx += gcounts[tot][AA];
+        meanx -= gcounts[tot][aa];
+        meanx /= ecounts[tot];
+        varx -= utl::sqr(meanx);
+        assert(varx >= 0.0);
+        genomescan[l].varX = varx;
 
         // Calculate genotype-specific statistics
 
@@ -300,6 +325,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
                 gdelta[zyg] = gmeans[zyg] - gexpec[zyg];
             }
         }
+
+        genomescan[l].beta = gbeta;
 
         // Calculate variance components within and across ecotypes
         for (size_t eco = 0u; eco < 3u; ++eco) {
@@ -555,8 +582,110 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         networkscan[e].corgen = 0.0;
         networkscan[e].corbreed = 0.0;
         networkscan[e].corfreq = 0.0;
+        networkscan[e].avgi = 0.0;
+        networkscan[e].avgj = 0.0;
 
         // Compute the statistics
+
+        const size_t i = networkscan[e].loc1;
+        const size_t j = networkscan[e].loc2;
+
+        double covgen = 0.0;
+        MatUns ggcounts = utl::uzeros(3u, 3u);
+
+        // Loop through individuals
+        for (size_t k = 0u; k < m.getSize(); ++k) {
+
+            const double geni = m.population[k].getLocusValue(i);
+            const double genj = m.population[k].getLocusValue(j);
+            const size_t zygi = m.population[k].getZygosity(i);
+            const size_t zygj = m.population[k].getZygosity(j);
+
+            covgen += geni * genj;
+            ++ggcounts[zygi][zygj];
+
+        }
+
+        // Correlation in genetic value between partners
+
+        covgen /= ecounts[tot];
+        const double meangi = genomescan[i].meang;
+        const double meangj = genomescan[j].meang;
+        covgen -= meangi * meangj;
+
+        const double vargeni = genomescan[i].varG[tot];
+        const double vargenj = genomescan[j].varG[tot];
+
+        norm = sqrt(vargeni * vargenj);
+        const double corgen = norm == 0.0 ? 0.0 : covgen / norm;
+
+        networkscan[e].corgen = corgen;
+
+        // Correlation in breeding values between partners
+
+        const double varbreedi = genomescan[i].varA[tot];
+        const double varbreedj = genomescan[j].varA[tot];
+
+        const vecDbl breedi = genomescan[i].beta;
+        const vecDbl breedj = genomescan[j].beta;
+
+        double covbreed = 0.0;
+        for (size_t zygi : { aa, Aa, AA }) {
+            for (size_t zygj : {bb, Bb, BB}) {
+                covbreed += ggcounts[zygi][zygj] * breedi[zygi] * breedj[zygj];
+            }
+        }
+        covbreed /= ecounts[tot];
+
+        norm = sqrt(varbreedi * varbreedj);
+        const double corbreed = norm == 0.0 ? 0.0 : covbreed / norm;
+
+        networkscan[e].corbreed = corbreed;
+
+        // Correlation in allele counts between partners
+
+        const double varzygi = genomescan[i].varZ;
+        const double varzygj = genomescan[j].varZ;
+
+        double covzyg = 4.0 * ggcounts[AA][BB];
+        covzyg += 2.0 * ggcounts[Aa][BB];
+        covzyg += 2.0 * ggcounts[AA][Bb];
+        covzyg += ggcounts[Aa][Bb]; // aa and bb do not count
+        covzyg /= ecounts[tot];
+        covzyg -= 4.0 * genomescan[i].freq * genomescan[j].freq;
+
+        norm = sqrt(varzygi * varzygj);
+        const double corfreq = norm == 0.0 ? 0.0 : covzyg / norm;
+
+        networkscan[e].corfreq = corfreq;
+
+        // Variance in average effect due to epistasis
+
+        const double varexpi = genomescan[i].varX;
+        const double varexpj = genomescan[j].varX;
+
+        const size_t id = networkscan[e].id;
+        const size_t trait = networkscan[e].trait;
+
+        const double weight = a.networks[trait].weights[id];
+
+        const double scaleA = p.scaleA[trait];
+        const double scaleI = p.scaleI[trait];
+
+        const double additi = scaleA * a.effects[i];
+        const double additj = scaleA * a.effects[j];
+
+        const double ratioi = additi == 0.0 ? 0.0 : scaleI * weight / additi;
+        const double ratioj = additj == 0.0 ? 0.0 : scaleI * weight / additj;
+
+        const double alphai = genomescan[i].alpha;
+        const double alphaj = genomescan[j].alpha;
+
+        const double avgi = utl::sqr(utl::sqr(alphaj * ratioj) * varexpi);
+        const double avgj = utl::sqr(utl::sqr(alphai * ratioi) * varexpj);
+
+        networkscan[e].avgi = avgi; // for partner i
+        networkscan[e].avgj = avgj; // for partner j
 
     }
 
@@ -666,6 +795,8 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(networkscan[e].corgen, files[f + off]); ++off;
         stf::write(networkscan[e].corbreed, files[f + off]); ++off;
         stf::write(networkscan[e].corfreq, files[f + off]); ++off;
+        stf::write(networkscan[e].avgi, files[f + off]); ++off;
+        stf::write(networkscan[e].avgj, files[f + off]); ++off;
 
     }
 

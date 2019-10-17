@@ -19,12 +19,15 @@ struct Locus
         varN(utl::zeros(3u)),
         varD(0.0),
         varI(0.0),
+        varZ(0.0),
+        varX(0.0),
         Pst(0.0),
         Gst(0.0),
         Qst(0.0),
         Cst(0.0),
         Fst(0.0),
         alpha(0.0),
+        beta(utl::zeros(3u)),
         meang(0.0),
         freq(0.0)
     {}
@@ -38,6 +41,8 @@ struct Locus
     vecDbl varN; // per ecotype
     double varD;
     double varI;
+    double varZ;
+    double varX;
 
     double Pst;
     double Gst;
@@ -46,28 +51,39 @@ struct Locus
     double Fst;
 
     double alpha;
+    vecDbl beta; // per genotype
     double meang;
     double freq;
 };
 
 struct Connexion
 {
-    Connexion(const size_t &i, const size_t &j, const size_t &t) :
-        id1(i),
-        id2(j),
+    Connexion(const size_t &e, const size_t &i, const size_t &j,
+     const size_t &t) :
+        id(e),
+        loc1(i),
+        loc2(j),
         trait(t),
         corgen(0.0),
         corbreed(0.0),
-        corfreq(0.0)
+        corfreq(0.0),
+        avgi(0.0),
+        avgj(0.0)
     {}
 
-    size_t id1;
-    size_t id2;
+    size_t id;
+    size_t loc1;
+    size_t loc2;
     size_t trait;
 
+    // Correlations in genetic values, breeding values and allele freq
     double corgen;
     double corbreed;
     double corfreq;
+
+    // Variation in average effect due to epistasis
+    double avgi;
+    double avgj;
 };
 
 typedef std::vector<Locus> vecLoci;
@@ -124,7 +140,7 @@ public:
         for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
     }
 
-    void analyze(const MetaPop&, const Param&);
+    void analyze(const MetaPop&, const Param&, const GenArch&);
     void print(const size_t&, const MetaPop&);
 
     // Getters called in tests

@@ -135,7 +135,6 @@ void Individual::develop(const Param &p, const GenArch &arch)
         }
 
         assert(expression >= -1.0);
-        assert(expression <= 1.0);
 
         transcriptome[locus] = expression; // record gene expression
 
