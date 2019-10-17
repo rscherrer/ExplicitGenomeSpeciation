@@ -3,8 +3,8 @@ include(EGS.pri)
 SOURCES += main.cpp
 
 # C++14
-CONFIG += c++17
-QMAKE_CXXFLAGS += -std=c++17
+CONFIG += c++14
+QMAKE_CXXFLAGS += -std=c++14
 
 # High warnings levels
 QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++ -Werror
@@ -21,6 +21,3 @@ CONFIG(release, debug|release) {
   QMAKE_CXXFLAGS += -pg
   QMAKE_LFLAGS += -pg
 }
-
-LIBS += -L"/usr/local/Cellar/boost/1.70.0/lib"
-INCLUDEPATH += "/usr/local/Cellar/boost/1.70.0/include"

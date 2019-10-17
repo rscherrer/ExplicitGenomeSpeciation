@@ -3,8 +3,8 @@ include(EGS.pri)
 include(EGS_test.pri)
 
 # C++14
-CONFIG += c++20
-QMAKE_CXXFLAGS += -std=c++20
+CONFIG += c++14
+QMAKE_CXXFLAGS += -std=c++14
 
 # High warnings levels
 QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++ -Werror
@@ -32,5 +32,3 @@ CONFIG(debug, debug|release) {
 
 # Boost.Test
 LIBS += -lboost_unit_test_framework
-LIBS += -L"/usr/local/Cellar/boost/1.70.0/lib"
-INCLUDEPATH += "/usr/local/Cellar/boost/1.70.0/include"

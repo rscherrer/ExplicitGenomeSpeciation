@@ -68,12 +68,22 @@
       <item>
        <widget class="QPlainTextEdit" name="output"/>
       </item>
+      <item>
+       <widget class="QChartView" name="graphicsView"/>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header>QtCharts</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

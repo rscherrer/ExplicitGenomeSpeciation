@@ -112,6 +112,15 @@ public:
         return RI;
     }
 
+    std::vector<float> get_Fst() const
+    {
+        std::vector<float> output(genomescan.size());
+        for(size_t i = 0; i < genomescan.size(); ++i) {
+            output[i] = static_cast<float>(genomescan[i].Fst);
+        }
+        return output;
+    }
+
 private:
 
     vecStrings whattosave() const;
