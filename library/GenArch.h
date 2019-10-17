@@ -63,6 +63,14 @@ public:
     MultiNet networks;      // per trait
 
     // Getters called from tests
+    size_t getNetworkSize() const
+    {
+        size_t nedges = 0u;
+        for (size_t trait = 0u; trait < 3u; ++trait) {
+            nedges += getNetworkSize(trait);
+        }
+        return nedges;
+    }
     size_t getNetworkSize(const size_t &trait) const
     {
         return networks[trait].map.size();

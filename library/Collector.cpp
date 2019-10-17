@@ -33,9 +33,7 @@ vecLoci Collector::emptyloci(const GenArch &arch) const
 vecConnex Collector::emptyconnexions(const GenArch &arch) const
 {
     vecConnex connexions;
-    size_t nedges = 0u;
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        nedges += arch.getNetworkSize(trait);
+    const size_t nedges = arch.getNetworkSize();
 
     if (!nedges) return connexions;
 
@@ -80,7 +78,7 @@ double Xst(const vecDbl &v, const vecUns &n)
     return xst;
 }
 
-void Collector::analyze(const MetaPop &m, const Param &p)
+void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 {
 
     // Indices for readability
@@ -549,6 +547,18 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
     assert(RI >= -1.0);
     assert(RI <= 1.0);
+
+    // Network scan
+    for (size_t e = 0u; e < a.getNetworkSize(); ++e) {
+
+        // Reset the edge information
+        networkscan[e].corgen = 0.0;
+        networkscan[e].corbreed = 0.0;
+        networkscan[e].corfreq = 0.0;
+
+        // Compute the statistics
+
+    }
 
 }
 
