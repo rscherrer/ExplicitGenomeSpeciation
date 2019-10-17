@@ -2,22 +2,40 @@
 
 vecStrings Collector::whattosave() const
 {
-    return { "time", "ecotype0", "ecotype1", "popsize0", "popsize1",
-     "nfemales0", "nfemales1", "resource00", "resource01", "resource10",
-     "resource11", "mean_eco0", "mean_eco1", "mean_eco", "varP_eco",
-     "varG_eco", "varA_eco", "varD_eco", "varI_eco", "varN_eco", "Pst_eco",
-     "Gst_eco", "Qst_eco", "Cst_eco", "Fst_eco", "mean_mat0", "mean_mat1",
-     "mean_mat", "varP_mat", "varG_mat", "varA_mat", "varD_mat", "varI_mat",
-     "varN_mat", "Pst_mat", "Gst_mat", "Qst_mat", "Cst_mat", "Fst_mat",
-     "mean_ntr0", "mean_ntr1", "mean_ntr", "varP_ntr", "varG_ntr",
-     "varA_ntr", "varD_ntr", "varI_ntr", "varN_ntr", "Pst_ntr",
-     "Gst_ntr", "Qst_ntr", "Cst_ntr", "Fst_ntr", "ecological_iso",
-     "spatial_iso", "mating_iso", "varP_scan", "varG_scan",
-     "varA_scan", "varD_scan", "varI_scan", "varN_scan", "Pst_scan",
-     "Gst_scan", "Qst_scan", "Cst_scan", "Fst_scan", "avgeffect_scan",
-     "meangen_scan", "allfreq_scan", "corgen_edges", "corbreed_edges",
-     "corfreq_edges", "avgeffecti_edges", "avgeffectj_edges", "ecotype_pop",
-     "habitat_pop", "x_pop", "y_pop", "z_pop"
+
+    return {
+
+     "time",
+
+     "count00", "count01", "count10", "count11",
+     "fem0", "fem1",
+
+     "resource00", "resource01", "resource10", "resource11",
+
+     "mean00_x", "mean01_x", "mean10_x", "mean11_x", "varP_x", "varG_x",
+     "varA_x", "varD_x", "varI_x", "varN_x", "Pst_x", "Gst_x", "Qst_x", "Cst_x",
+     "Fst_x",
+
+     "mean00_y", "mean01_y", "mean10_y", "mean11_y", "varP_y", "varG_y",
+     "varA_y", "varD_y", "varI_y", "varN_y", "Pst_y", "Gst_y", "Qst_y", "Cst_y",
+     "Fst_y",
+
+     "mean00_z", "mean01_z", "mean10_z", "mean11_z", "varP_z", "varG_z",
+     "varA_z", "varD_z", "varI_z", "varN_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
+     "Fst_z",
+
+     "EI", "SI", "MI",
+
+     "genome_varP", "genome_varG", "genome_varA", "genome_varD", "genome_varI",
+     "genome_varN", "genome_Pst", "genome_Gst", "genome_Qst", "genome_Cst",
+     "genome_Fst", "genome_alpha", "genome_meang", "genome_freq",
+
+     "network_corgen", "network_corbreed", "network_corfreq", "network_avgi",
+     "network_avgj",
+
+     "population_ecotype", "population_hab", "population_x", "population_y",
+     "population_z"
+
      };
 }
 
@@ -708,23 +726,20 @@ namespace stf // save to file
 
 void Collector::print(const size_t &t, const MetaPop &m)
 {
+    std::clog << "starting printing...\n";
+
     size_t f = 0u; // file id
 
     // Time
     stf::write(utl::size2dbl(t), files[0u]); ++f;
 
     // Census
-    stf::write(utl::size2dbl(counts[2u][2u]), files[f]); ++f; // total
-    stf::write(utl::size2dbl(counts[0u][2u]), files[f]); ++f; // eco 0
-    stf::write(utl::size2dbl(counts[1u][2u]), files[f]); ++f; // eco 1
-    stf::write(utl::size2dbl(counts[2u][0u]), files[f]); ++f; // hab 0
-    stf::write(utl::size2dbl(counts[2u][1u]), files[f]); ++f; // hab 1
-    stf::write(utl::size2dbl(counts[0u][0u]), files[f]); ++f; // eco 0 hab 0
-    stf::write(utl::size2dbl(counts[0u][1u]), files[f]); ++f; // eco 0 hab 1
-    stf::write(utl::size2dbl(counts[1u][0u]), files[f]); ++f; // eco 1 hab 0
-    stf::write(utl::size2dbl(counts[1u][1u]), files[f]); ++f; // eco 1 hab 1
-    stf::write(utl::size2dbl(m.sexcounts[0u][0u]), files[f]); ++f; // fem hab 0
-    stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]); ++f; // fem hab 1
+    stf::write(utl::size2dbl(counts[0u][0u]), files[f]); ++f; // hab 0 eco 0
+    stf::write(utl::size2dbl(counts[0u][1u]), files[f]); ++f; // hab 0 eco 1
+    stf::write(utl::size2dbl(counts[1u][0u]), files[f]); ++f; // hab 1 eco 0
+    stf::write(utl::size2dbl(counts[1u][1u]), files[f]); ++f; // hab 1 eco 1
+    stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]); ++f; // fem hab 0
+    stf::write(utl::size2dbl(m.sexcounts[1u][1u]), files[f]); ++f; // fem hab 1
 
     // Resources in each habitat
     stf::write(m.resources[0u][0u], files[f]); ++f; // hab 0 res 0
@@ -734,14 +749,10 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        stf::write(means[trait][0u][0u], files[f]); ++f; // eco 0 hab 0
-        stf::write(means[trait][0u][1u], files[f]); ++f; // eco 0 hab 1
-        stf::write(means[trait][1u][0u], files[f]); ++f; // eco 1 hab 0
-        stf::write(means[trait][1u][1u], files[f]); ++f; // eco 1 hab 1
-        stf::write(means[trait][0u][2u], files[f]); ++f; // eco 0
-        stf::write(means[trait][1u][2u], files[f]); ++f; // eco 1
-        stf::write(means[trait][2u][0u], files[f]); ++f; // hab 0
-        stf::write(means[trait][2u][1u], files[f]); ++f; // hab 1
+        stf::write(means[trait][0u][0u], files[f]); ++f; // hab 0 eco 0
+        stf::write(means[trait][0u][1u], files[f]); ++f; // hab 0 eco 1
+        stf::write(means[trait][1u][0u], files[f]); ++f; // hab 1 eco 0
+        stf::write(means[trait][1u][1u], files[f]); ++f; // hab 1 eco 1
         stf::write(varP[trait], files[f]); ++f;
         stf::write(varG[trait], files[f]); ++f;
         stf::write(varA[trait], files[f]); ++f;
@@ -785,7 +796,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(genomescan[l].freq, files[f + off]); ++off;
     }
 
-    f += off + 1u; // move on to network files
+    f += off; // move on to network files
 
     // Network scans through edges
     for (size_t e = 0u; e < networkscan.size(); ++e) {
@@ -800,7 +811,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
     }
 
-    f += off + 1u; // move on to population files
+    f += off; // move on to population files
 
     // Population screenshot
     for (size_t i = 0u; i < m.getSize(); ++i) {
@@ -814,7 +825,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(m.getNeutral(i), files[f + off]); ++off;
     }
 
-    assert(f + off == files.size() - 1u); // should be done with all files
+    assert(f + off == files.size()); // should be done with all files
 
 }
 
