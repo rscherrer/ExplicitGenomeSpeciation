@@ -726,7 +726,6 @@ namespace stf // save to file
 
 void Collector::print(const size_t &t, const MetaPop &m)
 {
-    std::clog << "starting printing...\n";
 
     size_t f = 0u; // file id
 
@@ -810,6 +809,8 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(networkscan[e].avgj, files[f + off]); ++off;
 
     }
+
+    if (!networkscan.size()) off = 5u;
 
     f += off; // move on to population files
 
