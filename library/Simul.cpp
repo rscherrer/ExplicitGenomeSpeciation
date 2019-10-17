@@ -48,8 +48,11 @@ int simulate(const vecStrings &args)
             }
 
             // Analyze the metapopulation if needed
-            if (timetosave(t, pars)) collector.analyze(metapop, pars);
-
+            if (timetosave(t, pars)) {
+                collector.analyze(metapop, pars); // collect stats
+                // there is a problem with printing
+                // collector.print(t, metapop); // save them to files
+            }
         }
 
         std::clog << "Simulation ended.\n";

@@ -23,7 +23,10 @@ struct Locus
         Gst(0.0),
         Qst(0.0),
         Cst(0.0),
-        Fst(0.0)
+        Fst(0.0),
+        alpha(0.0),
+        meang(0.0),
+        freq(0.0)
     {}
 
     size_t id;
@@ -41,9 +44,34 @@ struct Locus
     double Qst;
     double Cst;
     double Fst;
+
+    double alpha;
+    double meang;
+    double freq;
+};
+
+struct Connexion
+{
+    Connexion(const size_t &i, const size_t &j, const size_t &t) :
+        id1(i),
+        id2(j),
+        trait(t),
+        corgen(0.0),
+        corbreed(0.0),
+        corfreq(0.0)
+    {}
+
+    size_t id1;
+    size_t id2;
+    size_t trait;
+
+    double corgen;
+    double corbreed;
+    double corfreq;
 };
 
 typedef std::vector<Locus> vecLoci;
+typedef std::vector<Connexion> vecConnex;
 typedef std::vector<std::shared_ptr<std::ofstream> > vecStreams;
 
 class Collector
@@ -68,6 +96,7 @@ public:
         Cst(utl::zeros(3u)),
         Fst(utl::zeros(3u)),
         genomescan(emptyloci(arch)),
+        networkscan(emptyconnexions(arch)),
         EI(0.0),
         SI(0.0),
         RI(0.0)
@@ -116,6 +145,7 @@ private:
 
     vecStrings whattosave() const;
     vecLoci emptyloci(const GenArch&) const;
+    vecConnex emptyconnexions(const GenArch&) const;
 
     vecStrings filenames;
     vecStreams files;
@@ -138,6 +168,7 @@ private:
     vecDbl Fst; // per trait
 
     vecLoci genomescan; // per locus
+    vecConnex networkscan; // per edge
 
     double EI;
     double SI;

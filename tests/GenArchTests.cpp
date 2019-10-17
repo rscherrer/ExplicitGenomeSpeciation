@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
 
 BOOST_AUTO_TEST_CASE(SeedGeneticArchitecture)
 {
-    std::clog << "Test that genetic architecture can be reused...\n";
+    std::clog << "Testing that genetic architecture can be reused...\n";
     Param pars;
     rnd::rng.seed(pars.seed);
     pars.archseed = 42u;

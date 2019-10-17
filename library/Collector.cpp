@@ -4,27 +4,52 @@ vecStrings Collector::whattosave() const
 {
     return { "time", "ecotype0", "ecotype1", "popsize0", "popsize1",
      "nfemales0", "nfemales1", "resource00", "resource01", "resource10",
-      "resource11", "mean_eco0", "mean_eco1", "mean_eco", "varP_eco",
-       "varG_eco", "varA_eco", "varD_eco", "varI_eco", "varN_eco", "Pst_eco",
-        "Gst_eco", "Qst_eco", "Cst_eco", "Fst_eco", "mean_mat0", "mean_mat1",
-         "mean_mat", "varP_mat", "varG_mat", "varA_mat", "varD_mat", "varI_mat",
-          "varN_mat", "Pst_mat", "Gst_mat", "Qst_mat", "Cst_mat", "Fst_mat",
-           "mean_ntr0", "mean_ntr1", "mean_ntr", "varP_ntr", "varG_ntr",
-            "varA_ntr", "varD_ntr", "varI_ntr", "varN_ntr", "Pst_ntr",
-             "Gst_ntr", "Qst_ntr", "Cst_ntr", "Fst_ntr", "ecological_iso",
-              "spatial_iso", "mating_iso", "varP_scan", "varG_scan",
-               "varA_scan", "varD_scan", "varI_scan", "varN_scan", "Pst_scan",
-                "Gst_scan", "Qst_scan", "Cst_scan", "Fst_scan" };
+     "resource11", "mean_eco0", "mean_eco1", "mean_eco", "varP_eco",
+     "varG_eco", "varA_eco", "varD_eco", "varI_eco", "varN_eco", "Pst_eco",
+     "Gst_eco", "Qst_eco", "Cst_eco", "Fst_eco", "mean_mat0", "mean_mat1",
+     "mean_mat", "varP_mat", "varG_mat", "varA_mat", "varD_mat", "varI_mat",
+     "varN_mat", "Pst_mat", "Gst_mat", "Qst_mat", "Cst_mat", "Fst_mat",
+     "mean_ntr0", "mean_ntr1", "mean_ntr", "varP_ntr", "varG_ntr",
+     "varA_ntr", "varD_ntr", "varI_ntr", "varN_ntr", "Pst_ntr",
+     "Gst_ntr", "Qst_ntr", "Cst_ntr", "Fst_ntr", "ecological_iso",
+     "spatial_iso", "mating_iso", "varP_scan", "varG_scan",
+     "varA_scan", "varD_scan", "varI_scan", "varN_scan", "Pst_scan",
+     "Gst_scan", "Qst_scan", "Cst_scan", "Fst_scan", "avgeffect_scan",
+     "meangen_scan", "allfreq_scan", "corgen_edges", "corbreed_edges",
+     "corfreq_edges", "ecotype_pop", "habitat_pop", "x_pop", "y_pop", "z_pop"
+     };
 }
 
 vecLoci Collector::emptyloci(const GenArch &arch) const
 {
-    std::vector<Locus> loci;
+    vecLoci loci;
     loci.reserve(arch.traits.size());
     for (size_t locus = 0u; locus < arch.traits.size(); ++locus) {
         loci.push_back(Locus(locus, arch.traits[locus]));
     }
     return loci;
+}
+
+vecConnex Collector::emptyconnexions(const GenArch &arch) const
+{
+    vecConnex connexions;
+    size_t nedges = 0u;
+    for (size_t trait = 0u; trait < 3u; ++trait)
+        nedges += arch.getNetworkSize(trait);
+
+    if (!nedges) return connexions;
+
+    connexions.reserve(nedges);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        for (size_t edge = 0u; edge < arch.getNetworkSize(trait); ++edge) {
+            const size_t i = arch.networks[trait].edges[edge].first;
+            const size_t j = arch.networks[trait].edges[edge].second;
+            connexions.push_back(Connexion(i, j, trait));
+        }
+    }
+
+    assert(connexions.size() == nedges);
+    return connexions;
 }
 
 double Xst(const vecDbl &v, const vecUns &n)
@@ -168,6 +193,9 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].Qst = 0.0;
         genomescan[l].Cst = 0.0;
         genomescan[l].Fst = 0.0;
+        genomescan[l].alpha = 0.0;
+        genomescan[l].meang = 0.0;
+        genomescan[l].freq = 0.0;
 
         const double locusvarE = p.locusE[genomescan[l].trait];
 
@@ -212,6 +240,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             assert(allfreq[eco] <= 1.0);
         }
 
+        genomescan[l].freq = allfreq[tot];
+
         // Regress genetic values on allele counts
 
         // meanq = mean allele count
@@ -223,6 +253,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         // meang = mean genetic value
 
         const double meang = gsumgen[tot][all] / ecounts[tot];
+        genomescan[l].meang = meang;
 
         // varq = variance in allele count
 
@@ -245,8 +276,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
         // alpha = average effect of a mutation
 
-        double alpha = 0.0;
-        if (varq != 0.0) alpha = covqg / varq;
+        const double alpha = varq == 0.0 ? 0.0 : covqg / varq;
+        genomescan[l].alpha = alpha;
 
         // Calculate genotype-specific statistics
 
@@ -590,9 +621,15 @@ void Collector::print(const size_t &t, const MetaPop &m)
     stf::write(SI, files[f]); ++f;
     stf::write(RI, files[f]); ++f;
 
-    // Genome scans
+    size_t off; // offset to write multiple loci to the same file
+
+    // Genome scans through loci
     for (size_t l = 0u; l < genomescan.size(); ++l) {
-        size_t off = 0u;
+
+        off = 0u; // reset the offset
+
+        // Writing scalars here so maybe no need for vector writer
+
         stf::write(genomescan[l].varP, files[f + off]); ++off;
         stf::write(genomescan[l].varG, files[f + off]); ++off;
         stf::write(genomescan[l].varA, files[f + off]); ++off;
@@ -604,7 +641,40 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(genomescan[l].Qst, files[f + off]); ++off;
         stf::write(genomescan[l].Cst, files[f + off]); ++off;
         stf::write(genomescan[l].Fst, files[f + off]); ++off;
+        stf::write(genomescan[l].alpha, files[f + off]); ++off;
+        stf::write(genomescan[l].meang, files[f + off]); ++off;
+        stf::write(genomescan[l].freq, files[f + off]); ++off;
     }
+
+    f += off + 1u; // move on to network files
+
+    // Network scans through edges
+    for (size_t e = 0u; e < networkscan.size(); ++e) {
+
+        off = 0u; // reset the offset
+
+        stf::write(networkscan[e].corgen, files[f + off]); ++off;
+        stf::write(networkscan[e].corbreed, files[f + off]); ++off;
+        stf::write(networkscan[e].corfreq, files[f + off]); ++off;
+
+    }
+
+    f += off + 1u; // move on to population files
+
+    // Population screenshot
+    for (size_t i = 0u; i < m.getSize(); ++i) {
+
+        off = 0u;
+
+        stf::write(utl::size2dbl(m.getEcotype(i)), files[f + off]); ++off;
+        stf::write(utl::size2dbl(m.getHabitat(i)), files[f + off]); ++off;
+        stf::write(m.getEcoTrait(i), files[f + off]); ++off;
+        stf::write(m.getMatePref(i), files[f + off]); ++off;
+        stf::write(m.getNeutral(i), files[f + off]); ++off;
+    }
+
+    assert(f + off == files.size() - 1u); // should be done with all files
+
 }
 
 
