@@ -61,3 +61,6 @@ BOOST_AUTO_TEST_CASE(testUseLongSim) // takes a while
     BOOST_CHECK_EQUAL(simulate({ "EGS_test", "validparamfile2.txt" }), 0);
 }
 */
+
+
+

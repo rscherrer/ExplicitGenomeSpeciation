@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
     pars.capacity = 100.0;
     pars.maxfeed = 1.0;
     pars.dispersal = 0.0;
-    pars.birth = 4.0; // relatively high birth rate
+    pars.birth = 1000.0; // high birth rate
     pars.demesizes = { 10u, 0u };
     pars.survival = 1.0; // 100% chance survival
     pars.tburnin = 0u;

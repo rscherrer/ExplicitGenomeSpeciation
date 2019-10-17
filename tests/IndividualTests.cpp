@@ -156,6 +156,7 @@ BOOST_AUTO_TEST_CASE(AlleleOneEnhancesGeneExpression)
 BOOST_AUTO_TEST_CASE(HybridDevelopsWithZeroTraitValuesIfCodominance)
 {
     Param pars;
+    pars.mutation = 0.0;
     pars.dominancevar = 0.0; // codominance
     GenArch arch = GenArch(pars);
     pars.allfreq = 0.0;
