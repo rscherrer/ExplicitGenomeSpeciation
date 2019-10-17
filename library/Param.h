@@ -16,25 +16,24 @@
 struct Param {
 
     Param() :
-        rdynamics(0u),
-        inflow(1.0),
-        outflow(1000.0),
+        rdynamics(1u),
+        trenewal(0.001),
         capacity(100.0),
-        replenish(10.0),
-        hsymmetry(1.0),
-        ecosel(1.0),
-        dispersal(1.0E-3),
+        replenish(1.0),
+        hsymmetry(0.0),
+        ecosel(1.8),
+        dispersal(1.0E-2),
         birth(4.0),
-        survival(0.6),
+        survival(0.8),
         sexsel(10.0),
         matingcost(0.01),
         maxfeed(4.0E-4),
-        demesizes({ 10u, 0u }),        
-        nloci(300u), // cannot be provided
-        nvertices({ 100u, 100u, 100u }),
+        demesizes({ 100u, 0u }),
+        nloci(90u), // cannot be provided
+        nvertices({ 30u, 30u, 30u }),
         nedges({ 0u, 0u, 0u }),
         nchrom(3u),
-        mutation(1.0E-6),
+        mutation(1.0E-3),
         recombination(0.01),
         allfreq(0.2),
         scaleA({ 1.0, 1.0, 1.0 }),
@@ -48,9 +47,9 @@ struct Param {
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(10),
-        tend(10),
-        tsave(10),
+        tburnin(5),
+        tend(5),
+        tsave(5),
         record(true),
         seed(makeDefaultSeed()),
         ntrials(100u)
@@ -72,8 +71,7 @@ struct Param {
 
     // Ecological parameters    
     size_t rdynamics;
-    double inflow;
-    double outflow;
+    double trenewal;
     double capacity;
     double replenish;
     double hsymmetry;

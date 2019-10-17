@@ -184,8 +184,9 @@ void Individual::develop(const Param &p, const GenArch &arch)
     neutrait = traitvalues[2u];
 
     // Feeding rates
-    feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-    feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+    const double max = p.rdynamics ? 1.0 : p.maxfeed;
+    feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+    feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);
