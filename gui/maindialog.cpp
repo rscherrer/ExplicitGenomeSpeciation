@@ -109,7 +109,6 @@ void MainDialog::on_run_button_clicked()
                 ui->plot->update();
                 QThread::msleep(100);
             // }
-
         }
         // Show output
         {

@@ -1,35 +1,34 @@
-rdynamics 1
-inflow 1
-outflow 1000
-capacity 1000
-replenish 1
-hsymmetry 0
-ecosel 1
-dispersal 0.001
-birth 4
-survival 0.6
-sexsel 10
-matingcost 0.01
-maxfeed 0.0004
-demesizes 10 0
-nvertices 100 100 100
-nedges 0 0 0
-nchrom 3
-mutation 0.000001
-recombination 0.01
-allfreq 0.2
-scaleA 1 1 1
-scaleD 0 0 0
-scaleI 0 0 0
-scaleE 0 0 0
-skews 1 1 1
-effectshape 2
-effectscale 1
-interactionshape 5
-interactionscale 1
-dominancevar 1
-tburnin 10
-tend 10
-tsave 10
-record 1
-ntrials 100
+rdynamics	1
+trenewal	0.001
+capacity	10
+replenish	1
+hsymmetry	0
+ecosel	1.8
+dispersal	0.01
+birth	4
+survival	0.8
+sexsel	10
+matingcost	0.01
+maxfeed	0.0004
+demesizes	100	0
+nvertices	40	40	40
+nedges	0	0	0
+nchrom	3
+mutation	0.001
+recombination	0.01
+allfreq	0.2
+scaleA	0.5	0.5	0.5
+scaleD	0	0	0
+scaleI	0.5	0.5	0.5
+scaleE	0	0	0
+skews	1	1	1
+effectshape	2
+effectscale	1
+interactionshape	5
+interactionscale	1
+dominancevar	1
+tburnin	1000
+tend	10000
+tsave	100
+record	1
+ntrials	100
