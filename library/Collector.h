@@ -157,11 +157,11 @@ public:
         return RI;
     }
 
-    std::vector<float> get_Fst() const
+    std::vector<double> get_Fst() const
     {
-        std::vector<float> output(genomescan.size());
+        std::vector<double> output(genomescan.size());
         for(size_t i = 0; i < genomescan.size(); ++i) {
-            output[i] = static_cast<float>(genomescan[i].Fst);
+            output[i] = genomescan[i].Fst;
         }
         return output;
     }

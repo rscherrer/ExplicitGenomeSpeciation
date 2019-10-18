@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
     metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(collector.getEI(), 1.0);    
 }
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsOneIfEcotypesAreSeparated)
     metapop.resetEcoTraits(0u, 1.0, pars); // only trait 1 in habitat 1
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(collector.getSI(), 1.0);
 }
 
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(MatingIsolationIsOneIfMatingIsAssortative)
     metapop.resetMatePrefs(1.0); // assortative mating
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(utl::round(collector.getRI(), 4u), 1.0);
 }
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsZeroIfOneHabitatIsEmpty)
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(collector.getSI(), 0.0);
 }
 
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(MatingIsolationIsZeroIfOnlyOneSex)
     metapop.resetGenders(true); // only females
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(collector.getRI(), 0.0);
 }
 
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
     metapop.resetEcoTraits(-1.0, pars); // should produce only ecotype 0
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars, arch);
+    collector.analyze(metapop, pars);
     BOOST_CHECK_EQUAL(collector.getEI(), 0.0);
     BOOST_CHECK_EQUAL(collector.getSI(), 0.0);
     BOOST_CHECK_EQUAL(collector.getRI(), 0.0);
