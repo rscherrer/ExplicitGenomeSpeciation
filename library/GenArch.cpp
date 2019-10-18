@@ -1,5 +1,11 @@
 #include "GenArch.h"
 
+bool GenArch::resetseed(const size_t &seed)
+{
+    rnd::rng.seed(seed);
+    return true;
+}
+
 vecDbl GenArch::makeChromosomes(const Param &p)
 {
 

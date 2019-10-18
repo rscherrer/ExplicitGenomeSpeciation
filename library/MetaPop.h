@@ -116,6 +116,26 @@ public:
     {
         return population[i].getFeeding(r);
     }
+    size_t getEcotype(const size_t &i) const
+    {
+        return population[i].getEcotype();
+    }
+    size_t getHabitat(const size_t &i) const
+    {
+        return population[i].getHabitat();
+    }
+    double getEcoTrait(const size_t &i) const
+    {
+        return population[i].getEcoTrait();
+    }
+    double getMatePref(const size_t &i) const
+    {
+        return population[i].getMatePref();
+    }
+    double getNeutral(const size_t &i) const
+    {
+        return population[i].getNeutral();
+    }
 
     // Resetters used in tests
     void resetEcoTraits(const double &x, const Param &p)

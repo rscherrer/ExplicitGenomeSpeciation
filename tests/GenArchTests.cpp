@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(LociEncodeTheRightTraits)
     pars.nvertices = { 10u, 2u, 2u };
     pars.update();
     GenArch arch = GenArch(pars);
-    BOOST_CHECK_EQUAL(utl::sumu(arch.traits), 6u);
+    BOOST_CHECK_EQUAL(arch.getSumTraits(), 6u);
 }
 
 BOOST_AUTO_TEST_CASE(EffectSizesAreZeroIfScaleParamIsZero)
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(EffectSizesAreZeroIfScaleParamIsZero)
     Param pars;
     pars.effectscale = 0.0;
     GenArch arch = GenArch(pars);
-    BOOST_CHECK_EQUAL(utl::sum(arch.effects), 0.0);
+    BOOST_CHECK_EQUAL(arch.getSumEffects(), 0.0);
 }
 
 BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
     Param pars;
     pars.dominancevar = 0.0;
     GenArch arch = GenArch(pars);
-    BOOST_CHECK_EQUAL(utl::sum(arch.dominances), 0.0);
+    BOOST_CHECK_EQUAL(arch.getSumDominances(), 0.0);
 }
 
 BOOST_AUTO_TEST_CASE(NetworksAreEmptyIfNoEdges)
@@ -96,4 +96,27 @@ BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
     BOOST_CHECK_EQUAL(arch.getSumWeights(0u), 0.0);
     BOOST_CHECK_EQUAL(arch.getSumWeights(1u), 0.0);
     BOOST_CHECK_EQUAL(arch.getSumWeights(2u), 0.0);
+}
+
+// Two simulations with the same architecture seed should have the exact
+// same genetic architecture
+
+BOOST_AUTO_TEST_CASE(SeedGeneticArchitecture)
+{
+    std::clog << "Testing that genetic architecture can be reused...\n";
+    Param pars;
+    rnd::rng.seed(pars.seed);
+    pars.archseed = 42u;
+    GenArch arch1 = GenArch(pars);
+    GenArch arch2 = GenArch(pars);
+    BOOST_CHECK_EQUAL(arch1.getSumEffects(), arch2.getSumEffects());
+    BOOST_CHECK_EQUAL(arch1.getSumDominances(), arch2.getSumDominances());
+
+    // Control that different seeds give different architectures
+    pars.archseed = 42u;
+    GenArch arch3 = GenArch(pars);
+    pars.archseed = 43u;
+    GenArch arch4 = GenArch(pars);
+    BOOST_CHECK(arch3.getSumEffects() != arch4.getSumEffects());
+    BOOST_CHECK(arch3.getSumDominances() != arch4.getSumDominances());
 }

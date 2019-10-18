@@ -12,6 +12,8 @@ namespace tst
     void makeInvalidParamName();
     void makeInvalidParamValue();
     void makeInvalidParamValue2();
+    void makeParamFileWithArchitecture();
+    void makeParamFileWithMissingArchitecture();
 
 }
 
