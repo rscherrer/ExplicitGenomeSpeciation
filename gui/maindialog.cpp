@@ -63,7 +63,7 @@ void MainDialog::on_run_button_clicked()
             }
 
             // Analyze the metapopulation if needed
-            if (timetosave(t, pars)) collector.analyze(metapop, pars);
+            if (timetosave(t, pars)) collector.analyze(metapop, pars, arch);
 
         }
         // Show output

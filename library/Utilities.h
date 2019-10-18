@@ -8,6 +8,8 @@
 #include <cassert>
 #include <algorithm>
 #include <cmath>
+#include <fstream>
+#include <memory>
 
 namespace utl
 {
@@ -32,6 +34,12 @@ namespace utl
     double round(const double&, const size_t&);
     void correct(double&, const double&, const double&);
 
+}
+
+namespace stf // save to file
+{
+    void write(const double&, std::shared_ptr<std::ofstream>&);
+    void write(const vecDbl&, std::shared_ptr<std::ofstream>&);
 }
 
 #endif

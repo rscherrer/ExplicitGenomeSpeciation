@@ -48,10 +48,11 @@ struct Param {
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(5),
-        tend(20),
+        tburnin(0),
+        tend(10),
         tsave(10),
         record(true),
+        archsave(false),
         seed(makeDefaultSeed()),
         archseed(makeDefaultSeed()),
         ntrials(100u)
@@ -116,6 +117,7 @@ struct Param {
     int  tend;
     int  tsave;
     bool record;
+    bool archsave;
     size_t seed;
     size_t archseed;
     size_t ntrials;
