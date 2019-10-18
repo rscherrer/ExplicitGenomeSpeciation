@@ -16,6 +16,8 @@ public:
   explicit MainDialog(QWidget *parent = nullptr);
   ~MainDialog();
 
+  void plot();
+
 private slots:
   void on_run_button_clicked();
 
@@ -24,6 +26,9 @@ private:
 
   ///Read the parameters from the GUI
   Param createPars();
+
+  QVector<double> qv_x;
+  QVector<double> qv_y;
 };
 
 #endif // MAINDIALOG_H

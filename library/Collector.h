@@ -156,6 +156,15 @@ public:
         return RI;
     }
 
+    std::vector<double> get_Fst() const
+    {
+        std::vector<double> output(genomescan.size());
+        for(size_t i = 0; i < genomescan.size(); ++i) {
+            output[i] = genomescan[i].Fst;
+        }
+        return output;
+    }
+
 private:
 
     vecStrings whattosave() const;
