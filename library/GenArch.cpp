@@ -1,12 +1,12 @@
 #include "GenArch.h"
 
-bool GenArch::resetseed(const size_t &seed)
+bool GenArch::resetseed(const size_t &seed) const
 {
     rnd::rng.seed(seed);
     return true;
 }
 
-vecDbl GenArch::makeChromosomes(const Param &p)
+vecDbl GenArch::makeChromosomes(const Param &p) const
 {
 
     vecDbl chromends;
@@ -20,7 +20,7 @@ vecDbl GenArch::makeChromosomes(const Param &p)
 
 }
 
-vecUns GenArch::makeEncodedTraits(const Param &p)
+vecUns GenArch::makeEncodedTraits(const Param &p) const
 {
 
     vecUns encoded;
@@ -51,7 +51,7 @@ vecUns GenArch::makeEncodedTraits(const Param &p)
 
 
 
-vecDbl GenArch::makeLocations(const Param &p)
+vecDbl GenArch::makeLocations(const Param &p) const
 {
     vecDbl positions;
     positions.reserve(p.nloci);
@@ -68,7 +68,7 @@ vecDbl GenArch::makeLocations(const Param &p)
 }
 
 
-vecDbl GenArch::makeEffects(const Param &p)
+vecDbl GenArch::makeEffects(const Param &p) const
 {
 
     if (p.effectshape == 0.0 || p.effectscale == 0.0)
@@ -95,7 +95,7 @@ vecDbl GenArch::makeEffects(const Param &p)
 }
 
 
-vecDbl GenArch::makeDominances(const Param &p)
+vecDbl GenArch::makeDominances(const Param &p) const
 {
 
     if (p.dominancevar == 0.0) return utl::zeros(p.nloci);
@@ -119,7 +119,7 @@ vecDbl GenArch::makeDominances(const Param &p)
     return coefficients;
 }
 
-MultiNet GenArch::makeNetworks(const Param &p)
+MultiNet GenArch::makeNetworks(const Param &p) const
 {
     MultiNet multinet;
     multinet.reserve(3u);
@@ -134,4 +134,20 @@ MultiNet GenArch::makeNetworks(const Param &p)
     assert(multinet.size() == 3u);
 
     return multinet;
+}
+
+vecStrings GenArch::whattosave() const
+{
+    return {
+
+        "architecture_chromosomes",
+        "architecture_traits",
+        "architecture_locations",
+        "architecture_effects",
+        "architecture_dominances",
+        "architecture_edges1",
+        "architecture_edges2",
+        "architecture_weights"
+
+    };
 }

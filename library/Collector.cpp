@@ -709,21 +709,6 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
 }
 
-namespace stf // save to file
-{
-    void write(const double &x, std::shared_ptr<std::ofstream> &out)
-    {
-        out->write((char *) &x, sizeof(x));
-    }
-
-    void write(const vecDbl &vec, std::shared_ptr<std::ofstream> &out)
-    {
-        if (vec.size() > 0.0)
-            for (size_t i = 0u; i < vec.size(); ++i)
-                stf::write(vec[i], out);
-    }
-}
-
 void Collector::print(const size_t &t, const MetaPop &m)
 {
 

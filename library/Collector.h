@@ -5,7 +5,6 @@
 #include "Utilities.h"
 #include "MetaPop.h"
 #include "GenArch.h"
-#include <fstream>
 #include <cassert>
 
 struct Locus
