@@ -50,13 +50,31 @@ void MetaPop::disperse(const Param &p)
     // Change the habitat attribute of these migrants
 
     vecDbl probs = utl::ones(population.size());
-    size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
-    while (nmigrants) {
-        const size_t mig = rnd::sample(probs);
-        probs[mig] = 0.0;
-        population[mig].disperse();
-        --nmigrants;
+
+    if (p.dispersal < 0.5) {
+        auto hasmigrated = boost::dynamic_bitset<>(population.size());
+        size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
+        size_t t = 0u;
+        while (nmigrants) {
+            const size_t mig = rnd::random(population.size());
+            if (!hasmigrated.test(mig)) {
+                hasmigrated.set(mig);
+                population[mig].disperse();
+                --nmigrants;
+                t = 0u;
+            }
+
+            // If we run too long without finding an individual to migrate
+            // Then probably everyone has migrated
+            ++t;
+            if (t > 1000u) break;
+        }
     }
+    else {
+        for (size_t i = 0u; i < population.size(); ++i)
+            if (rnd::bernoulli(p.dispersal)) population[i].disperse();
+    }
+
 }
 
 void MetaPop::consume(const Param &p)
