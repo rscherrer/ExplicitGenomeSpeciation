@@ -15,7 +15,7 @@ Crowd MetaPop::populate(const Param &p, const GenArch &arch)
 
     for (size_t ind = 0u; ind < n; ++ind) {
         indivs.push_back(Individual(p, arch));
-        if (ind >= n0) indivs.back().disperse();
+        if (ind >= n0) indivs.back().disperse(); // is this not making a copy? test it
     }
 
     assert(indivs.size() == n);
@@ -165,6 +165,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     const size_t nparents = population.size();
 
+    // Discrete distributions for each habitat
+    // auto market = std::vector<std::discrete_distribution<size_t> >;
+
+    auto market0 = std::discrete_distribution<size_t>(probs[0u].cbegin(), probs[0u].cend());
+    auto market1 = std::discrete_distribution<size_t>(probs[1u].cbegin(), probs[1u].cend());
+
     // For each parent...
     for (size_t mom = 0u; mom < nparents; ++mom) {
 
@@ -181,7 +187,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 --timeleft;
 
                 // And encounters males one at a time with replacement
-                const size_t dad = rnd::sample(probs[hab]);
+                const size_t dad = hab ? market1(rnd::rng) : market0(rnd::rng);
                 const double maletrait = population[dad].getEcoTrait();
 
                 // If the female accepts to mate                
