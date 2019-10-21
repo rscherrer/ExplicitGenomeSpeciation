@@ -166,8 +166,6 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
     const size_t nparents = population.size();
 
     // Discrete distributions for each habitat
-    // auto market = std::vector<std::discrete_distribution<size_t> >;
-
     auto market0 = std::discrete_distribution<size_t>(probs[0u].cbegin(), probs[0u].cend());
     auto market1 = std::discrete_distribution<size_t>(probs[1u].cbegin(), probs[1u].cend());
 
