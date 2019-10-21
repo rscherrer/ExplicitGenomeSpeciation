@@ -48,9 +48,6 @@ void MetaPop::disperse(const Param &p)
 {
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
-
-    vecDbl probs = utl::ones(population.size());
-
     if (p.dispersal < 0.5) {
         auto hasmigrated = boost::dynamic_bitset<>(population.size());
         size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
