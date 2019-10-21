@@ -1,7 +1,5 @@
 #include "Network.h"
 
-typedef std::discrete_distribution<size_t> Discrete;
-
 bool checkedges(const double &e, const double &n)
 {
     return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes

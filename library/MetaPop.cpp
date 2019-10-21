@@ -15,7 +15,7 @@ Crowd MetaPop::populate(const Param &p, const GenArch &arch)
 
     for (size_t ind = 0u; ind < n; ++ind) {
         indivs.push_back(Individual(p, arch));
-        if (ind >= n0) indivs.back().disperse();
+        if (ind >= n0) indivs.back().disperse(); // is this not making a copy? test it
     }
 
     assert(indivs.size() == n);
@@ -48,15 +48,30 @@ void MetaPop::disperse(const Param &p)
 {
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
+    if (p.dispersal < 0.5) {
+        auto hasmigrated = boost::dynamic_bitset<>(population.size());
+        size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
+        size_t t = 0u;
+        while (nmigrants) {
+            const size_t mig = rnd::random(population.size());
+            if (!hasmigrated.test(mig)) {
+                hasmigrated.set(mig);
+                population[mig].disperse();
+                --nmigrants;
+                t = 0u;
+            }
 
-    vecDbl probs = utl::ones(population.size());
-    size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
-    while (nmigrants) {
-        const size_t mig = rnd::sample(probs);
-        probs[mig] = 0.0;
-        population[mig].disperse();
-        --nmigrants;
+            // If we run too long without finding an individual to migrate
+            // Then probably everyone has migrated
+            ++t;
+            if (t > 1000u) break;
+        }
     }
+    else {
+        for (size_t i = 0u; i < population.size(); ++i)
+            if (rnd::bernoulli(p.dispersal)) population[i].disperse();
+    }
+
 }
 
 void MetaPop::consume(const Param &p)
@@ -150,6 +165,10 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     const size_t nparents = population.size();
 
+    // Discrete distributions for each habitat
+    auto market0 = std::discrete_distribution<size_t>(probs[0u].cbegin(), probs[0u].cend());
+    auto market1 = std::discrete_distribution<size_t>(probs[1u].cbegin(), probs[1u].cend());
+
     // For each parent...
     for (size_t mom = 0u; mom < nparents; ++mom) {
 
@@ -166,7 +185,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 --timeleft;
 
                 // And encounters males one at a time with replacement
-                const size_t dad = rnd::sample(probs[hab]);
+                const size_t dad = hab ? market1(rnd::rng) : market0(rnd::rng);
                 const double maletrait = population[dad].getEcoTrait();
 
                 // If the female accepts to mate                

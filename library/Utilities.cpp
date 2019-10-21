@@ -9,21 +9,13 @@ double utl::sqr(const double &number)
 // Vector of ones
 vecDbl utl::ones(const size_t &n)
 {
-    vecDbl ones;
-    ones.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        ones.push_back(1.0);
-    return ones;
+    return vecDbl(n, 1.0);
 }
 
 // Vector of zeros
 vecDbl utl::zeros(const size_t &n)
 {
-    vecDbl zeros;
-    zeros.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0.0);
-    return zeros;
+    return vecDbl(n, 0.0);
 }
 
 // Matrix of zeros
@@ -49,11 +41,7 @@ Matx3d utl::zeros(const size_t &n0, const size_t &n1, const size_t &n2)
 // Unsigned zeros
 vecUns utl::uzeros(const size_t &n)
 {
-    vecUns zeros;
-    zeros.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0u);
-    return zeros;
+    return vecUns(n, 0u);
 }
 
 // Matrix of unsigned zeros
@@ -69,21 +57,13 @@ MatUns utl::uzeros(const size_t &nrow, const size_t &ncol)
 // Repeat a number many times
 vecDbl utl::rep(const double &x, const size_t &n)
 {
-    vecDbl reps;
-    reps.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        reps.push_back(x);
-    return reps;
+    return vecDbl(n, x);
 }
 
 // Repeat an unsigned integer many times
 vecUns utl::repUns(const size_t &x, const size_t &n)
 {
-    vecUns reps;
-    reps.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        reps.push_back(x);
-    return reps;
+    return vecUns(n, x);
 }
 
 
