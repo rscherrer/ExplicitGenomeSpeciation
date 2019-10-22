@@ -232,7 +232,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
             const size_t eco = m.population[i].getEcotype();
             const double gen = m.population[i].getLocusValue(genomescan[l].id);
-            const double zyg = m.population[i].getZygosity(genomescan[l].id);
+            const size_t zyg = m.population[i].getZygosity(genomescan[l].id);
 
             ++gcounts[eco][zyg];
             gsumgen[eco][zyg] += gen;

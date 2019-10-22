@@ -53,6 +53,10 @@ vecEdg Network::makeMap(const Param& p) const
             if (utl::sum(probs) < 1.0) break;
 
             // Make a bond without replacement and update degree distribution
+            // Note: sampling multiple time requires initializing a new
+            // discrete distribution everytime, which is time consuming.
+            // But this is done only when generating the architecture
+            // so probably not that big of a deal
             const size_t partner = rnd::sample(probs);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
