@@ -21,6 +21,10 @@ public:
 private slots:
   void on_run_button_clicked();
 
+  void on_btn_rand_points_clicked();
+
+  void on_btn_one_point_clicked();
+
 private:
   Ui::MainDialog *ui;
 

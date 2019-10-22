@@ -62,6 +62,20 @@
       <item row="3" column="0" colspan="2">
        <widget class="QPlainTextEdit" name="output"/>
       </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_rand_points">
+        <property name="text">
+         <string>Generate_points</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="btn_one_point">
+        <property name="text">
+         <string>Add single point</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -69,7 +83,11 @@
     <widget class="QWidget" name="main_area" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">
-       <widget class="QCustomPlot" name="plot" native="true"/>
+       <widget class="QCustomPlot" name="plot" native="true">
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

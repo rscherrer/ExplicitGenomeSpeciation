@@ -15,6 +15,9 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot->graph(0)->setLineStyle(QCPGraph::lsNone);
   ui->plot->xAxis->setRange(0,90);
   ui->plot->yAxis->setRange(0,1);
+  ui->plot->xAxis->grid()->setVisible(false);
+  ui->plot->yAxis->grid()->setVisible(false);
+ // plot->xAxis->grid().setVisible(false);
 }
 
 MainDialog::~MainDialog()
@@ -30,7 +33,7 @@ void MainDialog::plot()
     ui->plot->graph(0)->setData(qv_x, qv_y);
     ui->plot->replot();
     ui->plot->update();
-    QThread::msleep(100);
+//    QThread::msleep(100);
    // ui->plot->
 }
 
@@ -125,4 +128,51 @@ void MainDialog::on_run_button_clicked()
     {
         std::cerr << "Exception: " << err.what() << '\n';
     }
+}
+
+void MainDialog::on_btn_rand_points_clicked()
+{
+    for(int t = 0; t < 1000; ++t) {
+        qv_x.clear();
+        qv_y.clear();
+        for(size_t i = 0; i < 90; ++i) {
+            qv_x.append(i);
+            qv_y.append(1.0 * std::rand() / RAND_MAX);
+        }
+
+      //  ui->plot->graph(0)->clearData();
+      //  ui->plot->clearItems();
+      //  ui->plot->graph(0)->setData(qv_x, qv_y);
+
+       // ui->plot->replot();
+     //   ui->plot->update();
+
+
+
+
+        std::stringstream s;
+        s << t << "\n";
+        ui->output->appendPlainText(QString::fromStdString(s.str()));
+        ui->output->repaint();
+        ui->output->update();
+        QThread::msleep(10);
+    }
+}
+
+
+
+void MainDialog::on_btn_one_point_clicked()
+{
+    double x = 90.0 * std::rand() / RAND_MAX;
+    double y = 1.0 * std::rand() / RAND_MAX;
+    //qv_x.clear();
+    qv_x.append(x);
+    //qv_y.clear();
+    qv_y.append(y);
+
+    //ui->plot->graph(0)->clearData();
+   // ui->plot->clearItems();
+    ui->plot->graph(0)->setData(qv_x, qv_y);
+    ui->plot->replot();
+    ui->plot->update();
 }
