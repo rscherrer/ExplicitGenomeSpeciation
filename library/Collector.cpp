@@ -560,8 +560,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         // Sample many pairs of males and females with replacement
         while (ntrials) {
 
-            const size_t fem = females[rnd::random(females.size())];
-            const size_t mal = males[rnd::random(males.size())];
+            const size_t fem = females[rnd::random2(females.size())];
+            const size_t mal = males[rnd::random2(males.size())];
 
             // See if the female accepts the male or not
             const double maletrait = m.population[mal].getEcoTrait();

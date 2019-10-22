@@ -9,6 +9,7 @@ namespace rnd
 {
 
     typedef std::discrete_distribution<size_t> discrete;
+    typedef std::uniform_int_distribution<size_t> random;
 
     /// Random number generator
     extern std::mt19937_64 rng;
@@ -18,7 +19,7 @@ namespace rnd
     size_t binomial(const size_t&, const double&);
     size_t poisson(const double&);
     size_t geometric(const double&);
-    size_t random(const size_t&);
+    size_t random2(const size_t&);
     double uniform(const double&);
     double normal(const double&, const double&);
     double hnormal(const double&);

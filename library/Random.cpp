@@ -31,11 +31,13 @@ size_t rnd::geometric(const double &p)
 }
 
 
+
 /// Function to sample from a uniform integer distribution
-size_t rnd::random(const size_t &n)
+size_t rnd::random2(const size_t &n)
 {
     return std::uniform_int_distribution<size_t>(0, n - 1)(rng);
 }
+
 
 
 /// Function to sample from a uniform distribution

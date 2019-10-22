@@ -49,7 +49,7 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
         // Upon free recombination point, switch to random chromosome
         case 1u:
-            hap = rnd::random(2u);
+            hap = rnd::random2(2u);
             ++chrom;
             chromend = arch.chromosomes[chrom];
             break;
@@ -77,7 +77,7 @@ void Individual::mutate(Genome &zygote, const Param &p) const
 {
     size_t nmut = rnd::poisson(p.mutation * zygote.size());
     while (nmut) {
-        zygote.flip(rnd::random(zygote.size()));
+        zygote.flip(rnd::random2(zygote.size()));
         --nmut;
     }
 

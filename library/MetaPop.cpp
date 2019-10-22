@@ -53,7 +53,7 @@ void MetaPop::disperse(const Param &p)
         size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
         size_t t = 0u;
         while (nmigrants) {
-            const size_t mig = rnd::random(population.size());
+            const size_t mig = rnd::random2(population.size());
             if (!hasmigrated.test(mig)) {
                 hasmigrated.set(mig);
                 population[mig].disperse();
@@ -137,12 +137,15 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     // Males' fitness determine their encounter probabilities
     Matrix probs = utl::zeros(2u, population.size());
+    vecDbl var = utl::zeros(2u);
+    vecDbl avg = utl::zeros(2u);
     for (size_t i = 0u; i < population.size(); ++i) {
 
         const size_t sex = population[i].getGender();
         const size_t hab = population[i].getHabitat();
         ++sexcounts[hab][sex];
 
+        // If it's a male...
         if (!sex) {
 
             probs[hab][i] = population[i].getFitness();
@@ -152,6 +155,9 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 const double y = population[i].getMatePref();
                 probs[hab][i] *= exp(-p.ecosel * utl::sqr(y));
             }
+
+            var[hab] += utl::sqr(probs[hab][i]);
+            avg[hab] += probs[hab][i];
         }
     }
 
@@ -165,12 +171,24 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     const size_t nparents = population.size();
 
-    // Discrete distributions for each habitat
-    if (utl::sum(probs[0u]) == 0.0) probs[0u] = utl::ones(population.size());
-    if (utl::sum(probs[1u]) == 0.0) probs[1u] = utl::ones(population.size());
+    // One discrete distribution per habitat
+    std::vector<rnd::discrete> markets;
+    std::vector<bool> isequal = { false, false };
+    for (size_t hab = 0u; hab < 2u; ++hab) {
 
-    auto market0 = rnd::discrete(probs[0u].cbegin(), probs[0u].cend());
-    auto market1 = rnd::discrete(probs[1u].cbegin(), probs[1u].cend());
+        // Probabilities are all one if fitnesses are too similar
+        var[hab] /= nparents;
+        avg[hab] /= nparents;
+        var[hab] -= utl::sqr(avg[hab]);
+        isequal[hab] = var[hab] <= 1.0E-6;
+        if (isequal[hab]) probs[hab] = utl::ones(nparents);
+
+        // Make distribution
+        markets.push_back(rnd::discrete(probs[hab].cbegin(), probs[hab].cend()));
+    }
+
+    // One random uniform distribution in case no need for discrete
+    auto equalmales = rnd::random(0, nparents - 1u);
 
     // For each parent...
     for (size_t mom = 0u; mom < nparents; ++mom) {
@@ -188,7 +206,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 --timeleft;
 
                 // And encounters males one at a time with replacement
-                const size_t dad = hab ? market1(rnd::rng) : market0(rnd::rng);
+                size_t dad;
+                if (isequal[hab])
+                    dad = equalmales(rnd::rng);
+                else
+                    dad = markets[hab](rnd::rng);
+
                 const double maletrait = population[dad].getEcoTrait();
 
                 // If the female accepts to mate                
