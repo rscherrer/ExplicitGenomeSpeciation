@@ -69,6 +69,7 @@ double rnd::exponential(const double &lambda)
 
 
 /// Discrete distribution from vector of probabilities
+/// Think of removing that one
 size_t rnd::sample(const vecDbl &probs)
 {
     return std::discrete_distribution<size_t>(probs.begin(), probs.end())(rng);
