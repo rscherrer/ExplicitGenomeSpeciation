@@ -3,11 +3,12 @@
 
 #include "Types.h"
 #include <random>
-//#include <vector>
 #include <stddef.h>
 
 namespace rnd
 {
+
+    typedef std::discrete_distribution<size_t> discrete;
 
     /// Random number generator
     extern std::mt19937_64 rng;
