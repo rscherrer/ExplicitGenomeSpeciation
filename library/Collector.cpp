@@ -557,11 +557,15 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         MatUns crosses = utl::uzeros(2u, 2u);
         size_t ntrials = p.ntrials;
 
+        // Sample from a distribution of males and a distribution of females
+        auto femalepool = rnd::random(0u, females.size() - 1u);
+        auto malepool = rnd::random(0u, males.size() - 1u);
+
         // Sample many pairs of males and females with replacement
         while (ntrials) {
 
-            const size_t fem = females[rnd::random2(females.size())];
-            const size_t mal = males[rnd::random2(males.size())];
+            const size_t fem = females[femalepool(rnd::rng)];
+            const size_t mal = males[malepool(rnd::rng)];
 
             // See if the female accepts the male or not
             const double maletrait = m.population[mal].getEcoTrait();
