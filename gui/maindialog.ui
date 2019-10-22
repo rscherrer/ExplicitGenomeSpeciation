@@ -59,20 +59,13 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
+      <item row="4" column="0" colspan="2">
        <widget class="QPlainTextEdit" name="output"/>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="btn_rand_points">
+      <item row="3" column="0" colspan="2">
+       <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Generate_points</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QPushButton" name="btn_one_point">
-        <property name="text">
-         <string>Add single point</string>
+         <string>Stop</string>
         </property>
        </widget>
       </item>
@@ -82,12 +75,24 @@
    <item row="0" column="1">
     <widget class="QWidget" name="main_area" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="2" column="0">
+       <widget class="QCustomPlot" name="plot_gst" native="true"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCustomPlot" name="plot_sex_trait" native="true"/>
+      </item>
       <item row="1" column="0">
        <widget class="QCustomPlot" name="plot" native="true">
         <property name="autoFillBackground">
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCustomPlot" name="plot_eco_trait" native="true"/>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCustomPlot" name="plot_neu_trait" native="true"/>
       </item>
      </layout>
     </widget>

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "library/Param.h"
+#include "qcustomplot.h"
 
 namespace Ui {
   class MainDialog;
@@ -16,14 +17,14 @@ public:
   explicit MainDialog(QWidget *parent = nullptr);
   ~MainDialog();
 
-  void plot();
+  void plot_fst(const std::vector<double>& v);
+  void plot_gst(const std::vector<double>& v);
+  void plot_eco_trait(const std::vector<double>& v);
 
 private slots:
   void on_run_button_clicked();
 
-  void on_btn_rand_points_clicked();
-
-  void on_btn_one_point_clicked();
+  void on_pushButton_clicked();
 
 private:
   Ui::MainDialog *ui;
@@ -31,8 +32,17 @@ private:
   ///Read the parameters from the GUI
   Param createPars();
 
-  QVector<double> qv_x;
-  QVector<double> qv_y;
+  QVector<double> fst_x;
+  QVector<double> fst_y;
+
+  QVector<double> gst_x;
+  QVector<double> gst_y;
+
+  bool is_running;
+
+  QCPBars *ecoBars;
+  QCPBars *sexBars;
+  QCPBars *neuBars;
 };
 
 #endif // MAINDIALOG_H

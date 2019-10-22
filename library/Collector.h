@@ -165,6 +165,44 @@ public:
         return output;
     }
 
+    std::vector<double> get_Gst() const
+    {
+        std::vector<double> output(genomescan.size());
+        for(size_t i = 0; i < genomescan.size(); ++i) {
+            output[i] = genomescan[i].Gst;
+        }
+        return output;
+    }
+
+    std::vector<double> get_eco_trait(const MetaPop &m) const
+    {
+       std::vector<double> output(m.population.size());
+       for(size_t i = 0; i < m.population.size(); ++i) {
+           output[i] = m.population[i].getEcotype();
+       }
+       return output;
+    }
+
+    std::vector<double> get_sex_trait(const MetaPop &m) const
+    {
+       std::vector<double> output(m.population.size());
+       for(size_t i = 0; i < m.population.size(); ++i) {
+           output[i] = m.population[i].getMatePref();
+       }
+       return output;
+    }
+
+    std::vector<double> get_neu_trait(const MetaPop &m) const
+    {
+       std::vector<double> output(m.population.size());
+       for(size_t i = 0; i < m.population.size(); ++i) {
+           output[i] = m.population[i].getNeutral();
+       }
+       return output;
+    }
+
+
+
 private:
 
     vecStrings whattosave() const;
