@@ -24,7 +24,7 @@ vecStrings Collector::whattosave() const
      "varA_z", "varD_z", "varI_z", "varN_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
      "Fst_z",
 
-     "EI", "SI", "MI",
+     "EI", "SI", "RI",
 
      "genome_varP", "genome_varG", "genome_varA", "genome_varD", "genome_varI",
      "genome_varN", "genome_Pst", "genome_Gst", "genome_Qst", "genome_Cst",
