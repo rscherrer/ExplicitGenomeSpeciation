@@ -1,6 +1,6 @@
 #include "Network.h"
 
-bool checkedges(const double &e, const double &n)
+bool checkedges(const size_t &e, const size_t &n)
 {
     return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes
 }
