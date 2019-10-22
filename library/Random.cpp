@@ -64,7 +64,7 @@ double rnd::hnormal(const double &sdev)
 
 
 /// Function to sample from an exponential distribution
-double rnd::exponential(const double &lambda)
+double rnd::exponential2(const double &lambda)
 {
     return std::exponential_distribution<double>(lambda)(rng);
 }

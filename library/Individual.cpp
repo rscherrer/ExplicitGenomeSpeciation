@@ -27,7 +27,10 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
     size_t locus = 0u;
     size_t chrom = 0u;
 
-    double crossover = rnd::exponential(p.recombination);
+    // Exponential distribution to sample crossover points
+    auto nextcrossover = rnd::exponential(p.recombination);
+
+    double crossover = rnd::exponential2(p.recombination);
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
@@ -44,12 +47,12 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
         // Upon crossover point, switch haplotype
         case 0u:
             hap = hap ? 0u : 1u;
-            crossover += rnd::exponential(p.recombination);
+            crossover += nextcrossover(rnd::rng);
             break;
 
         // Upon free recombination point, switch to random chromosome
         case 1u:
-            hap = rnd::random2(2u);
+            hap = rnd::bernoulli(0.5);
             ++chrom;
             if (chrom < p.nchrom) chromend = arch.chromosomes[chrom];
             assert(chrom < p.nchrom);

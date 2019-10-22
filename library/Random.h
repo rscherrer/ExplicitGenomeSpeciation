@@ -10,6 +10,7 @@ namespace rnd
 
     typedef std::discrete_distribution<size_t> discrete;
     typedef std::uniform_int_distribution<size_t> random;
+    typedef std::exponential_distribution<double> exponential;
 
     /// Random number generator
     extern std::mt19937_64 rng;
@@ -23,7 +24,7 @@ namespace rnd
     double uniform(const double&);
     double normal(const double&, const double&);
     double hnormal(const double&);
-    double exponential(const double&);
+    double exponential2(const double&);
     size_t sample(const vecDbl&);
     double flip(const double&, const double&);
     double gamma(const double&, const double&);
