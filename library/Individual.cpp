@@ -51,7 +51,8 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
         case 1u:
             hap = rnd::random2(2u);
             ++chrom;
-            chromend = arch.chromosomes[chrom];
+            if (chrom < p.nchrom) chromend = arch.chromosomes[chrom];
+            assert(chrom < p.nchrom);
             break;
 
         // Upon gene, transmit haplotype to the zygote
@@ -61,9 +62,8 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
             if (genome.test(locus + hap * p.nloci))
                 zygote.set(locus + gender * p.nloci);
             ++locus;
-            position = arch.locations[locus];
+            if (locus < p.nloci) position = arch.locations[locus];
             break;
-
         }
     }
 
