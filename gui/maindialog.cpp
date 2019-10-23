@@ -11,7 +11,7 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->setupUi(this);
 
   ui->plot->addGraph();
-  ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
+  ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
   ui->plot->graph(0)->setLineStyle(QCPGraph::lsNone);
   ui->plot->graph(0)->setPen(QPen(Qt::red));
 
@@ -24,23 +24,20 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot->xAxis->setLabel("Locus");
   ui->plot->yAxis->setLabel("Fst");
 
-  ui->plot_gst->addGraph();
-  ui->plot_gst->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
-  ui->plot_gst->graph(0)->setLineStyle(QCPGraph::lsNone);
-  ui->plot_gst->graph(0)->setPen(QPen(Qt::blue));
-
-  QCPPlotTitle *gst_title = new QCPPlotTitle(ui->plot_gst, "Gst");
-  ui->plot_gst->plotLayout()->insertRow(0);
-  ui->plot_gst->plotLayout()->addElement(0, 0, gst_title);
-  ui->plot_gst->xAxis->setLabel("Locus");
-  ui->plot_gst->yAxis->setLabel("Gst");
-
-
   ui->plot->xAxis->setRange(0,90);
   ui->plot->yAxis->setRange(0,1);
-  ui->plot_gst->xAxis->setRange(0,90);
-  ui->plot_gst->yAxis->setRange(0,1);
 
+
+
+  ui->plot_popsize->addGraph();
+  ui->plot_popsize->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
+  ui->plot_popsize->graph(0)->setPen(QPen(Qt::black));
+
+  QCPPlotTitle *popsize_title = new QCPPlotTitle(ui->plot_popsize, "Population Size");
+  ui->plot_popsize->plotLayout()->insertRow(0);
+  ui->plot_popsize->plotLayout()->addElement(0, 0, popsize_title);
+  ui->plot_popsize->xAxis->setLabel("Time");
+  ui->plot_popsize->yAxis->setLabel("Population Size");
 
   ui->plot_eco_trait->addGraph();
 
@@ -87,6 +84,11 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_neu_trait->xAxis->setLabel("Trait Value");
   ui->plot_neu_trait->yAxis->setLabel("Count");
 
+
+
+
+
+
 }
 
 MainDialog::~MainDialog()
@@ -94,6 +96,15 @@ MainDialog::~MainDialog()
     delete ui;
 }
 
+void MainDialog::update_plot_popsize(int t, int n) {
+    pop_x.append(t);
+    pop_y.append(n);
+    ui->plot_popsize->graph(0)->clearData();
+    ui->plot_popsize->graph(0)->setData(pop_x, pop_y);
+    ui->plot_popsize->rescaleAxes();
+    ui->plot_popsize->replot();
+    ui->plot_popsize->update();
+}
 
 void MainDialog::plot_fst(const std::vector<double>& v)
 {
@@ -109,21 +120,6 @@ void MainDialog::plot_fst(const std::vector<double>& v)
     ui->plot->rescaleAxes();
     ui->plot->replot();
     ui->plot->update();
-}
-
-void MainDialog::plot_gst(const std::vector<double>& v)
-{
-    gst_x.clear();
-    gst_y.clear();
-    for(size_t i = 0; i < v.size(); ++i) {
-        gst_x.append(i);
-        gst_y.append(v[i]);
-    }
-    ui->plot_gst->graph(0)->clearData();
-    ui->plot_gst->graph(0)->setData(gst_x, gst_y);
-    ui->plot_gst->rescaleAxes();
-    ui->plot_gst->replot();
-    ui->plot_gst->update();
 }
 
 void plot_hist(QCustomPlot* UI, QCPBars * barplot,
@@ -173,9 +169,6 @@ void plot_hist(QCustomPlot* UI, QCPBars * barplot,
     return;
 }
 
-
-
-
 Param MainDialog::createPars()
 {
     Param pars;
@@ -188,6 +181,15 @@ void MainDialog::on_run_button_clicked()
     is_running = true;
     try
     {
+        // clean up old data
+        fst_x.clear();
+        fst_y.clear();
+        gst_x.clear();
+        gst_y.clear();
+        pop_x.clear();
+        pop_y.clear();
+
+
         // Create the parameters from the GUI
         Param pars = createPars();
 
@@ -197,6 +199,8 @@ void MainDialog::on_run_button_clicked()
             s << "seed: " << pars.seed << '\n';
             ui->output->setPlainText(QString::fromStdString(s.str()));
         }
+
+        pars.tend = static_cast<int>(ui->num_gen->value());
 
         // Random number generator
         rnd::rng.seed(pars.seed);
@@ -217,8 +221,7 @@ void MainDialog::on_run_button_clicked()
             }
             QApplication::processEvents();
             std::stringstream s;
-            s << "t: " << t;
-            ui->output->appendPlainText(QString::fromStdString(s.str()));
+
 
             if (t == 0) metapop.exitburnin();
 
@@ -232,15 +235,14 @@ void MainDialog::on_run_button_clicked()
             }
 
             // Analyze the metapopulation if needed
-            //if (timetosave(t, pars)) {
+            if (timetosave(t, pars)) {
+                s << "t: " << t;
+                ui->output->appendPlainText(QString::fromStdString(s.str()));
+
                 collector.analyze(metapop, pars, arch);
 
                 std::vector<double> fst_vals = collector.get_Fst();
                 plot_fst(fst_vals);
-
-
-                std::vector<double> gst_vals = collector.get_Gst();
-                plot_gst(gst_vals);
 
                 std::vector<double> eco_trait_vals = collector.get_eco_trait(metapop);
                 std::vector<double> sex_trait_vals = collector.get_sex_trait(metapop);
@@ -249,6 +251,11 @@ void MainDialog::on_run_button_clicked()
                 plot_hist(ui->plot_eco_trait, ecoBars, eco_trait_vals);
                 plot_hist(ui->plot_sex_trait, sexBars, sex_trait_vals);
                 plot_hist(ui->plot_neu_trait, neuBars, neu_trait_vals);
+
+                update_plot_popsize(t, metapop.getSize());
+
+
+            }
         }
         // Show output
         {

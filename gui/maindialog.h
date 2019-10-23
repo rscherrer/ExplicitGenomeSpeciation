@@ -21,6 +21,8 @@ public:
   void plot_gst(const std::vector<double>& v);
   void plot_eco_trait(const std::vector<double>& v);
 
+  void update_plot_popsize(int t, int n);
+
 private slots:
   void on_run_button_clicked();
 
@@ -37,6 +39,9 @@ private:
 
   QVector<double> gst_x;
   QVector<double> gst_y;
+
+  QVector<double> pop_x;
+  QVector<double> pop_y;
 
   bool is_running;
 
