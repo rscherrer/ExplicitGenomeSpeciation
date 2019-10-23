@@ -30,7 +30,7 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
     // Exponential distribution to sample crossover points
     auto nextcrossover = rnd::exponential(p.recombination);
 
-    double crossover = rnd::exponential2(p.recombination);
+    double crossover = nextcrossover(rnd::rng);
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
@@ -79,8 +79,12 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 void Individual::mutate(Genome &zygote, const Param &p) const
 {
     size_t nmut = rnd::poisson(p.mutation * zygote.size());
+
+    // Sample mutation targets across the genome
+    auto muttarget = rnd::random(0u, zygote.size() - 1u);
+
     while (nmut) {
-        zygote.flip(rnd::random2(zygote.size()));
+        zygote.flip(muttarget(rnd::rng));
         --nmut;
     }
 

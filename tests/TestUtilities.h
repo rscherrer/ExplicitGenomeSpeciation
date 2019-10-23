@@ -38,7 +38,7 @@ void tst::makeValidParamFile()
          << "maxfeed" << '\t' << 4.0E-4 << '\n'
          << "demesizes" << '\t' << 100 << '\t' << 100 << '\n'
          << "nvertices" << '\t' << 40 << '\t' << 20 << '\t' << 40 << '\n'
-         << "nedges" << '\t' << 1000 << '\t' << 500 << '\t' << 0 << '\n'
+         << "nedges" << '\t' << 20 << '\t' << 10 << '\t' << 0 << '\n'
          << "nchrom" << '\t' << 3 << '\n'
          << "mutation" << '\t' << 1.0e-5 << '\n'
          << "recombination" << '\t' << 0.01 << '\n'

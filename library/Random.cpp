@@ -9,13 +9,13 @@ bool rnd::bernoulli(const double &p)
     return std::bernoulli_distribution(p)(rng);
 }
 
-
+/*
 /// Function to sample a number of successes
 size_t rnd::binomial(const size_t &n, const double &p)
 {
     return std::binomial_distribution<size_t>(n, p)(rng);
 }
-
+*/
 
 /// Function to sample from a Poisson distribution
 size_t rnd::poisson(const double &lambda)
@@ -28,14 +28,6 @@ size_t rnd::poisson(const double &lambda)
 size_t rnd::geometric(const double &p)
 {
     return std::geometric_distribution<size_t>(p)(rng);
-}
-
-
-
-/// Function to sample from a uniform integer distribution
-size_t rnd::random2(const size_t &n)
-{
-    return std::uniform_int_distribution<size_t>(0, n - 1)(rng);
 }
 
 
@@ -60,13 +52,6 @@ double rnd::hnormal(const double &sdev)
 {
     double x = rnd::normal(0.0, sdev);
     return x > 0.0 ? x : -1.0 * x;
-}
-
-
-/// Function to sample from an exponential distribution
-double rnd::exponential2(const double &lambda)
-{
-    return std::exponential_distribution<double>(lambda)(rng);
 }
 
 

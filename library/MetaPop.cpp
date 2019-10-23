@@ -50,10 +50,18 @@ void MetaPop::disperse(const Param &p)
     // Change the habitat attribute of these migrants
     if (p.dispersal < 0.5) {
         auto hasmigrated = boost::dynamic_bitset<>(population.size());
-        size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
+
+        // Sample the number of migrants
+        auto samplemigrants = rnd::binomial(population.size(), p.dispersal);
+
+        size_t nmigrants = samplemigrants(rnd::rng);
         size_t t = 0u;
+
+        // Sample migrants at random
+        auto pickmigrant = rnd::random(0u, population.size() - 1u);
+
         while (nmigrants) {
-            const size_t mig = rnd::random2(population.size());
+            const size_t mig = pickmigrant(rnd::rng);
             if (!hasmigrated.test(mig)) {
                 hasmigrated.set(mig);
                 population[mig].disperse();

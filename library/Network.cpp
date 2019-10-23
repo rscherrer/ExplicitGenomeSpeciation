@@ -29,18 +29,24 @@ vecEdg Network::makeMap(const Param& p) const
     ++degrees[0u];
     ++degrees[1u];
 
-    size_t nleft = p.nedges[trait] - 1u; // number edges left to make
+    size_t nleft = p.nedges[trait] - 1u; // number of edges left to make
 
     // For each vertex...
     for (size_t vertex = 2u; nleft && vertex < p.nvertices[trait]; ++vertex) {
 
-        // Sample number of partners
-        size_t npartners = nleft;
+        // Sample number of partners from a binomial
         const double prob = 1.0 / (p.nvertices[trait] - vertex);
         assert(prob >= 0.0);
         assert(prob <= 1.0);
-        if (vertex == p.nvertices[trait] - 1u)
-            npartners = rnd::binomial(nleft, prob);
+
+        size_t npartners;
+        if (vertex == p.nvertices[trait] - 1u) {
+            npartners = nleft;
+        }
+        else {
+            auto seekpartners = rnd::binomial(nleft, prob);
+            npartners = seekpartners(rnd::rng);
+        }
 
         // Assign attachment probabilities
         vecDbl probs(vertex);
@@ -57,6 +63,7 @@ vecEdg Network::makeMap(const Param& p) const
             // discrete distribution everytime, which is time consuming.
             // But this is done only when generating the architecture
             // so probably not that big of a deal
+
             const size_t partner = rnd::sample(probs);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
@@ -69,6 +76,7 @@ vecEdg Network::makeMap(const Param& p) const
         }
     }
 
+    // These are not always the case unfortunately
     assert(nleft == 0u);
     assert(connexions.size() == p.nedges[trait]);
 
