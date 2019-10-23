@@ -11,21 +11,8 @@ Genome Individual::genomize(const Param &p) const
     assert(sequence.size() == 2u * p.nloci);
     assert(sequence.count() == 0u);
 
-    if (p.allfreq > 0.5) {
-        size_t nmut = rnd::binomial(sequence.size(), p.allfreq);
-        vecDbl probs = utl::ones(sequence.size());
-        assert(probs.size() == 2u * p.nloci);
-        while (nmut) {
-            const size_t mutant = rnd::sample(probs);
-            sequence.set(mutant);
-            probs[mutant] = 0.0; // no replacement
-            --nmut;
-        }
-    }
-    else {
-        for (size_t i = 0u; i < sequence.size(); ++i)
-            if (rnd::bernoulli(p.allfreq)) sequence.set(i);
-    }
+    for (size_t i = 0u; i < sequence.size(); ++i)
+        if (rnd::bernoulli(p.allfreq)) sequence.set(i);
 
     assert(sequence.size() == 2u * p.nloci);
 
