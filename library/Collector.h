@@ -178,7 +178,7 @@ public:
     {
        std::vector<double> output(m.population.size());
        for(size_t i = 0; i < m.population.size(); ++i) {
-           output[i] = m.population[i].getEcotype();
+           output[i] = m.population[i].getEcoTrait();
        }
        return output;
     }
