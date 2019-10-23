@@ -3,11 +3,13 @@
 /// Random number generator
 std::mt19937_64 rnd::rng;
 
+/*
 /// Function to sample a binary event
 bool rnd::bernoulli(const double &p)
 {
     return std::bernoulli_distribution(p)(rng);
 }
+*/
 
 /*
 /// Function to sample a number of successes
@@ -17,6 +19,7 @@ size_t rnd::binomial(const size_t &n, const double &p)
 }
 */
 
+/*
 /// Function to sample from a Poisson distribution
 size_t rnd::poisson(const double &lambda)
 {
@@ -45,8 +48,9 @@ double rnd::normal(const double &mean, const double &sdev)
     return sdev == 0.0 ? 0.0 : std::normal_distribution<double>(mean, sdev)(
      rng);
 }
+*/
 
-
+/*
 /// Half-normal distribution
 double rnd::hnormal(const double &sdev)
 {
@@ -68,18 +72,20 @@ double rnd::flip(const double &x, const double &p)
     return rnd::bernoulli(p) ? x : -1.0 * x;
 }
 
-
+*/
+/*
 /// Gamma distribution
 double rnd::gamma(const double &shape, const double &scale)
 {
     return std::gamma_distribution<double>(shape, scale)(rng);
 }
+*/
 
-
+/*
 /// Two-sided gamma
 double rnd::bigamma(const double &shape, const double &scale)
 {
     return rnd::flip(rnd::gamma(shape, scale), 0.5);
 }
 
-
+*/

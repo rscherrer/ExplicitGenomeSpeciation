@@ -570,12 +570,13 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
             // See if the female accepts the male or not
             const double maletrait = m.population[mal].getEcoTrait();
             const double prob = m.population[fem].mate(maletrait, p);
+            auto ismating = rnd::bernoulli(prob);
 
             const size_t ecof = m.population[fem].getEcotype();
             const size_t ecom = m.population[mal].getEcotype();
 
-            // Count the homogamic and heterogamic crosses
-            if (rnd::bernoulli(prob)) ++crosses[ecof][ecom];
+            // Count homogamic and heterogamic crosses
+            if (ismating(rnd::rng)) ++crosses[ecof][ecom];
 
             --ntrials;
         }

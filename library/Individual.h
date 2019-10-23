@@ -30,7 +30,7 @@ public:
         feeding(utl::zeros(2u)),
         ecotype(0u),
         habitat(0u),
-        gender(rnd::bernoulli(0.5)),
+        gender(determinesex()),
         alive(true),
         adult(true)
     {
@@ -62,7 +62,7 @@ public:
         feeding(utl::zeros(2u)),
         ecotype(0u),
         habitat(0u),
-        gender(rnd::bernoulli(0.5)),
+        gender(determinesex()),
         alive(true),
         adult(false)
     {
@@ -189,6 +189,8 @@ private:
     void recombine(Genome&, const Param&, const GenArch&) const;
     void mutate(Genome&, const Param&) const;
     void develop(const Param&, const GenArch&);
+
+    bool determinesex() const;
 
     Genome genome;
     vecDbl transcriptome;

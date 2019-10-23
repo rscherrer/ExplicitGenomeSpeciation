@@ -64,7 +64,8 @@ vecEdg Network::makeMap(const Param& p) const
             // But this is done only when generating the architecture
             // so probably not that big of a deal
 
-            const size_t partner = rnd::sample(probs);
+            auto getpartner = rnd::discrete(probs.cbegin(), probs.cend());
+            const size_t partner = getpartner(rnd::rng);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
             probs[partner] = 0.0;
@@ -131,11 +132,16 @@ vecDbl Network::makeWeights(const Param &p) const
     intweights.reserve(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
 
+    // Interaction weights are sampled from a two-sided Gamma distribution
+    auto getweight = rnd::gamma(p.interactionshape, p.interactionscale);
+    auto isflipped = rnd::bernoulli(0.5);
+
     // For each edge in the network...
     for (size_t edge = 0u; edge < p.nedges[trait]; ++edge) {
 
         // Two-sided Gamma distribution
-        const double w = rnd::bigamma(p.interactionshape, p.interactionscale);
+        double w = getweight(rnd::rng);
+        if (isflipped(rnd::rng)) w *= -1.0;
         intweights.push_back(w);
         sss += utl::sqr(w);
     }

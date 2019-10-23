@@ -11,8 +11,10 @@ Genome Individual::genomize(const Param &p) const
     assert(sequence.size() == 2u * p.nloci);
     assert(sequence.count() == 0u);
 
+    auto ismutation = rnd::bernoulli(p.allfreq);
+
     for (size_t i = 0u; i < sequence.size(); ++i)
-        if (rnd::bernoulli(p.allfreq)) sequence.set(i);
+        if (ismutation(rnd::rng)) sequence.set(i);
 
     assert(sequence.size() == 2u * p.nloci);
 
@@ -27,14 +29,17 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
     size_t locus = 0u;
     size_t chrom = 0u;
 
-    // Exponential distribution to sample crossover points
+    // Crossover points are sampled from an exponential distribution
     auto nextcrossover = rnd::exponential(p.recombination);
+
+    // Haplotypes have equal chances to be transmitted
+    auto gethaplotype = rnd::bernoulli(0.5);
 
     double crossover = nextcrossover(rnd::rng);
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
-    size_t hap = rnd::bernoulli(0.5);
+    size_t hap = gethaplotype(rnd::rng);
 
     while (locus < p.nloci) {
 
@@ -52,7 +57,7 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
         // Upon free recombination point, switch to random chromosome
         case 1u:
-            hap = rnd::bernoulli(0.5);
+            hap = gethaplotype(rnd::rng);
             ++chrom;
             if (chrom < p.nchrom) chromend = arch.chromosomes[chrom];
             assert(chrom < p.nchrom);
@@ -78,13 +83,16 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
 void Individual::mutate(Genome &zygote, const Param &p) const
 {
-    size_t nmut = rnd::poisson(p.mutation * zygote.size());
+    // The number of mutations is sampled from a Poisson distribution
+    auto getnmutations = rnd::poisson(p.mutation * zygote.size());
+
+    size_t nmut = getnmutations(rnd::rng);
 
     // Sample mutation targets across the genome
-    auto muttarget = rnd::random(0u, zygote.size() - 1u);
+    auto gettarget = rnd::random(0u, zygote.size() - 1u);
 
     while (nmut) {
-        zygote.flip(muttarget(rnd::rng));
+        zygote.flip(gettarget(rnd::rng));
         --nmut;
     }
 
@@ -165,9 +173,10 @@ void Individual::develop(const Param &p, const GenArch &arch)
         }
     }
 
-    // Add environmental effect for each trait
+    // Add normally distributed environmental effect for each trait
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        const double envnoise = rnd::normal(0.0, p.scaleE[trait]);
+        auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
+        const double envnoise = getenvnoise(rnd::rng);
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
 
@@ -250,4 +259,10 @@ void Individual::survive(const bool &x)
         return;
     }
     alive = x;
+}
+
+bool Individual::determinesex() const
+{
+    auto getsex = rnd::bernoulli(0.5);
+    return getsex(rnd::rng);
 }

@@ -76,8 +76,11 @@ void MetaPop::disperse(const Param &p)
         }
     }
     else {
+
+        auto ismigrant = rnd::bernoulli(p.dispersal);
+
         for (size_t i = 0u; i < population.size(); ++i)
-            if (rnd::bernoulli(p.dispersal)) population[i].disperse();
+            if (ismigrant(rnd::rng)) population[i].disperse();
     }
 
 }
@@ -173,7 +176,8 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
     if (!(sexcounts[0u][1u] + sexcounts[1u][1u])) return; // exit if no females
 
     // Determine the length of the mating season
-    const size_t seasonend = rnd::geometric(p.matingcost);
+    auto getseasonend = rnd::geometric(p.matingcost);
+    const size_t seasonend = getseasonend(rnd::rng);
 
     if (!seasonend) return;
 
@@ -221,9 +225,11 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                     dad = markets[hab](rnd::rng);
 
                 const double maletrait = population[dad].getEcoTrait();
+                const double prob = population[mom].mate(maletrait, p);
+                auto ismating = rnd::bernoulli(prob);
 
-                // If the female accepts to mate                
-                if (rnd::bernoulli(population[mom].mate(maletrait, p))) {
+                // If the female accepts to mate
+                if (ismating(rnd::rng)) {
 
                     // Determine fecundity
                     double fecundity = p.birth * population[mom].getFitness();
@@ -235,7 +241,8 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                     }
 
                     // Sample clutch size
-                    size_t noffspring = rnd::poisson(fecundity);
+                    auto getclutchsize = rnd::poisson(fecundity);
+                    size_t noffspring = getclutchsize(rnd::rng);
                     while (noffspring) {
 
                         // Give birth
@@ -262,8 +269,9 @@ void MetaPop::survive(const Param &p)
 {
     // Sample survival for each individual
     size_t nsurv = 0u;
+    auto issurvivor = rnd::bernoulli(p.survival);
     for (size_t i = 0u; i < population.size(); ++i) {
-        population[i].survive(rnd::bernoulli(p.survival));
+        population[i].survive(issurvivor(rnd::rng));
         if (population[i].isalive()) ++nsurv;
     }
 
