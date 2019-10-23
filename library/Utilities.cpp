@@ -102,21 +102,27 @@ void utl::marginalize(Matrix &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0.0);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0.0);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        double sum = 0.0;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        double sum = 0.0;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
@@ -128,21 +134,27 @@ void utl::marginalize(MatUns &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0u);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0u);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        size_t sum = 0u;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        size_t sum = 0u;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
