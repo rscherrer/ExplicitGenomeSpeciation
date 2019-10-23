@@ -1,4 +1,4 @@
-# ExplicitGenomeSpeciation
+# ExplicitGenomeSpeciation GUI version
 
 Branch|[![Travis CI logo](ci_setup/pics/TravisCI.png)](https://travis-ci.org)|[![Codecov logo](ci_setup/pics/Codecov.png)](https://www.codecov.io)
 ---|---|---
@@ -9,6 +9,17 @@ thijs|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.
 richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=richel)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=richel)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/richel)
 
 An individual based simulation of adaptive speciation with explicit genome, additive and non-additive genetic effects.
+
+# GUI
+
+Current state of the GUI:
+
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/thijs/gui/Screenshot_2019-10-23_15.59.03.png)
+
+
+
+
+
 
 # Compile
 
