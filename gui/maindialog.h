@@ -45,6 +45,8 @@ private:
   bool is_running;
 
   QCPBars *ecoBars;
+  QCPBars *ecoBars_0;
+  QCPBars *ecoBars_1;
   QCPBars *sexBars;
   QCPBars *neuBars;
 };

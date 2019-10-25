@@ -67,14 +67,39 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_popsize->legend->setFont(legendFont);
   ui->plot_popsize->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignRight);
 
-  ui->plot_eco_trait->addGraph();
 
+
+  ui->plot_eco_trait->addGraph();
   ecoBars = new QCPBars(ui->plot_eco_trait->xAxis,
                         ui->plot_eco_trait->yAxis);
   ecoBars->setName("Eco Trait");
   ecoBars->setPen(QPen(Qt::black));
+  ecoBars->setBrush(QBrush(Qt::black));
   ecoBars->setAntialiased(false);
   ecoBars->setAntialiasedFill(false);
+
+
+  ui->plot_eco_trait->addGraph();
+  ecoBars_0 = new QCPBars(ui->plot_eco_trait->xAxis,
+                         ui->plot_eco_trait->yAxis2);
+  ecoBars_0->setName("Eco Trait deme 0");
+  ecoBars_0->setPen(QPen(Qt::red));
+ // ecoBars_0->setBrush(QBrush(Qt::red));
+  ecoBars_0->setAntialiased(false);
+  ecoBars_0->setAntialiasedFill(false);
+
+  ui->plot_eco_trait->addGraph();
+  ecoBars_1 = new QCPBars(ui->plot_eco_trait->xAxis,
+                         ui->plot_eco_trait->yAxis2);
+  ecoBars_1->setName("Eco Trait deme 1");
+  ecoBars_1->setPen(QPen(Qt::blue));
+//  ecoBars_1->setBrush(QBrush(Qt::blue));
+  ecoBars_1->setAntialiased(false);
+  ecoBars_1->setAntialiasedFill(false);
+
+
+
+
 
   QCPPlotTitle *eco_title = new QCPPlotTitle(ui->plot_eco_trait, "Ecological Trait");
   ui->plot_eco_trait->plotLayout()->insertRow(0);
@@ -181,7 +206,6 @@ void plot_hist(QCustomPlot* UI, QCPBars * barplot,
     QVector<double> yvals;
 
     double max_y_val = -1;
-
     for(size_t i = 0; i < bins.size(); ++i) {
         xvals.append(*min_max.first + i * bin_size);
         yvals.append(bins[i]);
@@ -196,6 +220,71 @@ void plot_hist(QCustomPlot* UI, QCPBars * barplot,
     UI->yAxis->setRange(0, max_y_val * 1.05);
 
     barplot->setData(xvals, yvals);
+    UI->replot();
+    UI->update();
+
+    return;
+}
+
+void update_barplot(const std::vector< double>& v,
+                    QCPBars * barplot,
+                     double& max_y_val) {
+    auto min_max = std::minmax_element(v.begin(), v.end());
+
+    int num_bins = 30;
+    double bin_size = 1.0 * (*min_max.second - *min_max.first) / num_bins;
+
+    barplot->setWidth(bin_size);
+
+    std::vector<int> bins(30, 0);
+
+    for(size_t i = 0; i < 30; ++i) {
+        double left = *min_max.first + i * bin_size;
+        double right = *min_max.first + (i+1) * bin_size;
+        for(auto it = v.begin(); it != v.end(); ++it) {
+            if( (*it) >= left && (*it) < right) {
+                bins[ i ]++;
+            }
+        }
+    }
+
+    QVector<double> xvals;
+    QVector<double> yvals;
+
+    for(size_t i = 0; i < bins.size(); ++i) {
+        xvals.append(*min_max.first + i * bin_size);
+        yvals.append(bins[i]);
+        if(bins[i] > max_y_val) max_y_val = bins[i];
+    }
+
+    barplot->clearData();
+    barplot->setData(xvals, yvals);
+}
+
+
+void plot_hist2(QCustomPlot* UI,
+  //              QCPBars * barplot,
+                QCPBars * barplot_0,
+                QCPBars * barplot_1,
+                const std::vector<double>& v,
+                const std::vector<double>& v_0,
+                const std::vector<double>& v_1) {
+
+    auto min_max = std::minmax_element(v.begin(), v.end());
+
+    double max_y_val = -1;
+
+  //  update_barplot(v, barplot, max_y_val);
+    update_barplot(v_0, barplot_0, max_y_val);
+    update_barplot(v_1, barplot_1, max_y_val);
+
+
+    UI->xAxis->setRange(0.9 * *min_max.first,
+                                        1.1 * *min_max.second);
+
+    UI->yAxis->setRange(0, max_y_val * 1.05);
+    UI->yAxis2->setRange(0,max_y_val* 1.05);
+
     UI->replot();
     UI->update();
 
@@ -260,12 +349,20 @@ void MainDialog::on_run_button_clicked()
                 plot_fst(fst_vals);
 
                 std::vector<double> eco_trait_vals = collector.get_eco_trait(metapop);
+                std::vector<double> eco_trait_0 = collector.get_eco_trait_deme(metapop, 0);
+                std::vector<double> eco_trait_1 = collector.get_eco_trait_deme(metapop, 1);
+
                 std::vector<double> sex_trait_vals = collector.get_sex_trait(metapop);
                 std::vector<double> neu_trait_vals = collector.get_neu_trait(metapop);
 
-                plot_hist(ui->plot_eco_trait, ecoBars, eco_trait_vals);
+                //plot_hist(ui->plot_eco_trait, ecoBars, eco_trait_vals);
+                plot_hist2(ui->plot_eco_trait, ecoBars_0, ecoBars_1,
+                           eco_trait_vals, eco_trait_0, eco_trait_1);
+
                 plot_hist(ui->plot_sex_trait, sexBars, sex_trait_vals);
                 plot_hist(ui->plot_neu_trait, neuBars, neu_trait_vals);
+
+
 
                 update_plot_popsize(t,
                                     metapop.getSize(),

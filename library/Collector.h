@@ -183,6 +183,19 @@ public:
        return output;
     }
 
+    std::vector<double> get_eco_trait_deme(const MetaPop &m,
+                                           size_t deme) const
+    {
+       std::vector<double> output;
+       for(size_t i = 0; i < m.population.size(); ++i) {
+
+           if(m.population[i].getHabitat() == deme) {
+               output.push_back(m.population[i].getEcoTrait());
+           }
+       }
+       return output;
+    }
+
     std::vector<double> get_sex_trait(const MetaPop &m) const
     {
        std::vector<double> output(m.population.size());
@@ -191,6 +204,21 @@ public:
        }
        return output;
     }
+
+    std::vector<double> get_sex_trait_deme(const MetaPop &m,
+                                           size_t deme) const
+    {
+       std::vector<double> output;
+       for(size_t i = 0; i < m.population.size(); ++i) {
+
+           if(m.population[i].getHabitat() == deme) {
+               output.push_back(m.population[i].getMatePref());
+           }
+       }
+       return output;
+    }
+
+
 
     std::vector<double> get_neu_trait(const MetaPop &m) const
     {
