@@ -821,4 +821,9 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
 }
 
+void Collector::shutdown()
+{
+    // Close files
+    for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
+}
 
