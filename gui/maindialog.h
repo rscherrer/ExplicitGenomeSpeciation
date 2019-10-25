@@ -21,7 +21,9 @@ public:
   void plot_gst(const std::vector<double>& v);
   void plot_eco_trait(const std::vector<double>& v);
 
-  void update_plot_popsize(int t, int n);
+  void update_plot_popsize(int t, size_t n, size_t n_0, size_t n_1);
+
+
 
 private slots:
   void on_run_button_clicked();
@@ -33,15 +35,12 @@ private:
 
   ///Read the parameters from the GUI
   Param createPars();
-
-  QVector<double> fst_x;
-  QVector<double> fst_y;
-
-  QVector<double> gst_x;
-  QVector<double> gst_y;
+  void setup_spinboxes();
 
   QVector<double> pop_x;
   QVector<double> pop_y;
+  QVector<double> pop_y_0;
+  QVector<double> pop_y_1;
 
   bool is_running;
 
