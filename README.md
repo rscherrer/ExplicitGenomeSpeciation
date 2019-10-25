@@ -14,7 +14,7 @@ An individual based simulation of adaptive speciation with explicit genome, addi
 
 Current state of the GUI:
 
-![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-25_11.55.34.png)
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-25_combined.png)
 
 
 
