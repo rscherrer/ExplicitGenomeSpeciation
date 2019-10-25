@@ -805,7 +805,6 @@ void Collector::print(const size_t &t, const MetaPop &m)
     f += off; // move on to population files
 
     // Population screenshot
-    assert(counts[0u][0u] + counts[0u][1u] + counts[1u][0u] + counts[1u][1u] == m.getSize());
     for (size_t i = 0u; i < m.getSize(); ++i) {
 
         off = 0u;

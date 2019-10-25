@@ -13,24 +13,23 @@ vecDbl tst::readfile(const std::string &filename)
     if (file.is_open()) {
 
         // Loop through the file until we reach the end of the file
-        while (!file.eof()) {
+        while(file) {
 
             // Read elements
             file.read((char *) &x, sizeof(double));
+
+            // Exit if reaching the end of the file
+            if (!file.gcount()) break;
 
             // Store elements
             v.push_back(x);
 
         }
-
-        // Display values
-        for (size_t i = 0u; i < v.size(); ++i) std::clog << v[i] << '\n';
     }
 
     // Close the file
     file.close();
 
-    // v is the vector containing my data
     return v;
 
 }
