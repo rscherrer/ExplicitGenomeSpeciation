@@ -35,7 +35,7 @@ int simulate(const vecStrings &args)
 
             if (t == 0) metapop.exitburnin();
 
-            // std::clog << t << '\n';
+            std::clog << t << '\n';
 
             // Life cycle of the metapopulation
             metapop.cycle(pars, arch);

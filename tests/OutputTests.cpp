@@ -46,6 +46,8 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
     // On the C++ side it probably comes from ifstream::eof()
     // It seems that the end of file is not reached at the last element
     // So the loop goes one step further, and for some reason reads the
-    // last element again
+    // last element again. Ok problem solved on C++ side.
+
+    // How about Python?
 
 }
