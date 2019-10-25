@@ -15,12 +15,13 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 {
     std::clog << "Testing output files...\n";
 
-    vecDbl time(10);
-
     Param pars;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     Collector collector = Collector(arch);
+
+    vecDbl time(10);
+    size_t cumulsize = 0u;
 
     for (int t = 0; t < 10; ++t) {
 
@@ -29,6 +30,9 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
         metapop.cycle(pars, arch);
         collector.analyze(metapop, pars, arch);
         collector.print(t, metapop);
+
+        cumulsize += metapop.getSize();
+
     }
     collector.shutdown();
 
@@ -37,17 +41,12 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     BOOST_CHECK_EQUAL(time.size(), rtime.size());
 
-    // There are 80 bytes in the output file
-    // So 10 values of 8 bytes each
-    // It's the reading function that reads 11 values, duplicating the last one
-    // Why is it doing so?
-    // Is the reader in Python doing the same thing?
+    // Read individual trait values
+    vecDbl rpopx = tst::readfile("population_x.dat");
 
-    // On the C++ side it probably comes from ifstream::eof()
-    // It seems that the end of file is not reached at the last element
-    // So the loop goes one step further, and for some reason reads the
-    // last element again. Ok problem solved on C++ side.
+    // Check that the number of individuals recorded is indeed the cumulative
+    // population size through time (that's what's wrong in the Python script)
 
-    // How about Python?
+    BOOST_CHECK_EQUAL(rpopx.size(), cumulsize); // passes just fine
 
 }
