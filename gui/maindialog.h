@@ -21,7 +21,7 @@ public:
   void plot_gst(const std::vector<double>& v);
   void plot_eco_trait(const std::vector<double>& v);
 
-  void update_plot_popsize(int t, size_t n, size_t n_0, size_t n_1);
+  void update_plot_popsize(int t, size_t n_0, size_t n_1);
 
 
 
@@ -38,17 +38,19 @@ private:
   void setup_spinboxes();
 
   QVector<double> pop_x;
-  QVector<double> pop_y;
   QVector<double> pop_y_0;
   QVector<double> pop_y_1;
 
   bool is_running;
 
-  QCPBars *ecoBars;
   QCPBars *ecoBars_0;
   QCPBars *ecoBars_1;
-  QCPBars *sexBars;
-  QCPBars *neuBars;
+
+  QCPBars *sexBars_0;
+  QCPBars *sexBars_1;
+
+  QCPBars *neuBars_0;
+  QCPBars *neuBars_1;
 };
 
 #endif // MAINDIALOG_H

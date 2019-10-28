@@ -3,6 +3,7 @@
 #include "library/Simul.h"
 #include <sstream>
 #include <QThread>
+#include <QColor>
 
 MainDialog::MainDialog(QWidget *parent) :
   QDialog(parent),
@@ -33,33 +34,25 @@ MainDialog::MainDialog(QWidget *parent) :
   // overall population size graph
   ui->plot_popsize->addGraph();
   ui->plot_popsize->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
-  ui->plot_popsize->graph(0)->setPen(QPen(Qt::black));
-  ui->plot_popsize->graph(0)->setName("Both Demes");
-
-
-  // deme 0 population size graph
-  ui->plot_popsize->addGraph(ui->plot_popsize->xAxis2, ui->plot_popsize->yAxis2);
-  ui->plot_popsize->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
-  ui->plot_popsize->graph(1)->setPen(QPen(Qt::red));
-  ui->plot_popsize->graph(1)->setName("Deme 0");
+  ui->plot_popsize->graph(0)->setPen(QPen(Qt::red));
+  ui->plot_popsize->graph(0)->setName("Deme 0");
 
   // deme 1 population size graph
   ui->plot_popsize->addGraph(ui->plot_popsize->xAxis2, ui->plot_popsize->yAxis2);
-  ui->plot_popsize->graph(2)->setScatterStyle(QCPScatterStyle::ssDisc);
-  ui->plot_popsize->graph(2)->setPen(QPen(Qt::blue));
-  ui->plot_popsize->graph(2)->setName("Deme 1");
+  ui->plot_popsize->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
+  ui->plot_popsize->graph(1)->setPen(QPen(Qt::blue));
+  ui->plot_popsize->graph(1)->setName("Deme 1");
 
   ui->plot_popsize->yAxis2->setLabel("Deme Size");
   ui->plot_popsize->yAxis2->setVisible(true);
- // ui->plot_popsize->yAxis2->setTickLength(3, 3);
- // ui->plot_popsize->yAxis2->setSubTickLength(1, 1);
 
 
   QCPPlotTitle *popsize_title = new QCPPlotTitle(ui->plot_popsize, "Population Size");
   ui->plot_popsize->plotLayout()->insertRow(0);
   ui->plot_popsize->plotLayout()->addElement(0, 0, popsize_title);
   ui->plot_popsize->xAxis->setLabel("Time");
-  ui->plot_popsize->yAxis->setLabel("Population Size");
+  ui->plot_popsize->yAxis->setLabel("Size Deme 0");
+  ui->plot_popsize->yAxis2->setLabel("Size Deme 1");
 
   ui->plot_popsize->legend->setVisible(true);
   QFont legendFont = font();
@@ -70,35 +63,22 @@ MainDialog::MainDialog(QWidget *parent) :
 
 
   ui->plot_eco_trait->addGraph();
-  ecoBars = new QCPBars(ui->plot_eco_trait->xAxis,
-                        ui->plot_eco_trait->yAxis);
-  ecoBars->setName("Eco Trait");
-  ecoBars->setPen(QPen(Qt::black));
-  ecoBars->setBrush(QBrush(Qt::black));
-  ecoBars->setAntialiased(false);
-  ecoBars->setAntialiasedFill(false);
-
-
-  ui->plot_eco_trait->addGraph();
   ecoBars_0 = new QCPBars(ui->plot_eco_trait->xAxis,
-                         ui->plot_eco_trait->yAxis2);
+                         ui->plot_eco_trait->yAxis);
   ecoBars_0->setName("Eco Trait deme 0");
   ecoBars_0->setPen(QPen(Qt::red));
- // ecoBars_0->setBrush(QBrush(Qt::red));
+  ecoBars_0->setBrush(QBrush(QColor(255,0,0, static_cast<int>(0.5 * 255))));
   ecoBars_0->setAntialiased(false);
   ecoBars_0->setAntialiasedFill(false);
 
   ui->plot_eco_trait->addGraph();
   ecoBars_1 = new QCPBars(ui->plot_eco_trait->xAxis,
-                         ui->plot_eco_trait->yAxis2);
+                         ui->plot_eco_trait->yAxis);
   ecoBars_1->setName("Eco Trait deme 1");
   ecoBars_1->setPen(QPen(Qt::blue));
-//  ecoBars_1->setBrush(QBrush(Qt::blue));
+  ecoBars_1->setBrush(QBrush(QColor(0,0,255, static_cast<int>(0.5 * 255))));
   ecoBars_1->setAntialiased(false);
   ecoBars_1->setAntialiasedFill(false);
-
-
-
 
 
   QCPPlotTitle *eco_title = new QCPPlotTitle(ui->plot_eco_trait, "Ecological Trait");
@@ -109,12 +89,25 @@ MainDialog::MainDialog(QWidget *parent) :
 
 
   ui->plot_sex_trait->addGraph();
-  sexBars = new QCPBars(ui->plot_sex_trait->xAxis,
-                        ui->plot_sex_trait->yAxis);
-  sexBars->setName("Sex Trait");
-  sexBars->setPen(QPen(Qt::black));
-  sexBars->setAntialiased(false);
-  sexBars->setAntialiasedFill(false);
+  sexBars_0 = new QCPBars(ui->plot_sex_trait->xAxis,
+                          ui->plot_sex_trait->yAxis);
+  sexBars_0->setName("Sex Trait Deme 0");
+  sexBars_0->setPen(QPen(Qt::red));
+  sexBars_0->setBrush(QColor(255,0,0, static_cast<int>(0.5 * 255)));
+  sexBars_0->setAntialiased(false);
+  sexBars_0->setAntialiasedFill(false);
+
+
+  ui->plot_sex_trait->addGraph();
+  sexBars_1 = new QCPBars(ui->plot_sex_trait->xAxis,
+                          ui->plot_sex_trait->yAxis);
+  sexBars_1->setName("Sex Trait Deme 1");
+  sexBars_1->setPen(QPen(Qt::blue));
+  sexBars_1->setBrush(QColor(0,0,255, static_cast<int>(0.5 * 255)));
+  sexBars_1->setAntialiased(false);
+  sexBars_1->setAntialiasedFill(false);
+
+
 
   QCPPlotTitle *sex_title = new QCPPlotTitle(ui->plot_sex_trait, "Mating Preference");
   ui->plot_sex_trait->plotLayout()->insertRow(0);
@@ -124,12 +117,21 @@ MainDialog::MainDialog(QWidget *parent) :
 
   ui->plot_neu_trait->addGraph();
 
-  neuBars = new QCPBars(ui->plot_neu_trait->xAxis,
+  neuBars_0 = new QCPBars(ui->plot_neu_trait->xAxis,
                         ui->plot_neu_trait->yAxis);
-  neuBars->setName("Neutral Trait");
-  neuBars->setPen(QPen(Qt::black));
-  neuBars->setAntialiased(false);
-  neuBars->setAntialiasedFill(false);
+  neuBars_0->setName("Neutral Trait Deme 0");
+  neuBars_0->setPen(QPen(Qt::red));
+  neuBars_0->setBrush(QColor(255, 0, 0, static_cast<int>(0.5 * 255)));
+  neuBars_0->setAntialiased(false);
+  neuBars_0->setAntialiasedFill(false);
+
+  neuBars_1 = new QCPBars(ui->plot_neu_trait->xAxis,
+                        ui->plot_neu_trait->yAxis);
+  neuBars_1->setName("Neutral Trait Deme 0");
+  neuBars_1->setPen(QPen(Qt::blue));
+  neuBars_1->setBrush(QColor(0, 0, 255, static_cast<int>(0.5 * 255)));
+  neuBars_1->setAntialiased(false);
+  neuBars_1->setAntialiasedFill(false);
 
   QCPPlotTitle *neu_title = new QCPPlotTitle(ui->plot_neu_trait, "Neutral Trait");
   ui->plot_neu_trait->plotLayout()->insertRow(0);
@@ -143,21 +145,19 @@ MainDialog::~MainDialog()
     delete ui;
 }
 
-void MainDialog::update_plot_popsize(int t, size_t n, size_t n_0, size_t n_1) {
+void MainDialog::update_plot_popsize(int t,
+                                     size_t n_0,
+                                     size_t n_1) {
     pop_x.append(t);
-    pop_y.append(n);
-    ui->plot_popsize->graph(0)->clearData();
-    ui->plot_popsize->graph(0)->setData(pop_x, pop_y);
-
 
     pop_y_0.append(n_0);
     pop_y_1.append(n_1);
 
-    ui->plot_popsize->graph(1)->clearData();
-    ui->plot_popsize->graph(1)->setData(pop_x, pop_y_0);
+    ui->plot_popsize->graph(0)->clearData();
+    ui->plot_popsize->graph(0)->setData(pop_x, pop_y_0);
 
-    ui->plot_popsize->graph(2)->clearData();
-    ui->plot_popsize->graph(2)->setData(pop_x, pop_y_1);
+    ui->plot_popsize->graph(1)->clearData();
+    ui->plot_popsize->graph(1)->setData(pop_x, pop_y_1);
 
     ui->plot_popsize->rescaleAxes();
     ui->plot_popsize->replot();
@@ -180,56 +180,17 @@ void MainDialog::plot_fst(const std::vector<double>& v)
     ui->plot->update();
 }
 
-void plot_hist(QCustomPlot* UI, QCPBars * barplot,
-               const std::vector<double>& v) {
-
-    auto min_max = std::minmax_element(v.begin(), v.end());
-
-    int num_bins = 30;
-    double bin_size = 1.0 * (*min_max.second - *min_max.first) / num_bins;
-
-    barplot->setWidth(bin_size);
-
-    std::vector<int> bins(30, 0);
-
-    for(size_t i = 0; i < 30; ++i) {
-        double left = *min_max.first + i * bin_size;
-        double right = *min_max.first + (i+1) * bin_size;
-        for(auto it = v.begin(); it != v.end(); ++it) {
-            if( (*it) >= left && (*it) < right) {
-                bins[ i ]++;
-            }
-        }
-    }
-
-    QVector<double> xvals;
-    QVector<double> yvals;
-
-    double max_y_val = -1;
-    for(size_t i = 0; i < bins.size(); ++i) {
-        xvals.append(*min_max.first + i * bin_size);
-        yvals.append(bins[i]);
-        if(bins[i] > max_y_val) max_y_val = bins[i];
-    }
-
-    barplot->clearData();
-
-    UI->xAxis->setRange(0.9 * *min_max.first,
-                                        1.1 * *min_max.second);
-
-    UI->yAxis->setRange(0, max_y_val * 1.05);
-
-    barplot->setData(xvals, yvals);
-    UI->replot();
-    UI->update();
-
-    return;
-}
 
 void update_barplot(const std::vector< double>& v,
                     QCPBars * barplot,
-                     double& max_y_val) {
+                    double& max_y_val,
+                    double& min_x,
+                    double& max_x) {
+
     auto min_max = std::minmax_element(v.begin(), v.end());
+
+    if(*min_max.first < min_x) min_x = *min_max.first;
+    if(*min_max.second > max_x) max_x = *min_max.second;
 
     int num_bins = 30;
     double bin_size = 1.0 * (*min_max.second - *min_max.first) / num_bins;
@@ -262,28 +223,24 @@ void update_barplot(const std::vector< double>& v,
 }
 
 
-void plot_hist2(QCustomPlot* UI,
-  //              QCPBars * barplot,
-                QCPBars * barplot_0,
-                QCPBars * barplot_1,
-                const std::vector<double>& v,
-                const std::vector<double>& v_0,
-                const std::vector<double>& v_1) {
-
-    auto min_max = std::minmax_element(v.begin(), v.end());
+void plot_barplot(QCustomPlot* UI,
+                  QCPBars * barplot_0,
+                  QCPBars * barplot_1,
+                  const std::vector<double>& v_0,
+                  const std::vector<double>& v_1) {
 
     double max_y_val = -1;
+    double min_x = 1e6;
+    double max_x = -1e6;
 
-  //  update_barplot(v, barplot, max_y_val);
-    update_barplot(v_0, barplot_0, max_y_val);
-    update_barplot(v_1, barplot_1, max_y_val);
+    update_barplot(v_0, barplot_0, max_y_val, min_x, max_x);
+    update_barplot(v_1, barplot_1, max_y_val, min_x, max_x);
 
 
-    UI->xAxis->setRange(0.9 * *min_max.first,
-                                        1.1 * *min_max.second);
+    UI->xAxis->setRange(0.9 * min_x, 1.1 * max_x);
 
     UI->yAxis->setRange(0, max_y_val * 1.05);
-    UI->yAxis2->setRange(0,max_y_val* 1.05);
+    UI->yAxis->setRange(0, max_y_val * 1.05);
 
     UI->replot();
     UI->update();
@@ -298,8 +255,8 @@ void MainDialog::on_run_button_clicked()
     {
         // clean up old data
         pop_x.clear();
-        pop_y.clear();
-
+        pop_y_0.clear();
+        pop_y_1.clear();
 
         // Create the parameters from the GUI
         Param pars = createPars();
@@ -348,24 +305,27 @@ void MainDialog::on_run_button_clicked()
                 std::vector<double> fst_vals = collector.get_Fst();
                 plot_fst(fst_vals);
 
-                std::vector<double> eco_trait_vals = collector.get_eco_trait(metapop);
                 std::vector<double> eco_trait_0 = collector.get_eco_trait_deme(metapop, 0);
                 std::vector<double> eco_trait_1 = collector.get_eco_trait_deme(metapop, 1);
 
-                std::vector<double> sex_trait_vals = collector.get_sex_trait(metapop);
-                std::vector<double> neu_trait_vals = collector.get_neu_trait(metapop);
+                std::vector<double> sex_trait_0 = collector.get_sex_trait_deme(metapop, 0);
+                std::vector<double> sex_trait_1 = collector.get_sex_trait_deme(metapop, 1);
+
+                std::vector<double> neu_trait_0 = collector.get_neu_trait_deme(metapop, 0);
+                std::vector<double> neu_trait_1 = collector.get_neu_trait_deme(metapop, 1);
 
                 //plot_hist(ui->plot_eco_trait, ecoBars, eco_trait_vals);
-                plot_hist2(ui->plot_eco_trait, ecoBars_0, ecoBars_1,
-                           eco_trait_vals, eco_trait_0, eco_trait_1);
+                plot_barplot(ui->plot_eco_trait, ecoBars_0, ecoBars_1,
+                             eco_trait_0, eco_trait_1);
 
-                plot_hist(ui->plot_sex_trait, sexBars, sex_trait_vals);
-                plot_hist(ui->plot_neu_trait, neuBars, neu_trait_vals);
+                plot_barplot(ui->plot_sex_trait, sexBars_0, sexBars_1,
+                             sex_trait_0, sex_trait_1);
 
+                plot_barplot(ui->plot_neu_trait, neuBars_0, neuBars_1,
+                             neu_trait_0, neu_trait_1);
 
 
                 update_plot_popsize(t,
-                                    metapop.getSize(),
                                     metapop.getDemeSize(0),
                                     metapop.getDemeSize(1));
             }
@@ -585,3 +545,53 @@ Param MainDialog::createPars()
 }
 
 
+
+
+/// unused code /////
+/// (for now)   /////
+
+void plot_hist(QCustomPlot* UI, QCPBars * barplot,
+               const std::vector<double>& v) {
+
+    auto min_max = std::minmax_element(v.begin(), v.end());
+
+    int num_bins = 30;
+    double bin_size = 1.0 * (*min_max.second - *min_max.first) / num_bins;
+
+    barplot->setWidth(bin_size);
+
+    std::vector<int> bins(30, 0);
+
+    for(size_t i = 0; i < 30; ++i) {
+        double left = *min_max.first + i * bin_size;
+        double right = *min_max.first + (i+1) * bin_size;
+        for(auto it = v.begin(); it != v.end(); ++it) {
+            if( (*it) >= left && (*it) < right) {
+                bins[ i ]++;
+            }
+        }
+    }
+
+    QVector<double> xvals;
+    QVector<double> yvals;
+
+    double max_y_val = -1;
+    for(size_t i = 0; i < bins.size(); ++i) {
+        xvals.append(*min_max.first + i * bin_size);
+        yvals.append(bins[i]);
+        if(bins[i] > max_y_val) max_y_val = bins[i];
+    }
+
+    barplot->clearData();
+
+    UI->xAxis->setRange(0.9 * *min_max.first,
+                                        1.1 * *min_max.second);
+
+    UI->yAxis->setRange(0, max_y_val * 1.05);
+
+    barplot->setData(xvals, yvals);
+    UI->replot();
+    UI->update();
+
+    return;
+}
