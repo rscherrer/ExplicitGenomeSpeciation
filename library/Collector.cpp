@@ -815,4 +815,88 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
 }
 
+std::vector<double> Collector::get_Fst() const
+{
+    std::vector<double> output(genomescan.size());
+    for(size_t i = 0; i < genomescan.size(); ++i) {
+        output[i] = genomescan[i].Fst;
+    }
+    return output;
+}
 
+std::vector<double> Collector::get_Gst() const
+{
+    std::vector<double> output(genomescan.size());
+    for(size_t i = 0; i < genomescan.size(); ++i) {
+        output[i] = genomescan[i].Gst;
+    }
+    return output;
+}
+
+std::vector<double> Collector::get_eco_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getEcoTrait();
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_eco_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getEcoTrait());
+       }
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_sex_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getMatePref();
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_sex_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getMatePref());
+       }
+   }
+   return output;
+}
+
+
+
+std::vector<double> Collector::get_neu_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getNeutral();
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_neu_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getNeutral());
+       }
+   }
+   return output;
+}
