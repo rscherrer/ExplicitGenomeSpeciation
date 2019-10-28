@@ -21,15 +21,17 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
     Collector collector = Collector(arch);
 
     vecDbl time(10);
+    vecDbl varpx(10);
     size_t cumulsize = 0u;
 
     for (int t = 0; t < 10; ++t) {
 
         time[t] = utl::size2dbl(t);
-
         metapop.cycle(pars, arch);
         collector.analyze(metapop, pars, arch);
         collector.print(t, metapop);
+
+        varpx[t] = collector.getVarP(0u);
 
         cumulsize += metapop.getSize();
 
@@ -38,14 +40,13 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     // Read output file
     vecDbl rtime = tst::readfile("time.dat");
+    vecDbl rvarpx = tst::readfile("varP_x.dat");
 
     BOOST_CHECK_EQUAL(time.size(), rtime.size());
+    BOOST_CHECK_EQUAL(varpx.size(), rvarpx.size());
 
     // Read individual trait values
     vecDbl rpopx = tst::readfile("population_x.dat");
-
-    // Check that the number of individuals recorded is indeed the cumulative
-    // population size through time (that's what's wrong in the Python script)
 
     BOOST_CHECK_EQUAL(rpopx.size(), cumulsize); // passes just fine
 

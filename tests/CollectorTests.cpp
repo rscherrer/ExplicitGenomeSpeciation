@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
     collector.analyze(metapop, pars, arch);
-    BOOST_CHECK_EQUAL(collector.getEI(), 1.0);    
+    BOOST_CHECK_EQUAL(collector.getEI(), 1.0);
 }
 
 // Test case: a population with spatial isolation = 1

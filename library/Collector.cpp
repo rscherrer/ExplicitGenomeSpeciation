@@ -742,12 +742,12 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(means[trait][0u][1u], files[f]); ++f; // hab 0 eco 1
         stf::write(means[trait][1u][0u], files[f]); ++f; // hab 1 eco 0
         stf::write(means[trait][1u][1u], files[f]); ++f; // hab 1 eco 1
-        stf::write(varP[trait], files[f]); ++f;
-        stf::write(varG[trait], files[f]); ++f;
-        stf::write(varA[trait], files[f]); ++f;
+        stf::write(varP[trait][2u], files[f]); ++f;
+        stf::write(varG[trait][2u], files[f]); ++f;
+        stf::write(varA[trait][2u], files[f]); ++f;
         stf::write(varD[trait], files[f]); ++f;
         stf::write(varI[trait], files[f]); ++f;
-        stf::write(varN[trait], files[f]); ++f;
+        stf::write(varN[trait][2u], files[f]); ++f;
         stf::write(Pst[trait], files[f]); ++f;
         stf::write(Gst[trait], files[f]); ++f;
         stf::write(Qst[trait], files[f]); ++f;

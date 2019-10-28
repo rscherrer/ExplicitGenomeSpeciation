@@ -156,6 +156,11 @@ public:
         return RI;
     }
 
+    double getVarP(const size_t &t) const // used in test
+    {
+        return varP[t][2u];
+    }
+
 private:
 
     vecStrings whattosave() const;
