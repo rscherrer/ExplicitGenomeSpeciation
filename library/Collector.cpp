@@ -734,7 +734,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
     stf::write(m.resources[0u][0u], files[f]); ++f; // hab 0 res 0
     stf::write(m.resources[0u][1u], files[f]); ++f; // hab 0 res 1
     stf::write(m.resources[1u][0u], files[f]); ++f; // hab 1 res 0
-    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1
+    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1fem0
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
