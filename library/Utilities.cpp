@@ -12,6 +12,15 @@ vecDbl utl::ones(const size_t &n)
     return vecDbl(n, 1.0);
 }
 
+Matrix utl::ones(const size_t &nrow, const size_t &ncol)
+{
+    Matrix mat;
+    mat.reserve(nrow);
+    for (size_t i = 0u; i < nrow; ++i)
+        mat.push_back(utl::ones(ncol));
+    return mat;
+}
+
 // Vector of zeros
 vecDbl utl::zeros(const size_t &n)
 {
@@ -206,6 +215,12 @@ void utl::correct(double &x, const double &x0, const double &d)
 double utl::size2dbl(const size_t &x)
 {
     return static_cast<double>(x);
+}
+
+// Convert double to unsigned integer
+size_t utl::dbl2size(const double &x)
+{
+    return static_cast<size_t>(x);
 }
 
 // Save to file

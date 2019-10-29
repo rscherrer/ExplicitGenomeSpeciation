@@ -16,17 +16,31 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
     std::clog << "Testing output files...\n";
 
     Param pars;
+    pars.rdynamics = 1u;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.trenewal = 0.001;
+    pars.hsymmetry = 1.0;
+    pars.demesizes = { 100u, 0u };
+    pars.allfreq = 0.5;
+    pars.ecosel = 1.0;
+    pars.tburnin = 0u;
+
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     Collector collector = Collector(arch);
 
     size_t cumulsize = 0u;
+    size_t lastgenfirst = 0u;
 
     for (int t = 0; t < 10; ++t) {
 
         metapop.cycle(pars, arch);
         collector.analyze(metapop, pars, arch);
         collector.print(t, metapop);
+
+        if (t != 9) lastgenfirst += metapop.getSize();
 
         cumulsize += metapop.getSize();
 
@@ -98,9 +112,28 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
     BOOST_CHECK_EQUAL(si.size(), 10u);
     BOOST_CHECK_EQUAL(ri.size(), 10u);
 
-    // Read individual trait values
+    // Read individual trait values and ecotypes
     vecDbl popx = tst::readfile("population_x.dat");
+    vecDbl ecotypes = tst::readfile("population_ecotype.dat");
 
     BOOST_CHECK_EQUAL(popx.size(), cumulsize);
+
+    // In the last generation
+    // Check that ecological trait values are higher in ecotype 1 than 0
+
+    double xmax0 = -1.0;
+    double xmin1 = 1.0;
+
+    for (size_t i = lastgenfirst; i < popx.size(); ++i) {
+
+        const size_t e = utl::dbl2size(ecotypes[i]);
+        const double x = popx[i];
+
+        if (e == 0u && x > xmax0) xmax0 = x;
+        if (e == 1u && x < xmin1) xmin1 = x;
+
+    }
+
+    BOOST_CHECK(xmax0 < xmin1);
 
 }

@@ -251,3 +251,47 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     BOOST_CHECK_EQUAL(utl::round(metapop.getSumFitness(), 2u), sumw);
     BOOST_CHECK_EQUAL(utl::round(metapop.getVarFitness(), 4u), 0.0);
 }
+
+BOOST_AUTO_TEST_CASE(EcotypeClassification)
+{
+    std::clog << "Testing ecotype classification...\n";
+    Param pars;
+    pars.rdynamics = 1u;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.trenewal = 0.001;
+    pars.hsymmetry = 1.0;
+    pars.demesizes = { 100u, 0u };
+    pars.allfreq = 0.5;
+    pars.ecosel = 1.0;
+    pars.tburnin = 0u;
+    GenArch arch = GenArch(pars);
+
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+
+    // Find the lowest ecological trait value in ecotype 1
+    // Find the highest ecological trait values in ecotype 0
+
+    double xmax0 = -1.0;
+    double xmin1 = 1.0;
+
+    // For each individual
+    for (size_t i = 0u; i < metapop.getSize(); ++i) {
+
+        // Record trait value and ecotype
+        const double x = metapop.getEcoTrait(i);
+        const size_t e = metapop.getEcotype(i);
+
+        vecDbl w = utl::zeros(2u); // payoff on both resources
+
+        if (e == 0u && x > xmax0) xmax0 = x;
+        if (e == 1u && x < xmin1) xmin1 = x;
+
+    }
+
+    // Ecotype 1 should have higher ecological trait values than ecotype 0
+    BOOST_CHECK(xmax0 < xmin1);
+
+}
