@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     size_t cumulsize = 0u;
     size_t lastgenfirst = 0u;
+    size_t lastgensize = 0u;
 
     for (int t = 0; t < 10; ++t) {
 
@@ -41,10 +42,14 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
         collector.print(t, metapop);
 
         if (t != 9) lastgenfirst += metapop.getSize();
+        if (t == 9) lastgensize = metapop.getSize();
 
         cumulsize += metapop.getSize();
 
     }
+
+    assert(cumulsize - lastgenfirst == lastgensize);
+
     collector.shutdown();
 
     // Read output files
@@ -118,11 +123,17 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     BOOST_CHECK_EQUAL(popx.size(), cumulsize);
 
-    // In the last generation
-    // Check that ecological trait values are higher in ecotype 1 than 0
+    // Test that recorded ecological trait values in ecotype 1 are always higher
+    // than in ecotype 0 (on the last generation only)
+    // And that individuals always do better on the resource they are assigned
 
     double xmax0 = -1.0;
     double xmin1 = 1.0;
+
+    const double r0 = resource00[9];
+    const double r1 = resource01[9];
+
+    vecUns classif;
 
     for (size_t i = lastgenfirst; i < popx.size(); ++i) {
 
@@ -132,8 +143,17 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
         if (e == 0u && x > xmax0) xmax0 = x;
         if (e == 1u && x < xmin1) xmin1 = x;
 
+        const double f0 = exp(-utl::sqr(x + 1.0));
+        const double f1 = exp(-utl::sqr(x - 1.0));
+
+        const double w0 = f0 * r0;
+        const double w1 = f1 * r1;
+
+        classif.push_back(e == (w1 > w0));
+
     }
 
     BOOST_CHECK(xmax0 < xmin1);
+    BOOST_CHECK_EQUAL(utl::sumu(classif), classif.size());
 
 }
