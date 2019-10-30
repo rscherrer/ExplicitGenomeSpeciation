@@ -35,6 +35,11 @@ public:
     void exitburnin();
     bool isextinct() const;
 
+    void disperse(const Param&);
+    void consume(const Param&);
+    void reproduce(const Param&, const GenArch&);
+    void survive(const Param&);
+
     // Getters called from outside
     size_t getSize() const
     {
@@ -168,11 +173,6 @@ public:
 private:
 
     Crowd populate(const Param&, const GenArch&);
-
-    void disperse(const Param&);
-    void consume(const Param&);
-    void reproduce(const Param&, const GenArch&);
-    void survive(const Param&);
 
     Crowd population;
     bool isburnin;

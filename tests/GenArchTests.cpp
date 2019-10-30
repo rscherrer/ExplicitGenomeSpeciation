@@ -74,6 +74,7 @@ BOOST_AUTO_TEST_CASE(NetworkWithOneEdgeConnectsNodesZeroAndOne)
     BOOST_CHECK_EQUAL(arch.getEdge(0u, 0u).second, 1u);
 }
 
+/*
 BOOST_AUTO_TEST_CASE(NetworkWithTooManyEdgesIsCappedAtMaxPossible)
 {
     std::clog << "Testing too large networks...\n";
@@ -86,6 +87,7 @@ BOOST_AUTO_TEST_CASE(NetworkWithTooManyEdgesIsCappedAtMaxPossible)
     BOOST_CHECK_EQUAL(arch.getNetworkSize(1u), 10u);
     BOOST_CHECK_EQUAL(arch.getNetworkSize(2u), 1u);
 }
+*/
 
 BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
 {

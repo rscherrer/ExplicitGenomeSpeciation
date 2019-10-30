@@ -15,7 +15,8 @@ namespace utl
 {
 
     double sqr(const double&);
-    vecDbl ones(const size_t &n);
+    vecDbl ones(const size_t&);
+    Matrix ones(const size_t&, const size_t&);
     vecDbl zeros(const size_t&);    
     Matrix zeros(const size_t&, const size_t&);
     Matx3d zeros(const size_t&, const size_t&, const size_t&);
@@ -31,6 +32,7 @@ namespace utl
     void marginalize(MatUns&);
     Matrix dividemat(const Matrix&, const MatUns&);
     double size2dbl(const size_t&);
+    size_t dbl2size(const double&);
     double round(const double&, const size_t&);
     void correct(double&, const double&, const double&);
 

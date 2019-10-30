@@ -12,6 +12,15 @@ vecDbl utl::ones(const size_t &n)
     return vecDbl(n, 1.0);
 }
 
+Matrix utl::ones(const size_t &nrow, const size_t &ncol)
+{
+    Matrix mat;
+    mat.reserve(nrow);
+    for (size_t i = 0u; i < nrow; ++i)
+        mat.push_back(utl::ones(ncol));
+    return mat;
+}
+
 // Vector of zeros
 vecDbl utl::zeros(const size_t &n)
 {
@@ -102,21 +111,27 @@ void utl::marginalize(Matrix &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0.0);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0.0);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        double sum = 0.0;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        double sum = 0.0;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
@@ -128,21 +143,27 @@ void utl::marginalize(MatUns &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0u);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0u);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        size_t sum = 0u;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        size_t sum = 0u;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
@@ -194,6 +215,12 @@ void utl::correct(double &x, const double &x0, const double &d)
 double utl::size2dbl(const size_t &x)
 {
     return static_cast<double>(x);
+}
+
+// Convert double to unsigned integer
+size_t utl::dbl2size(const double &x)
+{
+    return static_cast<size_t>(x);
 }
 
 // Save to file

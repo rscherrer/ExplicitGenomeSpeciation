@@ -48,12 +48,21 @@ void MetaPop::disperse(const Param &p)
 {
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
+
     if (p.dispersal < 0.5) {
         auto hasmigrated = boost::dynamic_bitset<>(population.size());
-        size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
+
+        // Sample the number of migrants
+        auto samplemigrants = rnd::binomial(population.size(), p.dispersal);
+
+        size_t nmigrants = samplemigrants(rnd::rng);
         size_t t = 0u;
+
+        // Sample migrants at random
+        auto pickmigrant = rnd::random(0u, population.size() - 1u);
+
         while (nmigrants) {
-            const size_t mig = rnd::random(population.size());
+            const size_t mig = pickmigrant(rnd::rng);
             if (!hasmigrated.test(mig)) {
                 hasmigrated.set(mig);
                 population[mig].disperse();
@@ -68,8 +77,11 @@ void MetaPop::disperse(const Param &p)
         }
     }
     else {
+
+        auto ismigrant = rnd::bernoulli(p.dispersal);
+
         for (size_t i = 0u; i < population.size(); ++i)
-            if (rnd::bernoulli(p.dispersal)) population[i].disperse();
+            if (ismigrant(rnd::rng)) population[i].disperse();
     }
 
 }
@@ -124,8 +136,9 @@ void MetaPop::consume(const Param &p)
     }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i)
+    for (size_t i = 0u; i < population.size(); ++i) {
         population[i].feed(resources[population[i].getHabitat()]);
+    }
 
 }
 
@@ -137,12 +150,15 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     // Males' fitness determine their encounter probabilities
     Matrix probs = utl::zeros(2u, population.size());
+    vecDbl var = utl::zeros(2u);
+    vecDbl avg = utl::zeros(2u);
     for (size_t i = 0u; i < population.size(); ++i) {
 
         const size_t sex = population[i].getGender();
         const size_t hab = population[i].getHabitat();
         ++sexcounts[hab][sex];
 
+        // If it's a male...
         if (!sex) {
 
             probs[hab][i] = population[i].getFitness();
@@ -152,6 +168,9 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 const double y = population[i].getMatePref();
                 probs[hab][i] *= exp(-p.ecosel * utl::sqr(y));
             }
+
+            var[hab] += utl::sqr(probs[hab][i]);
+            avg[hab] += probs[hab][i];
         }
     }
 
@@ -159,15 +178,31 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
     if (!(sexcounts[0u][1u] + sexcounts[1u][1u])) return; // exit if no females
 
     // Determine the length of the mating season
-    const size_t seasonend = rnd::geometric(p.matingcost);
+    auto getseasonend = rnd::geometric(p.matingcost);
+    const size_t seasonend = getseasonend(rnd::rng);
 
     if (!seasonend) return;
 
     const size_t nparents = population.size();
 
-    // Discrete distributions for each habitat
-    auto market0 = std::discrete_distribution<size_t>(probs[0u].cbegin(), probs[0u].cend());
-    auto market1 = std::discrete_distribution<size_t>(probs[1u].cbegin(), probs[1u].cend());
+    // One discrete distribution per habitat
+    std::vector<rnd::discrete> markets;
+    std::vector<bool> isequal = { false, false };
+    for (size_t hab = 0u; hab < 2u; ++hab) {
+
+        // Probabilities are all one if fitnesses are too similar
+        var[hab] /= nparents;
+        avg[hab] /= nparents;
+        var[hab] -= utl::sqr(avg[hab]);
+        isequal[hab] = var[hab] <= 1.0E-6;
+        if (isequal[hab]) probs[hab] = utl::ones(nparents);
+
+        // Make distribution
+        markets.push_back(rnd::discrete(probs[hab].cbegin(), probs[hab].cend()));
+    }
+
+    // One random uniform distribution in case no need for discrete
+    auto equalmales = rnd::random(0, nparents - 1u);
 
     // For each parent...
     for (size_t mom = 0u; mom < nparents; ++mom) {
@@ -185,11 +220,18 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 --timeleft;
 
                 // And encounters males one at a time with replacement
-                const size_t dad = hab ? market1(rnd::rng) : market0(rnd::rng);
-                const double maletrait = population[dad].getEcoTrait();
+                size_t dad;
+                if (isequal[hab])
+                    dad = equalmales(rnd::rng);
+                else
+                    dad = markets[hab](rnd::rng);
 
-                // If the female accepts to mate                
-                if (rnd::bernoulli(population[mom].mate(maletrait, p))) {
+                const double maletrait = population[dad].getEcoTrait();
+                const double prob = population[mom].mate(maletrait, p);
+                auto ismating = rnd::bernoulli(prob);
+
+                // If the female accepts to mate
+                if (ismating(rnd::rng)) {
 
                     // Determine fecundity
                     double fecundity = p.birth * population[mom].getFitness();
@@ -201,7 +243,8 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                     }
 
                     // Sample clutch size
-                    size_t noffspring = rnd::poisson(fecundity);
+                    auto getclutchsize = rnd::poisson(fecundity);
+                    size_t noffspring = getclutchsize(rnd::rng);
                     while (noffspring) {
 
                         // Give birth
@@ -228,8 +271,9 @@ void MetaPop::survive(const Param &p)
 {
     // Sample survival for each individual
     size_t nsurv = 0u;
+    auto issurvivor = rnd::bernoulli(p.survival);
     for (size_t i = 0u; i < population.size(); ++i) {
-        population[i].survive(rnd::bernoulli(p.survival));
+        population[i].survive(issurvivor(rnd::rng));
         if (population[i].isalive()) ++nsurv;
     }
 

@@ -135,12 +135,12 @@ public:
 
     ~Collector()
     {
-        // Close files
-        for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
-    }
+        shutdown(); // close files
+    }    
 
     void analyze(const MetaPop&, const Param&, const GenArch&);
     void print(const size_t&, const MetaPop&);
+    void shutdown();
 
     // Getters called in tests
     double getEI() const
@@ -154,6 +154,11 @@ public:
     double getRI() const
     {
         return RI;
+    }
+
+    double getVarP(const size_t &t) const // used in test
+    {
+        return varP[t][2u];
     }
 
 private:
