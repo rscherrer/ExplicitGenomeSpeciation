@@ -262,7 +262,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 }
 
 // Lambda for removing dead individuals
-auto burry = [&](Individual ind) -> bool
+auto burry = [](Individual ind) -> bool
 {
     return !ind.isalive();
 };

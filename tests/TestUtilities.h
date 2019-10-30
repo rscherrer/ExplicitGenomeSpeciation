@@ -10,7 +10,6 @@ namespace tst
 {
 
     void makeValidParamFile();
-    void makeValidParamFile2();
     void makeInvalidParamName();
     void makeInvalidParamValue();
     void makeInvalidParamValue2();
