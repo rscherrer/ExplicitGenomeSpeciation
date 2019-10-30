@@ -61,7 +61,7 @@ public:
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
-        habitat(0u),
+        habitat(mom.getHabitat()),
         gender(determinesex()),
         alive(true),
         adult(false)

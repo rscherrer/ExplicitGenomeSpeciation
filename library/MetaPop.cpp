@@ -48,6 +48,7 @@ void MetaPop::disperse(const Param &p)
 {
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
+
     if (p.dispersal < 0.5) {
         auto hasmigrated = boost::dynamic_bitset<>(population.size());
 
@@ -135,8 +136,9 @@ void MetaPop::consume(const Param &p)
     }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i)
+    for (size_t i = 0u; i < population.size(); ++i) {
         population[i].feed(resources[population[i].getHabitat()]);
+    }
 
 }
 

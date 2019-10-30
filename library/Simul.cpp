@@ -38,18 +38,22 @@ int simulate(const vecStrings &args)
             std::clog << t << '\n';
 
             // Life cycle of the metapopulation
-            metapop.cycle(pars, arch);
-
-            // Is the population still there?
-            if (metapop.isextinct()) {
-                std::clog << "The population went extinct at t = " << t << '\n';
-                break;
-            }
+            metapop.disperse(pars);
+            metapop.consume(pars);
 
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) {
                 collector.analyze(metapop, pars, arch); // collect stats
                 collector.print(t, metapop); // save them to files
+            }
+
+            metapop.reproduce(pars, arch);
+            metapop.survive(pars);
+
+            // Is the population still there?
+            if (metapop.isextinct()) {
+                std::clog << "The population went extinct at t = " << t << '\n';
+                break;
             }
         }
 

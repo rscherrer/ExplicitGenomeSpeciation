@@ -138,8 +138,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     for (size_t i = 0u; i < m.population.size(); ++i) {
 
         // Count densities
-        const size_t eco = m.population[i].getEcotype();
-        const size_t hab = m.population[i].getHabitat();
+        const size_t eco = m.getEcotype(i);
+        const size_t hab = m.getHabitat(i);
         ++counts[hab][eco];
 
         // Accumulate trait and genetic values
@@ -155,6 +155,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
     // Counts across ecotypes and across habitats
     utl::marginalize(counts);
+
+    assert(counts[0u][0u] + counts[0u][1u] + counts[1u][0u] + counts[1u][1u] == m.getSize());
 
     // For each trait...
     for (size_t trait = 0u; trait < 3u; ++trait) {
