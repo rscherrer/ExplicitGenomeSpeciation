@@ -38,8 +38,6 @@ BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
     metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
-    collector.analyze(metapop, pars);
-    BOOST_CHECK_EQUAL(collector.getEI(), 1.0);    
 }
 
 // Test case: a population with spatial isolation = 1

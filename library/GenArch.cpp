@@ -56,8 +56,11 @@ vecDbl GenArch::makeLocations(const Param &p) const
     vecDbl positions;
     positions.reserve(p.nloci);
 
+    // Locations are sampled from a uniform distribution between 0 and 1
+    auto locsample = rnd::uniform(0.0, 1.0);
+
     for (size_t locus = 0u; locus < p.nloci; ++locus)
-        positions.push_back(rnd::uniform(1.0));
+        positions.push_back(locsample(rnd::rng));
 
     std::sort(positions.begin(), positions.end());
 
@@ -78,9 +81,14 @@ vecDbl GenArch::makeEffects(const Param &p) const
     effectsizes.reserve(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
+    // Effect sizes are sampled from a two-sided Gamma distribution
+    auto getffect = rnd::gamma(p.effectshape, p.effectscale);
+    auto isflipped = rnd::bernoulli(0.5);
+
     for (size_t locus = 0u; locus < p.nloci; ++locus) {
 
-        const double effect = rnd::bigamma(p.effectshape, p.effectscale);
+        double effect = getffect(rnd::rng);
+        if (isflipped(rnd::rng)) effect *= -1.0;
         effectsizes.push_back(effect);
         sss[traits[locus]] += utl::sqr(effect);
     }
@@ -104,8 +112,13 @@ vecDbl GenArch::makeDominances(const Param &p) const
     coefficients.reserve(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
+    // Dominance coefficients are sampled from a half-normal distribution
+    auto getdominance = rnd::normal(0.0, p.dominancevar);
+
     for (size_t locus = 0u; locus < p.nloci; ++locus) {
-        const double dom = rnd::hnormal(p.dominancevar);
+        double dom = getdominance(rnd::rng);
+        if (dom < 0.0) dom *= -1.0;
+        assert(dom >= 0.0);
         coefficients.push_back(dom);
         sss[traits[locus]] += utl::sqr(dom);
     }

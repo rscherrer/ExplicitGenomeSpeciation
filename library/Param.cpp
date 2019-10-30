@@ -130,13 +130,7 @@ void Param::import(std::ifstream &file)
     }
 
     // Now update interactive parameters
-    nloci = utl::sumu(nvertices);
-
-    // Make sure genetic networks do not have more edges than feasible
-    capEdges();
-
-    // Check validity of parameter values
-    checkParams();
+    update();
 
     std::clog << "Parameters were read in succesfully.\n";
 

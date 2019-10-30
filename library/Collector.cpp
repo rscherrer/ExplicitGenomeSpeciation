@@ -24,7 +24,7 @@ vecStrings Collector::whattosave() const
      "varA_z", "varD_z", "varI_z", "varN_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
      "Fst_z",
 
-     "EI", "SI", "MI",
+     "EI", "SI", "RI",
 
      "genome_varP", "genome_varG", "genome_varA", "genome_varD", "genome_varI",
      "genome_varN", "genome_Pst", "genome_Gst", "genome_Qst", "genome_Cst",
@@ -138,8 +138,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     for (size_t i = 0u; i < m.population.size(); ++i) {
 
         // Count densities
-        const size_t eco = m.population[i].getEcotype();
-        const size_t hab = m.population[i].getHabitat();
+        const size_t eco = m.getEcotype(i);
+        const size_t hab = m.getHabitat(i);
         ++counts[hab][eco];
 
         // Accumulate trait and genetic values
@@ -155,6 +155,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
     // Counts across ecotypes and across habitats
     utl::marginalize(counts);
+
+    assert(counts[0u][0u] + counts[0u][1u] + counts[1u][0u] + counts[1u][1u] == m.getSize());
 
     // For each trait...
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -232,7 +234,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
             const size_t eco = m.population[i].getEcotype();
             const double gen = m.population[i].getLocusValue(genomescan[l].id);
-            const double zyg = m.population[i].getZygosity(genomescan[l].id);
+            const size_t zyg = m.population[i].getZygosity(genomescan[l].id);
 
             ++gcounts[eco][zyg];
             gsumgen[eco][zyg] += gen;
@@ -557,21 +559,26 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         MatUns crosses = utl::uzeros(2u, 2u);
         size_t ntrials = p.ntrials;
 
+        // Sample from a distribution of males and a distribution of females
+        auto femalepool = rnd::random(0u, females.size() - 1u);
+        auto malepool = rnd::random(0u, males.size() - 1u);
+
         // Sample many pairs of males and females with replacement
         while (ntrials) {
 
-            const size_t fem = females[rnd::random(females.size())];
-            const size_t mal = males[rnd::random(males.size())];
+            const size_t fem = females[femalepool(rnd::rng)];
+            const size_t mal = males[malepool(rnd::rng)];
 
             // See if the female accepts the male or not
             const double maletrait = m.population[mal].getEcoTrait();
             const double prob = m.population[fem].mate(maletrait, p);
+            auto ismating = rnd::bernoulli(prob);
 
             const size_t ecof = m.population[fem].getEcotype();
             const size_t ecom = m.population[mal].getEcotype();
 
-            // Count the homogamic and heterogamic crosses
-            if (rnd::bernoulli(prob)) ++crosses[ecof][ecom];
+            // Count homogamic and heterogamic crosses
+            if (ismating(rnd::rng)) ++crosses[ecof][ecom];
 
             --ntrials;
         }
@@ -729,7 +736,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
     stf::write(m.resources[0u][0u], files[f]); ++f; // hab 0 res 0
     stf::write(m.resources[0u][1u], files[f]); ++f; // hab 0 res 1
     stf::write(m.resources[1u][0u], files[f]); ++f; // hab 1 res 0
-    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1
+    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1fem0
 
     // Quantitative genetics
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -737,12 +744,12 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(means[trait][0u][1u], files[f]); ++f; // hab 0 eco 1
         stf::write(means[trait][1u][0u], files[f]); ++f; // hab 1 eco 0
         stf::write(means[trait][1u][1u], files[f]); ++f; // hab 1 eco 1
-        stf::write(varP[trait], files[f]); ++f;
-        stf::write(varG[trait], files[f]); ++f;
-        stf::write(varA[trait], files[f]); ++f;
+        stf::write(varP[trait][2u], files[f]); ++f;
+        stf::write(varG[trait][2u], files[f]); ++f;
+        stf::write(varA[trait][2u], files[f]); ++f;
         stf::write(varD[trait], files[f]); ++f;
         stf::write(varI[trait], files[f]); ++f;
-        stf::write(varN[trait], files[f]); ++f;
+        stf::write(varN[trait][2u], files[f]); ++f;
         stf::write(Pst[trait], files[f]); ++f;
         stf::write(Gst[trait], files[f]); ++f;
         stf::write(Qst[trait], files[f]); ++f;
@@ -813,6 +820,12 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
     assert(f + off == files.size()); // should be done with all files
 
+}
+
+void Collector::shutdown()
+{
+    // Close files
+    for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
 }
 
 std::vector<double> Collector::get_Fst() const

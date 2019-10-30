@@ -10,7 +10,6 @@ int simulate(const vecStrings &args)
 
     try
     {
-
         if (args.size() > 2u)
             throw std::runtime_error("More than one argument were supplied");
 
@@ -39,29 +38,39 @@ int simulate(const vecStrings &args)
             std::clog << t << '\n';
 
             // Life cycle of the metapopulation
-            metapop.cycle(pars, arch);
-
-            // Is the population still there?
-            if (metapop.isextinct()) {
-                std::cout << "The population went extinct at t = " << t << '\n';
-                break;
-            }
+            metapop.disperse(pars);
+            metapop.consume(pars);
 
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) {
                 collector.analyze(metapop, pars, arch); // collect stats
                 collector.print(t, metapop); // save them to files
             }
+
+            metapop.reproduce(pars, arch);
+            metapop.survive(pars);
+
+            // Is the population still there?
+            if (metapop.isextinct()) {
+                std::clog << "The population went extinct at t = " << t << '\n';
+                break;
+            }
         }
 
         std::clog << "Simulation ended.\n";
-
+        return 0;
     }
-    catch (const std::runtime_error &err)
+    catch (const std::exception& err)
     {
         std::cerr << "Exception: " << err.what() << '\n';
-        return 1;
     }
-
-    return 0;
+    catch (const char* err)
+    {
+        std::cerr << "Exception: " << err << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown Exception\n";
+    }
+    return 1;
 }

@@ -35,7 +35,7 @@ struct Param {
         nedges({ 0u, 0u, 0u }),
         nchrom(3u),
         mutation(1.0E-3),
-        recombination(0.01),
+        recombination(3.0),
         allfreq(0.2),
         scaleA({ 1.0, 1.0, 1.0 }),
         scaleD({ 0.0, 0.0, 0.0 }),
