@@ -9,7 +9,6 @@
 #include <cassert>
 #include <stddef.h>
 #include <bitset>
-#include <boost/dynamic_bitset.hpp>
 
 typedef std::bitset<10000> Genome;
 
@@ -37,7 +36,6 @@ public:
     {
         develop(pars, arch);
 
-        // assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -68,7 +66,6 @@ public:
     {
         develop(pars, arch);
 
-        // assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
