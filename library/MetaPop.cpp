@@ -11,11 +11,11 @@ Crowd MetaPop::populate(const Param &p, const GenArch &arch)
     size_t n0 = p.demesizes[0u];
     assert(n0 <= n);
     Crowd indivs;
-    indivs.reserve(n); // seems to be causing trouble
+    indivs.reserve(n);
 
     for (size_t ind = 0u; ind < n; ++ind) {
         indivs.push_back(Individual(p, arch));
-        if (ind >= n0) indivs.back().disperse(); // is this not making a copy? test it
+        if (ind >= n0) indivs[ind].disperse();
     }
 
     assert(indivs.size() == n);
@@ -49,40 +49,48 @@ void MetaPop::disperse(const Param &p)
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
 
-    if (p.dispersal < 0.5) {
-        auto hasmigrated = boost::dynamic_bitset<>(population.size());
+    /*
+    if (p.dispersal < 0.1) {
 
-        // Sample the number of migrants
-        auto samplemigrants = rnd::binomial(population.size(), p.dispersal);
-
-        size_t nmigrants = samplemigrants(rnd::rng);
-        size_t t = 0u;
-
-        // Sample migrants at random
-        auto pickmigrant = rnd::random(0u, population.size() - 1u);
-
-        while (nmigrants) {
-            const size_t mig = pickmigrant(rnd::rng);
-            if (!hasmigrated.test(mig)) {
-                hasmigrated.set(mig);
-                population[mig].disperse();
-                --nmigrants;
-                t = 0u;
-            }
-
-            // If we run too long without finding an individual to migrate
-            // Then probably everyone has migrated
-            ++t;
-            if (t > 1000u) break;
+        // Use geometric if rare
+        auto getnextmigrant = rnd::iotagap(p.dispersal);
+        getnextmigrant.reset(0u);
+        size_t mig = 0u;
+        for (;;) {
+            mig = getnextmigrant(rnd::rng);
+            if (mig > getSize()) break;
+            population[mig].disperse();
         }
+    }
+    else if (p.dispersal < 0.5) {
+
+        // Use binomial if uncommon
+        auto getnmigrants = rnd::binomial(p.dispersal);
+        vecUns inds(getSize());
+        std::iota(inds.begin(), inds.end(), 0);
+        auto getmigrant = rnd::samplenr(inds.begin(), inds.end());
+        size_t nmig = getnmigrants(rnd::rng);
+        while (nmig) {
+            const size_t migrant = getmigrant(rnd::rng);
+            population[migrant].disperse();
+            --nmig;
+        }
+
     }
     else {
 
+        // Use bernoulli if common
         auto ismigrant = rnd::bernoulli(p.dispersal);
-
-        for (size_t i = 0u; i < population.size(); ++i)
+        for (size_t i = 0u; i < getSize(); ++i)
             if (ismigrant(rnd::rng)) population[i].disperse();
+
     }
+    */
+
+    // Use bernoulli if common
+    auto ismigrant = rnd::bernoulli(p.dispersal);
+    for (size_t i = 0u; i < getSize(); ++i)
+        if (ismigrant(rnd::rng)) population[i].disperse();
 
 }
 

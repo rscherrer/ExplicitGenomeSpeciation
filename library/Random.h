@@ -11,7 +11,9 @@ namespace rnd
 
     // Probability distributions
     typedef std::discrete_distribution<size_t> discrete;
-    typedef rndutils::mutable_discrete_distribution<size_t> mdiscrete;
+    typedef rndutils::mutable_discrete_distribution<size_t> mdiscrete; // mutable discrete
+    typedef rndutils::iota_gap_sampler<size_t> iotagap; // cumulative geometric
+    typedef rndutils::shuffle_sampler<size_t> samplenr; // sampling without replacement
     typedef std::uniform_int_distribution<size_t> random;
     typedef std::exponential_distribution<double> exponential;
     typedef std::binomial_distribution<size_t> binomial;
