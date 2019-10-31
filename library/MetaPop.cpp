@@ -156,23 +156,6 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
     sexcounts = utl::uzeros(2u, 2u); // per habitat per sex
 
     // Determine the length of the season and exit if zero
-    // Loop through the population and extract habitat and gender
-    // Record IDs in each sex and each habitat
-    // Keep track of census in each sex and each habitat
-    // For each habitat...
-    // If no males or no females, no reproduction and move on to next habitat
-    // Make a vector of probabilities for males (including burnin condition)
-    // Set all probabilities to zero if all fitnesses are the same
-    // Loop through females
-    // Initialize a mutable discrete distribution with uniform zero-policy
-    // Determine fecundity (including burnin condition)
-    // Sample the number of offspring from a Poisson
-    // While the season is not over and mating hasn't occured
-    // Sample a male and evaluate
-    // Produce offspring and add them to the population if accepted
-    // Then move on to the next female
-    // Or progress through mating season and mutate the distribution
-
     auto getseasonend = rnd::geometric(p.matingcost);
     const size_t seasonend = getseasonend(rnd::rng);
 
@@ -190,13 +173,16 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         males.push_back(mal);
     }
 
+    // Loop through the population and extract habitat and gender
     for (size_t i = 0u; i < getSize(); ++i) {
 
         const size_t hab = population[i].getHabitat();
         const size_t sex = population[i].getGender();
 
+        // Keep track of census in each sex and each habitat
         ++sexcounts[hab][sex];
 
+        // Record IDs in each sex and each habitat
         if (sex)
             females[hab].push_back(i);
         else
@@ -204,6 +190,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     }
 
+    // For each habitat...
     for (size_t hab = 0u; hab < 2u; ++hab) {
 
         females[hab].shrink_to_fit();
@@ -215,6 +202,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         assert(nm == males[hab].size());
         assert(nf == females[hab].size());
 
+        // If no males or no females, no reproduction and move on
         if (!nm) continue;
         if (!nf) continue;
 
@@ -224,10 +212,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         double sum = 0.0;
         double ssq = 0.0;
 
+        // Make a vector of probabilities for males
         for (size_t m : males[hab]) {
 
             fit[i] = population[m].getFitness();
 
+            // Modified in burn-in
             if (isburnin) {
                 const double y = population[m].getMatePref();
                 fit[i] *= exp(-p.ecosel * utl::sqr(y));
@@ -240,16 +230,20 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
         }
 
+        // Set all probabilities to one if all fitnesses are the same
         const double var = ssq / nm - utl::sqr(sum / nm);
-
         if (var < 1.0E-6) fit = utl::ones(nm);
 
+        // Initialize a mutable discrete distribution with uniform zero-policy
         auto getmale = rnd::mdiscrete();
 
+        // Loop through females
         for (size_t f : females[hab]) {
 
+            // Determine fecundity
             double fecundity = p.birth * population[f].getFitness();
 
+            // Modified during burn-in
             if (isburnin) {
                 const double y = population[f].getMatePref();
                 fecundity *= exp(-p.ecosel * utl::sqr(y));
@@ -257,6 +251,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             if (fecundity == 0.0) continue;
 
+            // Sample the number of offspring from a Poisson
             auto getclutchsize = rnd::poisson(fecundity);
             size_t noffspring = getclutchsize(rnd::rng);
 
@@ -266,15 +261,18 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             vecDbl probs = fit;
 
+            // While the season is not over and mating hasn't occured
             while (t) {
 
                 getmale.mutate(probs.cbegin(), probs.cend());
 
+                // Sample a male and evaluate
                 const size_t idm = getmale(rnd::rng);
                 const size_t m = males[hab][idm];
                 const double xm = population[m].getEcoTrait();
                 auto ismating = rnd::bernoulli(population[f].mate(xm, p));
 
+                // Produce offspring and add them to the population if accepted
                 if (ismating(rnd::rng)) {
 
                     while (noffspring) {
@@ -290,137 +288,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
                 }
 
+                // Update the distribution to avoid resampling
                 probs[idm] = 0.0;
-
                 --t;
             }
         }
     }
-
-    ///////////////
-
-    /*
-
-    // Males' fitness determine their encounter probabilities
-    Matrix probs = utl::zeros();
-    vecDbl var = utl::zeros(2u);
-    vecDbl avg = utl::zeros(2u);
-
-    for (size_t i = 0u; i < population.size(); ++i) {
-
-        const size_t sex = population[i].getGender();
-        const size_t hab = population[i].getHabitat();
-        ++sexcounts[hab][sex];
-
-        // If it's a male...
-        if (!sex) {
-
-            // Add its fitness to the vector of probabilities
-            probs[hab][i] = population[i].getFitness();
-
-            // Modify mating success during burnin
-            if (isburnin) {
-                const double y = population[i].getMatePref();
-                probs[hab][i] *= exp(-p.ecosel * utl::sqr(y));
-            }
-
-            // Keep track of the variance
-            var[hab] += utl::sqr(probs[hab][i]);
-            avg[hab] += probs[hab][i];
-        }
-    }
-
-    if (!(sexcounts[0u][0u] + sexcounts[1u][0u])) return; // exit if no males
-    if (!(sexcounts[0u][1u] + sexcounts[1u][1u])) return; // exit if no females
-
-    // Determine the length of the mating season
-    auto getseasonend = rnd::geometric(p.matingcost);
-    const size_t seasonend = getseasonend(rnd::rng);
-
-    if (!seasonend) return;
-
-    const size_t nparents = getSize();
-
-    // One discrete distribution per habitat
-    std::vector<rnd::discrete> markets;
-    std::vector<bool> isequal = { false, false };
-
-    for (size_t hab = 0u; hab < 2u; ++hab) {
-
-        // Probabilities are all zero if fitnesses are too similar
-        var[hab] /= nparents;
-        avg[hab] /= nparents;
-        var[hab] -= utl::sqr(avg[hab]);
-        isequal[hab] = var[hab] <= 1.0E-6;
-        if (var[hab] <= 1.0E-6) probs[hab] = utl::zeros(nparents);
-
-        // Make distribution
-        markets.push_back(rnd::discrete(probs[hab].cbegin(), probs[hab].cend()));
-    }
-
-    // One random uniform distribution in case no need for discrete
-    auto equalmales = rnd::random(0, nparents - 1u);
-
-    // For each parent...
-    for (size_t mom = 0u; mom < nparents; ++mom) {
-
-        const size_t sex = population[mom].getGender();
-        const size_t hab = population[mom].getHabitat();
-
-        // Is it a female and are there males around?
-        if (sex && sexcounts[hab][0u]) {
-
-            // Progress throughout the mating season
-            size_t timeleft = seasonend;
-            while (timeleft) {
-
-                --timeleft;
-
-                // And encounters males one at a time with replacement
-                size_t dad;
-                if (isequal[hab])
-                    dad = equalmales(rnd::rng);
-                else
-                    dad = markets[hab](rnd::rng);
-
-                const double maletrait = population[dad].getEcoTrait();
-                const double prob = population[mom].mate(maletrait, p);
-                auto ismating = rnd::bernoulli(prob);
-
-                // If the female accepts to mate
-                if (ismating(rnd::rng)) {
-
-                    // Determine fecundity
-                    double fecundity = p.birth * population[mom].getFitness();
-
-                    // Modify fecundity during burnin
-                    if (isburnin) {
-                        const size_t y = population[mom].getMatePref();
-                        fecundity *= exp(-p.ecosel * utl::sqr(y));
-                    }
-
-                    // Sample clutch size
-                    size_t noffspring = 0u;
-                    if (fecundity > 0.0) {
-                        auto getclutchsize = rnd::poisson(fecundity);
-                        noffspring = getclutchsize(rnd::rng);
-                    }
-                    while (noffspring) {
-
-                        // Give birth
-                        population.push_back(Individual(p, arch,
-                         population[mom], population[dad]));
-                        --noffspring;
-                    }
-
-                    // End the mating season if female has mated
-                    break;
-                }
-            }
-        }
-    }
-
-    */
 }
 
 // Lambda for removing dead individuals
