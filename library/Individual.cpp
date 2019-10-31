@@ -10,10 +10,29 @@ Genome Individual::genomize(const Param &p) const
 
     assert(sequence.count() == 0u);
 
-    auto ismutation = rnd::bernoulli(p.allfreq);
+    if (p.allfreq == 0.0) return sequence;
 
-    for (size_t i = 0u; i < p.nloci * 2.0; ++i)
-        if (ismutation(rnd::rng)) sequence.set(i);
+    if (p.allfreq < 0.1) {
+
+        // Use a geometric if rare
+        auto getnextmutant = rnd::iotagap(p.allfreq);
+        getnextmutant.reset(0u);
+        size_t mut = 0u;
+        for (;;) {
+            mut = getnextmutant(rnd::rng);
+            if (mut > 2.0 * p.nloci) break;
+            sequence.set(mut);
+        }
+
+    }
+    else {
+
+        // Use a bernoulli if common
+        auto ismutation = rnd::bernoulli(p.allfreq);
+        for (size_t i = 0u; i < p.nloci * 2.0; ++i)
+            if (ismutation(rnd::rng)) sequence.set(i);
+
+    }
 
     return sequence;
 }
