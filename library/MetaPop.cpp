@@ -243,8 +243,11 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                     }
 
                     // Sample clutch size
-                    auto getclutchsize = rnd::poisson(fecundity);
-                    size_t noffspring = getclutchsize(rnd::rng);
+                    size_t noffspring = 0u;
+                    if (fecundity > 0.0) {
+                        auto getclutchsize = rnd::poisson(fecundity);
+                        noffspring = getclutchsize(rnd::rng);
+                    }
                     while (noffspring) {
 
                         // Give birth

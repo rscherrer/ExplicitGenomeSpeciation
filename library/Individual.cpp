@@ -27,15 +27,18 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 {
 
     size_t locus = 0u;
-    size_t chrom = 0u;
-
-    // Crossover points are sampled from an exponential distribution
-    auto nextcrossover = rnd::exponential(p.recombination);
+    size_t chrom = 0u;        
 
     // Haplotypes have equal chances to be transmitted
     auto gethaplotype = rnd::bernoulli(0.5);
 
-    double crossover = nextcrossover(rnd::rng);
+    // Crossovers are sampled from an exponential distribution
+    const double recombrate = p.recombination > 0.0 ? p.recombination : 100.0;
+    auto nextcrossover = rnd::exponential(recombrate);
+
+    double crossover = 1.1; // beyond the end of the genome
+    if (p.recombination > 0.0) crossover = nextcrossover(rnd::rng);
+
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
@@ -84,9 +87,15 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 void Individual::mutate(Genome &zygote, const Param &p) const
 {
     // The number of mutations is sampled from a Poisson distribution
-    auto getnmutations = rnd::poisson(p.mutation * zygote.size());
+    size_t nmut = 0u;
+    double nexp = p.mutation * zygote.size(); // expected
+    assert(nexp >= 0.0);
+    if (nexp > 0.0) {
+        auto getnmutations = rnd::poisson(p.mutation * zygote.size());
+        nmut = getnmutations(rnd::rng);
+    }
 
-    size_t nmut = getnmutations(rnd::rng);
+    if (!nmut) return; // exit if no mutation
 
     // Sample mutation targets across the genome
     auto gettarget = rnd::random(0u, zygote.size() - 1u);
@@ -175,8 +184,11 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
     // Add normally distributed environmental effect for each trait
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
-        const double envnoise = getenvnoise(rnd::rng);
+        double envnoise = 0.0;
+        if (p.scaleE[trait] > 0.0) {
+            auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
+            envnoise = getenvnoise(rnd::rng);
+        }
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
 
