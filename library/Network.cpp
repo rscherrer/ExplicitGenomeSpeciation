@@ -91,16 +91,19 @@ vecEdg Network::makeMap(const Param& p) const
 
 vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 {
-    vecUns underlying;
-    underlying.reserve(p.nvertices[trait]);
+    vecUns underlying(p.nvertices[trait]);
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
     // Record all loci that encode the current trait
 
-    for (size_t locus = 0u; locus < p.nloci; ++locus)
-        if (traits[locus] == trait)
-            underlying.push_back(locus);
+    size_t i = 0u;
+    for (size_t locus = 0u; locus < p.nloci; ++locus) {
+        if (traits[locus] == trait) {
+            underlying[i] = locus;
+            ++i;
+        }
+    }
 
     assert(underlying.size() == p.nvertices[trait]);
 
@@ -110,17 +113,16 @@ vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 vecEdg Network::makeEdges(const Param &p) const
 {
 
-    vecEdg mapped;
-    mapped.reserve(p.nedges[trait]);
+    vecEdg mapped(p.nedges[trait]);
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
     // Add theses id to the vector of mapped edges
 
-    for (Edge partners : map) {
-        const size_t locus1 = loci[partners.first];
-        const size_t locus2 = loci[partners.second];
-        mapped.push_back(std::make_pair(locus1, locus2));
+    for (size_t e = 0u; e < map.size(); ++e) {
+        const size_t locus1 = loci[map[e].first];
+        const size_t locus2 = loci[map[e].second];
+        mapped[e] = std::make_pair(locus1, locus2);
     }
 
     return mapped;
@@ -132,8 +134,7 @@ vecDbl Network::makeWeights(const Param &p) const
     if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
         return utl::zeros(p.nedges[trait]);
 
-    vecDbl intweights;
-    intweights.reserve(p.nedges[trait]);
+    vecDbl intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
 
     // Interaction weights are sampled from a two-sided Gamma distribution
@@ -146,12 +147,13 @@ vecDbl Network::makeWeights(const Param &p) const
         // Two-sided Gamma distribution
         double w = getweight(rnd::rng);
         if (isflipped(rnd::rng)) w *= -1.0;
-        intweights.push_back(w);
+        intweights[edge] = w;
         sss += utl::sqr(w);
     }
 
     // Normalize
     sss = sss > 0.0 ? sqrt(sss) : 1.0;
+    assert(sss > 0.0);
     for (size_t edge = 0u; edge < p.nedges[trait]; ++edge)
         intweights[edge] /= sss;
 

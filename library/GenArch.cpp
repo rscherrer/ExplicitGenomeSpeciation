@@ -94,7 +94,7 @@ vecDbl GenArch::makeEffects(const Param &p) const
     }
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        sss[trait] = sqrt(sss[trait]);
+        sss[trait] = sss[trait] > 0.0 ? sqrt(sss[trait]) : 1.0;
         assert(sss[trait] > 0.0);
     }
 
@@ -124,8 +124,10 @@ vecDbl GenArch::makeDominances(const Param &p) const
         sss[traits[locus]] += utl::sqr(dom);
     }
 
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        sss[trait] = sqrt(sss[trait]);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        sss[trait] = sss[trait] > 0.0 ? sqrt(sss[trait]) : 1.0;
+        assert(sss[trait] > 0.0);
+    }
 
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         coefficients[locus] /= sss[traits[locus]];
