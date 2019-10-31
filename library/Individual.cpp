@@ -14,15 +14,7 @@ Genome Individual::genomize(const Param &p) const
 
     if (p.allfreq < 0.1) {
 
-        // Use a geometric if rare
-        auto getnextmutant = rnd::iotagap(p.allfreq);
-        getnextmutant.reset(0u);
-        size_t mut = 0u;
-        for (;;) {
-            mut = getnextmutant(rnd::rng);
-            if (mut > 2.0 * p.nloci) break;
-            sequence.set(mut);
-        }
+        mutate(sequence, p);
 
     }
     else {
@@ -99,13 +91,13 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
 }
 
-void Individual::mutate(Genome &zygote, const Param &p) const
+void Individual::mutate(Genome &seq, const Param &p) const
 {
 
     if (p.mutation == 0.0) return;
     if (p.mutation == 1.0)
         for (size_t i = 0u; i < 2u * p.nloci; ++i)
-            zygote.set(i);
+            seq.set(i);
 
     // Mutations are sampled from a geometric distribution
     assert(p.mutation > 0.0);
@@ -114,7 +106,7 @@ void Individual::mutate(Genome &zygote, const Param &p) const
     for (;;) {
         const size_t mut = getnextmutant(rnd::rng);
         if (mut >= 2.0 * p.nloci) break;
-        zygote.flip(mut);
+        seq.flip(mut);
     }
 }
 
