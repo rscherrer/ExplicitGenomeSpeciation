@@ -49,7 +49,8 @@ void MetaPop::disperse(const Param &p)
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
 
-    /*
+    if (p.dispersal == 0.0) return;
+
     if (p.dispersal < 0.1) {
 
         // Use geometric if rare
@@ -62,21 +63,24 @@ void MetaPop::disperse(const Param &p)
             population[mig].disperse();
         }
     }
+    /*
     else if (p.dispersal < 0.5) {
 
         // Use binomial if uncommon
         auto getnmigrants = rnd::binomial(p.dispersal);
         vecUns inds(getSize());
         std::iota(inds.begin(), inds.end(), 0);
-        auto getmigrant = rnd::samplenr(inds.begin(), inds.end());
+        auto getmigrant = rndutils::make_shuffle_sampler(inds.cbegin(), inds.cend());
         size_t nmig = getnmigrants(rnd::rng);
         while (nmig) {
-            const size_t migrant = getmigrant(rnd::rng);
-            population[migrant].disperse();
+            auto migrant = getmigrant(rnd::rng).second;
+            std::clog << migrant << '\n';
+            // population[migrant].disperse();
             --nmig;
         }
 
     }
+    */
     else {
 
         // Use bernoulli if common
@@ -85,13 +89,6 @@ void MetaPop::disperse(const Param &p)
             if (ismigrant(rnd::rng)) population[i].disperse();
 
     }
-    */
-
-    // Use bernoulli if common
-    auto ismigrant = rnd::bernoulli(p.dispersal);
-    for (size_t i = 0u; i < getSize(); ++i)
-        if (ismigrant(rnd::rng)) population[i].disperse();
-
 }
 
 void MetaPop::consume(const Param &p)
