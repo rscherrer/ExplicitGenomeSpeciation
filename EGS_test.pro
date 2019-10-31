@@ -5,6 +5,7 @@ include(EGS_test.pri)
 # C++14
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14
+QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
 
 # High warnings levels
 QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++ -Werror
