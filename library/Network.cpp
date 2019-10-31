@@ -77,9 +77,13 @@ vecEdg Network::makeMap(const Param& p) const
         }
     }
 
-    // These are not always the case unfortunately
+    // If the number of edges required is too large the algorithm may fail
+    // to reach a big enough network -- break in this case
+
+    if (connexions.size() != p.nedges[trait])
+        throw std::runtime_error("Required sized network could not be made.");
+
     assert(nleft == 0u);
-    assert(connexions.size() == p.nedges[trait]);
 
     return connexions;
 
