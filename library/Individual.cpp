@@ -6,17 +6,17 @@ Genome Individual::genomize(const Param &p) const
     // Generate a bitset of size 2N (diploid genome)
     // For each position, sample based on allele frequency
 
-    Genome sequence(2u * p.nloci); // diploid genome
+    Genome sequence; // diploid genome
 
-    assert(sequence.size() == 2u * p.nloci);
+    // assert(sequence.size() == 2u * p.nloci);
     assert(sequence.count() == 0u);
 
     auto ismutation = rnd::bernoulli(p.allfreq);
 
-    for (size_t i = 0u; i < sequence.size(); ++i)
+    for (size_t i = 0u; i < p.nloci * 2.0; ++i)
         if (ismutation(rnd::rng)) sequence.set(i);
 
-    assert(sequence.size() == 2u * p.nloci);
+    // assert(sequence.size() == 2u * p.nloci);
 
     return sequence;
 }
@@ -80,7 +80,7 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
     assert(locus == p.nloci);
     assert(chrom == p.nchrom - 1u);
-    assert(genome.size() == 2u * p.nloci);
+    // assert(genome.size() == 2u * p.nloci);
 
 }
 
@@ -88,7 +88,7 @@ void Individual::mutate(Genome &zygote, const Param &p) const
 {
     // The number of mutations is sampled from a Poisson distribution
     size_t nmut = 0u;
-    double nexp = p.mutation * zygote.size(); // expected
+    double nexp = p.mutation * p.nloci * 2.0; // expected
     assert(nexp >= 0.0);
     if (nexp > 0.0) {
         auto getnmutations = rnd::poisson(p.mutation * zygote.size());
@@ -113,8 +113,8 @@ void Individual::mutate(Genome &zygote, const Param &p) const
 Genome Individual::fecundate(const Individual &mom, const Individual &dad,
  const Param &p, const GenArch &arch) const
 {
-    Genome zygote(2u * p.nloci); // diploid genome
-    assert(zygote.size() == 2u * p.nloci);
+    Genome zygote; // diploid genome
+    // assert(zygote.size() == 2u * p.nloci);
     assert(zygote.count() == 0u);
 
     mom.recombine(zygote, p, arch);
