@@ -2,6 +2,7 @@
 #define EXPLICITGENOMESPECIATION_RANDOM_H
 
 #include "Types.h"
+#include "rndutils.hpp"
 #include <random>
 #include <stddef.h>
 

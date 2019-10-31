@@ -18,4 +18,5 @@ HEADERS += \
     $$PWD/library/MetaPop.h \
     $$PWD/library/Types.h \
     $$PWD/library/Simul.h \
-    $$PWD/library/Collector.h
+    $$PWD/library/Collector.h \
+    $$PWD/library/rndutils.hpp

@@ -35,6 +35,9 @@ vecEdg Network::makeMap(const Param& p) const
     for (size_t vertex = 2u; nleft && vertex < p.nvertices[trait]; ++vertex) {
 
         // Sample number of partners from a binomial
+        // This procedure conditions on the average of the degree distribution
+        // being nedges / nvertices
+
         const double prob = 1.0 / (p.nvertices[trait] - vertex);
         assert(prob >= 0.0);
         assert(prob <= 1.0);
@@ -58,11 +61,8 @@ vecEdg Network::makeMap(const Param& p) const
 
             if (utl::sum(probs) < 1.0) break;
 
-            // Make a bond without replacement and update degree distribution
-            // Note: sampling multiple time requires initializing a new
-            // discrete distribution everytime, which is time consuming.
-            // But this is done only when generating the architecture
-            // so probably not that big of a deal
+            // Sampling multiple targets without replacement
+            // Use Hanno's mutable discrete distribution
 
             auto getpartner = rnd::discrete(probs.cbegin(), probs.cend());
             const size_t partner = getpartner(rnd::rng);
