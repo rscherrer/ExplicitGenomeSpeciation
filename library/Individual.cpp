@@ -101,28 +101,21 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
 void Individual::mutate(Genome &zygote, const Param &p) const
 {
-    // The number of mutations is sampled from a Poisson distribution
-    size_t nmut = 0u;
-    double nexp = p.mutation * p.nloci * 2.0; // expected
-    assert(nexp >= 0.0);
-    if (nexp > 0.0) {
-        auto getnmutations = rnd::poisson(p.mutation * zygote.size());
-        nmut = getnmutations(rnd::rng);
+
+    if (p.mutation == 0.0) return;
+    if (p.mutation == 1.0)
+        for (size_t i = 0u; i < 2u * p.nloci; ++i)
+            zygote.set(i);
+
+    // Mutations are sampled from a geometric distribution
+    assert(p.mutation > 0.0);
+    auto getnextmutant = rnd::iotagap(p.mutation);
+    getnextmutant.reset(0u);
+    for (;;) {
+        const size_t mut = getnextmutant(rnd::rng);
+        if (mut >= 2.0 * p.nloci) break;
+        zygote.flip(mut);
     }
-
-    if (!nmut) return; // exit if no mutation
-
-    // Sample mutation targets across the genome
-    auto gettarget = rnd::random(0u, zygote.size() - 1u);
-
-    while (nmut) {
-        zygote.flip(gettarget(rnd::rng));
-        --nmut;
-    }
-
-    // NB: Maybe mutations should be sampled without replacement.
-    // But typically there should be so few that the chances of a locus
-    // being hit twice are negligible.
 }
 
 Genome Individual::fecundate(const Individual &mom, const Individual &dad,

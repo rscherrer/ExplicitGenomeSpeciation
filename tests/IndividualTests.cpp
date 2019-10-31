@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(MatingBetweenAlternativeHomozygotesGivesHeterozygoteNoMut)
 BOOST_AUTO_TEST_CASE(MutationAltersTheGenome)
 {
     Param pars;
-    pars.mutation = 100.0; // high mutation
+    pars.mutation = 0.99; // high mutation
     GenArch arch = GenArch(pars);
     pars.allfreq = 0.0;
     Individual mom = Individual(pars, arch);
