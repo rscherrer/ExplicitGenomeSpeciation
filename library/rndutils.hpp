@@ -1347,6 +1347,7 @@ private:
 
 }
 
+/*
 
 //
 // specialize std::generate_canonical<> for the generators provided in this library
@@ -1376,6 +1377,8 @@ namespace std {
   RNDUTILS_FAST_GENERATE_CANONICAL(rndutils::xorshift1024)
 }
 #endif
+
+*/
 
 
 #endif
