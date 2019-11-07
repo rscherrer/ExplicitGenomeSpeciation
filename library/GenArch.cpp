@@ -9,12 +9,11 @@ bool GenArch::resetseed(const size_t &seed) const
 vecDbl GenArch::makeChromosomes(const Param &p) const
 {
 
-    vecDbl chromends;
-    chromends.reserve(p.nchrom);
+    vecDbl chromends(p.nchrom);
 
     // Chromosomes all have the same size
     for (size_t chrom = 0u; chrom < p.nchrom; ++chrom)
-        chromends.push_back((chrom + 1.0) / p.nchrom);
+        chromends[chrom] = (chrom + 1.0) / p.nchrom;
 
     return chromends;
 
@@ -23,13 +22,16 @@ vecDbl GenArch::makeChromosomes(const Param &p) const
 vecUns GenArch::makeEncodedTraits(const Param &p) const
 {
 
-    vecUns encoded;
-    encoded.reserve(p.nloci);
+    vecUns encoded(p.nloci);
 
     // Make an ordered vector of trait indices
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        for (size_t locus = 0u; locus < p.nvertices[trait]; ++locus)
-            encoded.push_back(trait);
+    size_t i = 0u;
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        for (size_t locus = 0u; locus < p.nvertices[trait]; ++locus) {
+            encoded[i] = trait;
+            ++i;
+        }
+    }
 
     assert(encoded.size() == p.nloci);
 
@@ -38,7 +40,7 @@ vecUns GenArch::makeEncodedTraits(const Param &p) const
 
     assert(encoded.size() == p.nloci);
 
-    vecUns nvertices {0u, 0u, 0u};
+    vecUns nvertices = utl::uzeros(3u);
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         ++nvertices[encoded[locus]];
 
@@ -53,14 +55,13 @@ vecUns GenArch::makeEncodedTraits(const Param &p) const
 
 vecDbl GenArch::makeLocations(const Param &p) const
 {
-    vecDbl positions;
-    positions.reserve(p.nloci);
+    vecDbl positions(p.nloci);
 
     // Locations are sampled from a uniform distribution between 0 and 1
-    auto locsample = rnd::uniform(0.0, 1.0);
+    auto getlocation = rnd::uniform(0.0, 1.0);
 
     for (size_t locus = 0u; locus < p.nloci; ++locus)
-        positions.push_back(locsample(rnd::rng));
+        positions[locus] = getlocation(rnd::rng);
 
     std::sort(positions.begin(), positions.end());
 
@@ -77,8 +78,7 @@ vecDbl GenArch::makeEffects(const Param &p) const
     if (p.effectshape == 0.0 || p.effectscale == 0.0)
         return utl::zeros(p.nloci);
 
-    vecDbl effectsizes;
-    effectsizes.reserve(p.nloci);
+    vecDbl effectsizes(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
     // Effect sizes are sampled from a two-sided Gamma distribution
@@ -89,12 +89,14 @@ vecDbl GenArch::makeEffects(const Param &p) const
 
         double effect = getffect(rnd::rng);
         if (isflipped(rnd::rng)) effect *= -1.0;
-        effectsizes.push_back(effect);
+        effectsizes[locus] = effect;
         sss[traits[locus]] += utl::sqr(effect);
     }
 
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        sss[trait] = sqrt(sss[trait]);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        sss[trait] = sss[trait] > 0.0 ? sqrt(sss[trait]) : 1.0;
+        assert(sss[trait] > 0.0);
+    }
 
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         effectsizes[locus] /= sss[traits[locus]];
@@ -108,8 +110,7 @@ vecDbl GenArch::makeDominances(const Param &p) const
 
     if (p.dominancevar == 0.0) return utl::zeros(p.nloci);
 
-    vecDbl coefficients;
-    coefficients.reserve(p.nloci);
+    vecDbl coefficients(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares
 
     // Dominance coefficients are sampled from a half-normal distribution
@@ -119,12 +120,14 @@ vecDbl GenArch::makeDominances(const Param &p) const
         double dom = getdominance(rnd::rng);
         if (dom < 0.0) dom *= -1.0;
         assert(dom >= 0.0);
-        coefficients.push_back(dom);
+        coefficients[locus] = dom;
         sss[traits[locus]] += utl::sqr(dom);
     }
 
-    for (size_t trait = 0u; trait < 3u; ++trait)
-        sss[trait] = sqrt(sss[trait]);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        sss[trait] = sss[trait] > 0.0 ? sqrt(sss[trait]) : 1.0;
+        assert(sss[trait] > 0.0);
+    }
 
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         coefficients[locus] /= sss[traits[locus]];
@@ -135,7 +138,6 @@ vecDbl GenArch::makeDominances(const Param &p) const
 MultiNet GenArch::makeNetworks(const Param &p) const
 {
     MultiNet multinet;
-    multinet.reserve(3u);
 
     for (size_t trait = 0u; trait < 3u; ++trait)
         multinet.push_back(Network(trait, p, traits));

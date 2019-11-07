@@ -6,17 +6,25 @@ Genome Individual::genomize(const Param &p) const
     // Generate a bitset of size 2N (diploid genome)
     // For each position, sample based on allele frequency
 
-    Genome sequence(2u * p.nloci); // diploid genome
+    Genome sequence; // diploid genome
 
-    assert(sequence.size() == 2u * p.nloci);
     assert(sequence.count() == 0u);
 
-    auto ismutation = rnd::bernoulli(p.allfreq);
+    if (p.allfreq == 0.0) return sequence;
 
-    for (size_t i = 0u; i < sequence.size(); ++i)
-        if (ismutation(rnd::rng)) sequence.set(i);
+    if (p.allfreq < 0.1) {
 
-    assert(sequence.size() == 2u * p.nloci);
+        mutate(sequence, p);
+
+    }
+    else {
+
+        // Use a bernoulli if common
+        auto ismutation = rnd::bernoulli(p.allfreq);
+        for (size_t i = 0u; i < p.nloci * 2.0; ++i)
+            if (ismutation(rnd::rng)) sequence.set(i);
+
+    }
 
     return sequence;
 }
@@ -27,15 +35,18 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 {
 
     size_t locus = 0u;
-    size_t chrom = 0u;
-
-    // Crossover points are sampled from an exponential distribution
-    auto nextcrossover = rnd::exponential(p.recombination);
+    size_t chrom = 0u;        
 
     // Haplotypes have equal chances to be transmitted
     auto gethaplotype = rnd::bernoulli(0.5);
 
-    double crossover = nextcrossover(rnd::rng);
+    // Crossovers are sampled from an exponential distribution
+    const double recombrate = p.recombination > 0.0 ? p.recombination : 100.0;
+    auto nextcrossover = rnd::exponential(recombrate);
+
+    double crossover = 1.1; // beyond the end of the genome
+    if (p.recombination > 0.0) crossover = nextcrossover(rnd::rng);
+
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
@@ -77,35 +88,32 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 
     assert(locus == p.nloci);
     assert(chrom == p.nchrom - 1u);
-    assert(genome.size() == 2u * p.nloci);
 
 }
 
-void Individual::mutate(Genome &zygote, const Param &p) const
+void Individual::mutate(Genome &seq, const Param &p) const
 {
-    // The number of mutations is sampled from a Poisson distribution
-    auto getnmutations = rnd::poisson(p.mutation * zygote.size());
 
-    size_t nmut = getnmutations(rnd::rng);
+    if (p.mutation == 0.0) return;
+    if (p.mutation == 1.0)
+        for (size_t i = 0u; i < 2u * p.nloci; ++i)
+            seq.set(i);
 
-    // Sample mutation targets across the genome
-    auto gettarget = rnd::random(0u, zygote.size() - 1u);
-
-    while (nmut) {
-        zygote.flip(gettarget(rnd::rng));
-        --nmut;
+    // Mutations are sampled from a geometric distribution
+    assert(p.mutation > 0.0);
+    auto getnextmutant = rnd::iotagap(p.mutation);
+    getnextmutant.reset(0u);
+    for (;;) {
+        const size_t mut = getnextmutant(rnd::rng);
+        if (mut >= 2.0 * p.nloci) break;
+        seq.flip(mut);
     }
-
-    // NB: Maybe mutations should be sampled without replacement.
-    // But typically there should be so few that the chances of a locus
-    // being hit twice are negligible.
 }
 
 Genome Individual::fecundate(const Individual &mom, const Individual &dad,
  const Param &p, const GenArch &arch) const
 {
-    Genome zygote(2u * p.nloci); // diploid genome
-    assert(zygote.size() == 2u * p.nloci);
+    Genome zygote; // diploid genome
     assert(zygote.count() == 0u);
 
     mom.recombine(zygote, p, arch);
@@ -175,8 +183,11 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
     // Add normally distributed environmental effect for each trait
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
-        const double envnoise = getenvnoise(rnd::rng);
+        double envnoise = 0.0;
+        if (p.scaleE[trait] > 0.0) {
+            auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
+            envnoise = getenvnoise(rnd::rng);
+        }
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
 
