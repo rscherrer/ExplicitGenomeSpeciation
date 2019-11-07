@@ -120,6 +120,7 @@ void Param::import(std::ifstream &file)
         case _("tend"): file >> tend; break;
         case _("tsave"): file >> tsave; break;
         case _("record"): file >> record; break;
+        case _("archsave"): file >> archsave; break;
         case _("seed"): file >> seed; break;
         case _("ntrials"): file >> ntrials; break;
 
