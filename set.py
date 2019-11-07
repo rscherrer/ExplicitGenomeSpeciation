@@ -59,7 +59,7 @@ for i in range(len(idpars)):
 	if re.search(pattern, data):		
 		data = re.sub(pattern, replacement, data)
 	else:
-		data = data + replacement
+		data = data + replacement # or add
 
 # Overwrite the parameter file
 with open("parameters.txt", "wt") as f:
