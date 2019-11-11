@@ -1,0 +1,9 @@
+#SBATCH --time=00:30:00
+#SBATCH --mem=32Gb
+#SBATCH --partition=gelifes
+
+-mutation 0.1 0.01 0.001
+-nvertices 50_50_50 100_50_50
+
+nocluster
+
