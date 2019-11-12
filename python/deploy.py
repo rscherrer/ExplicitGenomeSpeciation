@@ -50,7 +50,7 @@ with open(filename, "rt") as f:
 paramstring = re.sub(' $', '', paramstring)
 
 # Make a template job file
-job = "#!/bin/bash\n"
+job = job = "#!/bin/bash\n"
 job = job + joboptions
 job = job + execpath + ' ' + "parameters.txt\n"
 
@@ -68,4 +68,4 @@ for dir in dirnames:
 		f.write(job)
 
 	if not nocluster: 
-		subprocess.run("cd " + dir + "\nsbatch ./job.sh", shell = True)
+		subprocess.run("sbatch " + dir + "/job.sh", shell = True)
