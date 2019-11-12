@@ -50,7 +50,7 @@ with open(filename, "rt") as f:
 paramstring = re.sub(' $', '', paramstring)
 
 # Make a template job file
-job = "#!/bin/bash\n"
+job = job = "#!/bin/bash\n"
 job = job + joboptions
 job = job + execpath + ' ' + "parameters.txt\n"
 
