@@ -55,8 +55,13 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
     while (locus < p.nloci) {
 
         // What is the thing coming up next?
-        vecDbl closest = { crossover, chromend, position };
-        size_t next = utl::argmin(closest);
+        size_t next = crossover;
+        if (crossover < chromend && crossover < position)
+            next = 0u;
+        else if (chromend < crossover && chromend < position)
+            next = 1u;
+        else
+            next = 2u;
 
         switch (next) {
 

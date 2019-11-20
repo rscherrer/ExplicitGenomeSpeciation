@@ -115,22 +115,6 @@ BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
     GenArch archloaded = GenArch(pars);
     archloaded.load(pars.archfile);
 
-
-    /*
-    std::ifstream file("architecture.txt");
-    if (!file.is_open()) {
-        std::clog << "error\n";
-        exit(EXIT_FAILURE);
-    }
-
-    std::string input;
-    while (file >> input) {
-        std::clog << input << ' ';
-    }
-
-    std::clog << '\n';
-    */
-
     const double sumeff1 = archsaved.getSumEffects();
     const double sumeff2 = archloaded.getSumEffects();
     const double sumwgt1 = archsaved.getSumWeights(0u);
