@@ -53,8 +53,9 @@ struct Param {
         tsave(10),
         record(true),
         archsave(false),
+        archload(false),
+        archfile("architecture.txt"),
         seed(makeDefaultSeed()),
-        archseed(makeDefaultSeed()),
         ntrials(100u)
     {
         // Make sure there are no more edges than feasible
@@ -69,7 +70,7 @@ struct Param {
 
     void read(const std::string&);
     void update();
-
+    void write(std::ofstream&);
     void import(std::ifstream&);
     void capEdges();
     void checkParams();
@@ -118,8 +119,9 @@ struct Param {
     int  tsave;
     bool record;
     bool archsave;
+    bool archload;
+    std::string archfile;
     size_t seed;
-    size_t archseed;
     size_t ntrials;
 
 };

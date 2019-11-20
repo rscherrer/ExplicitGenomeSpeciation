@@ -22,6 +22,9 @@ int simulate(const vecStrings &args)
         // Create a genetic architecture
         GenArch arch = GenArch(pars);
 
+        // Load the genetic architecture if necessary
+        if (pars.archload) arch.load(pars.archfile);
+
         // Create a metapopulation with two demes
         MetaPop metapop = MetaPop(pars, arch);
 

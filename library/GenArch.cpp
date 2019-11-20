@@ -1,11 +1,5 @@
 #include "GenArch.h"
 
-bool GenArch::resetseed(const size_t &seed) const
-{
-    rnd::rng.seed(seed);
-    return true;
-}
-
 vecDbl GenArch::makeChromosomes(const Param &p) const
 {
 
@@ -151,18 +145,187 @@ MultiNet GenArch::makeNetworks(const Param &p) const
     return multinet;
 }
 
-vecStrings GenArch::whattosave() const
+// Functions to write the content of the genetic architecture
+
+// Write vector as a row in text file, with end of line
+void GenArch::write(const vecDbl &v, std::ofstream &file, const char &sep) const
 {
-    return {
+    for (auto x : v)
+        file << x << sep;
+    file << '\n';
+}
 
-        "architecture_chromosomes",
-        "architecture_traits",
-        "architecture_locations",
-        "architecture_effects",
-        "architecture_dominances",
-        "architecture_edges1",
-        "architecture_edges2",
-        "architecture_weights"
+// Same for vector of integers
+void GenArch::write(const vecUns &v, std::ofstream &file, const char &sep) const
+{
+    for (auto x : v)
+        file << x << sep;
+    file << '\n';
+}
 
-    };
+// Same for vector of pairs (i determines first or second member)
+void GenArch::write(const vecEdg &v, std::ofstream &file, const bool &i, const char &sep) const
+{
+    for (size_t p = 0u; p < v.size(); ++p)
+        file << i ? v[p].second : v[p].first << sep;
+    file << '\n';
+}
+
+void GenArch::save(Param &pars) const
+{
+    std::ofstream archfile(pars.archfile); // should be arg
+
+    if (!archfile.is_open())
+        throw std::runtime_error("Unable to open file " + pars.archfile + '\n');
+
+    // Write parameters first
+    archfile << "Parameters used to generate the architecture:\n";
+    pars.write(archfile);
+
+    archfile << "\nArchitecture:\n";
+
+    archfile << "chromosomes\n";
+    write(chromosomes, archfile);
+
+    archfile << "traits\n";
+    write(traits, archfile);
+
+    archfile << "locations\n";
+    write(locations, archfile);
+
+    archfile << "effects\n";
+    write(effects, archfile);
+
+    archfile << "dominances\n";
+    write(dominances, archfile);
+
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+
+        archfile << "\nnetwork " << trait << ' ';
+        archfile << networks[trait].edges.size() << '\n';
+
+        archfile << "edges0\n";
+        write(networks[trait].edges, archfile, false);
+
+        archfile << "edges1\n";
+        write(networks[trait].edges, archfile, true);
+
+        archfile << "weights\n";
+        write(networks[trait].weights, archfile);
+
+    }
+
+    archfile.close();
+}
+
+
+void GenArch::read(vecDbl &v, const size_t &n, std::ifstream &file)
+{
+    for (size_t i = 0u; i < n; ++i)
+        file >> v[i];
+}
+
+void GenArch::read(vecUns &v, const size_t &n, std::ifstream &file)
+{
+    for (size_t i = 0u; i < n; ++i)
+        file >> v[i];
+}
+
+void GenArch::read(vecEdg &v, const size_t &n, const bool &id, std::ifstream &file)
+{
+    double x;
+    for (size_t p = 0u; p < n; ++p) {
+        file >> x;
+        if (id)
+            v[p].second = x;
+        else
+            v[p].first = x;
+    }
+
+}
+
+
+void GenArch::load(const std::string &filename)
+{
+
+    // This function will overwrite the genetic architecture
+    // with that found in the arhictecture file provided
+
+    // Open the architecture file
+    std::ifstream file(filename.c_str());
+    if (!file.is_open())
+        throw std::runtime_error("Unable to open file " + filename + '\n');
+
+    // Prepare to read parameters
+    std::string field;
+    size_t nchrom;
+    size_t nloci = 0u;
+
+    // Read in parameters of interest first
+    do {
+
+        file >> field;
+
+        // std::clog << field << '\n';
+
+        if (field == "nchrom") file >> nchrom;
+        if (field == "nvertices") {
+            // std::clog << "I found nloci! It is: ";
+
+            for (size_t trait = 0u; trait < 3u; ++trait) {
+                size_t nvertices;
+                file >> nvertices;
+                nloci += nvertices;
+            }
+
+            // std::clog << nloci << '\n';
+        }
+
+    }
+    while (field != "Architecture:");
+
+    // Reset the architecture
+    chromosomes.resize(nchrom);
+    // std::clog << nloci << '\n';
+    traits.resize(nloci);
+    locations.resize(nloci);
+    effects.resize(nloci);
+    dominances.resize(nloci);
+
+    assert(chromosomes.size() == nchrom);
+    assert(traits.size() == nloci);
+    assert(locations.size() == nloci);
+    assert(effects.size() == nloci);
+    assert(dominances.size() == nloci);
+
+    // Prepare to read architecture
+    size_t trait;
+    size_t nedges;
+
+
+    // Read in architecture
+    while (file >> field) {
+
+        if (field == "chromosomes") read(chromosomes, nchrom, file);
+        else if (field == "traits") read(traits, nloci, file);
+        else if (field == "locations") read(locations, nloci, file);
+        else if (field == "effects") read(effects, nloci, file);
+        else if (field == "dominances") read(dominances, nloci, file);
+
+        else if (field == "network") {
+            file >> trait;
+            file >> nedges;
+            networks[trait].edges.resize(nedges);
+            networks[trait].weights.resize(nedges);
+            assert(networks[trait].edges.size() == nedges);
+            assert(networks[trait].weights.size() == nedges);
+        }
+
+        else if (field == "edges0") read(networks[trait].edges, nedges, false, file);
+        else if (field == "edges1") read(networks[trait].edges, nedges, true, file);
+        else if (field == "weights") read(networks[trait].weights, nedges, file);
+
+    }
+
+    file.close();
 }

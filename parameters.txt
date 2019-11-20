@@ -5,7 +5,7 @@ replenish 1
 hsymmetry 1
 ecosel 1.4
 dispersal 0.001
-birth 4
+birth 2
 survival 0.8
 sexsel 10
 matingcost 0.01
