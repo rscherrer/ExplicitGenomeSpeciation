@@ -59,7 +59,7 @@ void MetaPop::disperse(const Param &p)
         size_t mig = 0u;
         for (;;) {
             mig = getnextmigrant(rnd::rng);
-            if (mig > getSize()) break;
+            if (mig >= getSize()) break;
             population[mig].disperse();
         }
     }

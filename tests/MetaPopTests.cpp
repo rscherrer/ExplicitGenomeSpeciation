@@ -152,10 +152,10 @@ BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
 {
     std::clog << "Testing that newborns do not die...\n";
     Param pars;
-    pars.birth = 4.0; // relatively high birth rate
+    pars.birth = 10.0; // relatively high birth rate
     pars.maxfeed = 0.1;
     pars.capacity = 10.0;
-    pars.demesizes = { 100u, 0u };
+    pars.demesizes = { 10u, 0u };
     pars.survival = 0.0; // all adults should die
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
