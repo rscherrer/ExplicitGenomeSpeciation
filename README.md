@@ -14,7 +14,7 @@ This repository contains the source code of the simulation program ExplicitGenom
 
 The repository has the following folder structure (the content of each folder is explained):
 
-The root folder contains file such as EGS.pro and EGS_test.pro, which are configuration files for Qt projects. Those are used by the developer (aka me) to develop the program on my Linux machine.
+The root folder contains files such as EGS.pro and EGS_test.pro, which are configuration files for building the program under Qt.
 
 ## ci
    
@@ -30,7 +30,7 @@ The C++ header and source files needed to build the program in debug mode, with 
 
 ## build
 
-Where the executables arse built. Any user can also build the program themselves to other build foldeors using the IDE of their choice. This one is just made for my own purpose when I develop in QtCreator. I am not sure what platform these executables can be directly run from, and when the user should recompile the program themselves. The instructions for the debug and the release builds are in ../EGS_test.pro and ../EGS.pro, respectively.
+Where the executables are built. Any user can also build the program themselves to other build foldeors using the IDE of their choice. This one is just made for my own purpose when I develop in QtCreator. I am not sure what platform these executables can be directly run from, and when the user should recompile the program themselves. The instructions for the debug and the release builds are in ../EGS_test.pro and ../EGS.pro, respectively.
 
 ### debug
    
