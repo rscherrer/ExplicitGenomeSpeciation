@@ -32,6 +32,22 @@ if [ "$1" != "" ]; then
 
 	mv EGS $1
 
+	# Move all intermediate files generated during the build to a build folder
+
+	if [ -d "build" ]; then
+
+		rm -rf build
+
+	fi
+
+	mkdir build
+
+	mv Makefile build
+	mv Makefile.Debug build
+	mv Makefile.Release build
+	mv -r debug build
+	mv -r release build
+
 	# Copy the protocol and the running script to the target folder
 
 	cp protocol.txt $1
