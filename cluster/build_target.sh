@@ -3,13 +3,21 @@
 # Make a target folder
 
 if [ "$1" != "" ]; then
+
 	if [ -d "$1" ]; then
-		echo "Overwriting target folder"
+
+		echo "Overwriting target folder..."
 		rm -rf $1		
+
 	else
-		echo "Creating target folder"		
+
+		echo "Creating target folder..."	
+
 	fi	
+
 	mkdir $1
+
+	echo "Building the program..."
 
 	# Produce an executable (from here cannot be tested locally)
 
@@ -25,8 +33,12 @@ if [ "$1" != "" ]; then
 
 	cp protocol.txt $1
 	cp run_simulations.sh $1
-	
+
+	echo "Done."
+
 else
+
 	echo "Please provide target folder"
+
 fi
 
