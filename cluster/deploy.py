@@ -43,11 +43,7 @@ job = job + "./EGS parameters.txt\n"
 
 # Make all parameter combinations
 
-print(paramstring)
-
 params = paramstring.split(' ')
-
-print(params)
 
 dirnames = pyt.combine_parameters(".", params)
 
