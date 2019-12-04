@@ -42,7 +42,13 @@ job = job + joboptions
 job = job + "./EGS parameters.txt\n"
 
 # Make all parameter combinations
+
+print(paramstring)
+
 params = paramstring.split(' ')
+
+print(params)
+
 dirnames = pyt.combine_parameters(".", params)
 
 # Save the job file in the target folder
