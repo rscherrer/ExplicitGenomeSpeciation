@@ -45,8 +45,8 @@ if [ "$1" != "" ]; then
 	mv Makefile build
 	mv Makefile.Debug build
 	mv Makefile.Release build
-	mv -r debug build
-	mv -r release build
+	mv debug build
+	mv release build
 
 	# Copy the protocol and the running script to the target folder
 
