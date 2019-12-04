@@ -5,7 +5,7 @@
 
 if [ "$1" != "" ]; then
 
-	if [ -d "$1" ]; then
+	if [ -f "$1" ]; then
 
 		# Make simulation folders and launch
 		python3 deploy.py $1
