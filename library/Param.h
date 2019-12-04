@@ -51,6 +51,7 @@ struct Param {
         tburnin(0),
         tend(10),
         tsave(10),
+        talkative(true),
         record(true),
         archsave(false),
         archload(false),
@@ -117,6 +118,7 @@ struct Param {
     int  tburnin;
     int  tend;
     int  tsave;
+    bool talkative;
     bool record;
     bool archsave;
     bool archload;

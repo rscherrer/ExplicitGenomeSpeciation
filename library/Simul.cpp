@@ -31,14 +31,14 @@ int simulate(const vecStrings &args)
         // Create an analytical module
         Collector collector = Collector(arch);
 
-        std::clog << "Simulation started.\n";
+        std::cout << "Simulation started.\n";
 
         // Loop through time
         for (int t = -pars.tburnin; t < pars.tend; ++t) {
 
             if (t == 0) metapop.exitburnin();
 
-            std::clog << t << '\n';
+            if (pars.talkative) std::clog << t << '\n';
 
             // Life cycle of the metapopulation
             metapop.disperse(pars);
@@ -55,12 +55,12 @@ int simulate(const vecStrings &args)
 
             // Is the population still there?
             if (metapop.isextinct()) {
-                std::clog << "The population went extinct at t = " << t << '\n';
+                std::cout << "The population went extinct at t = " << t << '\n';
                 break;
             }
         }
 
-        std::clog << "Simulation ended.\n";
+        std::cout << "Simulation ended.\n";
         return 0;
     }
     catch (const std::exception& err)
