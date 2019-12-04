@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run this script from the cluster folder
+# Pass it the path to the target folder as argument
+
 # Make a target folder
 
 if [ "$1" != "" ]; then
