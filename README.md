@@ -48,9 +48,19 @@ This folder contains Thijs's work on the GUI version of the program. I do not kn
 
 This folder contains scripts that make the program usable on the Peregrine cluster. Those scripts allow to launch large numbers of simulations on the server.
 
+# Download the program
+
+Download the repository by clicking the green button on the top right corner of the main GitHub page. Alternatively, you can download it from the command line using Git:
+
+```{bash}
+git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
+```
+
+Then navigate to the repository to access the program.
+
 # Run the program
 
-From the command line:
+The executable is available in /build/release, but can also be rebuilt from source to a custom location. Assuming we are in the directory where the executable is, from the command line:
 
 ```{bash}
 ./EGS
