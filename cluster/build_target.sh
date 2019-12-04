@@ -53,6 +53,11 @@ if [ "$1" != "" ]; then
 	cp protocol.txt $1
 	cp run_simulations.sh $1
 
+	# Copy the python scripts to the target folder
+
+	cp deploy.py $1
+	cp pytilities.py $1
+
 	echo "Done."
 
 else
