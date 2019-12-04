@@ -14,7 +14,7 @@ This repository contains the source code of the simulation program ExplicitGenom
 
 The repository has the following folder structure (the content of each folder is explained):
 
-The root folder contains files such as EGS.pro and EGS_test.pro, which are configuration files for building the program under Qt.
+The root folder contains files such as EGS.pro and EGS_test.pro, which are configuration files for building the program under Qt. The main.cpp file is also there.
 
 ## ci
    
