@@ -31,6 +31,11 @@ if [ "$1" != "" ]; then
 	# Move the executable to the target folder
 
 	mv EGS $1
+	mv -r debug $1
+	mv -r release $1
+	mv Makefile.Debug $1
+	mv Makefile.Release $1
+	mv Makefile $1
 
 	# Copy the protocol and the running script to the target folder
 
