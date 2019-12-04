@@ -1,6 +1,6 @@
 This file explains how to run the program of the Peregrine cluster of the University of Groningen.
 
-# Clone the repository on your session on the cluster
+# Clone the repository
 
 Enter the cluster. Navigate to where you want the repository to be. Then, type:
 
@@ -10,44 +10,29 @@ git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 
 That will download the repository.
 
-# Go to the repository
+# Build the program
 
-```{bash}
-cd ExplicitGenomeSpeciation
-```
-
-# Build the program into a target folder
+Assuming we are in the repository root (e.g. `cd ExplicitGenomeSpeciation`), build the target using:
 
 ```{bash}
 ./cluster/build_target.sh <path_to_target_folder>
 ```
 
-I am not sure whether the path to the target folder should be relative to /cluster or to /
-I am not sure either whether the shell script should be run from / or from /cluster, and
-if that changes what the relative path should be.
-If the target folder does not exist, it will be created.
-If it exists, it will be overwritten.
+I am not sure whether the path to the target folder should be relative to /cluster or to /. I am not sure either whether the shell script should be run from / or from /cluster, and if that changes what the relative path should be. If the target folder does not exist, it will be created. If it exists, it will be overwritten.
 
 The target folder will contain the executable, a protocol.txt file and a run_experiment.sh file.
 
-# Go to the target folder
-
-```{bash}
-cd <path_to_target_folder>
-```
-
 # Update the protocol
+
+Assuming we are in the target folder, on the cluster, use:
 
 ```{bash}
 nano protocol.txt
 ```
 
-To be able to edit the protocol. Here there should a description of what the protocol is
-and what it should contain. There could be a header in that file, commented using #, also explaining what to write into it.
+To be able to edit the protocol. Here there should a description of what the protocol is and what it should contain. There could be a header in that file, commented using #, also explaining what to write into it.
 
-A protocol file is a file that is read by a shell script in the next step.
-The information contained in the protocol allows to setup the different jobs that need to be submitted to SLURM.
-The protocol can contain the following information:
+A protocol file is a file that is read by a shell script in the next step. The information contained in the protocol allows to setup the different jobs that need to be submitted to SLURM. The protocol can contain the following information:
 
 1) SLURM options for running the jobs. Thos include run time, memory, partition etc. Please refer to SLURM or Peregrine documentation for what kind of options can be passed.
 The SLURM options should appear in the protocol exactly as they would appear on the job file submitted to SLURM through the sbatch command.
