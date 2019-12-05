@@ -96,7 +96,7 @@ def combine_parameters(dir, args):
 	for entry in fullentries:
 
 		# Make a folder if not already there
-		dirname = dir + "/sim_" + re.sub(" ", "_", entry)
+		dirname = dir + "/sim_" + re.sub(" ", "_", re.sub("-", "", entry))
 		if not os.path.exists(dirname): os.mkdir(dirname)
 
 		# Make a parameter file
