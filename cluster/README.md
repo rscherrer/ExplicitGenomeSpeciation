@@ -18,75 +18,42 @@ Assuming we are in the repository root (e.g. `cd ExplicitGenomeSpeciation`), bui
 ./cluster/build_target.sh <path_to_target_folder>
 ```
 
-I am not sure whether the path to the target folder should be relative to /cluster or to /. I am not sure either whether the shell script should be run from / or from /cluster, and if that changes what the relative path should be. If the target folder does not exist, it will be created. If it exists, it will be overwritten.
-
-The target folder will contain the executable, a protocol.txt file and a run_experiment.sh file.
+If the target folder does not exist, it will be created. Otherwise, it will be overwritten. The target folder will contain the executable `EGS` as well as the necessary files to launch the simulations. All other files than the executable generated during the build (make files, object files) are stored into the `build` folder, within `cluster`.
 
 # Update the protocol
 
-Assuming we are in the target folder, on the cluster, use:
+Go to the target folder. A batch of simulations will be launched from here. Here, we consider that a batch of simulations is nothing more than an experiment aiming at exploring various parameter values, and that this experiment requires a protocol. The protocol defines what combinations of parameters are to be tested during the experiment. The target folder contains a file `protocol.txt` containing this information. The file should look something like this:
 
-```{bash}
-nano protocol.txt
+```
+# This is a protocol file
+
+#SBATCH --time=00:10:00
+
+-mutation 0.001 0.01
+-ecosel 0.1 0.2
+
 ```
 
-To be able to edit the protocol. Here there should a description of what the protocol is and what it should contain. There could be a header in that file, commented using #, also explaining what to write into it.
+All entries starting with `#SBATCH` are options to be written to the job file that will be passed to SLURM to launch the simulations. For more information about what SLURM options are available on Peregrine, please refer to the Peregrine wiki (https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki). All entries starting with a dash (e.g. `-mutation`) are interpreted as parameters to be tested. The dash should be immediately followed by a valid parameter name, and then by the values the parameter should take across simulations, separated by spaces. If several parameters with several values are provided, simulations will be launched for all combinations of values provided for these parameters. So, in the above example, simulations will be run for `mutation` = 0.001 -- `ecosel` = 0.1,
+`mutation` = 0.001 -- `ecosel` = 0.2, `mutation` = 0.01 -- `ecosel` = 0.1 and `mutation` = 0.01 -- `ecosel` = 0.2. For parameters that take multiple values, such as `nvertices` that takes one value for each trait, please provide values of a single simulation separated by underscores. For example, `-nvertices 10_10_10 20_20_20` will launch simulations with 10 genes per trait as well as simulations with 20 genes per trait. Any line that does not start with `#SBATCH` or `-` will be ignored. Use a text editor (e.g. `nano` on the cluster) to make or edit a protocol file with the information needed to run your experiment. Parameters that are not mentioned in the protocol will take the values defined in the `parameters.txt` file, located in the target folder (a copy of it is in `cluster`). You can edit this file to set values to parameters that should be kept fixed across all simulations, thereby using the protocol only for parameters that should vary.
 
-A protocol file is a file that is read by a shell script in the next step. The information contained in the protocol allows to setup the different jobs that need to be submitted to SLURM. The protocol can contain the following information:
-
-1) SLURM options for running the jobs. Thos include run time, memory, partition etc. Please refer to SLURM or Peregrine documentation for what kind of options can be passed.
-The SLURM options should appear in the protocol exactly as they would appear on the job file submitted to SLURM through the sbatch command.
-Each SLURM option should be on a separate line in the protocol and start with #SBATCH.
-
-e.g. #SBATCH --time=00:10:00
-
-2) Parameter settings. Those define what values of what parameters should be run.
-Parameter names should be followed by their value to be tested, separated by a space.
-Each parameter must be on a separate line in the protocol and start with the name of the parameter.
-If several values of a parameter are to be tested, add those values at the end of the line of that parameter, separating them from other values using spaces.
-Same as explained in the /build/README.md file on how to run a single simulation, the job will crash if some parameter names are invalid or if the values are invalid.
-If several parameters are provided to the protocol, meaning that several parameters must be tested,
-all combinations of all provided values of the parameters appearing in the protocol will be tested.
-
-For example,
-
-mutation 0.001 0.01
-ecosel 0.1 0.2
-
-will launch four simulations, with all combinations of values of mutation rate and ecological selection coefficient provided.
-
-Some parameter are supposed to take multiple values, e.g. nvertices, which is the number of loci underlying each trait in the simulation (3 values).
-To enter a value of a multiple-valued parameter in the protocol, separate the different values of the same trial by underscores, as here spaces are reserved for separating parameter combinations.
-
-For example,
-
-nvertices 10_10_10 20_20_20
-
-will launch two simulations, one with 10 loci for each trait, and another one with 20 loci for each trait.
-
-Any line that does not start with either #SBATCH or a valid parameter name will be ignored.
-
-Note that the parameters supplied in the protocol are only those parameters to change from the default parameter setting. You can have a look at the default parameter setting in /default.txt.
-All parameters not supplied will therefore stay identical to their default values.
-The default parameter values used are in file /cluster/default.txt
-You change their values if you want identical values for all combinations you want to test.
+!!! Check that the run_simulation script can indeed add entries to the parameter file and not just replace them, important e.g. for the seed !!! 
 
 # Launch the experiment
 
-```{bash}
-./run_experiment.sh
-```
-
-This creates as many folders as there are simulations to be run. Every folder contains a job.sh file and a parameters.txt file. All job files are submitted to SLURM and should run on the server. 
-As the simulations progress, the simulation folders should fill up with .dat output files. The messages normally output to the screen by the program during the simulation will not appear in the terminal, but instead be printed to .out files, one per simulation folder, by SLURM. You can read those .out files to diagnose the course of a given simulation.
-
-The naming convention for the simulation folders is 
+From within the target folder, run:
 
 ```{bash}
-sim-parameter1-value1-parameter2-value2
+./run_experiment.sh protocol.txt
 ```
 
-where parameter<i> is the ith parameter provided in the protocol, and
-value<i> is the value of the ith parameter for this simulation.
-Only parameters that change from the default due to the protocol appear 
-in the name of the simulation folder.
+This creates as many folders as there are simulations to be run, inside the target folder. Every simulation folder contains a `job.sh` file and a `parameters.txt` file. All job files are submitted to SLURM in one go, and should start running on the server. Use `squeue -u $USER` to check the status and progression of your jobs. The naming convention for the simulation folders is `sim_parameter1_value1_parameter2_value2`, where `parameter1` and `parameter2` are the names of the parameters supplied in the protocol. For the example protocol above, the list of simulation folders should be:
+
+```
+sim_mutation_0.001_ecosel_0.1
+sim_mutation_0.001_ecosel_0.2
+sim_mutation_0.01_ecosel_0.1
+sim_mutation_0.01_ecosel_0.2
+```
+
+All outputs to screen generated by a given simulation will be stored in a SLURM output file, with extension `.out`, in the simulation folder. You can visualize this file to diagnose the course of a simulation after it is done e.g. whether it went extinct, whether it ran at all or whether it completed succesfully.
