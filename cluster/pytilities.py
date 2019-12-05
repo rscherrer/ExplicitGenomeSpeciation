@@ -1,9 +1,12 @@
+# This script contains the functions used in deploy.py
+
 import re
 import sys
 import numpy as np
 import os
 from shutil import copyfile
 
+# Update parameter values in a parameter file
 def set_parameters(dir, args):
 
 	# Loop through arguments
@@ -53,7 +56,7 @@ def set_parameters(dir, args):
 	with open(dir + "/parameters.txt", "wt") as f:
 		f.write(data)
 
-
+# Create folders with their corresponding parameter files for multiple combinations of parameters
 def combine_parameters(dir, args):
 
 	nargs = len(args)
