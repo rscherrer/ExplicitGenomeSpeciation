@@ -57,7 +57,7 @@ def set_parameters(dir, args):
 		f.write(data)
 
 # Create folders with their corresponding parameter files for multiple combinations of parameters
-def combine_parameters(dir, args):
+def combine_parameters(dir, args, nreplicates):
 
 	nargs = len(args)
 
@@ -98,17 +98,19 @@ def combine_parameters(dir, args):
 	# For each combination
 	for entry in fullentries:
 
-		# Make a folder if not already there
-		dirname = dir + "/sim_" + re.sub(" ", "_", re.sub("-", "", entry))
-		if not os.path.exists(dirname): os.mkdir(dirname)
+		# Make a folder for each replicate
+		dirtemplate = dir + "/sim_" + re.sub(" ", "_", re.sub("-", "", entry))
 
-		# Make a parameter file
-		copyfile(dir + "/parameters.txt", dirname + "/parameters.txt")
-		args = entry.split()
-		set_parameters(dirname, args)
+		for r in range(nreplicates):
 
-		dirnames.append(dirname)
+			dirname = dirtemplate + "_r" + str(r + 1)
+			if not os.path.exists(dirname): os.mkdir(dirname)	
+
+			# Make a parameter file
+			copyfile(dir + "/parameters.txt", dirname + "/parameters.txt")
+			args = entry.split()
+			set_parameters(dirname, args)			
+
+			dirnames.append(dirname)
 
 	return dirnames
-
-

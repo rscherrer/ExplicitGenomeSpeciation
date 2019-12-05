@@ -19,6 +19,7 @@ filename = sys.argv[1]
 
 joboptions = ''
 paramstring = ''
+nreplicates = 1
 
 # Read protocol
 with open(filename, "rt") as f:
@@ -34,6 +35,10 @@ with open(filename, "rt") as f:
 		if re.match(r'\-', line):
 			paramstring = paramstring + re.sub('\n', '', line) + ' '
 
+		# Is there a number of replicates?
+		if re.match(r'N=', line):
+			nreplicates = int(re.sub('N=', '', line))
+
 paramstring = re.sub(' $', '', paramstring)
 
 # Make a template job file
@@ -45,7 +50,7 @@ job = job + "./EGS parameters.txt\n"
 
 params = paramstring.split(' ')
 
-dirnames = pyt.combine_parameters(".", params)
+dirnames = pyt.combine_parameters(".", params, nreplicates)
 
 # Save the job file in the target folder
 with open("job.sh", "w+") as f:

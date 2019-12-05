@@ -1,10 +1,5 @@
-# This is a protocol file
-
+#!/bin/bash
 #SBATCH --time=00:30:00
 #SBATCH --mem=32Gb
 #SBATCH --partition=gelifes
-
--mutation 0.001 0.01
--ecosel 0.1 0.2
-
-N=5
+./EGS parameters.txt
