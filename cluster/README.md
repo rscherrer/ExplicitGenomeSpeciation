@@ -11,7 +11,7 @@ module add libpng/1.6.34-GCCcore-7.3.0
 
 # Clone the repository
 
-Enter the cluster. Navigate to where you want the repository to be. Then, type:
+Navigate to where you want the repository to be. Then, type:
 
 ```{bash}
 git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
