@@ -53,6 +53,7 @@ if [ "$1" != "" ]; then
 	# Copy the protocol and the running script to the target folder
 
 	cp protocol.txt $1
+	cp parameters.txt $1
 	cp run_simulations.sh $1
 
 	# Copy the python scripts to the target folder
