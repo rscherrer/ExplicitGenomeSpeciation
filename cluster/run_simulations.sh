@@ -7,8 +7,21 @@ if [ "$1" != "" ]; then
 
 	if [ -f "$1" ]; then
 
-		# Make simulation folders and launch
+		# Make simulation folders
 		python3 deploy.py $1
+
+		for folder in $(ls sim*)
+		do
+
+			# Pass the job file into the simulation folders
+			cp job.sh $folder
+
+			# Launch
+			cd $folder
+			sbatch job.sh
+			cd ..
+
+		done
 
 	else
 
