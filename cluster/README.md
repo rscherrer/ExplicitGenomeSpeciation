@@ -1,5 +1,14 @@
 This file explains how to run the program of the Peregrine cluster of the University of Groningen.
 
+# Prepare modules
+
+For the simulations to be able to run on Peregrine, make sure the modules `Python/3.6.4-foss-2018a` and `libpng/1.6.34-GCCcore-7.3.0` are made available, by adding them in the `.bash_profile` file located in the `/home/$USER` directory. Add to this file the following lines:
+
+```{bash}
+module add Python/3.6.4-foss-2018a
+module add libpng/1.6.34-GCCcore-7.3.0
+```
+
 # Clone the repository
 
 Enter the cluster. Navigate to where you want the repository to be. Then, type:
@@ -27,7 +36,9 @@ Go to the target folder. A batch of simulations will be launched from here. Here
 ```
 # This is a protocol file
 
-#SBATCH --time=00:10:00
+#SBATCH --time=00:30:00
+#SBATCH --mem=32Gb
+#SBATCH --partition=gelifes
 
 -mutation 0.001 0.01
 -ecosel 0.1 0.2
