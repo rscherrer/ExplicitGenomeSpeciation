@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script launches multiple simulations on the Peregrine cluster
+
 # Run this script from within the target folder
 # Pass it the protocol file as argument
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script compiles the program on the Peregrine cluster
+
 # Run this script from the cluster folder
 # Pass it the path to the target folder as argument
 
