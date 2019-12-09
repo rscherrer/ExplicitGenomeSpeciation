@@ -44,7 +44,7 @@ paramstring = re.sub(' $', '', paramstring)
 # Make a template job file
 job = job = "#!/bin/bash\n"
 job = job + joboptions
-job = job + "./EGS parameters.txt\n"
+job = job + "../EGS parameters.txt\n"
 
 # Make all parameter combinations
 
