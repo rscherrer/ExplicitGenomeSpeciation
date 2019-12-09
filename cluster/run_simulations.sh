@@ -12,7 +12,7 @@ if [ "$1" != "" ]; then
 		# Make simulation folders
 		python3 deploy.py $1
 
-		for folder in $(ls sim*)
+		for folder in $(ls -d sim*)
 		do
 
 			# Pass the job file into the simulation folders
