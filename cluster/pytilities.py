@@ -108,6 +108,8 @@ def combine_parameters(dir, args, nreplicates):
 
 			# Make a parameter file
 			copyfile(dir + "/parameters.txt", dirname + "/parameters.txt")
+			if os.path.isfile(dir + "/architecture.txt"):
+				copyfile(dir + "/architecture.txt", dirname + "/architecture.txt")
 			args = entry.split()
 			set_parameters(dirname, args)			
 
