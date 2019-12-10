@@ -21,10 +21,10 @@ That will download the repository.
 
 # Build the program
 
-Assuming we are in the repository root (e.g. `cd ExplicitGenomeSpeciation`), build the target using:
+Assuming we are in the cluster folder (e.g. `cd ExplicitGenomeSpeciation/cluster`), build the target using:
 
 ```{bash}
-./cluster/build_target.sh <path_to_target_folder>
+./build_target.sh <path_to_target_folder>
 ```
 
 If the target folder does not exist, it will be created. Otherwise, it will be overwritten. The target folder will contain the executable `EGS` as well as the necessary files to launch the simulations. All other files than the executable generated during the build (make files, object files) are stored into the `build` folder, within `cluster`.
