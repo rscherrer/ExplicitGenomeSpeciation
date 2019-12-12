@@ -70,9 +70,6 @@ start = t * nloci
 end = start + nloci - 1
 data = data[start:(end + 1)]
 
-print(start)
-print(end)
-
 # Plot
 pyplot.stem(data)
 pyplot.show()
