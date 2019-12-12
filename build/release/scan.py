@@ -51,19 +51,13 @@ with open(filename, "rb") as datafile:
 	data = datafile.read()
 data = np.frombuffer(data, np.float64)
 
-# Find out the number of loci
-if os.path.isfile("architecture.txt"):
-	with open("architecture.txt", "r") as archfile:
-		for cnt, line in enumerate(archfile):
-			if re.match(r'nvertices', line):
-				nloci = sum([int(x) for x in line.split(' ')[1:4]])
-elif os.path.isfile("parameters.txt"):
-	with open("parameters.txt", "r") as parfile:
-		for cnt, line in enumerate(parfile):
-			if re.match(r'nvertices', line):
-				nloci = sum([int(x) for x in line.split(' ')[1:4]])
-else:
-	nloci = 90				
+# I am so stupid
+# The number of genes is the number of values divided by the number of time points!
+
+if len(data) % len(time) != 0:
+	raise Exception("Wrong number of values in the data file.")
+
+nloci = int(len(data) / len(time))	
 
 # Extract the portion of the data we want to plot
 start = t * nloci
