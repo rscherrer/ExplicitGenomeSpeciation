@@ -38,8 +38,6 @@ cmake-build-release/
 *.pro.user
 *.pro.user.*
 .qmake.stash
-debug/
-release/
 Makefile
 Makefile.Debug
 Makefile.Release
