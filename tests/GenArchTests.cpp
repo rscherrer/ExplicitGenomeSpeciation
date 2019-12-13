@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
     pars.archsave = false;
     pars.archload = true;
     GenArch archloaded = GenArch(pars);
-    archloaded.load(pars.archfile);
+    archloaded.load(pars);
 
     const double sumeff1 = archsaved.getSumEffects();
     const double sumeff2 = archloaded.getSumEffects();

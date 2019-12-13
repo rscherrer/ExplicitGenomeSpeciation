@@ -55,12 +55,12 @@ struct Param {
         record(true),
         archsave(false),
         archload(false),
-        archfile("architecture.txt"),
+        parsave(true),
+        archfile("architecture.txt"),        
+        parfile("paramlog.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
-        // Make sure there are no more edges than feasible
-        capEdges();
 
         // Make sure parameter values make sense
         checkParams();
@@ -71,10 +71,12 @@ struct Param {
 
     void read(const std::string&);
     void update();
-    void write(std::ofstream&);
     void import(std::ifstream&);
-    void capEdges();
-    void checkParams();
+
+    void write(std::ofstream&) const;
+    void save() const;
+    void checkParams() const;
+
     size_t makeDefaultSeed();
 
     // Ecological parameters    
@@ -93,10 +95,10 @@ struct Param {
     vecUns demesizes;
 
     // Genetic parameters
-    size_t nloci;
-    vecUns nvertices;
-    vecUns nedges;
-    size_t nchrom;
+    mutable size_t nloci;
+    mutable vecUns nvertices;
+    mutable vecUns nedges;
+    mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
@@ -122,7 +124,9 @@ struct Param {
     bool record;
     bool archsave;
     bool archload;
+    bool parsave;
     std::string archfile;
+    std::string parfile;
     size_t seed;
     size_t ntrials;
 

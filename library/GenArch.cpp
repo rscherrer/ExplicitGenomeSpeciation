@@ -245,11 +245,14 @@ void GenArch::read(vecEdg &v, const size_t &n, const bool &id, std::ifstream &fi
 }
 
 
-void GenArch::load(const std::string &filename)
+void GenArch::load(const Param &pars)
 {
 
     // This function will overwrite the genetic architecture
     // with that found in the arhictecture file provided
+    // and update the parameters accordingly
+
+    const std::string filename = pars.archfile;
 
     // Open the architecture file
     std::ifstream file(filename.c_str());
@@ -266,27 +269,20 @@ void GenArch::load(const std::string &filename)
 
         file >> field;
 
-        // std::clog << field << '\n';
-
         if (field == "nchrom") file >> nchrom;
         if (field == "nvertices") {
-            // std::clog << "I found nloci! It is: ";
 
             for (size_t trait = 0u; trait < 3u; ++trait) {
                 size_t nvertices;
                 file >> nvertices;
                 nloci += nvertices;
             }
-
-            // std::clog << nloci << '\n';
         }
-
     }
     while (field != "Architecture:");
 
     // Reset the architecture
     chromosomes.resize(nchrom);
-    // std::clog << nloci << '\n';
     traits.resize(nloci);
     locations.resize(nloci);
     effects.resize(nloci);
@@ -301,7 +297,6 @@ void GenArch::load(const std::string &filename)
     // Prepare to read architecture
     size_t trait;
     size_t nedges;
-
 
     // Read in architecture
     while (file >> field) {
@@ -328,4 +323,12 @@ void GenArch::load(const std::string &filename)
     }
 
     file.close();
+
+    // Update relevant parameters
+    pars.nchrom = chromosomes.size();
+    pars.nloci = locations.size();
+    for (size_t i = 0u; i < 3u; ++i) {
+        pars.nvertices[i] = networks[i].loci.size();
+        pars.nedges[i] = networks[i].map.size();
+    }
 }

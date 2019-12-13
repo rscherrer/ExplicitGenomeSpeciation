@@ -8,23 +8,6 @@ size_t Param::makeDefaultSeed()
      time_since_epoch().count());
 }
 
-
-// Make sure that the numbers of edges of the genetic networks do not go above
-// their theoretical maximum, given the number of loci in each network
-void Param::capEdges()
-{
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        const size_t n = nvertices[trait];
-
-        // Number of edges in a complete graph with N vertices
-        const size_t emax = n * (n - 1u) / 2u;
-
-        // Cap the number of edges
-        if (nedges[trait] > emax) nedges[trait] = emax;
-    }
-}
-
-
 // Read parameters from a file
 
 void Param::read(const std::string &filename)
@@ -91,7 +74,9 @@ void Param::import(std::ifstream &file)
         else if (input == "talkative") file >> talkative;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
+        else if (input == "parsave") file >> parsave;
         else if (input == "archfile") file >> archfile;
+        else if (input == "parfile") file >> parfile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -109,12 +94,11 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     nloci = utl::sumu(nvertices);
-    capEdges();
     checkParams();
 }
 
 // Check that the parameter values are valid
-void Param::checkParams()
+void Param::checkParams() const
 {
     std::string msg = "No error detected";
 
@@ -172,15 +156,17 @@ void Param::checkParams()
         msg = "Recombination rate should be positive";
     for (size_t i = 0u; i < 3u; ++i) {
         if (skews[i] < 0.0)
-            msg = "Skewness should be positive";
+            msg = "Skewness should be positive for trait " + i;
         if (scaleA[i] < 0.0)
-            msg = "Additive scaling should be positive";
+            msg = "Additive scaling should be positive for trait " + i;
         if (scaleD[i] < 0.0)
-            msg = "Dominance scaling should be positive";
+            msg = "Dominance scaling should be positive for trait " + i;
         if (scaleI[i] < 0.0)
-            msg = "Interaction scaling should be positive";
+            msg = "Interaction scaling should be positive for trait " + i;
         if (scaleE[i] < 0.0)
-            msg = "Environmental scaling should be positive";
+            msg = "Environmental scaling should be positive for trait " + i;
+        if (nedges[i] >= nvertices[i] * (nvertices[i] - 1u) / 2u)
+            msg = "Number of edges is too large for trait " + i;
     }
     if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
@@ -201,11 +187,20 @@ void Param::checkParams()
     if (ntrials == 0u)
         msg = "Number of mating trials should be at least one";
 
-    if(msg != "No error detected")
+    if (msg != "No error detected")
         throw std::runtime_error(msg);
 }
 
-void Param::write(std::ofstream &file)
+void Param::save() const
+{
+    std::ofstream file(parfile);
+    if (!file.is_open())
+        throw std::runtime_error("Unable to open file " + parfile);
+    write(file);
+    file.close();
+}
+
+void Param::write(std::ofstream &file) const
 {
     file << "rdynamics " << rdynamics << '\n';
     file << "trenewal " << trenewal << '\n';
@@ -259,7 +254,9 @@ void Param::write(std::ofstream &file)
     file << "talkative " << talkative << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
+    file << "parsave" << parsave << '\n';
     file << "archfile " << archfile << '\n';
+    file << "parfile" << parfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }

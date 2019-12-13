@@ -97,7 +97,7 @@ public:
         return sum;
     }
 
-    void load(const std::string&); // Load architecture from a file
+    void load(const Param&); // Load architecture from a file
 
 private:
 
