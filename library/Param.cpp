@@ -94,11 +94,11 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     nloci = utl::sumu(nvertices);
-    checkParams();
+    check();
 }
 
 // Check that the parameter values are valid
-void Param::checkParams() const
+void Param::check() const
 {
     std::string msg = "No error detected";
 

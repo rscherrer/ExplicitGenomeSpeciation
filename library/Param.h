@@ -63,7 +63,7 @@ struct Param {
     {
 
         // Make sure parameter values make sense
-        checkParams();
+        check();
 
         // Seed the random number generator
         rnd::rng.seed(seed);
@@ -75,7 +75,7 @@ struct Param {
 
     void write(std::ofstream&) const;
     void save() const;
-    void checkParams() const;
+    void check() const;
 
     size_t makeDefaultSeed();
 
