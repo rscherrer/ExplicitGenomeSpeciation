@@ -96,13 +96,19 @@ void MetaPop::consume(const Param &p)
 
     // Calculate the sum of feeding efficiencies in each habitat
     Matrix sumfeed = utl::zeros(2u, 2u);
+    double sumx = 0.0;
     for (size_t i = 0u; i < population.size(); ++i) {
+
+        sumx += population[i].getEcoTrait();
+
         const size_t hab = population[i].getHabitat();
         sumfeed[hab][0u] += population[i].getFeeding(0u);
 
         // Feed only on resource 0 during burnin
         if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
     }
+
+    const double meanx = sumx / population.size();
 
     resources = utl::zeros(2u, 2u);
 
@@ -141,8 +147,11 @@ void MetaPop::consume(const Param &p)
     }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i)
+    for (size_t i = 0u; i < population.size(); ++i) {
         population[i].feed(resources[population[i].getHabitat()]);
+        population[i].classify(meanx);
+    }
+
 
 }
 
