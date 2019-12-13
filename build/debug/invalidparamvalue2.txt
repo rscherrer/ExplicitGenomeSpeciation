@@ -1,0 +1,5 @@
+dispersal	-0.001
+survival	2
+mutation	10
+hsymmetry	2
+allfreq	10

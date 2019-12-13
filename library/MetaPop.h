@@ -24,9 +24,6 @@ public:
         sexcounts(utl::uzeros(2u, 2u))
     {
 
-        // Test right number of individuals
-        // Test right number of individuals in each habitat
-
     }
 
     ~MetaPop() {}

@@ -8,76 +8,136 @@ raph|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.s
 thijs|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=thijs)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=thijs)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/thijs)
 richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=richel)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=richel)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/richel)
 
-An individual based simulation of adaptive speciation with explicit genome, additive and non-additive genetic effects.
+This repository contains the source code of the simulation program ExplicitGenomeSpeciation.
 
-# Compile
+# Folder structure
 
-```
-module load Qt5
-qmake EGS.pro
-make --silent release
-```
-or
-```
-./compiler.sh
+The repository has the following folder structure (the content of each folder is explained):
+
+The root folder contains files such as EGS.pro and EGS_test.pro, which are configuration files for building the program under Qt. The main.cpp file is also there.
+
+## ci
+   
+Bash files needed by Travis to perform its different tasks, as defined in .travis.yml, during continuous integration to GitHub.
+
+## library
+
+The C++ header and source files needed to build the program in release mode.
+
+## tests
+
+The C++ header and source files needed to build the program in debug mode, with tests.
+
+## build
+
+Where the executables are built. Any user can also build the program themselves from source using the IDE of their choice.
+
+### debug
+   
+Where the debug configuration is built. This version of the program runs all the tests upon execution. Name of the executable: ./EGS_test. Check /EGS\_test.pro for details about compiler flags.
+
+### release
+ 
+Where the release configuration is built. This version of the program runs the actual simulation, optimized for speed. Name of the executable: ./EGS This file also contains a parameter file, ./parameters.txt that can be passed to the executable as a command line argument. Check /EGS.pro for details about compiler flags.
+
+## gui
+
+This folder contains Thijs's work on the GUI version of the program. I do not know yet what it contains and how to use it.
+
+## cluster
+
+This folder contains scripts that make the program usable on the Peregrine cluster. Those scripts allow to launch large numbers of simulations on the server.
+
+# Download the program
+
+Download the repository by clicking the green button on the top right corner of the main GitHub page. Alternatively, you can download it from the command line using Git:
+
+```{bash}
+git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 ```
 
-# Run
+Then navigate to the repository to access the program.
 
-```bash
+# Run the program
+
+The executable is available in /build/release, but can also be rebuilt from source to a custom location. Assuming we are in the directory where the executable is, from the command line:
+
+```{bash}
 ./EGS
 ```
-or
-```bash
+
+will launch a simulation with default parameters. For custom parameters, please provide a parameter file name as unique argument, for example:
+
+```{bash}
 ./EGS parameters.txt
 ```
 
-# Submit to Peregrine
+# Default parameters
 
-```bash
-./launcher.sh
+Please refer to /MANUAL.md, the manuscript or the comments in the source code for a detailed explanation of what each parameter does. The default values are:
+
+Name | Value
+---|---
+```rdynamics``` | 1
+```trenewal``` | 0.001
+```capacity``` | 100
+```replenish``` | 1
+```hsymmetry``` | 0
+```ecosel``` | 1.8
+```dispersal``` | 0.01
+```birth``` | 4
+```survival``` | 0.8
+```sexsel``` | 10
+```matingcost``` | 0.01
+```maxfeed``` | 0.0004
+```demesizes``` | 100, 0
+```nvertices``` | 30, 30, 30
+```nedges``` | 0, 0, 0
+```nchrom``` | 3
+```mutation``` | 0.001
+```recombination``` | 3
+```allfreq``` | 0.2
+```scaleA``` | 1, 1, 1
+```scaleD``` | 0, 0, 0
+```scaleI``` | 0, 0, 0
+```scaleE``` | 0, 0, 0
+```skews``` | 1, 1, 1
+```effectshape``` | 2
+```effectscale``` | 1
+```interactionshape``` | 5
+```interactionscale``` | 1
+```dominancevar``` | 1
+```tburnin``` | 0
+```tend``` | 10
+```tsave``` | 10
+```talkative``` | 1
+```record``` | 1
+```archsave``` | 0
+```archload``` | 0
+```archfile``` | architecture.txt
+```seed``` | automatically generated
+```ntrials``` | 100
+
+# Parameter file
+
+A parameter file should contain parameter names as they appear in the above example with default parameters, followed by their values. Parameters are separated from other parameters by any blank character e.g. new line, tab, or space. For example:
+
+```
+ecosel 1.0
+hsymmetry 0.2
 ```
 
-# Check job progression
+would set the ecological selection coefficient to 1 and habitat symmetry to 0.2, and the other parameters would keep their default values.
 
-```bash
-./checker.sh
-```
+Note that each parameter expects a specific type of value, e.g. `ntrials` or `seed` expect integer numbers, while `archfile` expects a file name. 
 
-# Install Python dependencies
+Also note that some parameter expect multiple values. Parameters `nvertices`, `nedges`, `scaleA`, `scaleD`, `scaleI`, `scaleE` and `skews` all expect three values, one per trait, separated by any blank character. Parameter `demesizes` expects two values, one for each habitat.
 
-```bash
-./pystaller.sh # if needed, to install Python dependencies
-```
+# Notes
 
-# Read single files
-
-```bash
-./reader.py <variable_name>.dat
-```
-
-or
-
-```bash
-python reader.py <variable_name>.dat
-```
-
-# Plot single files
-
-```bash
-./plotter.py <variable_name>.dat
-```
-
-or
-
-```bash
-python plotter.py <variable_name>.dat
-```
-
-# Future features
-
-Talk about genetic sex determination.
+For more information on how to build the program and use it to run multiple simulations on the Peregrine cluster, please refer to the README in folder /cluster.
 
 # Downloads
 
  * [Windows executable](http://richelbilderbeek.nl/EGS_gui.zip)
+

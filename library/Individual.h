@@ -8,9 +8,9 @@
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
-#include <boost/dynamic_bitset.hpp>
+#include <bitset>
 
-typedef boost::dynamic_bitset<> Genome;
+typedef std::bitset<10000> Genome;
 
 class Individual {
 
@@ -36,7 +36,6 @@ public:
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -45,7 +44,6 @@ public:
         assert(feeding[0u] <= 1.0);
         assert(feeding[1u] <= 1.0);
     }
-
 
     // Newborn
     Individual(const Param &pars, const GenArch &arch, const Individual &mom,
@@ -68,7 +66,6 @@ public:
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
