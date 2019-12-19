@@ -31,7 +31,7 @@ tburnin 1000
 tend 2000
 tsave 100
 record 1
-talkative 0
+talkative 1
 archsave 0
 archload 0
 parsave 1

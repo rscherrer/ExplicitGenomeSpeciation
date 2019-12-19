@@ -31,11 +31,11 @@ tburnin 1000
 tend 2000
 tsave 100
 record 1
-talkative 0
+talkative 1
 archsave 0
 archload 0
-parsave1
+parsave 1
 archfile architecture.txt
-parfileparamlog.txt
+parfile paramlog.txt
 seed 1576260468662030479
 ntrials 100

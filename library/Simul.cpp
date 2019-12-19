@@ -2,10 +2,7 @@
 
 bool timetosave(const int &t,const Param &p)
 {
-    if (p.recordburnin)
-        return (p.record && t % p.tsave == 0);
-    else
-        return (t >= 0 && p.record && t % p.tsave == 0);
+    return p.record && t >= 0 && t % p.tsave == 0;
 }
 
 int simulate(const vecStrings &args)
