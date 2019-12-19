@@ -71,6 +71,7 @@ void Param::import(std::ifstream &file)
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
         else if (input == "record") file >> record;
+        else if (input == "recordburnin") file >> recordburnin;
         else if (input == "talkative") file >> talkative;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
@@ -251,6 +252,7 @@ void Param::write(std::ofstream &file) const
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
     file << "record " << record << '\n';
+    file << "recordburnin " << recordburnin << '\n';
     file << "talkative " << talkative << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';

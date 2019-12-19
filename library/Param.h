@@ -53,6 +53,7 @@ struct Param {
         tsave(10),
         talkative(true),
         record(true),
+        recordburnin(true),
         archsave(false),
         archload(false),
         parsave(true),
@@ -122,6 +123,7 @@ struct Param {
     int  tsave;
     bool talkative;
     bool record;
+    bool recordburnin;
     bool archsave;
     bool archload;
     bool parsave;
