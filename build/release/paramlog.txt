@@ -34,8 +34,8 @@ record 1
 talkative 0
 archsave 0
 archload 0
-parsave 1
+parsave1
 archfile architecture.txt
-parfile paramlog.txt
+parfileparamlog.txt
 seed 1576260468662030479
 ntrials 100

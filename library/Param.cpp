@@ -256,9 +256,9 @@ void Param::write(std::ofstream &file) const
     file << "talkative " << talkative << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
-    file << "parsave" << parsave << '\n';
+    file << "parsave " << parsave << '\n';
     file << "archfile " << archfile << '\n';
-    file << "parfile" << parfile << '\n';
+    file << "parfile " << parfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }
