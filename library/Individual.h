@@ -8,9 +8,9 @@
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
-#include <boost/dynamic_bitset.hpp>
+#include <bitset>
 
-typedef boost::dynamic_bitset<> Genome;
+typedef std::bitset<10000> Genome;
 
 class Individual {
 
@@ -30,13 +30,12 @@ public:
         feeding(utl::zeros(2u)),
         ecotype(0u),
         habitat(0u),
-        gender(rnd::bernoulli(0.5)),
+        gender(determinesex()),
         alive(true),
         adult(true)
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -45,7 +44,6 @@ public:
         assert(feeding[0u] <= 1.0);
         assert(feeding[1u] <= 1.0);
     }
-
 
     // Newborn
     Individual(const Param &pars, const GenArch &arch, const Individual &mom,
@@ -61,14 +59,13 @@ public:
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
-        habitat(0u),
-        gender(rnd::bernoulli(0.5)),
+        habitat(mom.getHabitat()),
+        gender(determinesex()),
         alive(true),
         adult(false)
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -86,6 +83,7 @@ public:
     void feed(const vecDbl&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
+    void classify(const double&);
 
     // Getters called from outside
     bool getGender() const
@@ -157,8 +155,9 @@ public:
     {
         ecotrait = x;
         traitvalues[0u] = x;
-        feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+        const double max = p.rdynamics ? 1.0 : p.maxfeed;
+        feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+        feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
         assert(feeding[0u] >= 0.0);
         assert(feeding[1u] >= 0.0);
         assert(feeding[0u] <= 1.0);
@@ -188,6 +187,8 @@ private:
     void recombine(Genome&, const Param&, const GenArch&) const;
     void mutate(Genome&, const Param&) const;
     void develop(const Param&, const GenArch&);
+
+    bool determinesex() const;
 
     Genome genome;
     vecDbl transcriptome;

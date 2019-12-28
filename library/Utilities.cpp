@@ -9,21 +9,22 @@ double utl::sqr(const double &number)
 // Vector of ones
 vecDbl utl::ones(const size_t &n)
 {
-    vecDbl ones;
-    ones.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        ones.push_back(1.0);
-    return ones;
+    return vecDbl(n, 1.0);
+}
+
+Matrix utl::ones(const size_t &nrow, const size_t &ncol)
+{
+    Matrix mat;
+    mat.reserve(nrow);
+    for (size_t i = 0u; i < nrow; ++i)
+        mat.push_back(utl::ones(ncol));
+    return mat;
 }
 
 // Vector of zeros
 vecDbl utl::zeros(const size_t &n)
 {
-    vecDbl zeros;
-    zeros.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0.0);
-    return zeros;
+    return vecDbl(n, 0.0);
 }
 
 // Matrix of zeros
@@ -49,11 +50,7 @@ Matx3d utl::zeros(const size_t &n0, const size_t &n1, const size_t &n2)
 // Unsigned zeros
 vecUns utl::uzeros(const size_t &n)
 {
-    vecUns zeros;
-    zeros.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        zeros.push_back(0u);
-    return zeros;
+    return vecUns(n, 0u);
 }
 
 // Matrix of unsigned zeros
@@ -69,21 +66,13 @@ MatUns utl::uzeros(const size_t &nrow, const size_t &ncol)
 // Repeat a number many times
 vecDbl utl::rep(const double &x, const size_t &n)
 {
-    vecDbl reps;
-    reps.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        reps.push_back(x);
-    return reps;
+    return vecDbl(n, x);
 }
 
 // Repeat an unsigned integer many times
 vecUns utl::repUns(const size_t &x, const size_t &n)
 {
-    vecUns reps;
-    reps.reserve(n);
-    for (size_t i = 0u; i < n; ++i)
-        reps.push_back(x);
-    return reps;
+    return vecUns(n, x);
 }
 
 
@@ -122,21 +111,27 @@ void utl::marginalize(Matrix &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0.0);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0.0);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        double sum = 0.0;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        double sum = 0.0;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
@@ -148,21 +143,27 @@ void utl::marginalize(MatUns &m)
     const size_t ncol = m[0u].size();
 
     // Check that all rows have the same number of elements
-    for (size_t i = 0u; i < nrow; ++i) {
-        assert(m[i].size() == ncol);
-    }
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i].size() == ncol);
+
+    // Check that the last row and the last column are full of zeros
+    for (size_t i = 0u; i < nrow; ++i) assert(m[i][ncol - 1u] == 0u);
+    for (size_t j = 0u; j < ncol; ++j) assert(m[nrow - 1u][j] == 0u);
 
     // Calculate row sums
     for (size_t i = 0u; i < nrow; ++i) {
+        size_t sum = 0u;
         for (size_t j = 0u; j < ncol - 1u; ++j) {
-            m[i][ncol - 1u] += m[i][j];
+            sum += m[i][j];
+            m[i][ncol - 1u] = sum;
         }
     }
 
     // Calculate column sums
     for (size_t j = 0u; j < ncol; ++j) {
+        size_t sum = 0u;
         for (size_t i = 0u; i < nrow - 1u; ++i) {
-            m[nrow - 1u][j] += m[i][j];
+            sum += m[i][j];
+            m[nrow - 1u][j] = sum;
         }
     }
 }
@@ -214,4 +215,23 @@ void utl::correct(double &x, const double &x0, const double &d)
 double utl::size2dbl(const size_t &x)
 {
     return static_cast<double>(x);
+}
+
+// Convert double to unsigned integer
+size_t utl::dbl2size(const double &x)
+{
+    return static_cast<size_t>(x);
+}
+
+// Save to file
+void stf::write(const double &x, std::shared_ptr<std::ofstream> &out)
+{
+    out->write((char *) &x, sizeof(x));
+}
+
+void stf::write(const vecDbl &v, std::shared_ptr<std::ofstream> &out)
+{
+    if (v.size() > 0u)
+        for (auto x : v)
+            stf::write(x, out);
 }

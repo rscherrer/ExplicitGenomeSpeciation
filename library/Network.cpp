@@ -1,8 +1,6 @@
 #include "Network.h"
 
-typedef std::discrete_distribution<size_t> Discrete;
-
-bool checkedges(const double &e, const double &n)
+bool checkedges(const size_t &e, const size_t &n)
 {
     return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes
 }
@@ -31,18 +29,27 @@ vecEdg Network::makeMap(const Param& p) const
     ++degrees[0u];
     ++degrees[1u];
 
-    size_t nleft = p.nedges[trait] - 1u; // number edges left to make
+    size_t nleft = p.nedges[trait] - 1u; // number of edges left to make
 
     // For each vertex...
     for (size_t vertex = 2u; nleft && vertex < p.nvertices[trait]; ++vertex) {
 
-        // Sample number of partners
-        size_t npartners = nleft;
+        // Sample number of partners from a binomial
+        // This procedure conditions on the average of the degree distribution
+        // being nedges / nvertices
+
         const double prob = 1.0 / (p.nvertices[trait] - vertex);
         assert(prob >= 0.0);
         assert(prob <= 1.0);
-        if (vertex == p.nvertices[trait] - 1u)
-            npartners = rnd::binomial(nleft, prob);
+
+        size_t npartners;
+        if (vertex == p.nvertices[trait] - 1u) {
+            npartners = nleft;
+        }
+        else {
+            auto seekpartners = rnd::binomial(nleft, prob);
+            npartners = seekpartners(rnd::rng);
+        }
 
         // Assign attachment probabilities
         vecDbl probs(vertex);
@@ -54,8 +61,11 @@ vecEdg Network::makeMap(const Param& p) const
 
             if (utl::sum(probs) < 1.0) break;
 
-            // Make a bond without replacement and update degree distribution
-            const size_t partner = rnd::sample(probs);
+            // Sampling multiple targets without replacement
+            // Use Hanno's mutable discrete distribution
+
+            auto getpartner = rnd::discrete(probs.cbegin(), probs.cend());
+            const size_t partner = getpartner(rnd::rng);
             assert(partner < vertex);
             connexions.push_back(std::make_pair(partner, vertex));
             probs[partner] = 0.0;
@@ -67,8 +77,13 @@ vecEdg Network::makeMap(const Param& p) const
         }
     }
 
+    // If the number of edges required is too large the algorithm may fail
+    // to reach a big enough network -- break in this case
+
+    if (connexions.size() != p.nedges[trait])
+        throw std::runtime_error("Required sized network could not be made.");
+
     assert(nleft == 0u);
-    assert(connexions.size() == p.nedges[trait]);
 
     return connexions;
 
@@ -76,16 +91,19 @@ vecEdg Network::makeMap(const Param& p) const
 
 vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 {
-    vecUns underlying;
-    underlying.reserve(p.nvertices[trait]);
+    vecUns underlying(p.nvertices[trait]);
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
     // Record all loci that encode the current trait
 
-    for (size_t locus = 0u; locus < p.nloci; ++locus)
-        if (traits[locus] == trait)
-            underlying.push_back(locus);
+    size_t i = 0u;
+    for (size_t locus = 0u; locus < p.nloci; ++locus) {
+        if (traits[locus] == trait) {
+            underlying[i] = locus;
+            ++i;
+        }
+    }
 
     assert(underlying.size() == p.nvertices[trait]);
 
@@ -95,17 +113,16 @@ vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
 vecEdg Network::makeEdges(const Param &p) const
 {
 
-    vecEdg mapped;
-    mapped.reserve(p.nedges[trait]);
+    vecEdg mapped(p.nedges[trait]);
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
     // Add theses id to the vector of mapped edges
 
-    for (Edge partners : map) {
-        const size_t locus1 = loci[partners.first];
-        const size_t locus2 = loci[partners.second];
-        mapped.push_back(std::make_pair(locus1, locus2));
+    for (size_t e = 0u; e < map.size(); ++e) {
+        const size_t locus1 = loci[map[e].first];
+        const size_t locus2 = loci[map[e].second];
+        mapped[e] = std::make_pair(locus1, locus2);
     }
 
     return mapped;
@@ -117,21 +134,26 @@ vecDbl Network::makeWeights(const Param &p) const
     if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
         return utl::zeros(p.nedges[trait]);
 
-    vecDbl intweights;
-    intweights.reserve(p.nedges[trait]);
+    vecDbl intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
+
+    // Interaction weights are sampled from a two-sided Gamma distribution
+    auto getweight = rnd::gamma(p.interactionshape, p.interactionscale);
+    auto isflipped = rnd::bernoulli(0.5);
 
     // For each edge in the network...
     for (size_t edge = 0u; edge < p.nedges[trait]; ++edge) {
 
         // Two-sided Gamma distribution
-        const double w = rnd::bigamma(p.interactionshape, p.interactionscale);
-        intweights.push_back(w);
+        double w = getweight(rnd::rng);
+        if (isflipped(rnd::rng)) w *= -1.0;
+        intweights[edge] = w;
         sss += utl::sqr(w);
     }
 
     // Normalize
     sss = sss > 0.0 ? sqrt(sss) : 1.0;
+    assert(sss > 0.0);
     for (size_t edge = 0u; edge < p.nedges[trait]; ++edge)
         intweights[edge] /= sss;
 

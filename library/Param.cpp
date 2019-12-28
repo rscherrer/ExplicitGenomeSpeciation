@@ -8,46 +8,6 @@ size_t Param::makeDefaultSeed()
      time_since_epoch().count());
 }
 
-
-// Make sure that the numbers of edges of the genetic networks do not go above
-// their theoretical maximum, given the number of loci in each network
-void Param::capEdges()
-{
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        const size_t n = nvertices[trait];
-
-        // Number of edges in a compete graph with N vertices
-        const size_t emax = n * (n - 1u) / 2u;
-
-        // Cap the number of edges
-        if (nedges[trait] > emax) nedges[trait] = emax;
-    }
-}
-
-
-// Functions to convert characters into integers
-// Used to read parameters in
-
-namespace fnv
-{
-  constexpr uint64_t _(uint64_t h, const char* s)
-  {
-    return (*s == 0) ? h :
-      _((h * 1099511628211ull) ^ static_cast<uint64_t>(*s), s+1);
-  }
-}
-
-constexpr uint64_t _(const char* s)
-{
-  return fnv::_(14695981039346656037ull, s);
-}
-
-uint64_t _(const std::string& s)
-{
-  return fnv::_(14695981039346656037ull, s.data());
-}
-
-
 // Read parameters from a file
 
 void Param::read(const std::string &filename)
@@ -67,77 +27,65 @@ void Param::import(std::ifstream &file)
 {
 
     std::string input;
+
     while (file >> input) {
 
-        switch (_(input)) {
-
-        case _("rdynamics"): file >> rdynamics; break;
-        case _("inflow"): file >> inflow; break;
-        case _("outflow"): file >> outflow; break;
-        case _("capacity"): file >> capacity; break;
-        case _("replenish"): file >> replenish; break;
-        case _("hsymmetry"): file >> hsymmetry; break;
-        case _("ecosel"): file >> ecosel; break;
-        case _("dispersal"): file >> dispersal; break;
-        case _("birth"): file >> birth; break;
-        case _("survival"): file >> survival; break;
-        case _("sexsel"): file >> sexsel; break;
-        case _("matingcost"): file >> matingcost; break;
-        case _("maxfeed"): file >> maxfeed; break;
-        case _("demesizes"):
+        if (input == "rdynamics") file >> rdynamics;
+        else if (input == "trenewal") file >> trenewal;
+        else if (input == "capacity") file >> capacity;
+        else if (input == "replenish") file >> replenish;
+        else if (input == "hsymmetry") file >> hsymmetry;
+        else if (input == "ecosel") file >> ecosel;
+        else if (input == "dispersal") file >> dispersal;
+        else if (input == "birth") file >> birth;
+        else if (input == "survival") file >> survival;
+        else if (input == "sexsel") file >> sexsel;
+        else if (input == "matingcost") file >> matingcost;
+        else if (input == "maxfeed") file >> maxfeed;
+        else if (input == "demesizes")
             for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
-            break;
-        case _("nvertices"):
+        else if (input == "nvertices")
             for (size_t i = 0u; i < 3u; ++i) file >> nvertices[i];
-            break;
-        case _("nedges"):
+        else if (input == "nedges")
             for (size_t i = 0u; i < 3u; ++i) file >> nedges[i];
-            break;
-        case _("nchrom"): file >> nchrom; break;
-        case _("mutation"): file >> mutation; break;
-        case _("recombination"): file >> recombination; break;
-        case _("allfreq"): file >> allfreq; break;
-        case _("scaleA"):
+        else if (input == "nchrom") file >> nchrom;
+        else if (input == "mutation") file >> mutation;
+        else if (input == "recombination") file >> recombination;
+        else if (input == "allfreq") file >> allfreq;
+        else if (input == "scaleA")
             for (size_t i = 0u; i < 3u; ++i) file >> scaleA[i];
-            break;
-        case _("scaleD"):
+        else if (input == "scaleD")
             for (size_t i = 0u; i < 3u; ++i) file >> scaleD[i];
-            break;
-        case _("scaleI"):
+        else if (input == "scaleI")
             for (size_t i = 0u; i < 3u; ++i) file >> scaleI[i];
-            break;
-        case _("scaleE"):
+        else if (input == "scaleE")
             for (size_t i = 0u; i < 3u; ++i) file >> scaleE[i];
-            break;
-        case _("skews"):
+        else if (input == "skews")
             for (size_t i = 0u; i < 3u; ++i) file >> skews[i];
-            break;
-        case _("effectshape"): file >> effectshape; break;
-        case _("effectscale"): file >> effectscale; break;
-        case _("interactionshape"): file >> interactionshape; break;
-        case _("interactionscale"): file >> interactionscale; break;
-        case _("dominancevar"): file >> dominancevar; break;
-        case _("tburnin"): file >> tburnin; break;
-        case _("tend"): file >> tend; break;
-        case _("tsave"): file >> tsave; break;
-        case _("record"): file >> record; break;
-        case _("seed"): file >> seed; break;
-        case _("ntrials"): file >> ntrials; break;
+        else if (input == "effectshape") file >> effectshape;
+        else if (input == "effectscale") file >> effectscale;
+        else if (input == "interactionshape") file >> interactionshape;
+        else if (input == "interactionscale") file >> interactionscale;
+        else if (input == "dominancevar") file >> dominancevar;
+        else if (input == "tburnin") file >> tburnin;
+        else if (input == "tend") file >> tend;
+        else if (input == "tsave") file >> tsave;
+        else if (input == "record") file >> record;
+        else if (input == "talkative") file >> talkative;
+        else if (input == "archsave") file >> archsave;
+        else if (input == "archload") file >> archload;
+        else if (input == "parsave") file >> parsave;
+        else if (input == "archfile") file >> archfile;
+        else if (input == "parfile") file >> parfile;
+        else if (input == "seed") file >> seed;
+        else if (input == "ntrials") file >> ntrials;
+        else
+            throw std::runtime_error("Invalid parameter name: " + input);
 
-        default:
-            throw std::runtime_error("Invalid parameter name: " + input); break;
-
-        }
     }
 
     // Now update interactive parameters
-    nloci = utl::sumu(nvertices);
-
-    // Make sure genetic networks do not have more edges than feasible
-    capEdges();
-
-    // Check validity of parameter values
-    checkParams();
+    update();
 
     std::clog << "Parameters were read in succesfully.\n";
 
@@ -146,12 +94,11 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     nloci = utl::sumu(nvertices);
-    capEdges();
-    checkParams();
+    check();
 }
 
 // Check that the parameter values are valid
-void Param::checkParams()
+void Param::check() const
 {
     std::string msg = "No error detected";
 
@@ -185,10 +132,8 @@ void Param::checkParams()
         msg = "Maximum resource growth should be positive";
     if (rdynamics > 1u)
         msg = "Resource dynamics is either 0 (logistic) or 1 (chemostat)";
-    if (inflow <= 0.0)
-        msg = "Resource inflow rate should be positive";
-    if (outflow <= 0.0)
-        msg = "Resource outflow rate should be positive";
+    if (trenewal <= 0.0)
+        msg = "Resource renewal time rate should be positive";
     if (nvertices[0u] <= 1u)
         msg = "Numer of ecological loci should be at least two";
     if (nvertices[1u] <= 1u)
@@ -211,15 +156,17 @@ void Param::checkParams()
         msg = "Recombination rate should be positive";
     for (size_t i = 0u; i < 3u; ++i) {
         if (skews[i] < 0.0)
-            msg = "Skewness should be positive";
+            msg = "Skewness should be positive for trait " + i;
         if (scaleA[i] < 0.0)
-            msg = "Additive scaling should be positive";
+            msg = "Additive scaling should be positive for trait " + i;
         if (scaleD[i] < 0.0)
-            msg = "Dominance scaling should be positive";
+            msg = "Dominance scaling should be positive for trait " + i;
         if (scaleI[i] < 0.0)
-            msg = "Interaction scaling should be positive";
+            msg = "Interaction scaling should be positive for trait " + i;
         if (scaleE[i] < 0.0)
-            msg = "Environmental scaling should be positive";
+            msg = "Environmental scaling should be positive for trait " + i;
+        if (nedges[i] >= nvertices[i] * (nvertices[i] - 1u) / 2u)
+            msg = "Number of edges is too large for trait " + i;
     }
     if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
@@ -240,6 +187,76 @@ void Param::checkParams()
     if (ntrials == 0u)
         msg = "Number of mating trials should be at least one";
 
-    if(msg != "No error detected")
+    if (msg != "No error detected")
         throw std::runtime_error(msg);
+}
+
+void Param::save() const
+{
+    std::ofstream file(parfile);
+    if (!file.is_open())
+        throw std::runtime_error("Unable to open file " + parfile);
+    write(file);
+    file.close();
+}
+
+void Param::write(std::ofstream &file) const
+{
+    file << "rdynamics " << rdynamics << '\n';
+    file << "trenewal " << trenewal << '\n';
+    file << "capacity " << capacity << '\n';
+    file << "replenish " << replenish << '\n';
+    file << "hsymmetry " << hsymmetry << '\n';
+    file << "ecosel " << ecosel << '\n';
+    file << "dispersal " << dispersal << '\n';
+    file << "birth " << birth << '\n';
+    file << "survival " << survival << '\n';
+    file << "sexsel " << sexsel << '\n';
+    file << "matingcost " << matingcost << '\n';
+    file << "maxfeed " << maxfeed << '\n';
+    file << "demesizes ";
+    for (size_t i = 0u; i < 2u; ++i) file << demesizes[i] << ' ';
+    file << '\n';
+    file << "nvertices ";
+    for (size_t i = 0u; i < 3u; ++i) file << nvertices[i] << ' ';
+    file << '\n';
+    file << "nedges ";
+    for (size_t i = 0u; i < 3u; ++i) file << nedges[i] << ' ';
+    file << '\n';
+    file << "nchrom " << nchrom << '\n';
+    file << "mutation " << mutation << '\n';
+    file << "recombination " << recombination << '\n';
+    file << "allfreq " << allfreq << '\n';
+    file << "scaleA ";
+    for (size_t i = 0u; i < 3u; ++i) file << scaleA[i] << ' ';
+    file << '\n';
+    file << "scaleD ";
+    for (size_t i = 0u; i < 3u; ++i) file << scaleD[i] << ' ';
+    file << '\n';
+    file << "scaleI ";
+    for (size_t i = 0u; i < 3u; ++i) file << scaleI[i] << ' ';
+    file << '\n';
+    file << "scaleE ";
+    for (size_t i = 0u; i < 3u; ++i) file << scaleE[i] << ' ';
+    file << '\n';
+    file << "skews ";
+    for (size_t i = 0u; i < 3u; ++i) file << skews[i] << ' ';
+    file << '\n';
+    file << "effectshape " << effectshape << '\n';
+    file << "effectscale " << effectscale << '\n';
+    file << "interactionshape " << interactionshape << '\n';
+    file << "interactionscale " << interactionscale << '\n';
+    file << "dominancevar " << dominancevar << '\n';
+    file << "tburnin " << tburnin << '\n';
+    file << "tend " << tend << '\n';
+    file << "tsave " << tsave << '\n';
+    file << "record " << record << '\n';
+    file << "talkative " << talkative << '\n';
+    file << "archsave " << archsave << '\n';
+    file << "archload " << archload << '\n';
+    file << "parsave " << parsave << '\n';
+    file << "archfile " << archfile << '\n';
+    file << "parfile " << parfile << '\n';
+    file << "seed " << seed << '\n';
+    file << "ntrials " << ntrials << '\n';
 }

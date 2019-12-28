@@ -79,6 +79,7 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
     std::clog << "Testing complete habitat asymmetry...\n";
     Param pars;
     GenArch arch = GenArch(pars);
+    pars.rdynamics = 0u;
     pars.capacity = 100.0;
     pars.hsymmetry = 0.0; // full habitat asymmetry
     pars.demesizes = {10u, 10u };
@@ -133,15 +134,15 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
     pars.capacity = 100.0;
     pars.maxfeed = 1.0;
     pars.dispersal = 0.0;
-    pars.birth = 4.0; // relatively high birth rate
+    pars.birth = 1000.0; // high birth rate
     pars.demesizes = { 10u, 0u };
     pars.survival = 1.0; // 100% chance survival
     pars.tburnin = 0u;
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
-    BOOST_CHECK(metapop.getSize() > 10u);
-    BOOST_CHECK(metapop.getDemeSize(0u) > 10u);
+    BOOST_CHECK(metapop.getSize() >= 10u);
+    BOOST_CHECK(metapop.getDemeSize(0u) >= 10u);
     BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 
@@ -151,10 +152,10 @@ BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
 {
     std::clog << "Testing that newborns do not die...\n";
     Param pars;
-    pars.birth = 4.0; // relatively high birth rate
+    pars.birth = 10.0; // relatively high birth rate
     pars.maxfeed = 0.1;
     pars.capacity = 10.0;
-    pars.demesizes = { 100u, 0u };
+    pars.demesizes = { 10u, 0u };
     pars.survival = 0.0; // all adults should die
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
@@ -227,8 +228,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     pars.dispersal = 0.0;
     pars.birth = 0.0;
     pars.survival = 1.0;
-    pars.inflow = 10.0;
-    pars.outflow = 1.0;
+    pars.trenewal = 0.001;
     pars.hsymmetry = 0.0;
     pars.demesizes = { 10u, 0u };
     pars.ecosel = 1.0;
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     metapop.cycle(pars, arch);
 
     // Predict resource equilibrium after consumption
-    const double R0 = utl::round(10.0 / 11.0, 4u);
+    const double R0 = utl::round(1.0 / (1.0 + 0.001 * 10.0), 4u);
     const double R1 = 0.0;
 
     // Fitness should sum up to the amount of food consumed
@@ -250,4 +250,46 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
     BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);
     BOOST_CHECK_EQUAL(utl::round(metapop.getSumFitness(), 2u), sumw);
     BOOST_CHECK_EQUAL(utl::round(metapop.getVarFitness(), 4u), 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(EcotypeClassification)
+{
+    std::clog << "Testing ecotype classification...\n";
+
+    Param pars;
+    pars.rdynamics = 1u;
+    pars.dispersal = 0.0;
+    pars.birth = 0.0;
+    pars.survival = 1.0;
+    pars.trenewal = 0.001;
+    pars.hsymmetry = 1.0;
+    pars.demesizes = { 100u, 0u };
+    pars.allfreq = 0.5;
+    pars.ecosel = 1.0;
+    pars.tburnin = 0u;
+
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+
+    // Test that ecological trait values in ecotype 1 are always higher than
+    // in ecotype 0
+
+    double xmax0 = -1.0;
+    double xmin1 = 1.0;
+
+    // For each individual
+    for (size_t i = 0u; i < metapop.getSize(); ++i) {
+
+        // Record trait value and ecotype
+        const double x = metapop.getEcoTrait(i);
+        const size_t e = metapop.getEcotype(i);
+
+        if (e == 0u && x > xmax0) xmax0 = x;
+        if (e == 1u && x < xmin1) xmin1 = x;
+
+    }
+
+    BOOST_CHECK(xmax0 < xmin1);
+
 }

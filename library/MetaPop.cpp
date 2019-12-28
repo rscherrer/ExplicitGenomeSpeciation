@@ -11,11 +11,11 @@ Crowd MetaPop::populate(const Param &p, const GenArch &arch)
     size_t n0 = p.demesizes[0u];
     assert(n0 <= n);
     Crowd indivs;
-    indivs.reserve(n); // seems to be causing trouble
+    indivs.reserve(n);
 
     for (size_t ind = 0u; ind < n; ++ind) {
         indivs.push_back(Individual(p, arch));
-        if (ind >= n0) indivs.back().disperse();
+        if (ind >= n0) indivs[ind].disperse();
     }
 
     assert(indivs.size() == n);
@@ -49,13 +49,45 @@ void MetaPop::disperse(const Param &p)
     // Sample migrants across the population
     // Change the habitat attribute of these migrants
 
-    vecDbl probs = utl::ones(population.size());
-    size_t nmigrants = rnd::binomial(population.size(), p.dispersal);
-    while (nmigrants) {
-        const size_t mig = rnd::sample(probs);
-        probs[mig] = 0.0;
-        population[mig].disperse();
-        --nmigrants;
+    if (p.dispersal == 0.0) return;
+
+    if (p.dispersal < 0.1) {
+
+        // Use geometric if rare
+        auto getnextmigrant = rnd::iotagap(p.dispersal);
+        getnextmigrant.reset(0u);
+        size_t mig = 0u;
+        for (;;) {
+            mig = getnextmigrant(rnd::rng);
+            if (mig >= getSize()) break;
+            population[mig].disperse();
+        }
+    }
+    /*
+    else if (p.dispersal < 0.5) {
+
+        // Use binomial if uncommon
+        auto getnmigrants = rnd::binomial(p.dispersal);
+        vecUns inds(getSize());
+        std::iota(inds.begin(), inds.end(), 0);
+        auto getmigrant = rndutils::make_shuffle_sampler(inds.cbegin(), inds.cend());
+        size_t nmig = getnmigrants(rnd::rng);
+        while (nmig) {
+            auto migrant = getmigrant(rnd::rng).second;
+            std::clog << migrant << '\n';
+            // population[migrant].disperse();
+            --nmig;
+        }
+
+    }
+    */
+    else {
+
+        // Use bernoulli if common
+        auto ismigrant = rnd::bernoulli(p.dispersal);
+        for (size_t i = 0u; i < getSize(); ++i)
+            if (ismigrant(rnd::rng)) population[i].disperse();
+
     }
 }
 
@@ -64,13 +96,19 @@ void MetaPop::consume(const Param &p)
 
     // Calculate the sum of feeding efficiencies in each habitat
     Matrix sumfeed = utl::zeros(2u, 2u);
+    double sumx = 0.0;
     for (size_t i = 0u; i < population.size(); ++i) {
+
+        sumx += population[i].getEcoTrait();
+
         const size_t hab = population[i].getHabitat();
         sumfeed[hab][0u] += population[i].getFeeding(0u);
 
         // Feed only on resource 0 during burnin
         if (!isburnin) sumfeed[hab][1u] += population[i].getFeeding(1u);
     }
+
+    const double meanx = sumx / population.size();
 
     resources = utl::zeros(2u, 2u);
 
@@ -95,22 +133,25 @@ void MetaPop::consume(const Param &p)
 
         // CHEMOSTAT
 
-        // Calculate the resource equilibrium = a / (b + C)
-        resources[0u][0u] = p.inflow;
-        resources[0u][1u] = isburnin ? 0.0 : p.inflow * p.hsymmetry;
-        resources[1u][0u] = p.inflow * p.hsymmetry;
-        resources[1u][1u] = isburnin ? 0.0 : p.inflow;
+        // Calculate the resource equilibrium = 1 / (1 + tau C)
+        resources[0u][0u] = 1.0;
+        resources[0u][1u] = isburnin ? 0.0 : p.hsymmetry;
+        resources[1u][0u] = p.hsymmetry;
+        resources[1u][1u] = isburnin ? 0.0 : 1.0;
         for (size_t hab = 0u; hab < 2u; ++hab) {
             for (size_t res = 0u; res < 2u; ++res) {
-                resources[hab][res] /= (p.outflow + sumfeed[hab][res]);
+                resources[hab][res] /= 1.0 + p.trenewal * sumfeed[hab][res];
                 assert(resources[hab][res] >= 0.0);
             }
         }
     }
 
     // Assign individual fitness and ecotypes
-    for (size_t i = 0u; i < population.size(); ++i)
+    for (size_t i = 0u; i < population.size(); ++i) {
         population[i].feed(resources[population[i].getHabitat()]);
+        population[i].classify(meanx);
+    }
+
 
 }
 
@@ -118,82 +159,144 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 {
 
     // Table to count the sexes in both habitats
-    sexcounts = utl::uzeros(2u, 2u);
+    sexcounts = utl::uzeros(2u, 2u); // per habitat per sex
 
-    // Males' fitness determine their encounter probabilities
-    Matrix probs = utl::zeros(2u, population.size());
-    for (size_t i = 0u; i < population.size(); ++i) {
-
-        const size_t sex = population[i].getGender();
-        const size_t hab = population[i].getHabitat();
-        ++sexcounts[hab][sex];
-
-        if (!sex) {
-
-            probs[hab][i] = population[i].getFitness();
-
-            // Modify mating success during burnin
-            if (isburnin) {
-                const double y = population[i].getMatePref();
-                probs[hab][i] *= exp(-p.ecosel * utl::sqr(y));
-            }
-        }
-    }
-
-    if (!(sexcounts[0u][0u] + sexcounts[1u][0u])) return; // exit if no males
-    if (!(sexcounts[0u][1u] + sexcounts[1u][1u])) return; // exit if no females
-
-    // Determine the length of the mating season
-    const size_t seasonend = rnd::geometric(p.matingcost);
+    // Determine the length of the season and exit if zero
+    auto getseasonend = rnd::geometric(p.matingcost);
+    const size_t seasonend = getseasonend(rnd::rng);
 
     if (!seasonend) return;
 
-    const size_t nparents = population.size();
+    std::vector<vecUns> females;
+    std::vector<vecUns> males;
 
-    // For each parent...
-    for (size_t mom = 0u; mom < nparents; ++mom) {
+    for (size_t hab = 0u; hab < 2u; ++hab) {
+        vecUns fem;
+        vecUns mal;
+        fem.reserve(getSize());
+        mal.reserve(getSize());
+        females.push_back(fem);
+        males.push_back(mal);
+    }
 
-        const size_t sex = population[mom].getGender();
-        const size_t hab = population[mom].getHabitat();
+    // Loop through the population and extract habitat and gender
+    for (size_t i = 0u; i < getSize(); ++i) {
 
-        // Is it a female and are there males around?
-        if (sex && sexcounts[hab][0u]) {
+        const size_t hab = population[i].getHabitat();
+        const size_t sex = population[i].getGender();
 
-            // Progress throughout the mating season
-            size_t timeleft = seasonend;
-            while (timeleft) {
+        // Keep track of census in each sex and each habitat
+        ++sexcounts[hab][sex];
 
-                --timeleft;
+        // Record IDs in each sex and each habitat
+        if (sex)
+            females[hab].push_back(i);
+        else
+            males[hab].push_back(i);
 
-                // And encounters males one at a time with replacement
-                const size_t dad = rnd::sample(probs[hab]);
-                const double maletrait = population[dad].getEcoTrait();
+    }
 
-                // If the female accepts to mate                
-                if (rnd::bernoulli(population[mom].mate(maletrait, p))) {
+    // For each habitat...
+    for (size_t hab = 0u; hab < 2u; ++hab) {
 
-                    // Determine fecundity
-                    double fecundity = p.birth * population[mom].getFitness();
+        females[hab].shrink_to_fit();
+        males[hab].shrink_to_fit();
 
-                    // Modify fecundity during burnin
-                    if (isburnin) {
-                        const size_t y = population[mom].getMatePref();
-                        fecundity *= exp(-p.ecosel * utl::sqr(y));
-                    }
+        const size_t nm = sexcounts[hab][0u];
+        const size_t nf = sexcounts[hab][1u];
 
-                    // Sample clutch size
-                    size_t noffspring = rnd::poisson(fecundity);
+        assert(nm == males[hab].size());
+        assert(nf == females[hab].size());
+
+        // If no males or no females, no reproduction and move on
+        if (!nm) continue;
+        if (!nf) continue;
+
+        vecDbl fit(nm);
+
+        size_t i = 0u;
+        double sum = 0.0;
+        double ssq = 0.0;
+
+        // Make a vector of probabilities for males
+        for (size_t m : males[hab]) {
+
+            fit[i] = population[m].getFitness();
+
+            // Modified in burn-in
+            if (isburnin) {
+                const double y = population[m].getMatePref();
+                fit[i] *= exp(-p.ecosel * utl::sqr(y));
+            }
+
+            sum += fit[i];
+            ssq += utl::sqr(fit[i]);
+
+            ++i;
+
+        }
+
+        // Set all probabilities to one if all fitnesses are the same
+        const double var = ssq / nm - utl::sqr(sum / nm);
+        if (var < 1.0E-6) fit = utl::ones(nm);
+
+        // Initialize a mutable discrete distribution with uniform zero-policy
+        auto getmale = rnd::mdiscrete();
+
+        // Loop through females
+        for (size_t f : females[hab]) {
+
+            // Determine fecundity
+            double fecundity = p.birth * population[f].getFitness();
+
+            // Modified during burn-in
+            if (isburnin) {
+                const double y = population[f].getMatePref();
+                fecundity *= exp(-p.ecosel * utl::sqr(y));
+            }
+
+            if (fecundity == 0.0) continue;
+
+            // Sample the number of offspring from a Poisson
+            auto getclutchsize = rnd::poisson(fecundity);
+            size_t noffspring = getclutchsize(rnd::rng);
+
+            if (!noffspring) continue;
+
+            size_t t = seasonend;
+
+            vecDbl probs = fit;
+
+            // While the season is not over and mating hasn't occured
+            while (t) {
+
+                getmale.mutate(probs.cbegin(), probs.cend());
+
+                // Sample a male and evaluate
+                const size_t idm = getmale(rnd::rng);
+                const size_t m = males[hab][idm];
+                const double xm = population[m].getEcoTrait();
+                auto ismating = rnd::bernoulli(population[f].mate(xm, p));
+
+                // Produce offspring and add them to the population if accepted
+                if (ismating(rnd::rng)) {
+
                     while (noffspring) {
 
-                        // Give birth
                         population.push_back(Individual(p, arch,
-                         population[mom], population[dad]));
+                         population[f], population[m]));
+
                         --noffspring;
+
                     }
 
-                    // End the mating season if female has mated
                     break;
+
                 }
+
+                // Update the distribution to avoid resampling
+                probs[idm] = 0.0;
+                --t;
             }
         }
     }
@@ -209,8 +312,9 @@ void MetaPop::survive(const Param &p)
 {
     // Sample survival for each individual
     size_t nsurv = 0u;
+    auto issurvivor = rnd::bernoulli(p.survival);
     for (size_t i = 0u; i < population.size(); ++i) {
-        population[i].survive(rnd::bernoulli(p.survival));
+        population[i].survive(issurvivor(rnd::rng));
         if (population[i].isalive()) ++nsurv;
     }
 

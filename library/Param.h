@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "Utilities.h"
+#include "Random.h"
 #include <fstream>
 #include <iostream>
 #include <chrono>
@@ -16,26 +17,25 @@
 struct Param {
 
     Param() :
-        rdynamics(0u),
-        inflow(1.0),
-        outflow(1000.0),
+        rdynamics(1u),
+        trenewal(0.001),
         capacity(100.0),
-        replenish(10.0),
-        hsymmetry(1.0),
-        ecosel(1.0),
-        dispersal(1.0E-3),
+        replenish(1.0),
+        hsymmetry(0.0),
+        ecosel(1.8),
+        dispersal(1.0E-2),
         birth(4.0),
-        survival(0.6),
+        survival(0.8),
         sexsel(10.0),
         matingcost(0.01),
         maxfeed(4.0E-4),
-        demesizes({ 10u, 0u }),        
-        nloci(300u), // cannot be provided
-        nvertices({ 100u, 100u, 100u }),
-        nedges({ 0u, 0u, 0u }),
+        demesizes({ 100u, 0u }),
+        nloci(90u), // cannot be provided
+        nvertices({ 30u, 30u, 30u }),
+        nedges({ 30u, 0u, 0u }),
         nchrom(3u),
-        mutation(1.0E-6),
-        recombination(0.01),
+        mutation(1.0E-3),
+        recombination(3.0),
         allfreq(0.2),
         scaleA({ 1.0, 1.0, 1.0 }),
         scaleD({ 0.0, 0.0, 0.0 }),
@@ -48,32 +48,40 @@ struct Param {
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(10),
+        tburnin(0),
         tend(10),
         tsave(10),
+        talkative(true),
         record(true),
+        archsave(false),
+        archload(false),
+        parsave(true),
+        archfile("architecture.txt"),        
+        parfile("paramlog.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
-        // Make sure there are no more edges than feasible
-        capEdges();
 
         // Make sure parameter values make sense
-        checkParams();
+        check();
+
+        // Seed the random number generator
+        rnd::rng.seed(seed);
     }
 
     void read(const std::string&);
     void update();
-
     void import(std::ifstream&);
-    void capEdges();
-    void checkParams();
+
+    void write(std::ofstream&) const;
+    void save() const;
+    void check() const;
+
     size_t makeDefaultSeed();
 
     // Ecological parameters    
     size_t rdynamics;
-    double inflow;
-    double outflow;
+    double trenewal;
     double capacity;
     double replenish;
     double hsymmetry;
@@ -87,10 +95,10 @@ struct Param {
     vecUns demesizes;
 
     // Genetic parameters
-    size_t nloci;
-    vecUns nvertices;
-    vecUns nedges;
-    size_t nchrom;
+    mutable size_t nloci;
+    mutable vecUns nvertices;
+    mutable vecUns nedges;
+    mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
@@ -112,7 +120,13 @@ struct Param {
     int  tburnin;
     int  tend;
     int  tsave;
+    bool talkative;
     bool record;
+    bool archsave;
+    bool archload;
+    bool parsave;
+    std::string archfile;
+    std::string parfile;
     size_t seed;
     size_t ntrials;
 

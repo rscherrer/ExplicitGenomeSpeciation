@@ -6,28 +6,25 @@ Genome Individual::genomize(const Param &p) const
     // Generate a bitset of size 2N (diploid genome)
     // For each position, sample based on allele frequency
 
-    Genome sequence(2u * p.nloci); // diploid genome
+    Genome sequence; // diploid genome
 
-    assert(sequence.size() == 2u * p.nloci);
     assert(sequence.count() == 0u);
 
-    if (p.allfreq > 0.5) {
-        size_t nmut = rnd::binomial(sequence.size(), p.allfreq);
-        vecDbl probs = utl::ones(sequence.size());
-        assert(probs.size() == 2u * p.nloci);
-        while (nmut) {
-            const size_t mutant = rnd::sample(probs);
-            sequence.set(mutant);
-            probs[mutant] = 0.0; // no replacement
-            --nmut;
-        }
+    if (p.allfreq == 0.0) return sequence;
+
+    if (p.allfreq < 0.1) {
+
+        mutate(sequence, p);
+
     }
     else {
-        for (size_t i = 0u; i < sequence.size(); ++i)
-            if (rnd::bernoulli(p.allfreq)) sequence.set(i);
-    }
 
-    assert(sequence.size() == 2u * p.nloci);
+        // Use a bernoulli if common
+        auto ismutation = rnd::bernoulli(p.allfreq);
+        for (size_t i = 0u; i < p.nloci * 2.0; ++i)
+            if (ismutation(rnd::rng)) sequence.set(i);
+
+    }
 
     return sequence;
 }
@@ -38,33 +35,48 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
 {
 
     size_t locus = 0u;
-    size_t chrom = 0u;
+    size_t chrom = 0u;        
 
-    double crossover = rnd::exponential(p.recombination);
+    // Haplotypes have equal chances to be transmitted
+    auto gethaplotype = rnd::bernoulli(0.5);
+
+    // Crossovers are sampled from an exponential distribution
+    const double recombrate = p.recombination > 0.0 ? p.recombination : 100.0;
+    auto nextcrossover = rnd::exponential(recombrate);
+
+    double crossover = 1.1; // beyond the end of the genome
+    if (p.recombination > 0.0) crossover = nextcrossover(rnd::rng);
+
     double position = arch.locations[0u];
     double chromend = arch.chromosomes[0u];
 
-    size_t hap = rnd::bernoulli(0.5);
+    size_t hap = gethaplotype(rnd::rng);
 
     while (locus < p.nloci) {
 
         // What is the thing coming up next?
-        vecDbl closest = { crossover, chromend, position };
-        size_t next = utl::argmin(closest);
+        size_t next = crossover;
+        if (crossover < chromend && crossover < position)
+            next = 0u;
+        else if (chromend < crossover && chromend < position)
+            next = 1u;
+        else
+            next = 2u;
 
         switch (next) {
 
         // Upon crossover point, switch haplotype
         case 0u:
             hap = hap ? 0u : 1u;
-            crossover += rnd::exponential(p.recombination);
+            crossover += nextcrossover(rnd::rng);
             break;
 
         // Upon free recombination point, switch to random chromosome
         case 1u:
-            hap = rnd::random(2u);
+            hap = gethaplotype(rnd::rng);
             ++chrom;
-            chromend = arch.chromosomes[chrom];
+            if (chrom < p.nchrom) chromend = arch.chromosomes[chrom];
+            assert(chrom < p.nchrom);
             break;
 
         // Upon gene, transmit haplotype to the zygote
@@ -74,36 +86,39 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
             if (genome.test(locus + hap * p.nloci))
                 zygote.set(locus + gender * p.nloci);
             ++locus;
-            position = arch.locations[locus];
+            if (locus < p.nloci) position = arch.locations[locus];
             break;
-
         }
     }
 
     assert(locus == p.nloci);
     assert(chrom == p.nchrom - 1u);
-    assert(genome.size() == 2u * p.nloci);
 
 }
 
-void Individual::mutate(Genome &zygote, const Param &p) const
+void Individual::mutate(Genome &seq, const Param &p) const
 {
-    size_t nmut = rnd::poisson(p.mutation * zygote.size());
-    while (nmut) {
-        zygote.flip(rnd::random(zygote.size()));
-        --nmut;
-    }
 
-    // NB: Maybe mutations should be sampled without replacement.
-    // But typically there should be so few that the chances of a locus
-    // being hit twice are negligible.
+    if (p.mutation == 0.0) return;
+    if (p.mutation == 1.0)
+        for (size_t i = 0u; i < 2u * p.nloci; ++i)
+            seq.set(i);
+
+    // Mutations are sampled from a geometric distribution
+    assert(p.mutation > 0.0);
+    auto getnextmutant = rnd::iotagap(p.mutation);
+    getnextmutant.reset(0u);
+    for (;;) {
+        const size_t mut = getnextmutant(rnd::rng);
+        if (mut >= 2.0 * p.nloci) break;
+        seq.flip(mut);
+    }
 }
 
 Genome Individual::fecundate(const Individual &mom, const Individual &dad,
  const Param &p, const GenArch &arch) const
 {
-    Genome zygote(2u * p.nloci); // diploid genome
-    assert(zygote.size() == 2u * p.nloci);
+    Genome zygote; // diploid genome
     assert(zygote.count() == 0u);
 
     mom.recombine(zygote, p, arch);
@@ -135,7 +150,6 @@ void Individual::develop(const Param &p, const GenArch &arch)
         }
 
         assert(expression >= -1.0);
-        assert(expression <= 1.0);
 
         transcriptome[locus] = expression; // record gene expression
 
@@ -172,9 +186,13 @@ void Individual::develop(const Param &p, const GenArch &arch)
         }
     }
 
-    // Add environmental effect for each trait
+    // Add normally distributed environmental effect for each trait
     for (size_t trait = 0u; trait < 3u; ++trait) {
-        const double envnoise = rnd::normal(0.0, p.scaleE[trait]);
+        double envnoise = 0.0;
+        if (p.scaleE[trait] > 0.0) {
+            auto getenvnoise = rnd::normal(0.0, p.scaleE[trait]);
+            envnoise = getenvnoise(rnd::rng);
+        }
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
 
@@ -184,8 +202,9 @@ void Individual::develop(const Param &p, const GenArch &arch)
     neutrait = traitvalues[2u];
 
     // Feeding rates
-    feeding[0u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-    feeding[1u] = p.maxfeed * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+    const double max = p.rdynamics ? 1.0 : p.maxfeed;
+    feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+    feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);
@@ -206,11 +225,13 @@ void Individual::disperse()
 
 void Individual::feed(const vecDbl &food)
 {
-
     fitness = feeding[0u] * food[0u] + feeding[1u] * food[1u];
-    ecotype = feeding[1u] * food[1u] > feeding[0u] * food[0u];
-
     assert(fitness >= 0.0);
+}
+
+void Individual::classify(const double &meanx)
+{
+    ecotype = ecotrait > meanx;
     assert(ecotype == 0u || ecotype == 1u);
 }
 
@@ -256,4 +277,10 @@ void Individual::survive(const bool &x)
         return;
     }
     alive = x;
+}
+
+bool Individual::determinesex() const
+{
+    auto getsex = rnd::bernoulli(0.5);
+    return getsex(rnd::rng);
 }
