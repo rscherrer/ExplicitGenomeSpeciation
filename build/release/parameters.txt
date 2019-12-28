@@ -2,8 +2,8 @@ rdynamics 1
 trenewal 0.01
 capacity 100
 replenish 1
-hsymmetry 0
-ecosel 0.8
+hsymmetry 1
+ecosel 1.6
 dispersal 0.01
 birth 4
 survival 0.8
@@ -16,7 +16,7 @@ nedges 0 0 0
 nchrom 3
 mutation 0.0001
 recombination 3
-allfreq 0.2
+allfreq 0.1
 scaleA 1 1 1 
 scaleD 0 0 0 
 scaleI 0 0 0 
@@ -28,7 +28,7 @@ interactionshape 5
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 2000
+tend 1000
 tsave 100
 record 1
 talkative 1
@@ -37,5 +37,4 @@ archload 0
 parsave 1
 archfile architecture.txt
 parfile paramlog.txt
-seed 1576260468662030479
 ntrials 100
