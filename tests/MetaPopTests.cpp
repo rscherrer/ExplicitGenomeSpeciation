@@ -141,8 +141,8 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
-    BOOST_CHECK(metapop.getSize() > 10u);
-    BOOST_CHECK(metapop.getDemeSize(0u) > 10u);
+    BOOST_CHECK(metapop.getSize() >= 10u);
+    BOOST_CHECK(metapop.getDemeSize(0u) >= 10u);
     BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 

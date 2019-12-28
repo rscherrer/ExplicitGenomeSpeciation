@@ -2,7 +2,7 @@
 
 bool timetosave(const int &t,const Param &p)
 {
-    return (t > 0 && p.record && t % p.tsave == 0u);
+    return p.record && t >= 0 && t % p.tsave == 0;
 }
 
 int simulate(const vecStrings &args)

@@ -83,6 +83,7 @@ public:
     void feed(const vecDbl&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
+    void classify(const double&);
 
     // Getters called from outside
     bool getGender() const

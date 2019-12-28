@@ -167,7 +167,7 @@ void GenArch::write(const vecUns &v, std::ofstream &file, const char &sep) const
 void GenArch::write(const vecEdg &v, std::ofstream &file, const bool &i, const char &sep) const
 {
     for (size_t p = 0u; p < v.size(); ++p)
-        file << i ? v[p].second : v[p].first << sep;
+        file << (i ? v[p].second : v[p].first) << sep;
     file << '\n';
 }
 
