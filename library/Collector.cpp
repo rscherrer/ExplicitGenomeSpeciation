@@ -426,7 +426,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
         genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
         genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
-        genomescan[l].varI *= 2.0;
+        genomescan[l].varI *= -2.0;
         genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
         genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);
         genomescan[l].varI += gcounts[tot][AA] * utl::sqr(gmeans[AA]);
