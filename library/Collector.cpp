@@ -13,15 +13,15 @@ vecStrings Collector::whattosave() const
      "resource00", "resource01", "resource10", "resource11",
 
      "mean00_x", "mean01_x", "mean10_x", "mean11_x", "varP_x", "varG_x",
-     "varA_x", "varD_x", "varI_x", "varN_x", "Pst_x", "Gst_x", "Qst_x", "Cst_x",
+     "varA_x", "varD_x", "varI_x", "varN_x", "varT_x", "Pst_x", "Gst_x", "Qst_x", "Cst_x",
      "Fst_x",
 
      "mean00_y", "mean01_y", "mean10_y", "mean11_y", "varP_y", "varG_y",
-     "varA_y", "varD_y", "varI_y", "varN_y", "Pst_y", "Gst_y", "Qst_y", "Cst_y",
+     "varA_y", "varD_y", "varI_y", "varN_y", "varT_y", "Pst_y", "Gst_y", "Qst_y", "Cst_y",
      "Fst_y",
 
      "mean00_z", "mean01_z", "mean10_z", "mean11_z", "varP_z", "varG_z",
-     "varA_z", "varD_z", "varI_z", "varN_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
+     "varA_z", "varD_z", "varI_z", "varN_z", "varT_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
      "Fst_z",
 
      "EI", "SI", "RI",
@@ -119,6 +119,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     varN = utl::zeros(3u, 3u); // per trait per ecotype
     varD = utl::zeros(3u); // per trait
     varI = utl::zeros(3u); // per trait
+    varT = utl::zeros(3u); // per trait
     Pst = utl::zeros(3u); // per trait
     Gst = utl::zeros(3u); // per trait
     Qst = utl::zeros(3u); // per trait
@@ -198,7 +199,6 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
     // Initialize genome-wide variances in heterozygosity
     vecDbl varS = utl::zeros(3u); // per trait
-    vecDbl varT = utl::zeros(3u); // per trait
 
     // Scan the genome and compute locus-specific variances
     for (size_t l = 0u; l < genomescan.size(); ++l) {
@@ -426,7 +426,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
         genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
         genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
-        genomescan[l].varI *= 2.0;
+        genomescan[l].varI *= -2.0;
         genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
         genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);
         genomescan[l].varI += gcounts[tot][AA] * utl::sqr(gmeans[AA]);
@@ -750,6 +750,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(varD[trait], files[f]); ++f;
         stf::write(varI[trait], files[f]); ++f;
         stf::write(varN[trait][2u], files[f]); ++f;
+        stf::write(varT[trait], files[f]); ++f;
         stf::write(Pst[trait], files[f]); ++f;
         stf::write(Gst[trait], files[f]); ++f;
         stf::write(Qst[trait], files[f]); ++f;

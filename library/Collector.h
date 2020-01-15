@@ -105,6 +105,7 @@ public:
         varN(utl::zeros(3u, 3u)),
         varD(utl::zeros(3u)),
         varI(utl::zeros(3u)),
+        varT(utl::zeros(3u)),
         Pst(utl::zeros(3u)),
         Gst(utl::zeros(3u)),
         Qst(utl::zeros(3u)),
@@ -195,6 +196,7 @@ private:
     Matrix varN; // per trait per ecotype
     vecDbl varD; // per trait
     vecDbl varI; // per trait
+    vecDbl varT; // per trait
 
     vecDbl Pst; // per trait
     vecDbl Gst; // per trait

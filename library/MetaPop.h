@@ -24,9 +24,6 @@ public:
         sexcounts(utl::uzeros(2u, 2u))
     {
 
-        // Test right number of individuals
-        // Test right number of individuals in each habitat
-
     }
 
     ~MetaPop() {}
@@ -77,6 +74,13 @@ public:
         }
         const size_t n = population.size();
         return ssq / n - utl::sqr(sum / n);
+    }
+    double getMeanEcoTrait() const
+    {
+        double mean = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i)
+            mean += population[i].getEcoTrait();
+        return mean / population.size();
     }
     double getMeanEcoTrait(const size_t &h) const // can be removed
     {
