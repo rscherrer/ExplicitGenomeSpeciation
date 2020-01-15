@@ -38,13 +38,13 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_popsize->graph(0)->setName("Deme 0");
 
   // deme 1 population size graph
-  ui->plot_popsize->addGraph(ui->plot_popsize->xAxis2, ui->plot_popsize->yAxis2);
+  ui->plot_popsize->addGraph(ui->plot_popsize->xAxis, ui->plot_popsize->yAxis);
   ui->plot_popsize->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
   ui->plot_popsize->graph(1)->setPen(QPen(Qt::blue));
   ui->plot_popsize->graph(1)->setName("Deme 1");
 
   ui->plot_popsize->yAxis2->setLabel("Deme Size");
-  ui->plot_popsize->yAxis2->setVisible(true);
+  // ui->plot_popsize->yAxis2->setVisible(true);
 
 
   QCPPlotTitle *popsize_title = new QCPPlotTitle(ui->plot_popsize, "Population Size");
@@ -54,12 +54,7 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_popsize->yAxis->setLabel("Size Deme 0");
   ui->plot_popsize->yAxis2->setLabel("Size Deme 1");
 
-  ui->plot_popsize->legend->setVisible(true);
-  QFont legendFont = font();
-  legendFont.setPointSize(7);
-  ui->plot_popsize->legend->setFont(legendFont);
-  ui->plot_popsize->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignRight);
-
+   
 
 
   ui->plot_eco_trait->addGraph();

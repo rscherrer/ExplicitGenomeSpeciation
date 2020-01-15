@@ -21,6 +21,7 @@ QMAKE_CXXFLAGS += -std=c++14
 
 # High warnings levels
 QMAKE_CXXFLAGS += -Wall -Wextra -Wnon-virtual-dtor -pedantic -Werror
+QMAKE_CXXFLAGS_RELEASE += -O3
 
 # Allow debug and release mode
 CONFIG += debug_and_release
