@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsOneIfEcotypesAreSeparated)
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-    metapop.resetEcoTraits(0u, 1.0, pars); // only trait 1 in habitat 1
+    metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
     collector.analyze(metapop, pars);

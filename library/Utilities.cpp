@@ -231,6 +231,7 @@ void stf::write(const double &x, std::shared_ptr<std::ofstream> &out)
 
 void stf::write(const vecDbl &v, std::shared_ptr<std::ofstream> &out)
 {
-    if (v.size() > 0.0)
-        for (auto x : v) stf::write(x, out);
+    if (v.size() > 0u)
+        for (auto x : v)
+            stf::write(x, out);
 }

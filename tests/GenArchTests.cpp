@@ -99,3 +99,29 @@ BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
     BOOST_CHECK_EQUAL(arch.getSumWeights(1u), 0.0);
     BOOST_CHECK_EQUAL(arch.getSumWeights(2u), 0.0);
 }
+
+
+// Test making a genetic architecture, saving it, then making another one by
+// reading the one we saved and check that they are identical
+
+BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
+{
+    std::clog << "Testing architecture saving and loading...\n";
+    Param pars;
+    pars.archsave = true;
+    pars.archload = false;
+    GenArch archsaved = GenArch(pars);
+    pars.archsave = false;
+    pars.archload = true;
+    GenArch archloaded = GenArch(pars);
+    archloaded.load(pars);
+
+    const double sumeff1 = archsaved.getSumEffects();
+    const double sumeff2 = archloaded.getSumEffects();
+    const double sumwgt1 = archsaved.getSumWeights(0u);
+    const double sumwgt2 = archloaded.getSumWeights(0u);
+
+    BOOST_CHECK_EQUAL(utl::round(sumeff1, 4u), utl::round(sumeff2, 4u));
+    BOOST_CHECK_EQUAL(utl::round(sumwgt1, 4u), utl::round(sumwgt2, 4u));
+
+}
