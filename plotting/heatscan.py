@@ -1,27 +1,48 @@
 #!/usr/bin/python3
 
-import matplotlib.pyplot as plt
-import numpy as np
-import sys
-
 # Plots a heatmap of a genome scan across loci through time
 # Fst through time as a default
 # Provide optional custom data file name as a command line argument
 
-filename = "genome_Fst.dat"
+# Arguments
+# -d: directory
+# -f: data file name
+
+import matplotlib.pyplot as plt
+import numpy as np
+import sys
+
+# Default parameters
+directory = "."
+datafilename = "genome_Fst.dat"
 
 # Read in arguments if any
 if len(sys.argv) > 1:
-	filename = sys.argv[1]
+
+	args = sys.argv[1:]
+
+	# Check even number of arguments after the name of the script
+	if len(args) % 2 != 0:
+		raise Exception("Wrong number of arguments")
+
+	if "-d" in args:
+		directory = args[args.index("-d") + 1]
+
+	if "-f" in args:
+		datafilename = args[args.index("-f") + 1]
+
+# Prepare file names
+timefilename = directory + "/time.dat"
+datafilename = directory + "/" + datafilename
 
 # Read time
-with open("time.dat", "rb") as binary_file:
-    time = binary_file.read()
+with open(timefilename, "rb") as timefile:
+    time = timefile.read()
 time = np.frombuffer(time, np.float64)
 time = [int(i) for i in time]
 
 # Read the data
-with open(filename, "rb") as datafile:
+with open(datafilename, "rb") as datafile:
 	data = datafile.read()
 data = np.frombuffer(data, np.float64)
 

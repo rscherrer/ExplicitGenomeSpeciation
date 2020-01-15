@@ -5,6 +5,11 @@
 # Provide an optional data file to plot preceded by -f
 # Provide an optional timestep preceded by -t
 
+# Arguments
+# -d: directory
+# -f: data file name
+# -t: time point
+
 import numpy as np
 from matplotlib import pyplot
 from itertools import compress
@@ -13,8 +18,9 @@ import re
 import sys
 
 # Default arguments
+directory = "."
+datafilename = "genome_Fst.dat"
 timepoint = -1
-filename = "genome_Fst.dat"
 
 # Read in arguments if any
 if len(sys.argv) > 1:
@@ -25,14 +31,21 @@ if len(sys.argv) > 1:
 	if len(args) % 2 != 0:
 		raise Exception("Wrong number of arguments")
 
+	if "-d" in args:
+		directory = args[args.index("-d") + 1]
+
 	if "-f" in args:
-		filename = args[args.index("-f") + 1]
+		datafilename = args[args.index("-f") + 1]
 	
 	if "-t" in args:
 		timepoint = int(args[args.index("-t") + 1])
 
+# Prepare file names
+timefilename = directory + "/time.dat"
+datafilename = directory + "/" + datafilename
+
 # Read time
-with open("time.dat", "rb") as timefile:
+with open(timefilename, "rb") as timefile:
     time = timefile.read()
 time = np.frombuffer(time, np.float64)
 time = [int(i) for i in time]
@@ -47,12 +60,9 @@ if timepoint not in time:
 t = time.index(timepoint)
 
 # Read the data
-with open(filename, "rb") as datafile:
+with open(datafilename, "rb") as datafile:
 	data = datafile.read()
 data = np.frombuffer(data, np.float64)
-
-# I am so stupid
-# The number of genes is the number of values divided by the number of time points!
 
 if len(data) % len(time) != 0:
 	raise Exception("Wrong number of values in the data file.")

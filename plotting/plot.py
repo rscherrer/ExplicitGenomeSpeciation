@@ -7,33 +7,49 @@
 # Example use: to plot ecological, reproductive and spatial isolation on the same plot, use
 # ./plot.py EI.dat RI.dat SI.dat
 
+# Arguments
+# -d: directory (should come first)
+# -f: data file names
+
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
+# Default arguments
+directory = "."
+datafilenames = ["EI.dat"]
+
+# Read in arguments
+if len(sys.argv) > 1:
+
+	args = sys.argv[1:]
+
+	if "-d" in args:
+		directory = args[args.index("-d") + 1]
+
+	if "-f" in args:
+		fidx = args.index("-f")
+		datafilenames = args[(fidx + 1):len(args)]
+
+# Prepare file names
+timefilename = directory + "/time.dat"
+datafilenames = [directory + "/" + fname for fname in datafilenames]
+
 # Read time points
-with open("time.dat", "rb") as binary_file:
-    time = binary_file.read()
+with open(timefilename, "rb") as timefile:
+    time = timefile.read()
 time = np.frombuffer(time, np.float64)
 
-# Read provided arguments
-filenames = sys.argv
-filenames.pop(0)
-
-# If no argument provided
-if len(filenames) == 0:
-	filenames = ["EI.dat"]
-
 # Loop through program arguments
-for f in filenames:
+for fname in datafilenames:
 
 	# Read data from file
-	with open(f, "rb") as binary_file:
-		y = binary_file.read()
-	y = np.frombuffer(y, np.float64)
+	with open(fname, "rb") as datafile:
+		data = datafile.read()
+	data = np.frombuffer(data, np.float64)
 
 	# Add to plot
-	plt.plot(time, y)
+	plt.plot(time, data)
 
 # Display
 plt.show()
