@@ -145,6 +145,18 @@ public:
     {
         return population[i].getNeutral();
     }
+    double getEcoMidparent(const size_t &i) const
+    {
+        return population[i].getEcoMidparent();
+    }
+    double getMatMidparent(const size_t &i) const
+    {
+        return population[i].getMatMidparent();
+    }
+    double getNeuMidparent(const size_t &i) const
+    {
+        return population[i].getNeuMidparent();
+    }
 
     // Resetters used in tests
     void resetEcoTraits(const double &x, const Param &p)

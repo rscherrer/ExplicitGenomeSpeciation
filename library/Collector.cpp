@@ -34,7 +34,7 @@ vecStrings Collector::whattosave() const
      "network_avgj",
 
      "population_ecotype", "population_habitat", "population_x", "population_y",
-     "population_z"
+     "population_z", "population_xmidparent", "population_ymidparent", "population_zmidparent"
 
      };
 }
@@ -817,6 +817,9 @@ void Collector::print(const size_t &t, const MetaPop &m)
         stf::write(m.getEcoTrait(i), files[f + off]); ++off;
         stf::write(m.getMatePref(i), files[f + off]); ++off;
         stf::write(m.getNeutral(i), files[f + off]); ++off;
+        stf::write(m.getEcoMidparent(i), files[f + off]); ++off;
+        stf::write(m.getMatMidparent(i), files[f + off]); ++off;
+        stf::write(m.getNeuMidparent(i), files[f + off]); ++off;
     }
 
     assert(f + off == files.size()); // should be done with all files
