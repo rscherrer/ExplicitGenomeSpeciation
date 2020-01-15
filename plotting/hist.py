@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
-# Use to check random stuff
-
 # Plot a histogram of trait values between ecotypes in the last generation
 # If called without arguments, will plot the distribution in ecological trait values at the last generation
-# Provide an optional data file to plot preceded by -f
-# Provide an optional timestep preceded by -t
+
+# Arguments
+# -d: directory
+# -f: data file name
+# -t: timepoint
 
 import numpy as np
 from matplotlib import pyplot
@@ -13,8 +14,9 @@ from itertools import compress
 import sys
 
 # Default arguments
+directory = "."
 timepoint = -1
-filename = "population_x.dat"
+datafilename = "population_x.dat"
 
 # Read in arguments if any
 if len(sys.argv) > 1:
@@ -25,14 +27,24 @@ if len(sys.argv) > 1:
 	if len(args) % 2 != 0:
 		raise Exception("Wrong number of arguments")
 
+	if "-d" in args:
+		directory = args[args.index("-d") + 1]
+
 	if "-f" in args:
-		filename = args[args.index("-f") + 1]
+		datafilename = args[args.index("-f") + 1]
 	
 	if "-t" in args:
 		timepoint = int(args[args.index("-t") + 1])
 
+# Prepare file names
+timefilename = directory + "/time.dat"
+datafilename = directory + "/" + datafilename
+countfilenames = ["count00.dat", "count01.dat", "count10.dat", "count11.dat"]
+countfilenames = [directory + "/" + fname for fname in countfilenames]
+ecofilename = directory + "/population_ecotype.dat"
+
 # Read time
-with open("time.dat", "rb") as timefile:
+with open(timefilename, "rb") as timefile:
     time = timefile.read()
 time = np.frombuffer(time, np.float64)
 time = [int(i) for i in time]
@@ -47,10 +59,9 @@ if timepoint not in time:
 t = time.index(timepoint)
 
 # Read counts
-countfiles = ["count00.dat", "count01.dat", "count10.dat", "count11.dat"]
 counts = np.zeros((len(time), 4))
-for f in range(len(countfiles)):
-	with open(countfiles[f], "rb") as countfile:
+for f in range(len(countfilenames)):
+	with open(countfilenames[f], "rb") as countfile:
 		n = countfile.read()
 	counts[:, f] = np.frombuffer(n, np.float64)
 
@@ -66,13 +77,13 @@ start = sum(popsizes[0:t])
 end = start + n - 1
 
 # Read the data to plot
-with open(filename, "rb") as datafile:
+with open(datafilename, "rb") as datafile:
     data = datafile.read()
 data = np.frombuffer(data, np.float64)
 data = data[start:(end + 1)]
 
 # Read the ecotype labels of the individuals
-with open("population_ecotype.dat", "rb") as ecofile:
+with open(ecofilename, "rb") as ecofile:
     eco = ecofile.read()
 eco = np.frombuffer(eco, np.float64)
 eco = list(map(bool, eco))
