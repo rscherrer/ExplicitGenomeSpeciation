@@ -115,12 +115,12 @@ BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
     GenArch archloaded = GenArch(pars);
     archloaded.load(pars);
 
-    const double sumeff1 = archsaved.getSumEffects();
-    const double sumeff2 = archloaded.getSumEffects();
-    const double sumwgt1 = archsaved.getSumWeights(0u);
-    const double sumwgt2 = archloaded.getSumWeights(0u);
+    const double ssqeff1 = archsaved.getSsqEffects();
+    const double ssqeff2 = archloaded.getSsqEffects();
+    const double ssqwgt1 = archsaved.getSsqWeights(0u);
+    const double ssqwgt2 = archloaded.getSsqWeights(0u);
 
-    BOOST_CHECK_EQUAL(utl::round(sumeff1, 4u), utl::round(sumeff2, 4u));
-    BOOST_CHECK_EQUAL(utl::round(sumwgt1, 4u), utl::round(sumwgt2, 4u));
+    BOOST_CHECK_EQUAL(utl::round(ssqeff1, 4u), utl::round(ssqeff2, 4u));
+    BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));
 
 }
