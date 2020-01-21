@@ -96,6 +96,21 @@ public:
             sum += networks[trait].weights[edge];
         return sum;
     }
+    double getSsqEffects() const
+    {
+        double ssq = 0.0;
+        for (auto x : effects) ssq += x * x;
+        return ssq;
+    }
+    double getSsqWeights(const size_t &trait) const
+    {
+        double ssq = 0.0;
+        for (size_t edge = 0u; edge < networks[trait].weights.size(); ++edge) {
+            const double x = networks[trait].weights[edge];
+            ssq += x * x;
+        }
+        return ssq;
+    }
 
     void load(const Param&); // Load architecture from a file
 

@@ -26,6 +26,9 @@ public:
         ecotrait(0.0),
         matepref(0.0),
         neutrait(0.0),
+        ecomidparent(0.0),
+        matmidparent(0.0),
+        neumidparent(0.0),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -56,6 +59,9 @@ public:
         ecotrait(0.0),
         matepref(0.0),
         neutrait(0.0),
+        ecomidparent((mom.getEcoTrait() + dad.getEcoTrait()) / 2.0),
+        matmidparent((mom.getMatePref() + dad.getMatePref()) / 2.0),
+        neumidparent((mom.getNeutral() + dad.getNeutral()) / 2.0),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -109,6 +115,18 @@ public:
     double getNeutral() const
     {
         return neutrait;
+    }
+    double getEcoMidparent() const
+    {
+        return ecomidparent;
+    }
+    double getMatMidparent() const
+    {
+        return matmidparent;
+    }
+    double getNeuMidparent() const
+    {
+        return neumidparent;
     }
     double getFitness() const
     {
@@ -198,6 +216,9 @@ private:
     double ecotrait;
     double matepref;
     double neutrait;
+    double ecomidparent;
+    double matmidparent;
+    double neumidparent;
     double fitness;
     vecDbl feeding;
     size_t ecotype;
