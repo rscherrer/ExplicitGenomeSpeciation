@@ -1,7 +1,0 @@
-#SBATCH --time=00:05:00
-#SBATCH --mem=4Gb
-#SBATCH --partition=regular
-
--mutation 0.1 0.01
--nvertices 50_50_50 100_50_50
-
