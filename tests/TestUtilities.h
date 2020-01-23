@@ -9,14 +9,14 @@
 namespace tst
 {
 
-    void makeValidParamFile();
-    void makeValidParamFile2();
-    void makeInvalidParamName();
-    void makeInvalidParamValue();
-    void makeInvalidParamValue2();
-    void makeParamFileWithArchitecture();
-    void makeParamFileWithMissingArchitecture();
-    vecDbl readfile(const std::string&);
+  void makeValidParamFile();
+  void makeValidParamFile2();
+  void makeInvalidParamName();
+  void makeInvalidParamValue();
+  void makeInvalidParamValue2();
+  void makeParamFileWithArchitecture();
+  void makeParamFileWithMissingArchitecture();
+  vecDbl readfile(const std::string&);
 
 }
 

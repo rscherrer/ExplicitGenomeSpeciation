@@ -157,10 +157,25 @@ public:
         return RI;
     }
 
+
     double getVarP(const size_t &t) const // used in test
     {
         return varP[t][2u];
     }
+
+    // these getters are used in plotting
+    // they are not optimized - they are not called that often.
+    std::vector<double> get_Fst() const;
+    std::vector<double> get_Gst() const;
+    std::vector<double> get_eco_trait(const MetaPop &m) const;
+    std::vector<double> get_eco_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
+    std::vector<double> get_sex_trait(const MetaPop &m) const;
+    std::vector<double> get_sex_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
+    std::vector<double> get_neu_trait(const MetaPop &m) const;
+    std::vector<double> get_neu_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
 
 private:
 
