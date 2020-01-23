@@ -1,4 +1,4 @@
-# ExplicitGenomeSpeciation
+# ExplicitGenomeSpeciation GUI version
 
 Branch|[![Travis CI logo](ci_setup/pics/TravisCI.png)](https://travis-ci.org)|[![Codecov logo](ci_setup/pics/Codecov.png)](https://www.codecov.io)
 ---|---|---
@@ -9,6 +9,18 @@ thijs|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.
 richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=richel)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=richel)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/richel)
 
 This repository contains the source code of the simulation program ExplicitGenomeSpeciation.
+
+# GUI
+
+GUI Tabs:
+
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-25_combined.png)
+
+Extended coloration of histograms (Update 29-10-2019):
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-29_11.37.21.png)
+
+
+
 
 # Folder structure
 

@@ -49,7 +49,7 @@ struct Param {
         interactionscale(1.0),
         dominancevar(1.0),
         tburnin(0),
-        tend(10),
+        tend(100),
         tsave(10),
         talkative(true),
         record(true),
