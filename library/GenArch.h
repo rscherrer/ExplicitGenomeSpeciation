@@ -25,23 +25,14 @@ class GenArch {
 
 public:
 
-    GenArch(const Param &pars) :
-        isreset(resetseed(pars.archseed)),
+    GenArch(Param &pars) :
         chromosomes(makeChromosomes(pars)),
         traits(makeEncodedTraits(pars)),
         locations(makeLocations(pars)),
         effects(makeEffects(pars)),
         dominances(makeDominances(pars)),
-        networks(makeNetworks(pars)),
-        archfilenames(whattosave()),
-        archfiles({ })
+        networks(makeNetworks(pars))
     {
-
-        // If we want to use a specific genetic architecture
-        // We can supply a seed just for the architecture
-        // At the end we need to reset the seed back to the original
-
-        rnd::rng.seed(pars.archseed);
 
         assert(utl::sumu(pars.nvertices) == pars.nloci);
         assert(chromosomes.size() == pars.nchrom);
@@ -50,68 +41,11 @@ public:
         assert(dominances.size() == pars.nloci);
         assert(locations.size() == pars.nloci);
         assert(networks.size() == 3u);
-        assert(isreset);
 
         // Save the architecture if necessary
-        if (pars.archsave) {
-
-            archfiles.reserve(archfilenames.size());
-
-            // Open files
-            for (size_t f = 0u; f < archfilenames.size(); ++f) {
-
-                const std::string filename = archfilenames[f] + ".dat";
-                std::shared_ptr<std::ofstream> out(new std::ofstream);
-                out->open(filename.c_str(), std::ios::binary);
-                if (!out->is_open()) {
-                    std::string msg = "Unable to open output file " + filename;
-                    throw std::runtime_error(msg);
-                }
-                archfiles.push_back(out);
-            }
-
-            // Write in files
-            for (size_t c = 0u; c < pars.nchrom; ++c) {
-                stf::write(chromosomes[c], archfiles[0u]);
-            }
-
-            size_t f = 1u; // file id
-
-            size_t off; // offset to write multiple loci to the same file
-
-            for (size_t l = 0u; l < pars.nloci; ++l) {
-
-                off = 0u; // reset the offset
-
-                stf::write(utl::size2dbl(traits[l]), archfiles[f + off]); ++off;
-                stf::write(locations[l], archfiles[f + off]); ++off;
-                stf::write(effects[l], archfiles[f + off]); ++off;
-                stf::write(dominances[l], archfiles[f + off]); ++off;
-
-            }
-
-            f += off; // move on to network files
-
-            for (size_t t = 0u; t < 3u; ++t) {
-                for (size_t e = 0u; e < getNetworkSize(t); ++e) {
-
-                    stf::write(utl::size2dbl(networks[t].edges[e].first), archfiles[f + off]); ++off;
-                    stf::write(utl::size2dbl(networks[t].edges[e].second), archfiles[f + off]); ++off;
-                    stf::write(networks[t].weights[e], archfiles[f + off]); ++off;
-
-                }
-            }
-
-            // Close files
-            f = 0u;
-            for (; f < archfiles.size(); ++f) archfiles[f]->close();
-        }
-
-        rnd::rng.seed(pars.seed);
+        if (pars.archsave) save(pars);
 
     }
-
-    bool isreset;
 
     vecDbl chromosomes;     // per chromosome
     vecUns traits;          // per locus
@@ -119,9 +53,6 @@ public:
     vecDbl effects;         // per locus
     vecDbl dominances;      // per locus
     MultiNet networks;      // per trait
-
-    vecStrings archfilenames;
-    vecStreams archfiles;
 
     // Getters called from tests
     size_t getNetworkSize() const
@@ -165,10 +96,26 @@ public:
             sum += networks[trait].weights[edge];
         return sum;
     }
+    double getSsqEffects() const
+    {
+        double ssq = 0.0;
+        for (auto x : effects) ssq += x * x;
+        return ssq;
+    }
+    double getSsqWeights(const size_t &trait) const
+    {
+        double ssq = 0.0;
+        for (size_t edge = 0u; edge < networks[trait].weights.size(); ++edge) {
+            const double x = networks[trait].weights[edge];
+            ssq += x * x;
+        }
+        return ssq;
+    }
+
+    void load(const Param&); // Load architecture from a file
 
 private:
 
-    bool resetseed(const size_t&) const;
     MultiNet makeNetworks(const Param&) const;
     vecDbl makeChromosomes(const Param&) const;
     vecUns makeEncodedTraits(const Param&) const;
@@ -176,7 +123,14 @@ private:
     vecDbl makeEffects(const Param&) const;
     vecDbl makeDominances(const Param&) const;
 
-    vecStrings whattosave() const;
+    void save(Param&) const;
+    void write(const vecDbl&, std::ofstream&, const char& = ' ') const;
+    void write(const vecUns&, std::ofstream&, const char& = ' ') const;
+    void write(const vecEdg&, std::ofstream&, const bool&, const char& = ' ') const;
+
+    void read(vecDbl&, const size_t&, std::ifstream&);
+    void read(vecUns&, const size_t&, std::ifstream&);
+    void read(vecEdg&, const size_t&, const bool&, std::ifstream&);
 
 };
 

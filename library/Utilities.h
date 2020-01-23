@@ -44,4 +44,5 @@ namespace stf // save to file
     void write(const vecDbl&, std::shared_ptr<std::ofstream>&);
 }
 
+
 #endif

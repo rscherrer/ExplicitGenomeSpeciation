@@ -28,10 +28,20 @@ public:
         edges(makeEdges(pars)),
         weights(makeWeights(pars))
     {
-        assert(map.size() == pars.nedges[character]);
+
         assert(loci.size() == pars.nvertices[character]);
-        assert(edges.size() == pars.nedges[character]);
-        assert(weights.size() == pars.nedges[character]);
+
+        const size_t realnedges = map.size();
+
+        assert(map.size() == realnedges);
+        assert(edges.size() == realnedges);
+        assert(weights.size() == realnedges);
+
+        assert(realnedges <= pars.nedges[character]);
+
+        if (realnedges < pars.nedges[character]) {
+            throw std::runtime_error("The requested number of edges was not realized for trait " + character);
+        }
     }
 
     size_t trait;

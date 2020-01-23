@@ -141,8 +141,8 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);
     metapop.cycle(pars, arch);
-    BOOST_CHECK(metapop.getSize() > 10u);
-    BOOST_CHECK(metapop.getDemeSize(0u) > 10u);
+    BOOST_CHECK(metapop.getSize() >= 10u);
+    BOOST_CHECK(metapop.getDemeSize(0u) >= 10u);
     BOOST_CHECK_EQUAL(metapop.getDemeSize(1u), 0u);
 }
 
@@ -152,10 +152,10 @@ BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
 {
     std::clog << "Testing that newborns do not die...\n";
     Param pars;
-    pars.birth = 4.0; // relatively high birth rate
+    pars.birth = 10.0; // relatively high birth rate
     pars.maxfeed = 0.1;
     pars.capacity = 10.0;
-    pars.demesizes = { 100u, 0u };
+    pars.demesizes = { 10u, 0u };
     pars.survival = 0.0; // all adults should die
     GenArch arch = GenArch(pars);
     MetaPop metapop = MetaPop(pars, arch);

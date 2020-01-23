@@ -8,9 +8,9 @@
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
-#include <boost/dynamic_bitset.hpp>
+#include <bitset>
 
-typedef boost::dynamic_bitset<> Genome;
+typedef std::bitset<10000> Genome;
 
 class Individual {
 
@@ -26,6 +26,9 @@ public:
         ecotrait(0.0),
         matepref(0.0),
         neutrait(0.0),
+        ecomidparent(0.0),
+        matmidparent(0.0),
+        neumidparent(0.0),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -36,7 +39,6 @@ public:
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -45,7 +47,6 @@ public:
         assert(feeding[0u] <= 1.0);
         assert(feeding[1u] <= 1.0);
     }
-
 
     // Newborn
     Individual(const Param &pars, const GenArch &arch, const Individual &mom,
@@ -58,6 +59,9 @@ public:
         ecotrait(0.0),
         matepref(0.0),
         neutrait(0.0),
+        ecomidparent((mom.getEcoTrait() + dad.getEcoTrait()) / 2.0),
+        matmidparent((mom.getMatePref() + dad.getMatePref()) / 2.0),
+        neumidparent((mom.getNeutral() + dad.getNeutral()) / 2.0),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -68,7 +72,6 @@ public:
     {
         develop(pars, arch);
 
-        assert(genome.size() == 2u * pars.nloci);
         assert(transcriptome.size() == pars.nloci);
         assert(traitvalues.size() == 3u);
         assert(fitness >= 0.0);
@@ -86,6 +89,7 @@ public:
     void feed(const vecDbl&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
+    void classify(const double&);
 
     // Getters called from outside
     bool getGender() const
@@ -111,6 +115,18 @@ public:
     double getNeutral() const
     {
         return neutrait;
+    }
+    double getEcoMidparent() const
+    {
+        return ecomidparent;
+    }
+    double getMatMidparent() const
+    {
+        return matmidparent;
+    }
+    double getNeuMidparent() const
+    {
+        return neumidparent;
     }
     double getFitness() const
     {
@@ -200,6 +216,9 @@ private:
     double ecotrait;
     double matepref;
     double neutrait;
+    double ecomidparent;
+    double matmidparent;
+    double neumidparent;
     double fitness;
     vecDbl feeding;
     size_t ecotype;

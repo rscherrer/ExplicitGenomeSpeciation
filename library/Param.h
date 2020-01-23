@@ -32,7 +32,7 @@ struct Param {
         demesizes({ 100u, 0u }),
         nloci(90u), // cannot be provided
         nvertices({ 30u, 30u, 30u }),
-        nedges({ 0u, 0u, 0u }),
+        nedges({ 30u, 0u, 0u }),
         nchrom(3u),
         mutation(1.0E-3),
         recombination(3.0),
@@ -51,17 +51,19 @@ struct Param {
         tburnin(0),
         tend(10),
         tsave(10),
+        talkative(true),
         record(true),
         archsave(false),
+        archload(false),
+        parsave(true),
+        archfile("architecture.txt"),        
+        parfile("paramlog.txt"),
         seed(makeDefaultSeed()),
-        archseed(makeDefaultSeed()),
         ntrials(100u)
     {
-        // Make sure there are no more edges than feasible
-        capEdges();
 
         // Make sure parameter values make sense
-        checkParams();
+        check();
 
         // Seed the random number generator
         rnd::rng.seed(seed);
@@ -69,10 +71,12 @@ struct Param {
 
     void read(const std::string&);
     void update();
-
     void import(std::ifstream&);
-    void capEdges();
-    void checkParams();
+
+    void write(std::ofstream&) const;
+    void save() const;
+    void check() const;
+
     size_t makeDefaultSeed();
 
     // Ecological parameters    
@@ -91,10 +95,10 @@ struct Param {
     vecUns demesizes;
 
     // Genetic parameters
-    size_t nloci;
-    vecUns nvertices;
-    vecUns nedges;
-    size_t nchrom;
+    mutable size_t nloci;
+    mutable vecUns nvertices;
+    mutable vecUns nedges;
+    mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
@@ -116,10 +120,14 @@ struct Param {
     int  tburnin;
     int  tend;
     int  tsave;
+    bool talkative;
     bool record;
     bool archsave;
+    bool archload;
+    bool parsave;
+    std::string archfile;
+    std::string parfile;
     size_t seed;
-    size_t archseed;
     size_t ntrials;
 
 };

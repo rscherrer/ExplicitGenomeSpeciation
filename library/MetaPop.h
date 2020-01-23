@@ -24,9 +24,6 @@ public:
         sexcounts(utl::uzeros(2u, 2u))
     {
 
-        // Test right number of individuals
-        // Test right number of individuals in each habitat
-
     }
 
     ~MetaPop() {}
@@ -77,6 +74,13 @@ public:
         }
         const size_t n = population.size();
         return ssq / n - utl::sqr(sum / n);
+    }
+    double getMeanEcoTrait() const
+    {
+        double mean = 0.0;
+        for (size_t i = 0u; i < population.size(); ++i)
+            mean += population[i].getEcoTrait();
+        return mean / population.size();
     }
     double getMeanEcoTrait(const size_t &h) const // can be removed
     {
@@ -140,6 +144,18 @@ public:
     double getNeutral(const size_t &i) const
     {
         return population[i].getNeutral();
+    }
+    double getEcoMidparent(const size_t &i) const
+    {
+        return population[i].getEcoMidparent();
+    }
+    double getMatMidparent(const size_t &i) const
+    {
+        return population[i].getMatMidparent();
+    }
+    double getNeuMidparent(const size_t &i) const
+    {
+        return population[i].getNeuMidparent();
     }
 
     // Resetters used in tests

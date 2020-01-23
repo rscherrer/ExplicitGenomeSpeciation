@@ -100,25 +100,27 @@ BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
     BOOST_CHECK_EQUAL(arch.getSumWeights(2u), 0.0);
 }
 
-// Two simulations with the same architecture seed should have the exact
-// same genetic architecture
+// Test making a genetic architecture, saving it, then making another one by
+// reading the one we saved and check that they are identical
 
-BOOST_AUTO_TEST_CASE(SeedGeneticArchitecture)
+BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
 {
-    std::clog << "Testing that genetic architecture can be reused...\n";
+    std::clog << "Testing architecture saving and loading...\n";
     Param pars;
-    rnd::rng.seed(pars.seed);
-    pars.archseed = 42u;
-    GenArch arch1 = GenArch(pars);
-    GenArch arch2 = GenArch(pars);
-    BOOST_CHECK_EQUAL(arch1.getSumEffects(), arch2.getSumEffects());
-    BOOST_CHECK_EQUAL(arch1.getSumDominances(), arch2.getSumDominances());
+    pars.archsave = true;
+    pars.archload = false;
+    GenArch archsaved = GenArch(pars);
+    pars.archsave = false;
+    pars.archload = true;
+    GenArch archloaded = GenArch(pars);
+    archloaded.load(pars);
 
-    // Control that different seeds give different architectures
-    pars.archseed = 42u;
-    GenArch arch3 = GenArch(pars);
-    pars.archseed = 43u;
-    GenArch arch4 = GenArch(pars);
-    BOOST_CHECK(arch3.getSumEffects() != arch4.getSumEffects());
-    BOOST_CHECK(arch3.getSumDominances() != arch4.getSumDominances());
+    const double ssqeff1 = archsaved.getSsqEffects();
+    const double ssqeff2 = archloaded.getSsqEffects();
+    const double ssqwgt1 = archsaved.getSsqWeights(0u);
+    const double ssqwgt2 = archloaded.getSsqWeights(0u);
+
+    BOOST_CHECK_EQUAL(utl::round(ssqeff1, 4u), utl::round(ssqeff2, 4u));
+    BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));
+
 }
