@@ -105,6 +105,8 @@ vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
         }
     }
 
+    std::shuffle(underlying.begin(), underlying.end(), rnd::rng);
+
     assert(underlying.size() == p.nvertices[trait]);
 
     return underlying;
