@@ -1,4 +1,4 @@
-#include "maindialog.h"
+#include "gui/maindialog.h"
 #include "ui_maindialog.h"
 #include "library/Simul.h"
 #include <sstream>

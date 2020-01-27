@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "library/Param.h"
-#include "qcustomplot.h"
+#include "gui/qcustomplot.h"
 
 namespace Ui {
   class MainDialog;
