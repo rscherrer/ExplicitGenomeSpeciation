@@ -28,9 +28,7 @@ CONFIG += debug_and_release
 
 # In release mode, remove asserts
 CONFIG(release, debug|release) {
-
   DEFINES += NDEBUG
-
 }
 
 # Qt
