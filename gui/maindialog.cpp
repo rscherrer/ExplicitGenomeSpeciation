@@ -367,6 +367,7 @@ void MainDialog::setup_spinboxes() {
     ui->box_tend->setValue(temp_pars.tend);
     ui->box_tsave->setValue(temp_pars.tsave);
     ui->box_record->setValue(temp_pars.record);
+    ui->box_datsave->setValue(0); // HARDCODED!!!!
     ui->box_seed->setValue(static_cast<int>(temp_pars.seed));
     ui->box_ntrials->setValue(static_cast<int>(temp_pars.ntrials));
 
@@ -437,6 +438,7 @@ Param MainDialog::createPars()
     pars.tend               = static_cast<int>(ui->box_tend->value());
     pars.tsave              = static_cast<int>(ui->box_tsave->value());
     pars.record             = static_cast<bool>(ui->box_record->value());
+    pars.datsave            = static_cast<bool>(ui->box_datsave->value());
     pars.seed               = static_cast<size_t>(ui->box_seed->value());
     pars.ntrials            = static_cast<size_t>(ui->box_ntrials->value());
 
@@ -521,6 +523,7 @@ Param MainDialog::createPars()
     s_p << "tend: "                 << pars.tend << "\n";
     s_p << "tsave: "                << pars.tsave << "\n";
     s_p << "record: "               << pars.record << "\n";
+    s_p << "datsave: "              << pars.datsave << "\n";
     s_p << "seed: "                 << pars.seed << "\n";
     s_p << "ntrials: "              << pars.ntrials << "\n";
 

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainDialog</string>
+   <string>Explicit Genome Speciation v0.1</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="1">
@@ -31,7 +31,2746 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QCustomPlot" name="plot_neu_trait" native="true"/>
+       <widget class="QCustomPlot" name="plot_neu_trait" native="true">
+        <widget class="QTabWidget" name="tabWidget_2">
+         <property name="geometry">
+          <rect>
+           <x>-670</x>
+           <y>-620</y>
+           <width>250</width>
+           <height>913</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>250</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>General</string>
+          </attribute>
+          <widget class="QLabel" name="rng_seed_label_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>61</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>RNG seed</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="rng_seed_2">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>10</y>
+             <width>94</width>
+             <height>21</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_39">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>74</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Generations</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="num_gen_2">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>30</y>
+             <width>91</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="run_button_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>60</y>
+             <width>101</width>
+             <height>32</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Run</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>60</y>
+             <width>101</width>
+             <height>32</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Stop</string>
+           </property>
+          </widget>
+          <widget class="QPlainTextEdit" name="output_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>100</y>
+             <width>241</width>
+             <height>411</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_5">
+          <attribute name="title">
+           <string>Advanced</string>
+          </attribute>
+          <widget class="QLabel" name="label_40">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>105</y>
+             <width>56</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>replenish</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_41">
+           <property name="geometry">
+            <rect>
+             <x>16</x>
+             <y>870</y>
+             <width>38</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>ntrials</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_nloci_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>384</y>
+             <width>44</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>500</number>
+           </property>
+           <property name="value">
+            <number>90</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_42">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>229</y>
+             <width>29</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>birth</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_sexsel_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>291</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>10.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_43">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>322</y>
+             <width>68</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>matingcost</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_ntrials_2">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>870</y>
+             <width>44</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>200</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_capacity_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>74</y>
+             <width>54</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <double>200.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>100.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_effectscale_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>570</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_dominancevar_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>663</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_44">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>756</y>
+             <width>33</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>tsave</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_allfreq_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>508</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.200000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_45">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>725</y>
+             <width>28</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>tend</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_mutation_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>446</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>4</number>
+           </property>
+           <property name="singleStep">
+            <double>0.001000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.001000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_ecosel_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>167</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.800000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_46">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>353</y>
+             <width>53</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>maxfeed</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_47">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>198</y>
+             <width>55</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>dispersal</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_48">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>663</y>
+             <width>86</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>dominancevar</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_49">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>136</y>
+             <width>68</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>hsymmetry</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_50">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>632</y>
+             <width>97</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>interactionscale</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_51">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>384</y>
+             <width>29</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>nloci</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_52">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>787</y>
+             <width>40</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>record</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_nchrom_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>415</y>
+             <width>36</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>3</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_53">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>601</y>
+             <width>102</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>interactionshape</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_54">
+           <property name="geometry">
+            <rect>
+             <x>16</x>
+             <y>839</y>
+             <width>30</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>seed</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_55">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>74</y>
+             <width>52</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>capacity</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_56">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>260</y>
+             <width>47</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>survival</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_57">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>477</y>
+             <width>87</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>recombination</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_58">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>446</y>
+             <width>54</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>mutation</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_interactionshape_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>601</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>5.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_rdynamics_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>12</y>
+             <width>28</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>1</number>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_birth_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>229</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>4.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_rdynamics_2">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>12</y>
+             <width>63</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>rdynamics</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_effectshape_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>539</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>2.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_59">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>694</y>
+             <width>44</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>tburnin</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_tend_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>725</y>
+             <width>50</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_60">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>291</y>
+             <width>38</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>sexsel</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_61">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>570</y>
+             <width>67</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>effectscale</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_62">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>508</y>
+             <width>38</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>allfreq</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_hsymmetry_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>136</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_maxfeed_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>353</y>
+             <width>79</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>5</number>
+           </property>
+           <property name="singleStep">
+            <double>0.000100000000000</double>
+           </property>
+           <property name="value">
+            <double>0.000400000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_recombination_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>477</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_tsave_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>756</y>
+             <width>36</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_replenish_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>105</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_63">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>415</y>
+             <width>46</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>nchrom</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_record_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>787</y>
+             <width>28</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>1</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_trenewal_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>43</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.001000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.001000000000000</double>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_seed_2">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>839</y>
+             <width>36</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>42</number>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_survival_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>260</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.800000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_interactionscale_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>632</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_dispersal_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>198</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_64">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>43</y>
+             <width>52</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>trenewal</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_65">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>167</y>
+             <width>40</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>ecosel</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_66">
+           <property name="geometry">
+            <rect>
+             <x>12</x>
+             <y>539</y>
+             <width>73</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>effectshape</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="box_matingcost_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>322</y>
+             <width>55</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_tburnin_2">
+           <property name="geometry">
+            <rect>
+             <x>126</x>
+             <y>694</y>
+             <width>36</width>
+             <height>21</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="box_datsave_2">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>810</y>
+             <width>28</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>1</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_67">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>810</y>
+             <width>71</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>save data</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_6">
+          <attribute name="title">
+           <string>Advanced 2</string>
+          </attribute>
+          <widget class="QWidget" name="layoutWidget_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>20</y>
+             <width>67</width>
+             <height>271</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_68">
+              <property name="text">
+               <string>demesizes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_69">
+              <property name="text">
+               <string>nvertices</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_70">
+              <property name="text">
+               <string>nedges</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_71">
+              <property name="text">
+               <string>scaleA</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_72">
+              <property name="text">
+               <string>scaleD</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_73">
+              <property name="text">
+               <string>scaleI</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_74">
+              <property name="text">
+               <string>scaleE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_75">
+              <property name="text">
+               <string>locusE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_76">
+              <property name="text">
+               <string>skews</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_3">
+           <property name="geometry">
+            <rect>
+             <x>60</x>
+             <y>20</y>
+             <width>57</width>
+             <height>271</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QSpinBox" name="box_demesizes_2">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="box_nvertices_3">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="box_nedges_3">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleA_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleD_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleI_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleE_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_locusE_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_skews_3">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_4">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>20</y>
+             <width>57</width>
+             <height>271</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QSpinBox" name="box_demesizes_3">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="box_nvertices_4">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="box_nedges_4">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleA_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleD_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleI_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleE_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_locusE_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_skews_4">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_5">
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>50</y>
+             <width>57</width>
+             <height>240</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QSpinBox" name="box_nvertices_5">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="box_nedges_5">
+              <property name="maximum">
+               <number>500</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleA_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleD_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleI_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_scaleE_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_locusE_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="box_skews_5">
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="main_area_2" native="true">
+         <property name="geometry">
+          <rect>
+           <x>-410</x>
+           <y>-614</y>
+           <width>783</width>
+           <height>907</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="3" column="0">
+           <widget class="QCustomPlot" name="plot_popsize_2" native="true"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCustomPlot" name="plot_sex_trait_2" native="true"/>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCustomPlot" name="plot_2" native="true">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCustomPlot" name="plot_neu_trait_2" native="true">
+            <widget class="QTabWidget" name="tabWidget_3">
+             <property name="geometry">
+              <rect>
+               <x>-670</x>
+               <y>-620</y>
+               <width>250</width>
+               <height>913</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>250</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="tab_7">
+              <attribute name="title">
+               <string>General</string>
+              </attribute>
+              <widget class="QLabel" name="rng_seed_label_3">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>10</y>
+                 <width>61</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>RNG seed</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="rng_seed_3">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>10</y>
+                 <width>94</width>
+                 <height>21</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_77">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>30</y>
+                 <width>74</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Generations</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="num_gen_3">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>30</y>
+                 <width>91</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>9999</number>
+               </property>
+               <property name="singleStep">
+                <number>10</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="run_button_3">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>60</y>
+                 <width>101</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Run</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>60</y>
+                 <width>101</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Stop</string>
+               </property>
+              </widget>
+              <widget class="QPlainTextEdit" name="output_3">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>100</y>
+                 <width>241</width>
+                 <height>411</height>
+                </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="tab_8">
+              <attribute name="title">
+               <string>Advanced</string>
+              </attribute>
+              <widget class="QLabel" name="label_78">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>105</y>
+                 <width>56</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>replenish</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_79">
+               <property name="geometry">
+                <rect>
+                 <x>16</x>
+                 <y>870</y>
+                 <width>38</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>ntrials</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_nloci_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>384</y>
+                 <width>44</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>500</number>
+               </property>
+               <property name="value">
+                <number>90</number>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_80">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>229</y>
+                 <width>29</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>birth</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_sexsel_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>291</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>10.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_81">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>322</y>
+                 <width>68</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>matingcost</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_ntrials_3">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>870</y>
+                 <width>44</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="maximum">
+                <number>200</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_capacity_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>74</y>
+                 <width>54</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="decimals">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <double>200.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_effectscale_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>570</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_dominancevar_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>663</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_82">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>756</y>
+                 <width>33</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>tsave</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_allfreq_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>508</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.200000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_83">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>725</y>
+                 <width>28</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>tend</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_mutation_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>446</y>
+                 <width>71</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="decimals">
+                <number>4</number>
+               </property>
+               <property name="singleStep">
+                <double>0.001000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.001000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_ecosel_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>167</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.800000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_84">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>353</y>
+                 <width>53</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>maxfeed</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_85">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>198</y>
+                 <width>55</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>dispersal</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_86">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>663</y>
+                 <width>86</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>dominancevar</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_87">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>136</y>
+                 <width>68</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>hsymmetry</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_88">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>632</y>
+                 <width>97</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>interactionscale</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_89">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>384</y>
+                 <width>29</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>nloci</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_90">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>787</y>
+                 <width>40</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>record</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_nchrom_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>415</y>
+                 <width>36</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="value">
+                <number>3</number>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_91">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>601</y>
+                 <width>102</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>interactionshape</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_92">
+               <property name="geometry">
+                <rect>
+                 <x>16</x>
+                 <y>839</y>
+                 <width>30</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>seed</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_93">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>74</y>
+                 <width>52</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>capacity</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_94">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>260</y>
+                 <width>47</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>survival</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_95">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>477</y>
+                 <width>87</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>recombination</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_96">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>446</y>
+                 <width>54</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>mutation</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_interactionshape_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>601</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>5.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_rdynamics_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>12</y>
+                 <width>28</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="maximum">
+                <number>1</number>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_birth_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>229</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>4.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_rdynamics_3">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>12</y>
+                 <width>63</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>rdynamics</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_effectshape_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>539</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>2.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_97">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>694</y>
+                 <width>44</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>tburnin</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_tend_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>725</y>
+                 <width>50</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_98">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>291</y>
+                 <width>38</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>sexsel</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_99">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>570</y>
+                 <width>67</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>effectscale</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_100">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>508</y>
+                 <width>38</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>allfreq</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_hsymmetry_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>136</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_maxfeed_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>353</y>
+                 <width>79</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="decimals">
+                <number>5</number>
+               </property>
+               <property name="singleStep">
+                <double>0.000100000000000</double>
+               </property>
+               <property name="value">
+                <double>0.000400000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_recombination_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>477</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_tsave_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>756</y>
+                 <width>36</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_replenish_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>105</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_101">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>415</y>
+                 <width>46</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>nchrom</string>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_record_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>787</y>
+                 <width>28</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="maximum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_trenewal_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>43</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="decimals">
+                <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.001000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.001000000000000</double>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_seed_3">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>839</y>
+                 <width>36</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="value">
+                <number>42</number>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_survival_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>260</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.800000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_interactionscale_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>632</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_dispersal_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>198</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_102">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>43</y>
+                 <width>52</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>trenewal</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_103">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>167</y>
+                 <width>40</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>ecosel</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_104">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>539</y>
+                 <width>73</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>effectshape</string>
+               </property>
+              </widget>
+              <widget class="QDoubleSpinBox" name="box_matingcost_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>322</y>
+                 <width>55</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_tburnin_3">
+               <property name="geometry">
+                <rect>
+                 <x>126</x>
+                 <y>694</y>
+                 <width>36</width>
+                 <height>21</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QSpinBox" name="box_datsave_3">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>810</y>
+                 <width>28</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="maximum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_105">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>810</y>
+                 <width>71</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>save data</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="tab_9">
+              <attribute name="title">
+               <string>Advanced 2</string>
+              </attribute>
+              <widget class="QWidget" name="layoutWidget_6">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>20</y>
+                 <width>67</width>
+                 <height>271</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="QLabel" name="label_106">
+                  <property name="text">
+                   <string>demesizes</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_107">
+                  <property name="text">
+                   <string>nvertices</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_108">
+                  <property name="text">
+                   <string>nedges</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_109">
+                  <property name="text">
+                   <string>scaleA</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_110">
+                  <property name="text">
+                   <string>scaleD</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_111">
+                  <property name="text">
+                   <string>scaleI</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_112">
+                  <property name="text">
+                   <string>scaleE</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_113">
+                  <property name="text">
+                   <string>locusE</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_114">
+                  <property name="text">
+                   <string>skews</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="layoutWidget_7">
+               <property name="geometry">
+                <rect>
+                 <x>60</x>
+                 <y>20</y>
+                 <width>57</width>
+                 <height>271</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_10">
+                <item>
+                 <widget class="QSpinBox" name="box_demesizes_4">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>100</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="box_nvertices_6">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>30</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="box_nedges_6">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleA_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleD_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleI_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleE_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_locusE_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_skews_6">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="layoutWidget_8">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>20</y>
+                 <width>57</width>
+                 <height>271</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QSpinBox" name="box_demesizes_5">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="box_nvertices_7">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>30</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="box_nedges_7">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleA_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleD_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleI_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleE_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_locusE_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_skews_7">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="layoutWidget_9">
+               <property name="geometry">
+                <rect>
+                 <x>180</x>
+                 <y>50</y>
+                 <width>57</width>
+                 <height>240</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <item>
+                 <widget class="QSpinBox" name="box_nvertices_8">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>30</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="box_nedges_8">
+                  <property name="maximum">
+                   <number>500</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleA_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleD_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleI_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_scaleE_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_locusE_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="box_skews_8">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCustomPlot" name="plot_eco_trait_2" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QCustomPlot" name="plot_eco_trait" native="true"/>
@@ -60,95 +2799,11 @@
       <attribute name="title">
        <string>General</string>
       </attribute>
-      <widget class="QLabel" name="rng_seed_label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>RNG seed</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="rng_seed">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>10</y>
-         <width>94</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>74</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Generations</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="num_gen">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>30</y>
-         <width>91</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>9999</number>
-       </property>
-       <property name="singleStep">
-        <number>10</number>
-       </property>
-       <property name="value">
-        <number>100</number>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="run_button">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>101</width>
-         <height>32</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Run</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton">
-       <property name="geometry">
-        <rect>
-         <x>120</x>
-         <y>60</y>
-         <width>101</width>
-         <height>32</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Stop</string>
-       </property>
-      </widget>
       <widget class="QPlainTextEdit" name="output">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>100</y>
+         <y>130</y>
          <width>241</width>
          <height>411</height>
         </rect>
@@ -161,12 +2816,131 @@
         </font>
        </property>
       </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>167</width>
+         <height>95</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="rng_seed_label">
+          <property name="text">
+           <string>RNG seed</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QSpinBox" name="rng_seed"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Generations</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QSpinBox" name="num_gen">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QPushButton" name="run_button">
+          <property name="text">
+           <string>Run</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Stop</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
        <string>Advanced</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_rdynamics">
+         <property name="text">
+          <string>rdynamics</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="box_rdynamics">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>trenewal</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="box_trenewal">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.001000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.001000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>capacity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="box_capacity">
+         <property name="decimals">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <double>200.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>100.000000000000000</double>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
@@ -174,23 +2948,61 @@
          </property>
         </widget>
        </item>
-       <item row="27" column="0">
-        <widget class="QLabel" name="label_30">
-         <property name="text">
-          <string>ntrials</string>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="box_replenish">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
-        <widget class="QSpinBox" name="box_nloci">
-         <property name="minimum">
-          <number>1</number>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>hsymmetry</string>
          </property>
-         <property name="maximum">
-          <number>500</number>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="box_hsymmetry">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>ecosel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="box_ecosel">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
          </property>
          <property name="value">
-          <number>90</number>
+          <double>1.800000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>dispersal</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QDoubleSpinBox" name="box_dispersal">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
@@ -198,6 +3010,40 @@
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>birth</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QDoubleSpinBox" name="box_birth">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>4.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>survival</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QDoubleSpinBox" name="box_survival">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.800000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>sexsel</string>
          </property>
         </widget>
        </item>
@@ -218,96 +3064,13 @@
          </property>
         </widget>
        </item>
-       <item row="27" column="1">
-        <widget class="QSpinBox" name="box_ntrials">
-         <property name="maximum">
-          <number>200</number>
-         </property>
-         <property name="value">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="box_capacity">
-         <property name="decimals">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <double>200.000000000000000</double>
-         </property>
+       <item row="10" column="1">
+        <widget class="QDoubleSpinBox" name="box_matingcost">
          <property name="singleStep">
           <double>0.010000000000000</double>
          </property>
          <property name="value">
-          <double>100.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="18" column="1">
-        <widget class="QDoubleSpinBox" name="box_effectscale">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>1.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="1">
-        <widget class="QDoubleSpinBox" name="box_dominancevar">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>1.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="24" column="0">
-        <widget class="QLabel" name="label_28">
-         <property name="text">
-          <string>tsave</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="1">
-        <widget class="QDoubleSpinBox" name="box_allfreq">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.200000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="0">
-        <widget class="QLabel" name="label_27">
-         <property name="text">
-          <string>tend</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QDoubleSpinBox" name="box_mutation">
-         <property name="decimals">
-          <number>4</number>
-         </property>
-         <property name="singleStep">
-          <double>0.001000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.001000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="box_ecosel">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>1.800000000000000</double>
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
@@ -315,186 +3078,6 @@
         <widget class="QLabel" name="label_11">
          <property name="text">
           <string>maxfeed</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>dispersal</string>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="0">
-        <widget class="QLabel" name="label_25">
-         <property name="text">
-          <string>dominancevar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>hsymmetry</string>
-         </property>
-        </widget>
-       </item>
-       <item row="20" column="0">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>interactionscale</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>nloci</string>
-         </property>
-        </widget>
-       </item>
-       <item row="25" column="0">
-        <widget class="QLabel" name="label_31">
-         <property name="text">
-          <string>record</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QSpinBox" name="box_nchrom">
-         <property name="value">
-          <number>3</number>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="0">
-        <widget class="QLabel" name="label_23">
-         <property name="text">
-          <string>interactionshape</string>
-         </property>
-        </widget>
-       </item>
-       <item row="26" column="0">
-        <widget class="QLabel" name="label_29">
-         <property name="text">
-          <string>seed</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>capacity</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>survival</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="0">
-        <widget class="QLabel" name="label_18">
-         <property name="text">
-          <string>recombination</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>mutation</string>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="1">
-        <widget class="QDoubleSpinBox" name="box_interactionshape">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>5.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="box_rdynamics">
-         <property name="maximum">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QDoubleSpinBox" name="box_birth">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>4.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_rdynamics">
-         <property name="text">
-          <string>rdynamics</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <widget class="QDoubleSpinBox" name="box_effectshape">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-         <property name="value">
-          <double>2.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="22" column="0">
-        <widget class="QLabel" name="label_26">
-         <property name="text">
-          <string>tburnin</string>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="1">
-        <widget class="QSpinBox" name="box_tend">
-         <property name="maximum">
-          <number>1000</number>
-         </property>
-         <property name="value">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>sexsel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="18" column="0">
-        <widget class="QLabel" name="label_22">
-         <property name="text">
-          <string>effectscale</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="label_19">
-         <property name="text">
-          <string>allfreq</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="box_hsymmetry">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
          </property>
         </widget>
        </item>
@@ -511,33 +3094,23 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
-        <widget class="QDoubleSpinBox" name="box_recombination">
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.010000000000000</double>
+       <item row="12" column="0">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>nloci</string>
          </property>
         </widget>
        </item>
-       <item row="24" column="1">
-        <widget class="QSpinBox" name="box_tsave">
+       <item row="12" column="1">
+        <widget class="QSpinBox" name="box_nloci">
          <property name="minimum">
           <number>1</number>
          </property>
-         <property name="value">
-          <number>10</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="box_replenish">
-         <property name="singleStep">
-          <double>0.100000000000000</double>
+         <property name="maximum">
+          <number>500</number>
          </property>
          <property name="value">
-          <double>1.000000000000000</double>
+          <number>90</number>
          </property>
         </widget>
        </item>
@@ -548,23 +3121,24 @@
          </property>
         </widget>
        </item>
-       <item row="25" column="1">
-        <widget class="QSpinBox" name="box_record">
-         <property name="maximum">
-          <number>1</number>
-         </property>
+       <item row="13" column="1">
+        <widget class="QSpinBox" name="box_nchrom">
          <property name="value">
-          <number>1</number>
+          <number>3</number>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="box_trenewal">
-         <property name="decimals">
-          <number>3</number>
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>mutation</string>
          </property>
-         <property name="maximum">
-          <double>1.000000000000000</double>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QDoubleSpinBox" name="box_mutation">
+         <property name="decimals">
+          <number>4</number>
          </property>
          <property name="singleStep">
           <double>0.001000000000000</double>
@@ -574,20 +3148,95 @@
          </property>
         </widget>
        </item>
-       <item row="26" column="1">
-        <widget class="QSpinBox" name="box_seed">
-         <property name="value">
-          <number>42</number>
+       <item row="15" column="0">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>recombination</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QDoubleSpinBox" name="box_survival">
+       <item row="15" column="1">
+        <widget class="QDoubleSpinBox" name="box_recombination">
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="0">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>allfreq</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QDoubleSpinBox" name="box_allfreq">
          <property name="singleStep">
           <double>0.100000000000000</double>
          </property>
          <property name="value">
-          <double>0.800000000000000</double>
+          <double>0.200000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0">
+        <widget class="QLabel" name="label_21">
+         <property name="text">
+          <string>effectshape</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
+        <widget class="QDoubleSpinBox" name="box_effectshape">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>2.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="0">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>effectscale</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="1">
+        <widget class="QDoubleSpinBox" name="box_effectscale">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0">
+        <widget class="QLabel" name="label_23">
+         <property name="text">
+          <string>interactionshape</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1">
+        <widget class="QDoubleSpinBox" name="box_interactionshape">
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>5.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="0">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>interactionscale</string>
          </property>
         </widget>
        </item>
@@ -601,49 +3250,131 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
-        <widget class="QDoubleSpinBox" name="box_dispersal">
+       <item row="21" column="0">
+        <widget class="QLabel" name="label_25">
+         <property name="text">
+          <string>dominancevar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="1">
+        <widget class="QDoubleSpinBox" name="box_dominancevar">
          <property name="singleStep">
           <double>0.100000000000000</double>
          </property>
          <property name="value">
-          <double>0.010000000000000</double>
+          <double>1.000000000000000</double>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+       <item row="22" column="0">
+        <widget class="QLabel" name="label_26">
          <property name="text">
-          <string>trenewal</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>ecosel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="0">
-        <widget class="QLabel" name="label_21">
-         <property name="text">
-          <string>effectshape</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QDoubleSpinBox" name="box_matingcost">
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.010000000000000</double>
+          <string>tburnin</string>
          </property>
         </widget>
        </item>
        <item row="22" column="1">
         <widget class="QSpinBox" name="box_tburnin"/>
+       </item>
+       <item row="23" column="0">
+        <widget class="QLabel" name="label_27">
+         <property name="text">
+          <string>tend</string>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="1">
+        <widget class="QSpinBox" name="box_tend">
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QLabel" name="label_28">
+         <property name="text">
+          <string>tsave</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1">
+        <widget class="QSpinBox" name="box_tsave">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QLabel" name="label_31">
+         <property name="text">
+          <string>record</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1">
+        <widget class="QSpinBox" name="box_record">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="0">
+        <widget class="QLabel" name="label_38">
+         <property name="text">
+          <string>save data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="1">
+        <widget class="QSpinBox" name="box_datsave">
+         <property name="maximum">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="0">
+        <widget class="QLabel" name="label_29">
+         <property name="text">
+          <string>seed</string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="1">
+        <widget class="QSpinBox" name="box_seed">
+         <property name="value">
+          <number>42</number>
+         </property>
+        </widget>
+       </item>
+       <item row="28" column="0">
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>ntrials</string>
+         </property>
+        </widget>
+       </item>
+       <item row="28" column="1">
+        <widget class="QSpinBox" name="box_ntrials">
+         <property name="maximum">
+          <number>200</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
