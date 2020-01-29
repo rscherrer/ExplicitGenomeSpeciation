@@ -54,7 +54,7 @@ MainDialog::MainDialog(QWidget *parent) :
 
   ui->plot_eco_trait->addGraph();
   ecoBars_0 = new QCPBars(ui->plot_eco_trait->xAxis,
-                         ui->plot_eco_trait->yAxis);
+                          ui->plot_eco_trait->yAxis);
   ecoBars_0->setName("Eco Trait deme 0");
   ecoBars_0->setPen(QPen(Qt::red));
   ecoBars_0->setBrush(QBrush(QColor(255,0,0, static_cast<int>(0.5 * 255))));
@@ -158,10 +158,12 @@ void MainDialog::plot_fst(const std::vector<double>& v)
     std::iota(fst_x.begin(), fst_x.end(), 1);
 
     QVector<double> fst_y = QVector<double>::fromStdVector(v);
+    auto max_y = std::max_element(v.begin(), v.end());
 
     ui->plot->graph(0)->clearData();
     ui->plot->graph(0)->setData(fst_x, fst_y);
     ui->plot->rescaleAxes();
+    ui->plot->yAxis->setRange(0, *max_y * 1.05);
     ui->plot->replot();
     ui->plot->update();
 }
