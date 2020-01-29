@@ -2,8 +2,8 @@
 #define MAINDIALOG_H
 
 #include <QDialog>
-#include "library/Param.h"
 #include "gui/qcustomplot.h"
+#include "library/Param.h"
 
 namespace Ui {
   class MainDialog;
