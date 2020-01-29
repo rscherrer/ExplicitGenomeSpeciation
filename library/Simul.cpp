@@ -50,7 +50,7 @@ int simulate(const vecStrings &args)
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) {
                 collector.analyze(metapop, pars, arch); // collect stats
-                collector.print(t, metapop); // save them to files
+                if (pars.datsave) collector.print(t, metapop); // save them to files
             }
 
             metapop.reproduce(pars, arch);
