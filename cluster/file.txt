@@ -1,3 +1,0 @@
-folder1
-folder2
-folder4
