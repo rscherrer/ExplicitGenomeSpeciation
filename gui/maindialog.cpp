@@ -1,15 +1,15 @@
 #include "maindialog.h"
+#include "gui/qcustomplot.h"
 #include "ui_maindialog.h"
 #include "library/Simul.h"
 #include <sstream>
 #include <QThread>
 #include <QColor>
 
+
 MainDialog::MainDialog(QWidget *parent) :
   QDialog(parent),
-  ui(new Ui::MainDialog)
-{
-
+  ui(new Ui::MainDialog) {
   ui->setupUi(this);
   setup_spinboxes();
 
@@ -30,7 +30,6 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot->xAxis->setRange(0,90);
   ui->plot->yAxis->setRange(0,1);
 
-
   // overall population size graph
   ui->plot_popsize->addGraph();
   ui->plot_popsize->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
@@ -46,16 +45,12 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_popsize->yAxis2->setLabel("Deme Size");
   // ui->plot_popsize->yAxis2->setVisible(true);
 
-
   QCPPlotTitle *popsize_title = new QCPPlotTitle(ui->plot_popsize, "Population Size");
   ui->plot_popsize->plotLayout()->insertRow(0);
   ui->plot_popsize->plotLayout()->addElement(0, 0, popsize_title);
   ui->plot_popsize->xAxis->setLabel("Time");
   ui->plot_popsize->yAxis->setLabel("Size Deme 0");
   ui->plot_popsize->yAxis2->setLabel("Size Deme 1");
-
-   
-
 
   ui->plot_eco_trait->addGraph();
   ecoBars_0 = new QCPBars(ui->plot_eco_trait->xAxis,
@@ -82,7 +77,6 @@ MainDialog::MainDialog(QWidget *parent) :
   ui->plot_eco_trait->xAxis->setLabel("Trait Value");
   ui->plot_eco_trait->yAxis->setLabel("Count");
 
-
   ui->plot_sex_trait->addGraph();
   sexBars_0 = new QCPBars(ui->plot_sex_trait->xAxis,
                           ui->plot_sex_trait->yAxis);
@@ -92,7 +86,6 @@ MainDialog::MainDialog(QWidget *parent) :
   sexBars_0->setAntialiased(false);
   sexBars_0->setAntialiasedFill(false);
 
-
   ui->plot_sex_trait->addGraph();
   sexBars_1 = new QCPBars(ui->plot_sex_trait->xAxis,
                           ui->plot_sex_trait->yAxis);
@@ -101,8 +94,6 @@ MainDialog::MainDialog(QWidget *parent) :
   sexBars_1->setBrush(QColor(0,0,255, static_cast<int>(0.5 * 255)));
   sexBars_1->setAntialiased(false);
   sexBars_1->setAntialiasedFill(false);
-
-
 
   QCPPlotTitle *sex_title = new QCPPlotTitle(ui->plot_sex_trait, "Mating Preference");
   ui->plot_sex_trait->plotLayout()->insertRow(0);
@@ -309,7 +300,6 @@ void MainDialog::on_run_button_clicked()
                 std::vector<double> neu_trait_0 = collector.get_neu_trait_deme(metapop, 0);
                 std::vector<double> neu_trait_1 = collector.get_neu_trait_deme(metapop, 1);
 
-                //plot_hist(ui->plot_eco_trait, ecoBars, eco_trait_vals);
                 plot_barplot(ui->plot_eco_trait, ecoBars_0, ecoBars_1,
                              eco_trait_0, eco_trait_1);
 
@@ -537,56 +527,4 @@ Param MainDialog::createPars()
     ui->output->appendPlainText(QString::fromStdString(s_p.str()));
 
     return pars;
-}
-
-
-
-
-/// unused code /////
-/// (for now)   /////
-
-void plot_hist(QCustomPlot* UI, QCPBars * barplot,
-               const std::vector<double>& v) {
-
-    auto min_max = std::minmax_element(v.begin(), v.end());
-
-    int num_bins = 30;
-    double bin_size = 1.0 * (*min_max.second - *min_max.first) / num_bins;
-
-    barplot->setWidth(bin_size);
-
-    std::vector<int> bins(30, 0);
-
-    for(size_t i = 0; i < 30; ++i) {
-        double left = *min_max.first + i * bin_size;
-        double right = *min_max.first + (i+1) * bin_size;
-        for(auto it = v.begin(); it != v.end(); ++it) {
-            if( (*it) >= left && (*it) < right) {
-                bins[ i ]++;
-            }
-        }
-    }
-
-    QVector<double> xvals;
-    QVector<double> yvals;
-
-    double max_y_val = -1;
-    for(size_t i = 0; i < bins.size(); ++i) {
-        xvals.append(*min_max.first + i * bin_size);
-        yvals.append(bins[i]);
-        if(bins[i] > max_y_val) max_y_val = bins[i];
-    }
-
-    barplot->clearData();
-
-    UI->xAxis->setRange(0.9 * *min_max.first,
-                                        1.1 * *min_max.second);
-
-    UI->yAxis->setRange(0, max_y_val * 1.05);
-
-    barplot->setData(xvals, yvals);
-    UI->replot();
-    UI->update();
-
-    return;
 }
