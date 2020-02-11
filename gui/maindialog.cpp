@@ -54,7 +54,7 @@ MainDialog::MainDialog(QWidget *parent) :
 
   ui->plot_eco_trait->addGraph();
   ecoBars_0 = new QCPBars(ui->plot_eco_trait->xAxis,
-                         ui->plot_eco_trait->yAxis);
+                          ui->plot_eco_trait->yAxis);
   ecoBars_0->setName("Eco Trait deme 0");
   ecoBars_0->setPen(QPen(Qt::red));
   ecoBars_0->setBrush(QBrush(QColor(255,0,0, static_cast<int>(0.5 * 255))));
@@ -158,10 +158,12 @@ void MainDialog::plot_fst(const std::vector<double>& v)
     std::iota(fst_x.begin(), fst_x.end(), 1);
 
     QVector<double> fst_y = QVector<double>::fromStdVector(v);
+    auto max_y = std::max_element(v.begin(), v.end());
 
     ui->plot->graph(0)->clearData();
     ui->plot->graph(0)->setData(fst_x, fst_y);
     ui->plot->rescaleAxes();
+    ui->plot->yAxis->setRange(0, *max_y * 1.05);
     ui->plot->replot();
     ui->plot->update();
 }
@@ -219,8 +221,8 @@ void plot_barplot(QCustomPlot* UI,
     double min_x = 1e6;
     double max_x = -1e6;
 
-    update_barplot(v_0, barplot_0, max_y_val, min_x, max_x);
-    update_barplot(v_1, barplot_1, max_y_val, min_x, max_x);
+    if(!v_0.empty()) update_barplot(v_0, barplot_0, max_y_val, min_x, max_x);
+    if(!v_1.empty()) update_barplot(v_1, barplot_1, max_y_val, min_x, max_x);
 
 
     UI->xAxis->setRange(0.9 * min_x, 1.1 * max_x);
@@ -367,6 +369,7 @@ void MainDialog::setup_spinboxes() {
     ui->box_tend->setValue(temp_pars.tend);
     ui->box_tsave->setValue(temp_pars.tsave);
     ui->box_record->setValue(temp_pars.record);
+    ui->box_datsave->setValue(0); // HARDCODED!!!!
     ui->box_seed->setValue(static_cast<int>(temp_pars.seed));
     ui->box_ntrials->setValue(static_cast<int>(temp_pars.ntrials));
 
@@ -437,6 +440,7 @@ Param MainDialog::createPars()
     pars.tend               = static_cast<int>(ui->box_tend->value());
     pars.tsave              = static_cast<int>(ui->box_tsave->value());
     pars.record             = static_cast<bool>(ui->box_record->value());
+    pars.datsave            = static_cast<bool>(ui->box_datsave->value());
     pars.seed               = static_cast<size_t>(ui->box_seed->value());
     pars.ntrials            = static_cast<size_t>(ui->box_ntrials->value());
 
@@ -521,6 +525,7 @@ Param MainDialog::createPars()
     s_p << "tend: "                 << pars.tend << "\n";
     s_p << "tsave: "                << pars.tsave << "\n";
     s_p << "record: "               << pars.record << "\n";
+    s_p << "datsave: "              << pars.datsave << "\n";
     s_p << "seed: "                 << pars.seed << "\n";
     s_p << "ntrials: "              << pars.ntrials << "\n";
 
