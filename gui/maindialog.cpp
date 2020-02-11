@@ -221,8 +221,8 @@ void plot_barplot(QCustomPlot* UI,
     double min_x = 1e6;
     double max_x = -1e6;
 
-    update_barplot(v_0, barplot_0, max_y_val, min_x, max_x);
-    update_barplot(v_1, barplot_1, max_y_val, min_x, max_x);
+    if(!v_0.empty()) update_barplot(v_0, barplot_0, max_y_val, min_x, max_x);
+    if(!v_1.empty()) update_barplot(v_1, barplot_1, max_y_val, min_x, max_x);
 
 
     UI->xAxis->setRange(0.9 * min_x, 1.1 * max_x);
