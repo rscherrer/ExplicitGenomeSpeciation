@@ -485,6 +485,8 @@ Param MainDialog::createPars()
     pars.seed = static_cast<size_t>(ui->rng_seed->value());
     pars.tend = static_cast<int>(ui->num_gen->value());
 
+    pars.update();
+
     std::stringstream s_p;
     s_p << "parameters read from GUI\n";
     s_p << "With the following values:\n";
