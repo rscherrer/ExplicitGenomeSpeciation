@@ -5,6 +5,7 @@
 #include <sstream>
 #include <QThread>
 #include <QColor>
+#include <chrono>
 
 
 MainDialog::MainDialog(QWidget *parent) :
@@ -239,6 +240,7 @@ void plot_barplot(QCustomPlot* UI,
 void MainDialog::on_run_button_clicked()
 {
     is_running = true;
+    auto start_time = std::chrono::steady_clock::now();
     try
     {
         // clean up old data
@@ -321,6 +323,9 @@ void MainDialog::on_run_button_clicked()
         {
             std::stringstream s;
             s << "Done\n";
+            auto end_time = std::chrono::steady_clock::now();
+            auto total_time = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+            s << "This took: " << total_time << " seconds\n";
             ui->output->appendPlainText(QString::fromStdString(s.str()));
         }
     }
@@ -355,7 +360,6 @@ void MainDialog::setup_spinboxes() {
     ui->box_sexsel->setValue(temp_pars.sexsel);
     ui->box_matingcost->setValue(temp_pars.matingcost);
     ui->box_maxfeed->setValue(temp_pars.maxfeed);
-    ui->box_nloci->setValue(static_cast<int>(temp_pars.nloci));
     ui->box_nchrom->setValue(static_cast<int>(temp_pars.nchrom));
     ui->box_mutation->setValue(temp_pars.mutation);
     ui->box_recombination->setValue(temp_pars.recombination);
@@ -426,7 +430,6 @@ Param MainDialog::createPars()
     pars.sexsel             = ui->box_sexsel->value();
     pars.matingcost         = ui->box_matingcost->value();
     pars.maxfeed            = ui->box_maxfeed->value();
-    pars.nloci              = static_cast<size_t>(ui->box_nloci->value());
     pars.nchrom             = static_cast<size_t>(ui->box_nchrom->value());
     pars.mutation           = ui->box_mutation->value();
     pars.recombination      = ui->box_recombination->value();
@@ -478,8 +481,6 @@ Param MainDialog::createPars()
     pars.skews[0]           = ui->box_skews_0->value();
     pars.skews[1]           = ui->box_skews_1->value();
     pars.skews[2]           = ui->box_skews_2->value();
-
-
 
     pars.seed = static_cast<size_t>(ui->rng_seed->value());
     pars.tend = static_cast<int>(ui->num_gen->value());
