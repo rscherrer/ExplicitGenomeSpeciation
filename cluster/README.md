@@ -2,11 +2,12 @@ This file explains how to run the program of the Peregrine cluster of the Univer
 
 # Prepare modules
 
-For the simulations to be able to run on Peregrine, make sure the modules `Python/3.6.4-foss-2018a` and `libpng/1.6.34-GCCcore-7.3.0` are made available, by adding them in the `.bash_profile` file located in the `/home/$USER` directory. Add to this file the following lines:
+For the simulations to be able to run on Peregrine, make sure some modules are made available, by adding them in the `.bash_profile` file located in the `/home/$USER` directory. Add to this file the following lines:
 
 ```{bash}
 module add Python/3.6.4-foss-2018a
-module add libpng/1.6.34-GCCcore-7.3.0
+module add libpng/1.6.37-GCCcore-8.3.0
+module add PCRE2/10.33-GCCcore-8.3.0
 ```
 
 # Clone the repository
