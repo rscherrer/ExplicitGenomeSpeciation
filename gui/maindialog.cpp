@@ -295,14 +295,20 @@ void MainDialog::on_run_button_clicked()
                 std::vector<double> fst_vals = collector.get_Fst();
                 plot_fst(fst_vals);
 
-                std::vector<double> eco_trait_0 = collector.get_eco_trait_deme(metapop, 0);
-                std::vector<double> eco_trait_1 = collector.get_eco_trait_deme(metapop, 1);
+                std::vector<double> eco_trait_0, eco_trait_1, sex_trait_0, sex_trait_1, neu_trait_0, neu_trait_1;\
 
-                std::vector<double> sex_trait_0 = collector.get_sex_trait_deme(metapop, 0);
-                std::vector<double> sex_trait_1 = collector.get_sex_trait_deme(metapop, 1);
+                size_t deme_size_0 = metapop.getDemeSize(0);
+                size_t deme_size_1 = metapop.getDemeSize(1);
 
-                std::vector<double> neu_trait_0 = collector.get_neu_trait_deme(metapop, 0);
-                std::vector<double> neu_trait_1 = collector.get_neu_trait_deme(metapop, 1);
+                collector.get_traits(metapop,
+                                     eco_trait_0,
+                                     eco_trait_1,
+                                     sex_trait_0,
+                                     sex_trait_1,
+                                     neu_trait_0,
+                                     neu_trait_1,
+                                     deme_size_0,
+                                     deme_size_1);
 
                 plot_barplot(ui->plot_eco_trait, ecoBars_0, ecoBars_1,
                              eco_trait_0, eco_trait_1);
@@ -315,8 +321,8 @@ void MainDialog::on_run_button_clicked()
 
 
                 update_plot_popsize(t,
-                                    metapop.getDemeSize(0),
-                                    metapop.getDemeSize(1));
+                                    deme_size_0,
+                                    deme_size_1);
             }
         }
         // Show output

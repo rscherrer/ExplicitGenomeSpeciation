@@ -917,3 +917,50 @@ std::vector<double> Collector::get_neu_trait_deme(const MetaPop &m,
    }
    return output;
 }
+
+void Collector::get_traits(const MetaPop &m,
+                           std::vector<double>& eco_trait_0,
+                           std::vector<double>& eco_trait_1,
+                           std::vector<double>& sex_trait_0,
+                           std::vector<double>& sex_trait_1,
+                           std::vector<double>& neu_trait_0,
+                           std::vector<double>& neu_trait_1,
+                           size_t deme_size_0,
+                           size_t deme_size_1) const {
+    eco_trait_0.clear();
+    eco_trait_0.resize(deme_size_0);
+    sex_trait_0.clear();
+    sex_trait_0.resize(deme_size_0);
+    neu_trait_0.clear();
+    neu_trait_0.resize(deme_size_0);
+
+    eco_trait_1.clear();
+    eco_trait_1.resize(deme_size_1);
+    sex_trait_1.clear();
+    sex_trait_1.resize(deme_size_1);
+    neu_trait_1.clear();
+    neu_trait_1.resize(deme_size_1);
+
+
+    size_t deme_0_counter = 0;
+    size_t deme_1_counter = 0;
+
+   // for(size_t i = 0; i < m.population.size(); ++i) {
+   for(auto i : m.population) {
+        if(i.getHabitat() == 0) {
+            eco_trait_0[deme_0_counter] = i.getEcoTrait();
+            sex_trait_0[deme_0_counter] = i.getMatePref();
+            neu_trait_0[deme_0_counter] = i.getNeutral();
+            deme_0_counter++;
+        }
+
+        if(i.getHabitat() == 1) {
+            eco_trait_1[deme_1_counter] = i.getEcoTrait();
+            sex_trait_1[deme_1_counter] = i.getMatePref();
+            neu_trait_1[deme_1_counter] = i.getNeutral();
+            deme_1_counter++;
+        }
+    }
+
+    return;
+}

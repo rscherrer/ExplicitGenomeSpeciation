@@ -177,6 +177,16 @@ public:
     std::vector<double> get_neu_trait_deme(const MetaPop &m,
                                            size_t deme) const;
 
+    void get_traits(const MetaPop &m,
+                    std::vector<double>& eco_trait_0,
+                    std::vector<double>& eco_trait_1,
+                    std::vector<double>& sex_trait_0,
+                    std::vector<double>& sex_trait_1,
+                    std::vector<double>& neu_trait_0,
+                    std::vector<double>& neu_trait_1,
+                    size_t deme_size_0,
+                    size_t deme_size_1) const;
+
 private:
 
     vecStrings whattosave() const;
