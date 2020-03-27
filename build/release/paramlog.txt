@@ -16,10 +16,10 @@ nedges 100 0 0
 nchrom 3
 mutation 0.0001
 recombination 3
-allfreq 0.2
-scaleA 0 1 1 
+allfreq 0.1
+scaleA 1 1 1 
 scaleD 0 0 0 
-scaleI 1 0 0 
+scaleI 0 0 0 
 scaleE 0 0 0 
 skews 1 1 1 
 effectshape 2
@@ -28,14 +28,14 @@ interactionshape 5
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 1000
+tend 5000
 tsave 100
 record 1
 talkative 1
-archsave 1
+archsave 0
 archload 0
 parsave 1
 archfile architecture.txt
 parfile paramlog.txt
-seed 1576662185874209727
-ntrials 1000
+seed 1583326675418353533
+ntrials 100
