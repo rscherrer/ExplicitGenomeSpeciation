@@ -12,7 +12,7 @@ matingcost 0.01
 maxfeed 0.0004
 demesizes 100 0 
 nvertices 100 100 100 
-nedges 0 0 0 
+nedges 100 0 0 
 nchrom 3
 mutation 0.0001
 recombination 3
@@ -28,7 +28,7 @@ interactionshape 5
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 1000
+tend 5000
 tsave 100
 record 1
 talkative 1
