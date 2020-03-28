@@ -4,7 +4,6 @@
 #include "GenArch.h"
 #include "Utilities.h"
 #include "Types.h"
-#include "Gamete.h"
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>

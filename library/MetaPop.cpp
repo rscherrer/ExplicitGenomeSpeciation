@@ -247,7 +247,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         for (size_t f : females[hab]) {
 
             // Determine fecundity
-            double fecundity = p.birth * population[f].getFitness();
+            double fecundity = population[f].getFitness();
 
             // Modified during burn-in
             if (isburnin) {
