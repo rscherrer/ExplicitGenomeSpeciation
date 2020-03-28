@@ -55,7 +55,7 @@ void Individual::recombine(Genome &zygote, const Param &p, const GenArch &arch)
     while (locus < p.nloci) {
 
         // What is the thing coming up next?
-        size_t next = crossover;
+        size_t next = static_cast<size_t>(crossover);
         if (crossover < chromend && crossover < position)
             next = 0u;
         else if (chromend < crossover && chromend < position)
@@ -202,9 +202,8 @@ void Individual::develop(const Param &p, const GenArch &arch)
     neutrait = traitvalues[2u];
 
     // Feeding rates
-    const double max = p.rdynamics ? 1.0 : p.maxfeed;
-    feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-    feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+    feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+    feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);

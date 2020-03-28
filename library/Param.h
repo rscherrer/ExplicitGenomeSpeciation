@@ -18,17 +18,17 @@ struct Param {
 
     Param() :
         rdynamics(1u),
-        trenewal(0.001),
-        capacity(100.0),
-        replenish(1.0),
+        capacity(1.0),
+        replenish(2375.0),
+        inflow(400.0),
+        outflow(100.0),
         hsymmetry(0.0),
         ecosel(1.8),
         dispersal(1.0E-2),
-        birth(4.0),
+        birth(1.0),
         survival(0.8),
         sexsel(10.0),
         matingcost(0.01),
-        maxfeed(4.0E-4),
         demesizes({ 100u, 0u }),
         nloci(90u), // cannot be provided
         nvertices({ 30u, 30u, 30u }),
@@ -82,9 +82,10 @@ struct Param {
 
     // Ecological parameters    
     size_t rdynamics;
-    double trenewal;
     double capacity;
     double replenish;
+    double inflow;
+    double outflow;
     double hsymmetry;
     double ecosel;
     double dispersal;
@@ -92,7 +93,6 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    double maxfeed;
     vecUns demesizes;
 
     // Genetic parameters

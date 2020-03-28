@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(ConstantPopSizeWhenNoBirthNoDeath)
   pars.tburnin = 0;
   pars.demesizes = { 10u, 10u };
   pars.dispersal = 0.0;
-  pars.survival = 1.0; //  no death
+  pars.survival = 1.0; // no death
   pars.birth = 0.0; // no birth
   pars.sexsel = 0.0;
 
@@ -79,16 +79,17 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
   std::clog << "Testing complete habitat asymmetry...\n";
   Param pars;
   GenArch arch = GenArch(pars);
-  pars.rdynamics = 0u;
-  pars.capacity = 100.0;
+  pars.rdynamics = 1u;
+  pars.inflow = 400.0;
+  pars.outflow = 100.0;
   pars.hsymmetry = 0.0; // full habitat asymmetry
-  pars.demesizes = {10u, 10u };
+  pars.demesizes = {10u, 10u};
+  pars.ecosel = 0.0;
   pars.tburnin = 0;
-  pars.maxfeed = 0.0; // no consumption
   MetaPop metapop = MetaPop(pars, arch);
   metapop.cycle(pars, arch);
-  BOOST_CHECK_EQUAL(metapop.getResource(0u, 0u), pars.capacity);
-  BOOST_CHECK_EQUAL(metapop.getResource(1u, 1u), pars.capacity);
+  BOOST_CHECK_EQUAL(metapop.getResource(0u, 0u), 400.0/110.0);
+  BOOST_CHECK_EQUAL(metapop.getResource(1u, 1u), 400.0/110.0);
   BOOST_CHECK_EQUAL(metapop.getResource(0u, 1u), 0.0);
   BOOST_CHECK_EQUAL(metapop.getResource(1u, 0u), 0.0);
 
@@ -132,7 +133,6 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
   std::clog << "Testing reproduction...\n";
   Param pars;
   pars.capacity = 100.0;
-  pars.maxfeed = 1.0;
   pars.dispersal = 0.0;
   pars.birth = 1000.0; // high birth rate
   pars.demesizes = { 10u, 0u };
@@ -154,7 +154,6 @@ BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
   std::clog << "Testing that newborns do not die...\n";
   Param pars;
   pars.birth = 100.0; // relatively high birth rate
-  pars.trenewal = 0.05;
   pars.demesizes = { 10u, 0u };
   pars.survival = 0.0; // all adults should die
   GenArch arch = GenArch(pars);
@@ -195,24 +194,23 @@ BOOST_AUTO_TEST_CASE(KnownLogisticResourceEquilibrium)
   pars.dispersal = 0.0;
   pars.birth = 0.0;
   pars.survival = 1.0;
-  pars.capacity = 10.0;
+  pars.capacity = 1.0;
   pars.hsymmetry = 0.0;
-  pars.replenish = 1.0;
+  pars.replenish = 2000.0;
   pars.demesizes = { 10u, 0u };
   pars.ecosel = 1.0;
-  pars.maxfeed = 0.01;
   pars.tburnin = 0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
   metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
   metapop.cycle(pars, arch);
 
-    // Predict resource equilibrium after consumption
-  const double R0 = utl::round(10.0 * (1.0 - 10.0 * 0.01), 4u);
+  // Predict resource equilibrium after consumption
+  const double R0 = utl::round(199.0/200.0, 4u);
   const double R1 = 0.0;
 
-    // Fitness should sum up to the amount of food consumed
-  const double sumw = utl::round(0.1 * R0, 2u);
+  // Fitness should sum up to the amount of food consumed
+  const double sumw = utl::round(10.0 * R0, 2u);
 
   BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 0u), 4u), R0);
   BOOST_CHECK_EQUAL(utl::round(metapop.getResource(0u, 1u), 4u), R1);
@@ -226,14 +224,14 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
   std::clog << "Testing chemostat resource equilibrium...\n";
   Param pars;
   pars.rdynamics = 1u;
+  pars.inflow = 400.0;
+  pars.outflow = 100.0;
   pars.dispersal = 0.0;
   pars.birth = 0.0;
   pars.survival = 1.0;
-  pars.trenewal = 0.001;
   pars.hsymmetry = 0.0;
   pars.demesizes = { 10u, 0u };
   pars.ecosel = 1.0;
-  pars.maxfeed = 1.0;
   pars.tburnin = 0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
@@ -241,7 +239,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
   metapop.cycle(pars, arch);
 
     // Predict resource equilibrium after consumption
-  const double R0 = utl::round(1.0 / (1.0 + 0.001 * 10.0), 4u);
+  const double R0 = utl::round(400.0/110.0, 4u);
   const double R1 = 0.0;
 
     // Fitness should sum up to the amount of food consumed
@@ -262,7 +260,6 @@ BOOST_AUTO_TEST_CASE(EcotypeClassification)
   pars.dispersal = 0.0;
   pars.birth = 0.0;
   pars.survival = 1.0;
-  pars.trenewal = 0.001;
   pars.hsymmetry = 1.0;
   pars.demesizes = { 100u, 0u };
   pars.allfreq = 0.5;

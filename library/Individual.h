@@ -172,9 +172,8 @@ public:
     {
         ecotrait = x;
         traitvalues[0u] = x;
-        const double max = p.rdynamics ? 1.0 : p.maxfeed;
-        feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+        feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
+        feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
         assert(feeding[0u] >= 0.0);
         assert(feeding[1u] >= 0.0);
         assert(feeding[0u] <= 1.0);

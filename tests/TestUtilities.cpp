@@ -42,9 +42,10 @@ void tst::makeValidParamFile()
     std::cout << "Unable to open valid parameter test file.\n";
 
   file << "rdynamics" << '\t' << 0 << '\n'
-  << "trenewal" << '\t' << 0.001 << '\n'
   << "capacity" << '\t' << 10.0 << '\n'
   << "replenish" << '\t' << 1.0 << '\n'
+  << "inflow" << '\t' << 400.0 << '\n'
+  << "outflow" << '\t' << 100.0 << '\n'
   << "hsymmetry" << '\t' << 1.0 << '\n'
   << "ecosel" << '\t' << 1.0 << '\n'
   << "dispersal" << '\t' << 1.0E-3 << '\n'
@@ -52,7 +53,6 @@ void tst::makeValidParamFile()
   << "survival" << '\t' << 0.8 << '\n'
   << "sexsel" << '\t' << 10.0 << '\n'
   << "matingcost" << '\t' << 0.01 << '\n'
-  << "maxfeed" << '\t' << 4.0E-4 << '\n'
   << "demesizes" << '\t' << 100 << '\t' << 100 << '\n'
   << "nvertices" << '\t' << 40 << '\t' << 20 << '\t' << 40 << '\n'
   << "nedges" << '\t' << 20 << '\t' << 10 << '\t' << 0 << '\n'
