@@ -70,9 +70,9 @@ void Param::import(std::ifstream &file)
         else if (input == "tburnin") file >> tburnin;
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
+        else if (input == "talkative") file >> talkative;
         else if (input == "record") file >> record;
         else if (input == "datsave") file >> datsave;
-        else if (input == "talkative") file >> talkative;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
@@ -207,8 +207,8 @@ void Param::write(std::ofstream &file) const
     file << "rdynamics " << rdynamics << '\n';
     file << "capacity " << capacity << '\n';
     file << "replenish " << replenish << '\n';
-    file << "inflow" << inflow << '\n';
-    file << "outflow" << outflow << '\n';
+    file << "inflow " << inflow << '\n';
+    file << "outflow " << outflow << '\n';
     file << "hsymmetry " << hsymmetry << '\n';
     file << "ecosel " << ecosel << '\n';
     file << "dispersal " << dispersal << '\n';
@@ -252,9 +252,9 @@ void Param::write(std::ofstream &file) const
     file << "tburnin " << tburnin << '\n';
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
+    file << "talkative " << talkative << '\n';
     file << "record " << record << '\n';
     file << "datsave " << datsave << '\n';
-    file << "talkative " << talkative << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';
