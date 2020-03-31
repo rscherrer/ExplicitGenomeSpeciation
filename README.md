@@ -10,6 +10,13 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 This repository contains the source code of the simulation program ExplicitGenomeSpeciation.
 
+# Example simulations
+
+
+![Simulation](pics/example_speciation_event.png)
+![Simulation](pics/example_speciation_histogram.png)
+
+
 # Folder structure
 
 The repository has the following folder structure:
