@@ -70,7 +70,6 @@ MainDialog::MainDialog(QWidget *parent) :
   ecoBars_1->setAntialiased(false);
   ecoBars_1->setAntialiasedFill(false);
 
-
   QCPPlotTitle *eco_title = new QCPPlotTitle(ui->plot_eco_trait, "Ecological Trait");
   ui->plot_eco_trait->plotLayout()->insertRow(0);
   ui->plot_eco_trait->plotLayout()->addElement(0, 0, eco_title);
