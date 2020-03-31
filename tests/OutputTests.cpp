@@ -20,7 +20,6 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
   pars.dispersal = 0.0;
   pars.birth = 0.0;
   pars.survival = 1.0;
-  pars.trenewal = 0.001;
   pars.hsymmetry = 1.0;
   pars.demesizes = { 100u, 0u };
   pars.allfreq = 0.5;

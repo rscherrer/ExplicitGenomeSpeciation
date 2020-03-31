@@ -1,6 +1,5 @@
 #include "library/Param.h"
 #include "library/GenArch.h"
-#include "library/Deme.h"
 #include "library/Random.h"
 #include "library/Simul.h"
 #include <cassert>
