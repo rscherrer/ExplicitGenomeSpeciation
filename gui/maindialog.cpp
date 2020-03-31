@@ -344,7 +344,6 @@ void MainDialog::setup_spinboxes() {
 
     Param temp_pars;
     ui->box_rdynamics->setValue(static_cast<int>(temp_pars.rdynamics));
-    ui->box_trenewal->setValue(temp_pars.trenewal);
     ui->box_capacity->setValue(temp_pars.capacity);
     ui->box_replenish->setValue(temp_pars.replenish);
     ui->box_hsymmetry->setValue(temp_pars.hsymmetry);
@@ -354,7 +353,6 @@ void MainDialog::setup_spinboxes() {
     ui->box_survival->setValue(temp_pars.survival);
     ui->box_sexsel->setValue(temp_pars.sexsel);
     ui->box_matingcost->setValue(temp_pars.matingcost);
-    ui->box_maxfeed->setValue(temp_pars.maxfeed);
     ui->box_nloci->setValue(static_cast<int>(temp_pars.nloci));
     ui->box_nchrom->setValue(static_cast<int>(temp_pars.nchrom));
     ui->box_mutation->setValue(temp_pars.mutation);
@@ -415,7 +413,6 @@ Param MainDialog::createPars()
     // read parameters from GUI
     Param pars;
     pars.rdynamics          = static_cast<size_t>(ui->box_rdynamics->value());
-    pars.trenewal           = ui->box_trenewal->value();
     pars.capacity           = ui->box_capacity->value();
     pars.replenish          = ui->box_replenish->value();
     pars.hsymmetry          = ui->box_hsymmetry->value();
@@ -425,7 +422,6 @@ Param MainDialog::createPars()
     pars.survival           = ui->box_survival->value();
     pars.sexsel             = ui->box_sexsel->value();
     pars.matingcost         = ui->box_matingcost->value();
-    pars.maxfeed            = ui->box_maxfeed->value();
     pars.nloci              = static_cast<size_t>(ui->box_nloci->value());
     pars.nchrom             = static_cast<size_t>(ui->box_nchrom->value());
     pars.mutation           = ui->box_mutation->value();
@@ -491,7 +487,6 @@ Param MainDialog::createPars()
     // display parameters:
 
     s_p << "rdynamics: "            << pars.rdynamics << "\n";
-    s_p << "trenewal: "             << pars.trenewal << "\n";
     s_p << "capacity: "             << pars.capacity << "\n";
     s_p << "replenish: "            << pars.replenish << "\n";
     s_p << "hsymmetry: "            << pars.hsymmetry << "\n";
@@ -501,7 +496,6 @@ Param MainDialog::createPars()
     s_p << "survival: "             << pars.survival << "\n";
     s_p << "sexsel: "               << pars.sexsel << "\n";
     s_p << "matingcost: "           << pars.matingcost << "\n";
-    s_p << "maxfeed: "              << pars.maxfeed << "\n";
     s_p << "demesizes: "            << "{" << pars.demesizes[0] << "," << pars.demesizes[1] << "}\n";
     s_p << "nloci: "                << pars.nloci << "\n";
     s_p << "nvertices: "            << "{" << pars.nvertices[0] << "," << pars.nvertices[1] << "," << pars.nvertices[2] << "}\n";
