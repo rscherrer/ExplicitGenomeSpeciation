@@ -10,18 +10,6 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 This repository contains the source code of the simulation program ExplicitGenomeSpeciation.
 
-# GUI
-
-GUI Tabs:
-
-![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-25_combined.png)
-
-Extended coloration of histograms (Update 29-10-2019):
-![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-29_11.37.21.png)
-
-
-
-
 # Folder structure
 
 The repository has the following folder structure:
@@ -67,6 +55,15 @@ Refer to the manual of the program for this.
 # Use on the cluster
 
 Check out the README in folder `cluster`.
+
+# GUI
+
+GUI Tabs:
+
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-25_combined.png)
+
+Extended coloration of histograms (Update 29-10-2019):
+![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-29_11.37.21.png)
 
 # Downloads
 
