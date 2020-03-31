@@ -24,29 +24,13 @@ Extended coloration of histograms (Update 29-10-2019):
 
 # Folder structure
 
-The repository has the following folder structure (the content of each folder is explained):
+The repository has the following folder structure:
 
-The root folder contains files such as EGS.pro and EGS_test.pro, which are configuration files for building the program under Qt. The main.cpp file is also there.
-
-## ci
-   
-Bash files needed by Travis to perform its different tasks, as defined in .travis.yml, during continuous integration to GitHub.
-
-## library
-
-The C++ header and source files needed to build the program in release mode.
-
-## tests
-
-The C++ header and source files needed to build the program in debug mode, with tests.
-
-## gui
-
-This folder contains extra code for the GUI.
-
-## cluster
-
-This folder contains scripts that make the program usable on the Peregrine cluster. Those scripts allow to launch large numbers of simulations on the server.
+* `ci`: Bash files needed by Travis for continuous integration to GitHub.
+* `library`: headers and source files for the simulation
+* `tests`: headers and source files for the tests
+* `gui`: headers and source files for the graphical user interface (GUI)
+* `cluster`: scripts to use the program on the Peregrine cluster
 
 # Download the program
 
@@ -82,7 +66,7 @@ Refer to the manual of the program for this.
 
 # Use on the cluster
 
-For more information on how to build the program and use it to run multiple simulations on the Peregrine cluster, please refer to the README in folder /cluster.
+Check out the README in folder `cluster`.
 
 # Downloads
 
