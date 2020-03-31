@@ -40,21 +40,9 @@ The C++ header and source files needed to build the program in release mode.
 
 The C++ header and source files needed to build the program in debug mode, with tests.
 
-## build
-
-Where the executables are built. Any user can also build the program themselves from source using the IDE of their choice.
-
-### debug
-   
-Where the debug configuration is built. This version of the program runs all the tests upon execution. Name of the executable: ./EGS_test. Check /EGS\_test.pro for details about compiler flags.
-
-### release
- 
-Where the release configuration is built. This version of the program runs the actual simulation, optimized for speed. Name of the executable: ./EGS This file also contains a parameter file, ./parameters.txt that can be passed to the executable as a command line argument. Check /EGS.pro for details about compiler flags.
-
 ## gui
 
-This folder contains Thijs's work on the GUI version of the program. I do not know yet what it contains and how to use it.
+This folder contains extra code for the GUI.
 
 ## cluster
 
@@ -70,15 +58,19 @@ git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 
 Then navigate to the repository to access the program.
 
+# Build the program
+
+You need to build the program from the source code. The project file `EGS.pro` contains all build instructions in release mode for Qt5, using qmake. The project file `EGS_test.pro` contains the build instructions for the debug version, which runs tests. The project file `EGS_gui` contains the instructions for building the GUI.
+
 # Run the program
 
-The executable is available in /build/release, but can also be rebuilt from source to a custom location. Assuming we are in the directory where the executable is, from the command line:
+To run the program from the command line, use
 
 ```{bash}
 ./EGS
 ```
 
-will launch a simulation with default parameters. For custom parameters, please provide a parameter file name as unique argument, for example:
+For non-default parameters you have to provide them in a parameter file, like this:
 
 ```{bash}
 ./EGS parameters.txt
@@ -86,66 +78,9 @@ will launch a simulation with default parameters. For custom parameters, please 
 
 # Default parameters
 
-Please refer to /MANUAL.md, the manuscript or the comments in the source code for a detailed explanation of what each parameter does. The default values are:
+Refer to the manual of the program for this.
 
-Name | Value
----|---
-```rdynamics``` | 1
-```trenewal``` | 0.001
-```capacity``` | 100
-```replenish``` | 1
-```hsymmetry``` | 0
-```ecosel``` | 1.8
-```dispersal``` | 0.01
-```birth``` | 4
-```survival``` | 0.8
-```sexsel``` | 10
-```matingcost``` | 0.01
-```maxfeed``` | 0.0004
-```demesizes``` | 100, 0
-```nvertices``` | 30, 30, 30
-```nedges``` | 0, 0, 0
-```nchrom``` | 3
-```mutation``` | 0.001
-```recombination``` | 3
-```allfreq``` | 0.2
-```scaleA``` | 1, 1, 1
-```scaleD``` | 0, 0, 0
-```scaleI``` | 0, 0, 0
-```scaleE``` | 0, 0, 0
-```skews``` | 1, 1, 1
-```effectshape``` | 2
-```effectscale``` | 1
-```interactionshape``` | 5
-```interactionscale``` | 1
-```dominancevar``` | 1
-```tburnin``` | 0
-```tend``` | 10
-```tsave``` | 10
-```talkative``` | 1
-```record``` | 1
-```archsave``` | 0
-```archload``` | 0
-```archfile``` | architecture.txt
-```seed``` | automatically generated
-```ntrials``` | 100
-
-# Parameter file
-
-A parameter file should contain parameter names as they appear in the above example with default parameters, followed by their values. Parameters are separated from other parameters by any blank character e.g. new line, tab, or space. For example:
-
-```
-ecosel 1.0
-hsymmetry 0.2
-```
-
-would set the ecological selection coefficient to 1 and habitat symmetry to 0.2, and the other parameters would keep their default values.
-
-Note that each parameter expects a specific type of value, e.g. `ntrials` or `seed` expect integer numbers, while `archfile` expects a file name. 
-
-Also note that some parameter expect multiple values. Parameters `nvertices`, `nedges`, `scaleA`, `scaleD`, `scaleI`, `scaleE` and `skews` all expect three values, one per trait, separated by any blank character. Parameter `demesizes` expects two values, one for each habitat.
-
-# Notes
+# Use on the cluster
 
 For more information on how to build the program and use it to run multiple simulations on the Peregrine cluster, please refer to the README in folder /cluster.
 
