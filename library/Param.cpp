@@ -70,9 +70,11 @@ void Param::import(std::ifstream &file)
         else if (input == "tburnin") file >> tburnin;
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
+        else if (input == "tfreeze") file >> tfreeze;
         else if (input == "talkative") file >> talkative;
         else if (input == "record") file >> record;
         else if (input == "datsave") file >> datsave;
+        else if (input == "gensave") file >> gensave;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
@@ -186,6 +188,8 @@ void Param::check() const
         msg = "End time should be positive";
     if (tsave <= 0)
         msg = "Save time should be positive";
+    if (tfreeze <= 0)
+        msg = "Freezing time should be positive";
     if (ntrials == 0u)
         msg = "Number of mating trials should be at least one";
 
@@ -252,9 +256,11 @@ void Param::write(std::ofstream &file) const
     file << "tburnin " << tburnin << '\n';
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
+    file << "tfreeze " << tfreeze << '\n';
     file << "talkative " << talkative << '\n';
     file << "record " << record << '\n';
     file << "datsave " << datsave << '\n';
+    file << "gensave " << gensave << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';

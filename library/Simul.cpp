@@ -5,6 +5,11 @@ bool timetosave(const int &t,const Param &p)
     return p.record && t >= 0 && t % p.tsave == 0;
 }
 
+bool timetofreeze(const int &t,const Param &p)
+{
+    return p.record && p.gensave && t >= 0 && t % p.tfreeze == 0;
+}
+
 int simulate(const vecStrings &args)
 {
 
@@ -51,6 +56,11 @@ int simulate(const vecStrings &args)
             if (timetosave(t, pars)) {
                 collector.analyze(metapop, pars, arch); // collect stats
                 if (pars.datsave) collector.print(t, metapop); // save them to files
+            }
+
+            // Save whole genomes if needed (space-consuming)
+            if (timetofreeze(t, pars)) {
+                collector.freeze(metapop, pars);
             }
 
             metapop.reproduce(pars, arch);

@@ -224,6 +224,11 @@ size_t utl::dbl2size(const double &x)
 }
 
 // Save to file
+void stf::write(const unsigned long long &x, std::shared_ptr<std::ofstream> &out)
+{
+    out->write((char *) &x, sizeof(x));
+}
+
 void stf::write(const double &x, std::shared_ptr<std::ofstream> &out)
 {
     out->write((char *) &x, sizeof(x));
