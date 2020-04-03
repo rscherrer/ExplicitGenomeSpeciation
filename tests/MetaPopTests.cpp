@@ -86,6 +86,7 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
   pars.demesizes = {10u, 10u};
   pars.ecosel = 0.0;
   pars.tburnin = 0;
+  pars.dispersal = 0.0;
   MetaPop metapop = MetaPop(pars, arch);
   metapop.cycle(pars, arch);
   BOOST_CHECK_EQUAL(metapop.getResource(0u, 0u), 400.0/110.0);

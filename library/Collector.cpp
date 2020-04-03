@@ -713,7 +713,15 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         networkscan[e].avgj = avgj; // for partner j
 
     }
+}
 
+// Save individual whole genomes
+void Collector::freeze(const MetaPop &m, const Param &p)
+{
+    const size_t nbytes = 2u * p.nloci / 64u + 1u;
+    for (size_t i = 0u; i < m.population.size(); ++i)
+        for (size_t B = 0u; B < nbytes; ++B)
+            stf::write(m.population[i].getByte(B), freezer);
 }
 
 void Collector::print(const size_t &t, const MetaPop &m)
@@ -763,7 +771,7 @@ void Collector::print(const size_t &t, const MetaPop &m)
     stf::write(SI, files[f]); ++f;
     stf::write(RI, files[f]); ++f;
 
-    size_t off; // offset to write multiple loci to the same file
+    size_t off = 0u; // offset to write multiple loci to the same file
 
     // Genome scans through loci
     for (size_t l = 0u; l < genomescan.size(); ++l) {
@@ -830,6 +838,7 @@ void Collector::shutdown()
 {
     // Close files
     for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
+    freezer->close();
 }
 
 std::vector<double> Collector::get_Fst() const

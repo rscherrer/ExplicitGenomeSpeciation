@@ -87,7 +87,8 @@ struct Connexion
 
 typedef std::vector<Locus> vecLoci;
 typedef std::vector<Connexion> vecConnex;
-typedef std::vector<std::shared_ptr<std::ofstream> > vecStreams;
+typedef std::shared_ptr<std::ofstream> Stream;
+typedef std::vector<Stream > vecStreams;
 
 class Collector
 {
@@ -97,6 +98,7 @@ public:
     Collector(const GenArch &arch) :
         filenames(whattosave()),
         files({ }),
+        freezer(new std::ofstream),
         counts(utl::uzeros(3u, 3u)),
         means(utl::zeros(3u, 3u, 3u)),
         varG(utl::zeros(3u, 3u)),
@@ -124,13 +126,21 @@ public:
         for (size_t f = 0u; f < filenames.size(); ++f) {
 
             const std::string filename = filenames[f] + ".dat";
-            std::shared_ptr<std::ofstream> out(new std::ofstream);
+            Stream out(new std::ofstream);
             out->open(filename.c_str(), std::ios::binary);
             if (!out->is_open()) {
                 std::string msg = "Unable to open output file " + filename;
                 throw std::runtime_error(msg);
             }
             files.push_back(out);
+        }
+
+        // Open the freezer
+        const std::string freezername = "freezer.dat";
+        freezer->open(freezername.c_str(), std::ios::binary);
+        if (!freezer->is_open()) {
+            std::string msg = "Unable to open output freezer file";
+            throw std::runtime_error(msg);
         }
     }
 
@@ -141,6 +151,7 @@ public:
 
     void analyze(const MetaPop&, const Param&, const GenArch&);
     void print(const size_t&, const MetaPop&);
+    void freeze(const MetaPop&, const Param&);
     void shutdown();
 
     // Getters called in tests
@@ -185,6 +196,7 @@ private:
 
     vecStrings filenames;
     vecStreams files;
+    Stream freezer;
 
     MatUns counts; // per habitat per ecotype
 

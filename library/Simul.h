@@ -13,5 +13,6 @@
 int simulate(const vecStrings&);
 
 bool timetosave(const int &t, const Param &p);
+bool timetofreeze(const int &t, const Param &p);
 
 #endif
