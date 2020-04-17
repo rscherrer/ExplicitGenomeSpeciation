@@ -13,7 +13,7 @@ int main(int argc, char * argv[])
 {
 
     // Convert arguments into a vector of strings
-    const vecStrings args(argv, argv + argc);
+    const std::vector<std::string> args(argv, argv + argc);
 
     // Run the program
     return simulate(args);
