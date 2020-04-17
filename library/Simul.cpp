@@ -37,7 +37,9 @@ int simulate(const vecStrings &args)
         MetaPop metapop = MetaPop(pars, arch);
 
         // Create an analytical module
-        Collector collector = Collector(arch);
+        Collector collector = Collector(arch, pars.savefile);
+
+        if (!pars.choosewhat) collector = Collector(arch);
 
         std::cout << "Simulation started.\n";
 
@@ -54,8 +56,12 @@ int simulate(const vecStrings &args)
 
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) {
-                collector.analyze(metapop, pars, arch); // collect stats
-                if (pars.datsave) collector.print(t, metapop); // save them to files
+
+                // Collect stats
+                collector.analyze(metapop, pars, arch);
+
+                // Save them to files
+                if (pars.datsave) collector.print(t, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)

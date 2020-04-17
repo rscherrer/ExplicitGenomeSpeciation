@@ -95,8 +95,8 @@ class Collector
 
 public:
 
-    Collector(const GenArch &arch) :
-        filenames(whattosave()),
+    Collector(const GenArch &arch, const std::string &savefile = "") :
+        filenames(whattosave(savefile)),
         files({ }),
         freezer(new std::ofstream),
         counts(utl::uzeros(3u, 3u)),
@@ -142,6 +142,7 @@ public:
             std::string msg = "Unable to open output freezer file";
             throw std::runtime_error(msg);
         }
+
     }
 
     ~Collector()
@@ -190,7 +191,7 @@ public:
 
 private:
 
-    vecStrings whattosave() const;
+    vecStrings whattosave(const std::string&) const;
     vecLoci emptyloci(const GenArch&) const;
     vecConnex emptyconnexions(const GenArch&) const;
 
@@ -226,6 +227,5 @@ private:
 };
 
 double Xst(const vecDbl&, const vecUns&);
-
 
 #endif

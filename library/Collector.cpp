@@ -1,42 +1,123 @@
 #include "Collector.h"
 
-vecStrings Collector::whattosave() const
-{
+vecStrings Collector::whattosave(const std::string &filename) const
+{    
+    if (filename == "") {
 
-    return {
+        // Save all possible variables if none defined
 
-     "time",
+        return {
 
-     "count00", "count01", "count10", "count11",
-     "fem0", "fem1",
+            "time",
+            "count00",
+            "count01",
+            "count10",
+            "count11",
+            "fem0",
+            "fem1",
+            "resource00",
+            "resource01",
+            "resource10",
+            "resource11",
+            "mean00_x",
+            "mean01_x",
+            "mean10_x",
+            "mean11_x",
+            "varP_x",
+            "varG_x",
+            "varA_x",
+            "varD_x",
+            "varI_x",
+            "varN_x",
+            "varT_x",
+            "Pst_x",
+            "Gst_x",
+            "Qst_x",
+            "Cst_x",
+            "Fst_x",
+            "mean00_y",
+            "mean01_y",
+            "mean10_y",
+            "mean11_y",
+            "varP_y",
+            "varG_y",
+            "varA_y",
+            "varD_y",
+            "varI_y",
+            "varN_y",
+            "varT_y",
+            "Pst_y",
+            "Gst_y",
+            "Qst_y",
+            "Cst_y",
+            "Fst_y",
+            "mean00_z",
+            "mean01_z",
+            "mean10_z",
+            "mean11_z",
+            "varP_z",
+            "varG_z",
+            "varA_z",
+            "varD_z",
+            "varI_z",
+            "varN_z",
+            "varT_z",
+            "Pst_z",
+            "Gst_z",
+            "Qst_z",
+            "Cst_z",
+            "Fst_z",
+            "EI",
+            "SI",
+            "RI",
+            "genome_varP",
+            "genome_varG",
+            "genome_varA",
+            "genome_varD",
+            "genome_varI",
+            "genome_varN",
+            "genome_Pst",
+            "genome_Gst",
+            "genome_Qst",
+            "genome_Cst",
+            "genome_Fst",
+            "genome_alpha",
+            "genome_meang",
+            "genome_freq",
+            "network_corgen",
+            "network_corbreed",
+            "network_corfreq",
+            "network_avgi",
+            "network_avgj",
+            "population_ecotype",
+            "population_habitat",
+            "population_x",
+            "population_y",
+            "population_z",
+            "population_xmidparent",
+            "population_ymidparent",
+            "population_zmidparent"
 
-     "resource00", "resource01", "resource10", "resource11",
+        };
 
-     "mean00_x", "mean01_x", "mean10_x", "mean11_x", "varP_x", "varG_x",
-     "varA_x", "varD_x", "varI_x", "varN_x", "varT_x", "Pst_x", "Gst_x", "Qst_x", "Cst_x",
-     "Fst_x",
+    }
 
-     "mean00_y", "mean01_y", "mean10_y", "mean11_y", "varP_y", "varG_y",
-     "varA_y", "varD_y", "varI_y", "varN_y", "varT_y", "Pst_y", "Gst_y", "Qst_y", "Cst_y",
-     "Fst_y",
+    std::vector<std::string> variables;
 
-     "mean00_z", "mean01_z", "mean10_z", "mean11_z", "varP_z", "varG_z",
-     "varA_z", "varD_z", "varI_z", "varN_z", "varT_z", "Pst_z", "Gst_z", "Qst_z", "Cst_z",
-     "Fst_z",
+    // Or read file defining what variables to save
 
-     "EI", "SI", "RI",
+    std::ifstream file;
+    file.open(filename);
+    if (!file.is_open()) {
+        std::string msg = "Unable to open save file ";
+        throw std::runtime_error(msg + filename);
+    }
 
-     "genome_varP", "genome_varG", "genome_varA", "genome_varD", "genome_varI",
-     "genome_varN", "genome_Pst", "genome_Gst", "genome_Qst", "genome_Cst",
-     "genome_Fst", "genome_alpha", "genome_meang", "genome_freq",
+    std::string input;
+    while (file >> input) variables.push_back(input);
+    file.close();
+    return variables;
 
-     "network_corgen", "network_corbreed", "network_corfreq", "network_avgi",
-     "network_avgj",
-
-     "population_ecotype", "population_habitat", "population_x", "population_y",
-     "population_z", "population_xmidparent", "population_ymidparent", "population_zmidparent"
-
-     };
 }
 
 vecLoci Collector::emptyloci(const GenArch &arch) const
@@ -721,117 +802,223 @@ void Collector::freeze(const MetaPop &m, const Param &p)
     const size_t nbytes = 2u * p.nloci / 64u + 1u;
     for (size_t i = 0u; i < m.population.size(); ++i)
         for (size_t B = 0u; B < nbytes; ++B)
-            stf::write(m.population[i].getByte(B), freezer);
+                 stf::write(m.population[i].getByte(B), freezer);
 }
 
 void Collector::print(const size_t &t, const MetaPop &m)
 {
 
-    size_t f = 0u; // file id
+    for (size_t f = 0u; f < filenames.size(); ++f) {
 
-    // Time
-    stf::write(utl::size2dbl(t), files[0u]); ++f;
+        if (filenames[f] == "time")
+                 stf::write(utl::size2dbl(t), files[f]);
+        else if (filenames[f] == "count00")
+                 stf::write(utl::size2dbl(counts[0u][0u]), files[f]);
+        else if (filenames[f] == "count01")
+                 stf::write(utl::size2dbl(counts[0u][1u]), files[f]);
+        else if (filenames[f] == "count10")
+                 stf::write(utl::size2dbl(counts[1u][0u]), files[f]);
+        else if (filenames[f] == "count11")
+                 stf::write(utl::size2dbl(counts[1u][1u]), files[f]);
+        else if (filenames[f] == "fem0")
+                 stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]);
+        else if (filenames[f] == "fem1")
+                 stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]);
+        else if (filenames[f] == "resource00")
+                 stf::write(m.resources[0u][0u], files[f]);
+        else if (filenames[f] == "resource01")
+                 stf::write(m.resources[0u][1u], files[f]);
+        else if (filenames[f] == "resource10")
+                 stf::write(m.resources[1u][0u], files[f]);
+        else if (filenames[f] == "resource11")
+                 stf::write(m.resources[1u][1u], files[f]);
+        else if (filenames[f] == "mean00_x")
+                 stf::write(means[0u][0u][0u], files[f]);
+        else if (filenames[f] == "mean01_x")
+                 stf::write(means[0u][0u][1u], files[f]);
+        else if (filenames[f] == "mean10_x")
+                 stf::write(means[0u][1u][0u], files[f]);
+        else if (filenames[f] == "mean11_x")
+                 stf::write(means[0u][1u][1u], files[f]);
+        else if (filenames[f] == "varP_x")
+                 stf::write(varP[0u][2u], files[f]);
+        else if (filenames[f] == "varG_x")
+                 stf::write(varG[0u][2u], files[f]);
+        else if (filenames[f] == "varA_x")
+                 stf::write(varA[0u][2u], files[f]);
+        else if (filenames[f] == "varD_x")
+                 stf::write(varD[0u], files[f]);
+        else if (filenames[f] == "varI_x")
+                 stf::write(varI[0u], files[f]);
+        else if (filenames[f] == "varN_x")
+                 stf::write(varN[0u][2u], files[f]);
+        else if (filenames[f] == "varT_x")
+                 stf::write(varT[0u], files[f]);
+        else if (filenames[f] == "Pst_x")
+                 stf::write(Pst[0u], files[f]);
+        else if (filenames[f] == "Gst_x")
+                 stf::write(Gst[0u], files[f]);
+        else if (filenames[f] == "Qst_x")
+             stf::write(Qst[0u], files[f]);
+        else if (filenames[f] == "Cst_x")
+             stf::write(Cst[0u], files[f]);
+        else if (filenames[f] == "Fst_x")
+             stf::write(Fst[0u], files[f]);
+        else if (filenames[f] == "mean00_y")
+             stf::write(means[1u][0u][0u], files[f]);
+        else if (filenames[f] == "mean01_y")
+             stf::write(means[1u][0u][1u], files[f]);
+        else if (filenames[f] == "mean10_y")
+             stf::write(means[1u][1u][0u], files[f]);
+        else if (filenames[f] == "mean11_y")
+             stf::write(means[1u][1u][1u], files[f]);
+        else if (filenames[f] == "varP_y")
+             stf::write(varP[1u][2u], files[f]);
+        else if (filenames[f] == "varG_y")
+             stf::write(varG[1u][2u], files[f]);
+        else if (filenames[f] == "varA_y")
+             stf::write(varA[1u][2u], files[f]);
+        else if (filenames[f] == "varD_y")
+             stf::write(varD[1u], files[f]);
+        else if (filenames[f] == "varI_y")
+             stf::write(varI[1u], files[f]);
+        else if (filenames[f] == "varN_y")
+             stf::write(varN[1u][2u], files[f]);
+        else if (filenames[f] == "varT_y")
+             stf::write(varT[1u], files[f]);
+        else if (filenames[f] == "Pst_y")
+             stf::write(Pst[1u], files[f]);
+        else if (filenames[f] == "Gst_y")
+             stf::write(Gst[1u], files[f]);
+        else if (filenames[f] == "Qst_y")
+             stf::write(Qst[1u], files[f]);
+        else if (filenames[f] == "Cst_y")
+             stf::write(Cst[1u], files[f]);
+        else if (filenames[f] == "Fst_y")
+             stf::write(Fst[1u], files[f]);
+        else if (filenames[f] == "means00_z")
+             stf::write(means[2u][0u][0u], files[f]);
+        else if (filenames[f] == "means01_z")
+             stf::write(means[2u][0u][1u], files[f]);
+        else if (filenames[f] == "means10_z")
+             stf::write(means[2u][1u][0u], files[f]);
+        else if (filenames[f] == "means11_z")
+             stf::write(means[2u][1u][1u], files[f]);
+        else if (filenames[f] == "varP_z")
+             stf::write(varP[2u][2u], files[f]);
+        else if (filenames[f] == "varG_z")
+             stf::write(varG[2u][2u], files[f]);
+        else if (filenames[f] == "varA_z")
+             stf::write(varA[2u][2u], files[f]);
+        else if (filenames[f] == "varD_z")
+             stf::write(varD[2u], files[f]);
+        else if (filenames[f] == "varI_z")
+             stf::write(varI[2u], files[f]);
+        else if (filenames[f] == "varN_z")
+             stf::write(varN[2u][2u], files[f]);
+        else if (filenames[f] == "varT_z")
+             stf::write(varT[2u], files[f]);
+        else if (filenames[f] == "Pst_z")
+             stf::write(Pst[2u], files[f]);
+        else if (filenames[f] == "Gst_z")
+             stf::write(Gst[2u], files[f]);
+        else if (filenames[f] == "Qst_z")
+             stf::write(Qst[2u], files[f]);
+        else if (filenames[f] == "Cst_z")
+             stf::write(Cst[2u], files[f]);
+        else if (filenames[f] == "Fst_z")
+             stf::write(Fst[2u], files[f]);
+        else if (filenames[f] == "EI")
+             stf::write(EI, files[f]);
+        else if (filenames[f] == "SI")
+             stf::write(SI, files[f]);
+        else if (filenames[f] == "RI")
+             stf::write(RI, files[f]);
 
-    // Census
-    stf::write(utl::size2dbl(counts[0u][0u]), files[f]); ++f; // hab 0 eco 0
-    stf::write(utl::size2dbl(counts[0u][1u]), files[f]); ++f; // hab 0 eco 1
-    stf::write(utl::size2dbl(counts[1u][0u]), files[f]); ++f; // hab 1 eco 0
-    stf::write(utl::size2dbl(counts[1u][1u]), files[f]); ++f; // hab 1 eco 1
-    stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]); ++f; // fem hab 0
-    stf::write(utl::size2dbl(m.sexcounts[1u][1u]), files[f]); ++f; // fem hab 1
+        else if (filenames[f] == "genome_varP")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varP[2u], files[f]);
+        else if (filenames[f] == "genome_varG")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varG[2u], files[f]);
+        else if (filenames[f] == "genome_varA")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varA[2u], files[f]);
+        else if (filenames[f] == "genome_varD")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varD, files[f]);
+        else if (filenames[f] == "genome_varI")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varI, files[f]);
+        else if (filenames[f] == "genome_varN")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].varN[2u], files[f]);
+        else if (filenames[f] == "genome_Pst")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].Pst, files[f]);
+        else if (filenames[f] == "genome_Gst")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].Gst, files[f]);
+        else if (filenames[f] == "genome_Qst")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].Qst, files[f]);
+        else if (filenames[f] == "genome_Cst")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].Cst, files[f]);
+        else if (filenames[f] == "genome_Fst")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].Fst, files[f]);
+        else if (filenames[f] == "genome_alpha")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].alpha, files[f]);
+        else if (filenames[f] == "genome_meang")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].meang, files[f]);
+        else if (filenames[f] == "genome_freq")
+            for (size_t l = 0u; l < genomescan.size(); ++l)
+                stf::write(genomescan[l].freq, files[f]);
 
-    // Resources in each habitat
-    stf::write(m.resources[0u][0u], files[f]); ++f; // hab 0 res 0
-    stf::write(m.resources[0u][1u], files[f]); ++f; // hab 0 res 1
-    stf::write(m.resources[1u][0u], files[f]); ++f; // hab 1 res 0
-    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1fem0
+        else if (filenames[f] == "network_corgen")
+            for (size_t e = 0u; e < networkscan.size(); ++e)
+                stf::write(networkscan[e].corgen, files[f]);
+        else if (filenames[f] == "network_corbreed")
+            for (size_t e = 0u; e < networkscan.size(); ++e)
+                stf::write(networkscan[e].corbreed, files[f]);
+        else if (filenames[f] == "network_corfreq")
+            for (size_t e = 0u; e < networkscan.size(); ++e)
+                stf::write(networkscan[e].corfreq, files[f]);
+        else if (filenames[f] == "network_avgi")
+            for (size_t e = 0u; e < networkscan.size(); ++e)
+                stf::write(networkscan[e].avgi, files[f]);
+        else if (filenames[f] == "network_avgj")
+            for (size_t e = 0u; e < networkscan.size(); ++e)
+                stf::write(networkscan[e].avgj, files[f]);
 
-    // Quantitative genetics
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        stf::write(means[trait][0u][0u], files[f]); ++f; // hab 0 eco 0
-        stf::write(means[trait][0u][1u], files[f]); ++f; // hab 0 eco 1
-        stf::write(means[trait][1u][0u], files[f]); ++f; // hab 1 eco 0
-        stf::write(means[trait][1u][1u], files[f]); ++f; // hab 1 eco 1
-        stf::write(varP[trait][2u], files[f]); ++f;
-        stf::write(varG[trait][2u], files[f]); ++f;
-        stf::write(varA[trait][2u], files[f]); ++f;
-        stf::write(varD[trait], files[f]); ++f;
-        stf::write(varI[trait], files[f]); ++f;
-        stf::write(varN[trait][2u], files[f]); ++f;
-        stf::write(varT[trait], files[f]); ++f;
-        stf::write(Pst[trait], files[f]); ++f;
-        stf::write(Gst[trait], files[f]); ++f;
-        stf::write(Qst[trait], files[f]); ++f;
-        stf::write(Cst[trait], files[f]); ++f;
-        stf::write(Fst[trait], files[f]); ++f;
+        else if (filenames[f] == "population_ecotype")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(utl::size2dbl(m.getEcotype(i)), files[f]);
+        else if (filenames[f] == "population_habitat")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(utl::size2dbl(m.getHabitat(i)), files[f]);
+        else if (filenames[f] == "population_x")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getEcoTrait(i), files[f]);
+        else if (filenames[f] == "population_y")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getMatePref(i), files[f]);
+        else if (filenames[f] == "population_z")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getNeutral(i), files[f]);
+        else if (filenames[f] == "population_xmidparent")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getEcoMidparent(i), files[f]);
+        else if (filenames[f] == "population_ymidparent")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getMatMidparent(i), files[f]);
+        else if (filenames[f] == "population_zmidparent")
+            for (size_t i = 0u; i < m.getSize(); ++i)
+                stf::write(m.getNeuMidparent(i), files[f]);
     }
-
-    // Speciation metrics
-    stf::write(EI, files[f]); ++f;
-    stf::write(SI, files[f]); ++f;
-    stf::write(RI, files[f]); ++f;
-
-    size_t off = 0u; // offset to write multiple loci to the same file
-
-    // Genome scans through loci
-    for (size_t l = 0u; l < genomescan.size(); ++l) {
-
-        off = 0u; // reset the offset
-
-        // Writing scalars here so maybe no need for vector writer
-
-        stf::write(genomescan[l].varP[2u], files[f + off]); ++off;
-        stf::write(genomescan[l].varG[2u], files[f + off]); ++off;
-        stf::write(genomescan[l].varA[2u], files[f + off]); ++off;
-        stf::write(genomescan[l].varD, files[f + off]); ++off;
-        stf::write(genomescan[l].varI, files[f + off]); ++off;
-        stf::write(genomescan[l].varN[2u], files[f + off]); ++off;
-        stf::write(genomescan[l].Pst, files[f + off]); ++off;
-        stf::write(genomescan[l].Gst, files[f + off]); ++off;
-        stf::write(genomescan[l].Qst, files[f + off]); ++off;
-        stf::write(genomescan[l].Cst, files[f + off]); ++off;
-        stf::write(genomescan[l].Fst, files[f + off]); ++off;
-        stf::write(genomescan[l].alpha, files[f + off]); ++off;
-        stf::write(genomescan[l].meang, files[f + off]); ++off;
-        stf::write(genomescan[l].freq, files[f + off]); ++off;
-    }
-
-    f += off; // move on to network files
-
-    // Network scans through edges
-    for (size_t e = 0u; e < networkscan.size(); ++e) {
-
-        off = 0u; // reset the offset
-
-        stf::write(networkscan[e].corgen, files[f + off]); ++off;
-        stf::write(networkscan[e].corbreed, files[f + off]); ++off;
-        stf::write(networkscan[e].corfreq, files[f + off]); ++off;
-        stf::write(networkscan[e].avgi, files[f + off]); ++off;
-        stf::write(networkscan[e].avgj, files[f + off]); ++off;
-
-    }
-
-    if (!networkscan.size()) off = 5u;
-
-    f += off; // move on to population files
-
-    // Population screenshot
-    for (size_t i = 0u; i < m.getSize(); ++i) {
-
-        off = 0u;
-
-        stf::write(utl::size2dbl(m.getEcotype(i)), files[f + off]); ++off;
-        stf::write(utl::size2dbl(m.getHabitat(i)), files[f + off]); ++off;
-        stf::write(m.getEcoTrait(i), files[f + off]); ++off;
-        stf::write(m.getMatePref(i), files[f + off]); ++off;
-        stf::write(m.getNeutral(i), files[f + off]); ++off;
-        stf::write(m.getEcoMidparent(i), files[f + off]); ++off;
-        stf::write(m.getMatMidparent(i), files[f + off]); ++off;
-        stf::write(m.getNeuMidparent(i), files[f + off]); ++off;
-    }
-
-    assert(f + off == files.size()); // should be done with all files
-
 }
 
 void Collector::shutdown()
