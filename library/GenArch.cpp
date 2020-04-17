@@ -69,8 +69,8 @@ vecDbl GenArch::makeLocations(const Param &p) const
 vecDbl GenArch::makeEffects(const Param &p) const
 {
 
-    if (p.effectshape == 0.0 || p.effectscale == 0.0)
-        return utl::zeros(p.nloci);
+    if (p.effectshape == 0.0) return utl::zeros(p.nloci);
+    if (p.effectscale == 0.0) return utl::ones(p.nloci);
 
     vecDbl effectsizes(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares

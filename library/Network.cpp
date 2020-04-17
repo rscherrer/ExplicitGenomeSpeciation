@@ -133,8 +133,8 @@ vecEdg Network::makeEdges(const Param &p) const
 
 vecDbl Network::makeWeights(const Param &p) const
 {
-    if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
-        return utl::zeros(p.nedges[trait]);
+    if (p.interactionshape == 0.0) return utl::zeros(p.nedges[trait]);
+    if (p.interactionscale == 0.0) return utl::ones(p.nedges[trait]);
 
     vecDbl intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
