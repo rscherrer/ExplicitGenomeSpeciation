@@ -37,9 +37,11 @@ int simulate(const vecStrings &args)
         MetaPop metapop = MetaPop(pars, arch);
 
         // Create an analytical module
-        std::string order = "";
-        if (pars.choosewhattosave) order = pars.orderfile;
-        Collector collector = Collector(arch, order);
+        Collector collector = Collector(arch);
+
+        // Create a printer
+        const std::string order = pars.choosewhattosave ? pars.orderfile : "";
+        Printer printer = Printer(order);
 
         std::cout << "Simulation started.\n";
 
@@ -61,12 +63,14 @@ int simulate(const vecStrings &args)
                 collector.analyze(metapop, pars, arch);
 
                 // Save them to files
-                if (pars.datsave) collector.print(t, metapop);
+                // if (pars.datsave) collector.print(t, metapop);
+                if (pars.datsave) printer.print(t, collector, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)
             if (timetofreeze(t, pars)) {
-                collector.freeze(metapop, pars);
+                // collector.freeze(metapop, pars);
+                printer.freeze(metapop, pars);
             }
 
             metapop.reproduce(pars, arch);

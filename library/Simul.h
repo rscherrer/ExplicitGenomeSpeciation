@@ -7,6 +7,7 @@
 #include "Types.h"
 #include "MetaPop.h"
 #include "Collector.h"
+#include "Printer.h"
 #include <stddef.h>
 #include <iostream>
 

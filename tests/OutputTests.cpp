@@ -1,4 +1,5 @@
 #include "library/Collector.h"
+#include "library/Printer.h"
 #include "library/Random.h"
 #include "library/Utilities.h"
 #include "tests/TestUtilities.h"
@@ -29,6 +30,7 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
   Collector collector = Collector(arch);
+  Printer printer = Printer();
 
   size_t cumulsize = 0u;
   size_t lastgenfirst = 0u;
@@ -38,7 +40,7 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     metapop.cycle(pars, arch);
     collector.analyze(metapop, pars, arch);
-    collector.print(t, metapop);
+    printer.print(t, collector, metapop);
 
     if (t != 9) lastgenfirst += metapop.getSize();
     else lastgensize = metapop.getSize();
@@ -49,7 +51,7 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
   assert(cumulsize - lastgenfirst == lastgensize);
 
-  collector.shutdown();
+  printer.shutdown();
 
     // Read output files
   vecDbl time = tst::readfile("time.dat");

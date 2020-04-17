@@ -93,12 +93,11 @@ typedef std::vector<Stream > vecStreams;
 class Collector
 {
 
+    friend class Printer;
+
 public:
 
-    Collector(const GenArch &arch, const std::string &savefile = "") :
-        filenames(whattosave(savefile)),
-        files({ }),
-        freezer(new std::ofstream),
+    Collector(const GenArch &arch) :
         counts(utl::uzeros(3u, 3u)),
         means(utl::zeros(3u, 3u, 3u)),
         varG(utl::zeros(3u, 3u)),
@@ -118,42 +117,9 @@ public:
         EI(0.0),
         SI(0.0),
         RI(0.0)
-    {
-
-        files.reserve(filenames.size());
-
-        // Open files
-        for (size_t f = 0u; f < filenames.size(); ++f) {
-
-            const std::string filename = filenames[f] + ".dat";
-            Stream out(new std::ofstream);
-            out->open(filename.c_str(), std::ios::binary);
-            if (!out->is_open()) {
-                std::string msg = "Unable to open output file " + filename;
-                throw std::runtime_error(msg);
-            }
-            files.push_back(out);
-        }
-
-        // Open the freezer
-        const std::string freezername = "freezer.dat";
-        freezer->open(freezername.c_str(), std::ios::binary);
-        if (!freezer->is_open()) {
-            std::string msg = "Unable to open output freezer file";
-            throw std::runtime_error(msg);
-        }
-
-    }
-
-    ~Collector()
-    {
-        shutdown(); // close files
-    }    
+    {}
 
     void analyze(const MetaPop&, const Param&, const GenArch&);
-    void print(const size_t&, const MetaPop&);
-    void freeze(const MetaPop&, const Param&);
-    void shutdown();
 
     // Getters called in tests
     double getEI() const
@@ -191,13 +157,8 @@ public:
 
 private:
 
-    vecStrings whattosave(const std::string&) const;
     vecLoci emptyloci(const GenArch&) const;
     vecConnex emptyconnexions(const GenArch&) const;
-
-    vecStrings filenames;
-    vecStreams files;
-    Stream freezer;
 
     MatUns counts; // per habitat per ecotype
 
