@@ -75,25 +75,12 @@ public:
         const size_t n = population.size();
         return ssq / n - utl::sqr(sum / n);
     }
-    double getMeanEcoTrait() const
+    double getMeanTrait(const size_t &trait) const
     {
         double mean = 0.0;
         for (size_t i = 0u; i < population.size(); ++i)
-            mean += population[i].getEcoTrait();
+            mean += population[i].getTraitValue(trait);
         return mean / population.size();
-    }
-    double getMeanEcoTrait(const size_t &h) const // can be removed
-    {
-        double mean = 0.0;
-        size_t n = 0u;
-        for (size_t i = 0u; i < population.size(); ++i) {
-            if (population[i].getHabitat() == h) {
-                ++n;
-                mean += population[i].getEcoTrait();
-            }
-        }
-        mean /= n;
-        return mean;
     }
     double getMeanEcotype(const size_t &h) const // can be removed
     {
@@ -106,15 +93,6 @@ public:
             }
         }
         mean /= n;
-        return mean;
-    }
-    double getMeanMatePref() const // can be removed
-    {
-        double mean = 0.0;
-        for (size_t i = 0u; i < population.size(); ++i) {
-            mean += population[i].getMatePref();
-        }
-        mean /= population.size();
         return mean;
     }
     double getFitness(const size_t &i) const // can be removed
@@ -133,50 +111,28 @@ public:
     {
         return population[i].getHabitat();
     }
-    double getEcoTrait(const size_t &i) const
+    double getTrait(const size_t &i, const size_t &trait) const
     {
-        return population[i].getEcoTrait();
+        return population[i].getTraitValue(trait);
     }
-    double getMatePref(const size_t &i) const
+    double getMidparent(const size_t &i, const size_t &trait) const
     {
-        return population[i].getMatePref();
-    }
-    double getNeutral(const size_t &i) const
-    {
-        return population[i].getNeutral();
-    }
-    double getEcoMidparent(const size_t &i) const
-    {
-        return population[i].getEcoMidparent();
-    }
-    double getMatMidparent(const size_t &i) const
-    {
-        return population[i].getMatMidparent();
-    }
-    double getNeuMidparent(const size_t &i) const
-    {
-        return population[i].getNeuMidparent();
+        return population[i].getMidparent(trait);
     }
 
     // Resetters used in tests
-    void resetEcoTraits(const double &x, const Param &p)
+    void resetTraits(const size_t &trait, const double &x, const Param &p)
     {
         for (size_t i = 0u; i < population.size(); ++i){
-            population[i].resetEcoTrait(x, p);
+            population[i].resetTrait(trait, x, p);
         }
     }
-    void resetEcoTraits(const size_t &h, const double &x, const Param &p)
+    void resetTraits(const size_t &trait, const size_t &h, const double &x,
+                     const Param &p)
     {
-        for (size_t i = 0u; i < population.size(); ++i) {
-            if (population[i].getHabitat() == h) {
-                population[i].resetEcoTrait(x, p);
-            }
-        }
-    }
-    void resetMatePrefs(const double &x)
-    {
-        for (size_t i = 0u; i < population.size(); ++i) {
-            population[i].resetMatePref(x);
+        for (size_t i = 0u; i < population.size(); ++i){
+            if (population[i].getHabitat() == h)
+                population[i].resetTrait(trait, x, p);
         }
     }
     void resetGenders(const bool &sex)

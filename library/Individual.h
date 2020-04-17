@@ -22,12 +22,7 @@ public:
         locivalues(utl::zeros(pars.nloci)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(0.0),
-        matepref(0.0),
-        neutrait(0.0),
-        ecomidparent(0.0),
-        matmidparent(0.0),
-        neumidparent(0.0),
+        midparents(utl::zeros(3u)),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -55,12 +50,7 @@ public:
         locivalues(utl::zeros(pars.nloci)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(0.0),
-        matepref(0.0),
-        neutrait(0.0),
-        ecomidparent((mom.getEcoTrait() + dad.getEcoTrait()) / 2.0),
-        matmidparent((mom.getMatePref() + dad.getMatePref()) / 2.0),
-        neumidparent((mom.getNeutral() + dad.getNeutral()) / 2.0),
+        midparents(calcmidparent(mom, dad)),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -103,30 +93,6 @@ public:
     {
         return habitat;
     }
-    double getEcoTrait() const
-    {
-        return ecotrait;
-    }
-    double getMatePref() const
-    {
-        return matepref;
-    }
-    double getNeutral() const
-    {
-        return neutrait;
-    }
-    double getEcoMidparent() const
-    {
-        return ecomidparent;
-    }
-    double getMatMidparent() const
-    {
-        return matmidparent;
-    }
-    double getNeuMidparent() const
-    {
-        return neumidparent;
-    }
     double getFitness() const
     {
         return fitness;
@@ -134,6 +100,10 @@ public:
     double getTraitValue(const size_t &trait) const
     {
         return traitvalues[trait];
+    }
+    double getMidparent(const size_t &trait) const
+    {
+        return midparents[trait];
     }
     double getGenValue(const size_t &trait) const
     {
@@ -178,21 +148,17 @@ public:
     }
 
     // Force resetters
-    void resetEcoTrait(const double &x, const Param &p)
+    void resetTrait(const size_t &trait, const double &newvalue, const Param &p)
     {
-        ecotrait = x;
-        traitvalues[0u] = x;
-        feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
-        assert(feeding[0u] >= 0.0);
-        assert(feeding[1u] >= 0.0);
-        assert(feeding[0u] <= 1.0);
-        assert(feeding[1u] <= 1.0);
-    }
-    void resetMatePref(const double &y)
-    {
-        matepref = y;
-        traitvalues[1u] = y;
+        traitvalues[trait] = newvalue;
+        if (trait == 0u) {
+            feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] + 1.0));
+            feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] - 1.0));
+            assert(feeding[0u] >= 0.0);
+            assert(feeding[1u] >= 0.0);
+            assert(feeding[0u] <= 1.0);
+            assert(feeding[1u] <= 1.0);
+        }
     }
     void resetEcotype(const size_t &e)
     {
@@ -215,18 +181,14 @@ private:
     void develop(const Param&, const GenArch&);
 
     bool determinesex() const;
+    vecDbl calcmidparent(const Individual&, const Individual&) const;
 
     Genome genome;
     vecDbl transcriptome;
     vecDbl locivalues;
     vecDbl genvalues;
     vecDbl traitvalues;
-    double ecotrait;
-    double matepref;
-    double neutrait;
-    double ecomidparent;
-    double matmidparent;
-    double neumidparent;
+    vecDbl midparents;
     double fitness;
     vecDbl feeding;
     size_t ecotype;

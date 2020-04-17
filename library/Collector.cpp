@@ -9,94 +9,47 @@ vecStrings Collector::whattosave(const std::string &filename) const
         return {
 
             "time",
-            "count00",
-            "count01",
-            "count10",
-            "count11",
-            "fem0",
-            "fem1",
-            "resource00",
-            "resource01",
-            "resource10",
-            "resource11",
-            "mean00_x",
-            "mean01_x",
-            "mean10_x",
-            "mean11_x",
-            "varP_x",
-            "varG_x",
-            "varA_x",
-            "varD_x",
-            "varI_x",
-            "varN_x",
-            "varT_x",
-            "Pst_x",
-            "Gst_x",
-            "Qst_x",
-            "Cst_x",
-            "Fst_x",
-            "mean00_y",
-            "mean01_y",
-            "mean10_y",
-            "mean11_y",
-            "varP_y",
-            "varG_y",
-            "varA_y",
-            "varD_y",
-            "varI_y",
-            "varN_y",
-            "varT_y",
-            "Pst_y",
-            "Gst_y",
-            "Qst_y",
-            "Cst_y",
-            "Fst_y",
-            "mean00_z",
-            "mean01_z",
-            "mean10_z",
-            "mean11_z",
-            "varP_z",
-            "varG_z",
-            "varA_z",
-            "varD_z",
-            "varI_z",
-            "varN_z",
-            "varT_z",
-            "Pst_z",
-            "Gst_z",
-            "Qst_z",
-            "Cst_z",
-            "Fst_z",
+            "population_size",
+            "resources", // per habitat per resource
+            "means", // per trait per ecotype
+            "varP", // per trait
+            "varG", // per trait
+            "varA", // per trait
+            "varD", // per trait
+            "varI", // per trait
+            "varN", // per trait
+            "varT", // per trait
+            "Pst", // per trait
+            "Gst", // per trait
+            "Qst", // per trait
+            "Cst", // per trait
+            "Fst", // per trait
             "EI",
             "SI",
             "RI",
-            "genome_varP",
-            "genome_varG",
-            "genome_varA",
-            "genome_varD",
-            "genome_varI",
-            "genome_varN",
-            "genome_Pst",
-            "genome_Gst",
-            "genome_Qst",
-            "genome_Cst",
-            "genome_Fst",
-            "genome_alpha",
-            "genome_meang",
-            "genome_freq",
-            "network_corgen",
-            "network_corbreed",
-            "network_corfreq",
-            "network_avgi",
-            "network_avgj",
-            "population_ecotype",
-            "population_habitat",
-            "population_x",
-            "population_y",
-            "population_z",
-            "population_xmidparent",
-            "population_ymidparent",
-            "population_zmidparent"
+            "genome_varP", // per locus
+            "genome_varG", // per locus
+            "genome_varA", // per locus
+            "genome_varD", // per locus
+            "genome_varI", // per locus
+            "genome_varN", // per locus
+            "genome_Pst", // per locus
+            "genome_Gst", // per locus
+            "genome_Qst", // per locus
+            "genome_Cst", // per locus
+            "genome_Fst", // per locus
+            "genome_alpha", // per locus
+            "genome_meang", // per locus
+            "genome_freq", // per locus
+            "network_corgen", // per edge
+            "network_corbreed", // per edge
+            "network_corfreq", // per edge
+            "network_avgi", // per edge
+            "network_avgj", // per edge
+            "individual_ecotype", // per individual
+            "individual_habitat", // per individual
+            "individual_trait", // per individual per trait
+            "individual_midparent" // per individual per trait
 
         };
 
@@ -651,7 +604,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
             const size_t mal = males[malepool(rnd::rng)];
 
             // See if the female accepts the male or not
-            const double maletrait = m.population[mal].getEcoTrait();
+            const double maletrait = m.population[mal].getTraitValue(0u);
             const double prob = m.population[fem].mate(maletrait, p);
             auto ismating = rnd::bernoulli(prob);
 
@@ -811,130 +764,59 @@ void Collector::print(const size_t &t, const MetaPop &m)
     for (size_t f = 0u; f < filenames.size(); ++f) {
 
         if (filenames[f] == "time")
-                 stf::write(utl::size2dbl(t), files[f]);
-        else if (filenames[f] == "count00")
-                 stf::write(utl::size2dbl(counts[0u][0u]), files[f]);
-        else if (filenames[f] == "count01")
-                 stf::write(utl::size2dbl(counts[0u][1u]), files[f]);
-        else if (filenames[f] == "count10")
-                 stf::write(utl::size2dbl(counts[1u][0u]), files[f]);
-        else if (filenames[f] == "count11")
-                 stf::write(utl::size2dbl(counts[1u][1u]), files[f]);
-        else if (filenames[f] == "fem0")
-                 stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]);
-        else if (filenames[f] == "fem1")
-                 stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]);
-        else if (filenames[f] == "resource00")
-                 stf::write(m.resources[0u][0u], files[f]);
-        else if (filenames[f] == "resource01")
-                 stf::write(m.resources[0u][1u], files[f]);
-        else if (filenames[f] == "resource10")
-                 stf::write(m.resources[1u][0u], files[f]);
-        else if (filenames[f] == "resource11")
-                 stf::write(m.resources[1u][1u], files[f]);
-        else if (filenames[f] == "mean00_x")
-                 stf::write(means[0u][0u][0u], files[f]);
-        else if (filenames[f] == "mean01_x")
-                 stf::write(means[0u][0u][1u], files[f]);
-        else if (filenames[f] == "mean10_x")
-                 stf::write(means[0u][1u][0u], files[f]);
-        else if (filenames[f] == "mean11_x")
-                 stf::write(means[0u][1u][1u], files[f]);
-        else if (filenames[f] == "varP_x")
-                 stf::write(varP[0u][2u], files[f]);
-        else if (filenames[f] == "varG_x")
-                 stf::write(varG[0u][2u], files[f]);
-        else if (filenames[f] == "varA_x")
-                 stf::write(varA[0u][2u], files[f]);
-        else if (filenames[f] == "varD_x")
-                 stf::write(varD[0u], files[f]);
-        else if (filenames[f] == "varI_x")
-                 stf::write(varI[0u], files[f]);
-        else if (filenames[f] == "varN_x")
-                 stf::write(varN[0u][2u], files[f]);
-        else if (filenames[f] == "varT_x")
-                 stf::write(varT[0u], files[f]);
-        else if (filenames[f] == "Pst_x")
-                 stf::write(Pst[0u], files[f]);
-        else if (filenames[f] == "Gst_x")
-                 stf::write(Gst[0u], files[f]);
-        else if (filenames[f] == "Qst_x")
-             stf::write(Qst[0u], files[f]);
-        else if (filenames[f] == "Cst_x")
-             stf::write(Cst[0u], files[f]);
-        else if (filenames[f] == "Fst_x")
-             stf::write(Fst[0u], files[f]);
-        else if (filenames[f] == "mean00_y")
-             stf::write(means[1u][0u][0u], files[f]);
-        else if (filenames[f] == "mean01_y")
-             stf::write(means[1u][0u][1u], files[f]);
-        else if (filenames[f] == "mean10_y")
-             stf::write(means[1u][1u][0u], files[f]);
-        else if (filenames[f] == "mean11_y")
-             stf::write(means[1u][1u][1u], files[f]);
-        else if (filenames[f] == "varP_y")
-             stf::write(varP[1u][2u], files[f]);
-        else if (filenames[f] == "varG_y")
-             stf::write(varG[1u][2u], files[f]);
-        else if (filenames[f] == "varA_y")
-             stf::write(varA[1u][2u], files[f]);
-        else if (filenames[f] == "varD_y")
-             stf::write(varD[1u], files[f]);
-        else if (filenames[f] == "varI_y")
-             stf::write(varI[1u], files[f]);
-        else if (filenames[f] == "varN_y")
-             stf::write(varN[1u][2u], files[f]);
-        else if (filenames[f] == "varT_y")
-             stf::write(varT[1u], files[f]);
-        else if (filenames[f] == "Pst_y")
-             stf::write(Pst[1u], files[f]);
-        else if (filenames[f] == "Gst_y")
-             stf::write(Gst[1u], files[f]);
-        else if (filenames[f] == "Qst_y")
-             stf::write(Qst[1u], files[f]);
-        else if (filenames[f] == "Cst_y")
-             stf::write(Cst[1u], files[f]);
-        else if (filenames[f] == "Fst_y")
-             stf::write(Fst[1u], files[f]);
-        else if (filenames[f] == "means00_z")
-             stf::write(means[2u][0u][0u], files[f]);
-        else if (filenames[f] == "means01_z")
-             stf::write(means[2u][0u][1u], files[f]);
-        else if (filenames[f] == "means10_z")
-             stf::write(means[2u][1u][0u], files[f]);
-        else if (filenames[f] == "means11_z")
-             stf::write(means[2u][1u][1u], files[f]);
-        else if (filenames[f] == "varP_z")
-             stf::write(varP[2u][2u], files[f]);
-        else if (filenames[f] == "varG_z")
-             stf::write(varG[2u][2u], files[f]);
-        else if (filenames[f] == "varA_z")
-             stf::write(varA[2u][2u], files[f]);
-        else if (filenames[f] == "varD_z")
-             stf::write(varD[2u], files[f]);
-        else if (filenames[f] == "varI_z")
-             stf::write(varI[2u], files[f]);
-        else if (filenames[f] == "varN_z")
-             stf::write(varN[2u][2u], files[f]);
-        else if (filenames[f] == "varT_z")
-             stf::write(varT[2u], files[f]);
-        else if (filenames[f] == "Pst_z")
-             stf::write(Pst[2u], files[f]);
-        else if (filenames[f] == "Gst_z")
-             stf::write(Gst[2u], files[f]);
-        else if (filenames[f] == "Qst_z")
-             stf::write(Qst[2u], files[f]);
-        else if (filenames[f] == "Cst_z")
-             stf::write(Cst[2u], files[f]);
-        else if (filenames[f] == "Fst_z")
-             stf::write(Fst[2u], files[f]);
+            stf::write(utl::size2dbl(t), files[f]);
+        else if (filenames[f] == "population_size")
+            stf::write(utl::size2dbl(m.getSize()), files[f]);
+        else if (filenames[f] == "resources")
+            for (size_t hab = 0u; hab < 2u; ++hab)
+                for (size_t res = 0u; res < 2u; ++res)
+                    stf::write(m.resources[hab][res], files[f]);
+        else if (filenames[f] == "means")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                for (size_t eco = 0u; eco < 2u; ++eco)
+                    stf::write(means[trait][2u][eco], files[f]);
+        else if (filenames[f] == "varP")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varP[trait][2u], files[f]);
+        else if (filenames[f] == "varG")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varG[trait][2u], files[f]);
+        else if (filenames[f] == "varA")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varA[trait][2u], files[f]);
+        else if (filenames[f] == "varD")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varD[trait], files[f]);
+        else if (filenames[f] == "varI")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varI[trait], files[f]);
+        else if (filenames[f] == "varN")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varN[trait][2u], files[f]);
+        else if (filenames[f] == "varT")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(varT[trait], files[f]);
+        else if (filenames[f] == "Pst")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(Pst[trait], files[f]);
+        else if (filenames[f] == "Gst")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(Gst[trait], files[f]);
+        else if (filenames[f] == "Qst")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(Qst[trait], files[f]);
+        else if (filenames[f] == "Cst")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(Cst[trait], files[f]);
+        else if (filenames[f] == "Fst")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(Fst[trait], files[f]);
         else if (filenames[f] == "EI")
              stf::write(EI, files[f]);
         else if (filenames[f] == "SI")
              stf::write(SI, files[f]);
         else if (filenames[f] == "RI")
              stf::write(RI, files[f]);
-
         else if (filenames[f] == "genome_varP")
             for (size_t l = 0u; l < genomescan.size(); ++l)
                 stf::write(genomescan[l].varP[2u], files[f]);
@@ -977,7 +859,6 @@ void Collector::print(const size_t &t, const MetaPop &m)
         else if (filenames[f] == "genome_freq")
             for (size_t l = 0u; l < genomescan.size(); ++l)
                 stf::write(genomescan[l].freq, files[f]);
-
         else if (filenames[f] == "network_corgen")
             for (size_t e = 0u; e < networkscan.size(); ++e)
                 stf::write(networkscan[e].corgen, files[f]);
@@ -993,31 +874,20 @@ void Collector::print(const size_t &t, const MetaPop &m)
         else if (filenames[f] == "network_avgj")
             for (size_t e = 0u; e < networkscan.size(); ++e)
                 stf::write(networkscan[e].avgj, files[f]);
-
-        else if (filenames[f] == "population_ecotype")
+        else if (filenames[f] == "individual_ecotype")
             for (size_t i = 0u; i < m.getSize(); ++i)
                 stf::write(utl::size2dbl(m.getEcotype(i)), files[f]);
-        else if (filenames[f] == "population_habitat")
+        else if (filenames[f] == "individual_habitat")
             for (size_t i = 0u; i < m.getSize(); ++i)
                 stf::write(utl::size2dbl(m.getHabitat(i)), files[f]);
-        else if (filenames[f] == "population_x")
+        else if (filenames[f] == "individual_trait")
             for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getEcoTrait(i), files[f]);
-        else if (filenames[f] == "population_y")
+                for (size_t trait = 0u; trait < 3u; ++trait)
+                    stf::write(m.getTrait(i, trait), files[f]);
+        else if (filenames[f] == "individual_midparent")
             for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getMatePref(i), files[f]);
-        else if (filenames[f] == "population_z")
-            for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getNeutral(i), files[f]);
-        else if (filenames[f] == "population_xmidparent")
-            for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getEcoMidparent(i), files[f]);
-        else if (filenames[f] == "population_ymidparent")
-            for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getMatMidparent(i), files[f]);
-        else if (filenames[f] == "population_zmidparent")
-            for (size_t i = 0u; i < m.getSize(); ++i)
-                stf::write(m.getNeuMidparent(i), files[f]);
+                for (size_t trait = 0u; trait < 3u; ++trait)
+                    stf::write(m.getMidparent(i, trait), files[f]);
     }
 }
 
@@ -1050,7 +920,7 @@ std::vector<double> Collector::get_eco_trait(const MetaPop &m) const
 {
    std::vector<double> output(m.population.size());
    for(size_t i = 0; i < m.population.size(); ++i) {
-       output[i] = m.population[i].getEcoTrait();
+       output[i] = m.population[i].getTraitValue(0u);
    }
    return output;
 }
@@ -1062,7 +932,7 @@ std::vector<double> Collector::get_eco_trait_deme(const MetaPop &m,
    for(size_t i = 0; i < m.population.size(); ++i) {
 
        if(m.population[i].getHabitat() == deme) {
-           output.push_back(m.population[i].getEcoTrait());
+           output.push_back(m.population[i].getTraitValue(0u));
        }
    }
    return output;
@@ -1072,7 +942,7 @@ std::vector<double> Collector::get_sex_trait(const MetaPop &m) const
 {
    std::vector<double> output(m.population.size());
    for(size_t i = 0; i < m.population.size(); ++i) {
-       output[i] = m.population[i].getMatePref();
+       output[i] = m.population[i].getTraitValue(1u);
    }
    return output;
 }
@@ -1084,7 +954,7 @@ std::vector<double> Collector::get_sex_trait_deme(const MetaPop &m,
    for(size_t i = 0; i < m.population.size(); ++i) {
 
        if(m.population[i].getHabitat() == deme) {
-           output.push_back(m.population[i].getMatePref());
+           output.push_back(m.population[i].getTraitValue(1u));
        }
    }
    return output;
@@ -1096,7 +966,7 @@ std::vector<double> Collector::get_neu_trait(const MetaPop &m) const
 {
    std::vector<double> output(m.population.size());
    for(size_t i = 0; i < m.population.size(); ++i) {
-       output[i] = m.population[i].getNeutral();
+       output[i] = m.population[i].getTraitValue(2u);
    }
    return output;
 }
@@ -1108,7 +978,7 @@ std::vector<double> Collector::get_neu_trait_deme(const MetaPop &m,
    for(size_t i = 0; i < m.population.size(); ++i) {
 
        if(m.population[i].getHabitat() == deme) {
-           output.push_back(m.population[i].getNeutral());
+           output.push_back(m.population[i].getTraitValue(2u));
        }
    }
    return output;

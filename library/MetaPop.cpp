@@ -99,7 +99,7 @@ void MetaPop::consume(const Param &p)
     double sumx = 0.0;
     for (size_t i = 0u; i < population.size(); ++i) {
 
-        sumx += population[i].getEcoTrait();
+        sumx += population[i].getTraitValue(0u);
 
         const size_t hab = population[i].getHabitat();
         sumfeed[hab][0u] += population[i].getFeeding(0u);
@@ -152,8 +152,6 @@ void MetaPop::consume(const Param &p)
         population[i].feed(resources[population[i].getHabitat()]);
         population[i].classify(meanx);
     }
-
-
 }
 
 void MetaPop::reproduce(const Param &p, const GenArch &arch)
@@ -226,7 +224,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             // Modified in burn-in
             if (isburnin) {
-                const double y = population[m].getMatePref();
+                const double y = population[m].getTraitValue(1u);
                 fit[i] *= exp(-p.ecosel * utl::sqr(y));
             }
 
@@ -252,7 +250,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             // Modified during burn-in
             if (isburnin) {
-                const double y = population[f].getMatePref();
+                const double y = population[f].getTraitValue(1u);
                 fecundity *= exp(-p.ecosel * utl::sqr(y));
             }
 
@@ -276,7 +274,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 // Sample a male and evaluate
                 const size_t idm = getmale(rnd::rng);
                 const size_t m = males[hab][idm];
-                const double xm = population[m].getEcoTrait();
+                const double xm = population[m].getTraitValue(0u);
                 auto ismating = rnd::bernoulli(population[f].mate(xm, p));
 
                 // Produce offspring and add them to the population if accepted

@@ -196,19 +196,25 @@ void Individual::develop(const Param &p, const GenArch &arch)
         traitvalues[trait] = genvalues[trait] + envnoise;
     }
 
-    // Phenotype
-    ecotrait = traitvalues[0u];
-    matepref = traitvalues[1u];
-    neutrait = traitvalues[2u];
-
     // Feeding rates
-    feeding[0u] = exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-    feeding[1u] = exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
+    feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] + 1.0));
+    feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] - 1.0));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);
     assert(feeding[0u] <= 1.0);
     assert(feeding[1u] <= 1.0);
+
+}
+
+vecDbl Individual::calcmidparent(const Individual &mom, const Individual &dad) const
+{
+    vecDbl midtraits = utl::zeros(3u);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        midtraits[trait] = mom.getTraitValue(trait) + dad.getTraitValue(trait);
+        midtraits[trait] /= 2.0;
+    }
+    return midtraits;
 
 }
 
@@ -230,7 +236,7 @@ void Individual::feed(const vecDbl &food)
 
 void Individual::classify(const double &meanx)
 {
-    ecotype = ecotrait > meanx;
+    ecotype = traitvalues[0u] > meanx;
     assert(ecotype == 0u || ecotype == 1u);
 }
 
@@ -260,10 +266,10 @@ double calcDisassortProb(const double &y, const double &xi,
 double Individual::mate(const double &x, const Param &p) const
 {
     double prob;
-    if (matepref >= 0.0)
-       prob = calcAssortProb(matepref, ecotrait, x, p.sexsel);
+    if (traitvalues[1u] >= 0.0)
+       prob = calcAssortProb(traitvalues[1u], traitvalues[0u], x, p.sexsel);
     else
-       prob = calcDisassortProb(matepref, ecotrait, x, p.sexsel);
+       prob = calcDisassortProb(traitvalues[1u], traitvalues[0u], x, p.sexsel);
     assert(prob >= 0.0);
     assert(prob <= 1.0);
     return prob;
