@@ -3,7 +3,7 @@
 
 #include "GenArch.h"
 #include "Utilities.h"
-#include "Types.h"
+
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
@@ -75,7 +75,7 @@ public:
     // Life history
     bool isalive() const;
     void disperse();
-    void feed(const vecDbl&);
+    void feed(const std::vector<double>&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
     void classify(const double&);
@@ -181,16 +181,16 @@ private:
     void develop(const Param&, const GenArch&);
 
     bool determinesex() const;
-    vecDbl calcmidparent(const Individual&, const Individual&) const;
+    std::vector<double> calcmidparent(const Individual&, const Individual&) const;
 
     Genome genome;
-    vecDbl transcriptome;
-    vecDbl locivalues;
-    vecDbl genvalues;
-    vecDbl traitvalues;
-    vecDbl midparents;
+    std::vector<double> transcriptome;
+    std::vector<double> locivalues;
+    std::vector<double> genvalues;
+    std::vector<double> traitvalues;
+    std::vector<double> midparents;
     double fitness;
-    vecDbl feeding;
+    std::vector<double> feeding;
     size_t ecotype;
     size_t habitat;
     bool gender;

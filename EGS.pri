@@ -17,7 +17,6 @@ HEADERS += \
     $$PWD/library/Network.h \
     $$PWD/library/Individual.h \
     $$PWD/library/MetaPop.h \
-    $$PWD/library/Types.h \
     $$PWD/library/Simul.h \
     $$PWD/library/Collector.h \
     $$PWD/library/Printer.h \

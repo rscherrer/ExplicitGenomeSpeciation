@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_COLLECTOR_H
 #define EXPLICITGENOMESPECIATION_COLLECTOR_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "MetaPop.h"
 #include "GenArch.h"
@@ -34,10 +34,10 @@ struct Locus
     size_t id;
     size_t trait;
 
-    vecDbl varG; // per ecotype
-    vecDbl varP; // per ecotype
-    vecDbl varA; // per ecotype
-    vecDbl varN; // per ecotype
+    std::vector<double> varG; // per ecotype
+    std::vector<double> varP; // per ecotype
+    std::vector<double> varA; // per ecotype
+    std::vector<double> varN; // per ecotype
     double varD;
     double varI;
     double varZ;
@@ -50,7 +50,7 @@ struct Locus
     double Fst;
 
     double alpha;
-    vecDbl beta; // per genotype
+    std::vector<double> beta; // per genotype
     double meang;
     double freq;
 };
@@ -85,10 +85,7 @@ struct Connexion
     double avgj;
 };
 
-typedef std::vector<Locus> vecLoci;
-typedef std::vector<Connexion> vecConnex;
 typedef std::shared_ptr<std::ofstream> Stream;
-typedef std::vector<Stream > vecStreams;
 
 class Collector
 {
@@ -157,29 +154,29 @@ public:
 
 private:
 
-    vecLoci emptyloci(const GenArch&) const;
-    vecConnex emptyconnexions(const GenArch&) const;
+    std::vector<Locus> emptyloci(const GenArch&) const;
+    std::vector<Connexion> emptyconnexions(const GenArch&) const;
 
-    MatUns counts; // per habitat per ecotype
+    std::vector<std::vector<size_t> > counts; // per habitat per ecotype
 
-    Matx3d means; // per trait per habitat per ecotype
+    std::vector<std::vector<std::vector<double> > > means; // per trait per habitat per ecotype
 
-    Matrix varG; // per trait per ecotype
-    Matrix varP; // per trait per ecotype
-    Matrix varA; // per trait per ecotype
-    Matrix varN; // per trait per ecotype
-    vecDbl varD; // per trait
-    vecDbl varI; // per trait
-    vecDbl varT; // per trait
+    std::vector<std::vector<double> > varG; // per trait per ecotype
+    std::vector<std::vector<double> > varP; // per trait per ecotype
+    std::vector<std::vector<double> > varA; // per trait per ecotype
+    std::vector<std::vector<double> > varN; // per trait per ecotype
+    std::vector<double> varD; // per trait
+    std::vector<double> varI; // per trait
+    std::vector<double> varT; // per trait
 
-    vecDbl Pst; // per trait
-    vecDbl Gst; // per trait
-    vecDbl Qst; // per trait
-    vecDbl Cst; // per trait
-    vecDbl Fst; // per trait
+    std::vector<double> Pst; // per trait
+    std::vector<double> Gst; // per trait
+    std::vector<double> Qst; // per trait
+    std::vector<double> Cst; // per trait
+    std::vector<double> Fst; // per trait
 
-    vecLoci genomescan; // per locus
-    vecConnex networkscan; // per edge
+    std::vector<Locus> genomescan; // per locus
+    std::vector<Connexion> networkscan; // per edge
 
     double EI;
     double SI;
@@ -187,6 +184,6 @@ private:
 
 };
 
-double Xst(const vecDbl&, const vecUns&);
+double Xst(const std::vector<double>&, const std::vector<size_t>&);
 
 #endif

@@ -54,10 +54,10 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
   printer.shutdown();
 
     // Read output files
-  vecDbl time = tst::readfile("time.dat");
-  vecDbl ei = tst::readfile("EI.dat");
-  vecDbl si = tst::readfile("SI.dat");
-  vecDbl ri = tst::readfile("RI.dat");
+  std::vector<double> time = tst::readfile("time.dat");
+  std::vector<double> ei = tst::readfile("EI.dat");
+  std::vector<double> si = tst::readfile("SI.dat");
+  std::vector<double> ri = tst::readfile("RI.dat");
 
     // Check output files
 
@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
   BOOST_CHECK_EQUAL(ri.size(), 10u);
 
     // Read individual trait values and ecotypes
-  vecDbl popx = tst::readfile("individual_trait.dat");
-  vecDbl ecotypes = tst::readfile("individual_ecotype.dat");
+  std::vector<double> popx = tst::readfile("individual_trait.dat");
+  std::vector<double> ecotypes = tst::readfile("individual_ecotype.dat");
 
   BOOST_CHECK_EQUAL(popx.size() / 3u, cumulsize);
 

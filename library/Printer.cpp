@@ -150,7 +150,7 @@ void Printer::shutdown()
 }
 
 
-vecStrings Printer::whattosave(const std::string &filename) const
+std::vector<std::string> Printer::whattosave(const std::string &filename) const
 {
     if (filename == "") {
 

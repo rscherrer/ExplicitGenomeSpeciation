@@ -2,14 +2,13 @@
 #define EXPLICITGENOMESPECIATION_NETWORK_H
 
 #include "Param.h"
-#include "Types.h"
+
 #include "Utilities.h"
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
 
 typedef std::pair<size_t, size_t> Edge;
-typedef std::vector<Edge> vecEdg;
 
 // A class for a gene regulatory network. One network underlies one of the
 // three traits of the simulation. Networks are generated using a
@@ -21,7 +20,7 @@ class Network
 
 public:
 
-    Network(const size_t &character, const Param &pars, const vecUns &traits) :
+    Network(const size_t &character, const Param &pars, const std::vector<size_t> &traits) :
         trait(character),
         map(makeMap(pars)),
         loci(makeUnderlyingLoci(pars, traits)),
@@ -45,16 +44,16 @@ public:
 
     size_t trait;
 
-    vecEdg map;
-    vecUns loci;
-    vecEdg edges;
-    vecDbl weights;
+    std::vector<Edge> map;
+    std::vector<size_t> loci;
+    std::vector<Edge> edges;
+    std::vector<double> weights;
 
     // Makers
-    vecEdg makeMap(const Param&) const;
-    vecUns makeUnderlyingLoci(const Param&, const vecUns&) const;
-    vecEdg makeEdges(const Param&) const;
-    vecDbl makeWeights(const Param&) const;
+    std::vector<Edge> makeMap(const Param&) const;
+    std::vector<size_t> makeUnderlyingLoci(const Param&, const std::vector<size_t>&) const;
+    std::vector<Edge> makeEdges(const Param&) const;
+    std::vector<double> makeWeights(const Param&) const;
 
 };
 

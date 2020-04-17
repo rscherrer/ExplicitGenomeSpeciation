@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_PARAM_H
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "Random.h"
 #include <fstream>
@@ -97,24 +97,24 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    vecUns demesizes;
+    std::vector<size_t> demesizes;
 
     // Genetic parameters
     mutable size_t nloci;
-    mutable vecUns nvertices;
-    mutable vecUns nedges;
+    mutable std::vector<size_t> nvertices;
+    mutable std::vector<size_t> nedges;
     mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
 
     // Genotype-phenotype map
-    vecDbl scaleA;
-    vecDbl scaleD;
-    vecDbl scaleI;
-    vecDbl scaleE;
-    vecDbl locusE;
-    vecDbl skews;
+    std::vector<double> scaleA;
+    std::vector<double> scaleD;
+    std::vector<double> scaleI;
+    std::vector<double> scaleE;
+    std::vector<double> locusE;
+    std::vector<double> skews;
     double effectshape;
     double effectscale;
     double interactionshape;

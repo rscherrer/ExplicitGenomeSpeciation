@@ -10,7 +10,7 @@ bool timetofreeze(const int &t,const Param &p)
     return p.record && p.gensave && t >= 0 && t % p.tfreeze == 0;
 }
 
-int simulate(const vecStrings &args)
+int simulate(const std::vector<std::string> &args)
 {
 
     try

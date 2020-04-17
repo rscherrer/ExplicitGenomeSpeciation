@@ -207,9 +207,9 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
 }
 
-vecDbl Individual::calcmidparent(const Individual &mom, const Individual &dad) const
+std::vector<double> Individual::calcmidparent(const Individual &mom, const Individual &dad) const
 {
-    vecDbl midtraits = utl::zeros(3u);
+    std::vector<double> midtraits = utl::zeros(3u);
     for (size_t trait = 0u; trait < 3u; ++trait) {
         midtraits[trait] = mom.getTraitValue(trait) + dad.getTraitValue(trait);
         midtraits[trait] /= 2.0;
@@ -228,7 +228,7 @@ void Individual::disperse()
     habitat = habitat == 0u ? 1u : 0u;
 }
 
-void Individual::feed(const vecDbl &food)
+void Individual::feed(const std::vector<double> &food)
 {
     fitness = feeding[0u] * food[0u] + feeding[1u] * food[1u];
     assert(fitness >= 0.0);

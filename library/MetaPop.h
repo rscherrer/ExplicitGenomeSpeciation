@@ -5,7 +5,7 @@
 #include "GenArch.h"
 #include "Individual.h"
 #include "Utilities.h"
-#include "Types.h"
+
 #include <cassert>
 
 typedef std::vector<Individual> Crowd;
@@ -150,8 +150,8 @@ private:
     Crowd population;
     bool isburnin;
 
-    Matrix resources; // per habitat per resource
-    MatUns sexcounts; // per habitat per sex
+    std::vector<std::vector<double> > resources; // per habitat per resource
+    std::vector<std::vector<size_t> > sexcounts; // per habitat per sex
 
 };
 

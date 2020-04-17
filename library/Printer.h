@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_PRINTER_H
 #define EXPLICITGENOMESPECIATION_PRINTER_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "Collector.h"
 #include "MetaPop.h"
@@ -54,9 +54,9 @@ public:
 
 private:
 
-    vecStrings whattosave(const std::string&) const;
+    std::vector<std::string> whattosave(const std::string&) const;
 
-    vecStrings filenames;
+    std::vector<std::string> filenames;
     vecStreams files;
     Stream freezer;
 

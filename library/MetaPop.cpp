@@ -68,7 +68,7 @@ void MetaPop::disperse(const Param &p)
 
         // Use binomial if uncommon
         auto getnmigrants = rnd::binomial(p.dispersal);
-        vecUns inds(getSize());
+        std::vector<size_t> inds(getSize());
         std::iota(inds.begin(), inds.end(), 0);
         auto getmigrant = rndutils::make_shuffle_sampler(inds.cbegin(), inds.cend());
         size_t nmig = getnmigrants(rnd::rng);
@@ -95,7 +95,7 @@ void MetaPop::consume(const Param &p)
 {
 
     // Calculate the sum of feeding efficiencies in each habitat
-    Matrix sumfeed = utl::zeros(2u, 2u);
+    std::vector<std::vector<double> > sumfeed = utl::zeros(2u, 2u);
     double sumx = 0.0;
     for (size_t i = 0u; i < population.size(); ++i) {
 
@@ -166,12 +166,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     if (!seasonend) return;
 
-    std::vector<vecUns> females;
-    std::vector<vecUns> males;
+    std::vector<std::vector<size_t>> females;
+    std::vector<std::vector<size_t>> males;
 
     for (size_t hab = 0u; hab < 2u; ++hab) {
-        vecUns fem;
-        vecUns mal;
+        std::vector<size_t> fem;
+        std::vector<size_t> mal;
         fem.reserve(getSize());
         mal.reserve(getSize());
         females.push_back(fem);
@@ -211,7 +211,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         if (!nm) continue;
         if (!nf) continue;
 
-        vecDbl fit(nm);
+        std::vector<double> fit(nm);
 
         size_t i = 0u;
         double sum = 0.0;
@@ -264,7 +264,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             size_t t = seasonend;
 
-            vecDbl probs = fit;
+            std::vector<double> probs = fit;
 
             // While the season is not over and mating hasn't occured
             while (t) {

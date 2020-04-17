@@ -1,8 +1,8 @@
 #include "Collector.h"
 
-vecLoci Collector::emptyloci(const GenArch &arch) const
+std::vector<Locus> Collector::emptyloci(const GenArch &arch) const
 {
-    vecLoci loci;
+    std::vector<Locus> loci;
     loci.reserve(arch.traits.size());
     for (size_t locus = 0u; locus < arch.traits.size(); ++locus) {
         loci.push_back(Locus(locus, arch.traits[locus]));
@@ -10,9 +10,9 @@ vecLoci Collector::emptyloci(const GenArch &arch) const
     return loci;
 }
 
-vecConnex Collector::emptyconnexions(const GenArch &arch) const
+std::vector<Connexion> Collector::emptyconnexions(const GenArch &arch) const
 {
-    vecConnex connexions;
+    std::vector<Connexion> connexions;
     const size_t nedges = arch.getNetworkSize();
 
     if (!nedges) return connexions;
@@ -30,7 +30,7 @@ vecConnex Collector::emptyconnexions(const GenArch &arch) const
     return connexions;
 }
 
-double Xst(const vecDbl &v, const vecUns &n)
+double Xst(const std::vector<double> &v, const std::vector<size_t> &n)
 {
 
     assert(v.size() == 3u);
@@ -91,10 +91,11 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     RI = 0.0;
 
     // Create tables for counts
-    Matx3d sumgen = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d sumphe = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d ssqgen = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d ssqphe = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
+    // per trait per habitat per ecotype
+    std::vector<std::vector<std::vector<double> > > sumgen = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > sumphe = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > ssqgen = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > ssqphe = utl::zeros(3u, 3u, 3u);
 
     // Calculate sums within ecotypes and habitats
     for (size_t i = 0u; i < m.population.size(); ++i) {
@@ -143,13 +144,14 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     }
 
     // From now use only counts across habitats
-    vecUns ecounts = counts[2u]; // per ecotype
+    std::vector<size_t> ecounts = counts[2u]; // per ecotype
     assert(ecounts[tot] = m.population.size());
     assert(ecounts[tot] == ecounts[0u] + ecounts[1u]);
-    Matrix esumgen = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix esumphe = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix essqgen = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix essqphe = utl::zeros(3u, 3u); // per trait per ecotype
+    // per trait per ecotype
+    std::vector<std::vector<double> > esumgen = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > esumphe = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > essqgen = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > essqphe = utl::zeros(3u, 3u);
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
         esumgen[trait] = sumgen[trait][2u];
@@ -159,7 +161,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     }
 
     // Initialize genome-wide variances in heterozygosity
-    vecDbl varS = utl::zeros(3u); // per trait
+    std::vector<double> varS = utl::zeros(3u); // per trait
 
     // Scan the genome and compute locus-specific variances
     for (size_t l = 0u; l < genomescan.size(); ++l) {
@@ -186,9 +188,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         const double locusvarE = p.locusE[genomescan[l].trait];
 
         // Create count tables
-        MatUns gcounts = utl::uzeros(3u, 4u); // per ecotype per genotype
-        Matrix gsumgen = utl::zeros(3u, 4u); // per ecotype per genotype
-        Matrix gssqgen = utl::zeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<size_t> > gcounts = utl::uzeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<double> > gsumgen = utl::zeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<double> > gssqgen = utl::zeros(3u, 4u); // per ecotype per genotype
 
         // Calculate sums within ecotypes and genotypes
         for (size_t i = 0u; i < m.population.size(); ++i) {
@@ -216,7 +218,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         }
 
         // Calculate allele frequencies within and across ecotypes
-        vecDbl allfreq = utl::zeros(3u);
+        std::vector<double> allfreq = utl::zeros(3u);
         for (size_t eco = 0u; eco < 3u; ++eco) {
             if (ecounts[eco]) {
                 allfreq[eco] = gcounts[eco][AA] + 0.5 * gcounts[eco][Aa];
@@ -294,10 +296,10 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         // expec(AA) = meang(all) + beta(AA)
         // beta(AA) = alpha (AA - meanq)
 
-        vecDbl gbeta = utl::zeros(3u); // per genotype
-        vecDbl gexpec = utl::zeros(3u); // per genotype
-        vecDbl gmeans = utl::zeros(3u); // per genotype
-        vecDbl gdelta = utl::zeros(3u); // per genotype
+        std::vector<double> gbeta = utl::zeros(3u); // per genotype
+        std::vector<double> gexpec = utl::zeros(3u); // per genotype
+        std::vector<double> gmeans = utl::zeros(3u); // per genotype
+        std::vector<double> gdelta = utl::zeros(3u); // per genotype
         for (size_t zyg : { aa, Aa, AA }) {
             if (gcounts[tot][zyg]) {
                 gbeta[zyg] = alpha * (zyg - meanq);
@@ -504,8 +506,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     // Mating isolation
 
     // Sort males and females in the population
-    vecUns males;
-    vecUns females;
+    std::vector<size_t> males;
+    std::vector<size_t> females;
     males.reserve(m.population.size());
     females.reserve(m.population.size());
     for (size_t i =0u; i < m.population.size(); ++i) {
@@ -517,7 +519,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
     if (females.size() && males.size()) {
 
-        MatUns crosses = utl::uzeros(2u, 2u);
+        std::vector<std::vector<size_t> > crosses = utl::uzeros(2u, 2u);
         size_t ntrials = p.ntrials;
 
         // Sample from a distribution of males and a distribution of females
@@ -577,7 +579,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         const size_t j = networkscan[e].loc2;
 
         double covgen = 0.0;
-        MatUns ggcounts = utl::uzeros(3u, 3u);
+        std::vector<std::vector<size_t> > ggcounts = utl::uzeros(3u, 3u);
 
         // Loop through individuals
         for (size_t k = 0u; k < m.getSize(); ++k) {
@@ -612,8 +614,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         const double varbreedi = genomescan[i].varA[tot];
         const double varbreedj = genomescan[j].varA[tot];
 
-        const vecDbl breedi = genomescan[i].beta;
-        const vecDbl breedj = genomescan[j].beta;
+        const std::vector<double> breedi = genomescan[i].beta;
+        const std::vector<double> breedj = genomescan[j].beta;
 
         double covbreed = 0.0;
         for (size_t zygi : { aa, Aa, AA }) {
