@@ -55,14 +55,14 @@ struct Param {
         talkative(true),
         record(true),
         datsave(true),
-        choosewhat(true),
+        choosewhattosave(false),
         gensave(false),
         archsave(false),
         archload(false),
         parsave(true),
         archfile("architecture.txt"),        
         parfile("paramlog.txt"),
-        savefile("whattosave.txt"),
+        orderfile("whattosave.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
@@ -129,14 +129,14 @@ struct Param {
     bool talkative;
     bool record;
     bool datsave;
-    bool choosewhat;
+    bool choosewhattosave;
     bool gensave;
     bool archsave;
     bool archload;
     bool parsave;
     std::string archfile;
     std::string parfile;
-    std::string savefile;
+    std::string orderfile;
     size_t seed;
     size_t ntrials;
 

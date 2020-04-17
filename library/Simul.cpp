@@ -37,9 +37,9 @@ int simulate(const vecStrings &args)
         MetaPop metapop = MetaPop(pars, arch);
 
         // Create an analytical module
-        Collector collector = Collector(arch, pars.savefile);
-
-        if (!pars.choosewhat) collector = Collector(arch);
+        std::string order = "";
+        if (pars.choosewhattosave) order = pars.orderfile;
+        Collector collector = Collector(arch, order);
 
         std::cout << "Simulation started.\n";
 

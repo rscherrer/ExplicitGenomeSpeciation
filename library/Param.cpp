@@ -74,14 +74,14 @@ void Param::import(std::ifstream &file)
         else if (input == "talkative") file >> talkative;
         else if (input == "record") file >> record;
         else if (input == "datsave") file >> datsave;
-        else if (input == "choosewhat") file >> choosewhat;
+        else if (input == "choosewhattosave") file >> choosewhattosave;
         else if (input == "gensave") file >> gensave;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
-        else if (input == "savefile") file >> savefile;
+        else if (input == "orderfile") file >> orderfile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -262,14 +262,14 @@ void Param::write(std::ofstream &file) const
     file << "talkative " << talkative << '\n';
     file << "record " << record << '\n';
     file << "datsave " << datsave << '\n';
-    file << "choosewhat " << choosewhat << '\n';
+    file << "choosewhattosave " << choosewhattosave << '\n';
     file << "gensave " << gensave << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
-    file << "savefile " << parfile << '\n';
+    file << "orderfile " << orderfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }
