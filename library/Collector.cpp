@@ -780,12 +780,12 @@ void Collector::print(const size_t &t, const MetaPop &m)
 
         // Writing scalars here so maybe no need for vector writer
 
-        stf::write(genomescan[l].varP, files[f + off]); ++off;
-        stf::write(genomescan[l].varG, files[f + off]); ++off;
-        stf::write(genomescan[l].varA, files[f + off]); ++off;
+        stf::write(genomescan[l].varP[2u], files[f + off]); ++off;
+        stf::write(genomescan[l].varG[2u], files[f + off]); ++off;
+        stf::write(genomescan[l].varA[2u], files[f + off]); ++off;
         stf::write(genomescan[l].varD, files[f + off]); ++off;
         stf::write(genomescan[l].varI, files[f + off]); ++off;
-        stf::write(genomescan[l].varN, files[f + off]); ++off;
+        stf::write(genomescan[l].varN[2u], files[f + off]); ++off;
         stf::write(genomescan[l].Pst, files[f + off]); ++off;
         stf::write(genomescan[l].Gst, files[f + off]); ++off;
         stf::write(genomescan[l].Qst, files[f + off]); ++off;

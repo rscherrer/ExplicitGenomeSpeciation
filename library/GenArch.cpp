@@ -102,7 +102,7 @@ vecDbl GenArch::makeEffects(const Param &p) const
 vecDbl GenArch::makeDominances(const Param &p) const
 {
 
-    if (p.dominancevar == 0.0) return utl::zeros(p.nloci);
+    if (p.dominancevar == 0.0) return utl::ones(p.nloci);
 
     vecDbl coefficients(p.nloci);
     vecDbl sss = utl::zeros(3u); // square rooted sum of squares

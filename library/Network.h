@@ -36,7 +36,6 @@ public:
         assert(map.size() == realnedges);
         assert(edges.size() == realnedges);
         assert(weights.size() == realnedges);
-
         assert(realnedges <= pars.nedges[character]);
 
         if (realnedges < pars.nedges[character]) {

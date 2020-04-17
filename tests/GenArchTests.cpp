@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
   Param pars;
   pars.dominancevar = 0.0;
   GenArch arch = GenArch(pars);
-  BOOST_CHECK_EQUAL(arch.getSumDominances(), 0.0);
+  BOOST_CHECK_EQUAL(arch.getSumDominances(), pars.nloci);
 }
 
 BOOST_AUTO_TEST_CASE(NetworksAreEmptyIfNoEdges)
@@ -121,6 +121,6 @@ BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
   const double ssqwgt2 = archloaded.getSsqWeights(0u);
 
   BOOST_CHECK_EQUAL(utl::round(ssqeff1, 4u), utl::round(ssqeff2, 4u));
-  BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));
+  BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));  
 
 }
