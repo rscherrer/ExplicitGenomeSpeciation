@@ -23,7 +23,7 @@ if [ "$1" != "" ]; then
 			# Pass extra optional files into the simulation folders
 			for i in "${@:2}" # loop through input arguments except the first one
 			do 
-				if[ -f "$i" ]; then
+				if [ -f "$i" ]; then
 					cp "$i" $folder
 				else
 					echo "Invalid file to pass to the simulations"
