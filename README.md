@@ -57,6 +57,8 @@ For non-default parameters you have to provide them in a parameter file, like th
 
 # Parameters
 
+The following table shows all the parameters of the program and their default values. All of them can be supplied by the user in a parameter file. The parameter file must contain on each line, the name of one parameter followed by a blank (e.g. space or tab) and the value(s) that this parameter must take. Parameter names must match those in the table. Parameters that are not in the parameter file will take default values. Parameters that take multiple values must be supplied as such, with values separated by blanks.
+
 | Parameter | Meaning | Default |
 |----|:----:|----:|
 | rdynamics | Type of resource dynamics | 1 |
@@ -106,6 +108,13 @@ For non-default parameters you have to provide them in a parameter file, like th
 | seed | Random seed | randomly generated |  
 | ntrials | Number of mating trials | 100 |
 
+# Useful information about the parameters
+
+Some of the parameters are simulation options:
+
+* sdsd
+* sdsd
+* dsdsd
 
 # Use on the cluster
 
