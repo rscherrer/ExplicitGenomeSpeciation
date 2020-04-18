@@ -345,14 +345,15 @@ void MainDialog::setup_spinboxes() {
     ui->box_rdynamics->setValue(static_cast<int>(temp_pars.rdynamics));
     ui->box_capacity->setValue(temp_pars.capacity);
     ui->box_replenish->setValue(temp_pars.replenish);
-    ui->box_hsymmetry->setValue(temp_pars.hsymmetry);
+    //ui->box_inflow->setValue(temp_pars.inflow);
+    //ui->box_outflow->setValue(temps_pars.outflow);
+    ui->box_hsymmetry->setValue(temp_pars.hsymmetry);    
     ui->box_ecosel->setValue(temp_pars.ecosel);
     ui->box_dispersal->setValue(temp_pars.dispersal);
     ui->box_birth->setValue(temp_pars.birth);
     ui->box_survival->setValue(temp_pars.survival);
     ui->box_sexsel->setValue(temp_pars.sexsel);
     ui->box_matingcost->setValue(temp_pars.matingcost);
-    ui->box_nloci->setValue(static_cast<int>(temp_pars.nloci));
     ui->box_nchrom->setValue(static_cast<int>(temp_pars.nchrom));
     ui->box_mutation->setValue(temp_pars.mutation);
     ui->box_recombination->setValue(temp_pars.recombination);
@@ -365,11 +366,16 @@ void MainDialog::setup_spinboxes() {
     ui->box_tburnin->setValue(temp_pars.tburnin);
     ui->box_tend->setValue(temp_pars.tend);
     ui->box_tsave->setValue(temp_pars.tsave);
+    //ui->box_talkative->setValue(0);
     ui->box_record->setValue(temp_pars.record);
     ui->box_datsave->setValue(0); // HARDCODED!!!!
+    //ui->box_choosewhattosave->setValue(0);
+    //ui->box_gensave->setValue(0);
+    //ui->box_archsave->setValue(0);
+    //ui->box_archload->setValue(0);
+    //ui->box_parsave->setValue(0);
     ui->box_seed->setValue(static_cast<int>(temp_pars.seed));
     ui->box_ntrials->setValue(static_cast<int>(temp_pars.ntrials));
-
 
     ui->box_demesizes_0->setValue(static_cast<int>(temp_pars.demesizes[0]));
     ui->box_demesizes_1->setValue(static_cast<int>(temp_pars.demesizes[1]));
@@ -398,10 +404,6 @@ void MainDialog::setup_spinboxes() {
     ui->box_scaleE_1->setValue(temp_pars.scaleE[1]);
     ui->box_scaleE_2->setValue(temp_pars.scaleE[2]);
 
-    ui->box_locusE_0->setValue(temp_pars.locusE[0]);
-    ui->box_locusE_1->setValue(temp_pars.locusE[1]);
-    ui->box_locusE_2->setValue(temp_pars.locusE[2]);
-
     ui->box_skews_0->setValue(temp_pars.skews[0]);
     ui->box_skews_0->setValue(temp_pars.skews[1]);
     ui->box_skews_0->setValue(temp_pars.skews[2]);
@@ -421,7 +423,6 @@ Param MainDialog::createPars()
     pars.survival           = ui->box_survival->value();
     pars.sexsel             = ui->box_sexsel->value();
     pars.matingcost         = ui->box_matingcost->value();
-    pars.nloci              = static_cast<size_t>(ui->box_nloci->value());
     pars.nchrom             = static_cast<size_t>(ui->box_nchrom->value());
     pars.mutation           = ui->box_mutation->value();
     pars.recombination      = ui->box_recombination->value();
@@ -466,15 +467,9 @@ Param MainDialog::createPars()
     pars.scaleE[1]          = ui->box_scaleE_1->value();
     pars.scaleE[2]          = ui->box_scaleE_2->value();
 
-    pars.locusE[0]          = ui->box_locusE_0->value();
-    pars.locusE[1]          = ui->box_locusE_1->value();
-    pars.locusE[2]          = ui->box_locusE_2->value();
-
     pars.skews[0]           = ui->box_skews_0->value();
     pars.skews[1]           = ui->box_skews_1->value();
     pars.skews[2]           = ui->box_skews_2->value();
-
-
 
     pars.seed = static_cast<size_t>(ui->rng_seed->value());
     pars.tend = static_cast<int>(ui->num_gen->value());
