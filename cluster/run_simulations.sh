@@ -6,8 +6,18 @@
 # Pass it the protocol file as argument
 # Pass it files to copy into each simulation folder as extra optional arguments
 
+# First check that the optional extra files are present
+for i in "${@:2}"
+do
+	if [ ! -f $i ]; then
+		echo "Warning: file $i not found"
+    fi
+done
+
+# If a protocol file is provided
 if [ "$1" != "" ]; then
 
+	# Is it found?
 	if [ -f "$1" ]; then
 
 		# Make simulation folders
@@ -21,16 +31,17 @@ if [ "$1" != "" ]; then
 			cp job.sh $folder
 
 			# Pass extra optional files into the simulation folders
-			for i in "${@:2}" # loop through input arguments except the first one
-			do 
-				if [ -f "$i" ]; then
-					cp "$i" $folder
-				else
-					echo "Invalid file to pass to the simulations"
-				fi
+			for folder in $(ls -d target*)
+			do
+				for i in "${@:2}"
+				do
+					if [ -f $i ]; then
+						cp $i $folder
+	    			fi
+				done
 			done
 
-			# Launch
+			# launches
 			cd $folder
 			sbatch job.sh
 			cd ..
