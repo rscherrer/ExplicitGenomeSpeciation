@@ -1,0 +1,28 @@
+trenewal	-1
+capacity	-1
+replenish	-1
+hsymmetry	-1
+ecosel	-1
+dispersal	10
+birth	-4
+survival	-0.8
+sexsel	-10
+matingcost	-0.01
+maxfeed	-1
+demesizes	-100	-100
+nvertices	1	1	1
+nchrom	0
+mutation	-1e-05
+recombination	-0.01
+allfreq	-0.02
+scaleA	-1	1	1
+scaleD	-1	0	0
+scaleI	-1	0	0
+scaleE	-1	0	0
+skews	-1	1	1
+effectshape	-2
+effectscale	-1
+interactionshape	-5
+interactionscale	-1
+dominancevar	-1
+ntrials	0
