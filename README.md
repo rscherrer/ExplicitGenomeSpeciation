@@ -184,8 +184,10 @@ This optional file contains a list of names of variables to save, if record, dat
 |----|:----:|----:|
 | time | Generation | 1 |
 | population_size | Number of individuals | 1 |
+| ecotype_size | Ecotype population size | 1 per ecotype |
 | resources | Equilibrium resource concentrations | 1 per habitat per resource |
-| means | Mean trait values | 1 per trait per ecotype |
+| means | Mean trait values | 1 per trait |
+| ecotype_means | Ecotype-mean trait values | 1 per trait per ecotype |
 | varP | Phenotypic variance | 1 per trait |
 | varG | Genetic variance | 1 per trait |
 | varA | Additive variance | 1 per trait |
