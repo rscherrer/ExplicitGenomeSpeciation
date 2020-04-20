@@ -9,7 +9,7 @@
 read_means <- function(folder) {
 
   data <- read_data(folder, "means")
-  t <- read_time(folder)
+  t <- read_time_if(folder, ntimes = 3)
   t <- rep(t, each = 3) # per time point
   split(data, t)
 

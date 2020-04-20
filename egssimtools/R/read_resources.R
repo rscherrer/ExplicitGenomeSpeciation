@@ -9,7 +9,7 @@
 read_resources <- function(folder) {
 
   data <- read_data(folder, "resources")
-  t <- read_time(folder)
+  t <- read_time_if(folder, ntimes = 4)
   t <- rep(t, each = 4) # per time point
   lapply(split(data, t), split, c(1, 1, 2, 2)) # per habitat
 

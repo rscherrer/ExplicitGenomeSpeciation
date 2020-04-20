@@ -9,7 +9,7 @@
 read_ecotype_means <- function(folder) {
 
   data <- read_data(folder, "ecotype_means")
-  t <- read_time(folder)
+  t <- read_time_if(folder, ntimes = 6)
   t <- rep(t, each = 6) # per time point
   lapply(split(data, t), split, c(1, 2, 3)) # per trait per ecotype
 

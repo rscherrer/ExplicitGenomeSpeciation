@@ -9,6 +9,7 @@
 read_ecotype_sizes <- function(folder) {
 
   data <- read_data(folder, variable = "ecotype_size")
-  split(data, rep(seq_len(length(data) / 2), each = 2))
+  t <- read_time_if(folder, ntimes = 2)
+  split(data, rep(t, each = 2))
 
 }
