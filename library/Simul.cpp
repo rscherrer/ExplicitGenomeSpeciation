@@ -63,7 +63,6 @@ int simulate(const std::vector<std::string> &args)
                 collector.analyze(metapop, pars, arch);
 
                 // Save them to files
-                // if (pars.datsave) collector.print(t, metapop);
                 if (pars.datsave) printer.print(t, collector, metapop);
             }
 

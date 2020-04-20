@@ -17,12 +17,18 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
         if (filenames[f] == "time")
             stf::write(utl::size2dbl(t), files[f]);
         else if (filenames[f] == "population_size")
-            stf::write(utl::size2dbl(m.getSize()), files[f]);
+            stf::write(utl::size2dbl(c.counts[2u][2u]), files[f]);
+        else if (filenames[f] == "ecotype_size")
+            for (size_t eco = 0u; eco < 2u; ++eco)
+                stf::write(utl::size2dbl(c.counts[2u][eco]), files[f]);
         else if (filenames[f] == "resources")
             for (size_t hab = 0u; hab < 2u; ++hab)
                 for (size_t res = 0u; res < 2u; ++res)
                     stf::write(m.resources[hab][res], files[f]);
         else if (filenames[f] == "means")
+            for (size_t trait = 0u; trait < 3u; ++trait)
+                stf::write(c.means[trait][2u][2u], files[f]);
+        else if (filenames[f] == "ecotype_means")
             for (size_t trait = 0u; trait < 3u; ++trait)
                 for (size_t eco = 0u; eco < 2u; ++eco)
                     stf::write(c.means[trait][2u][eco], files[f]);
@@ -160,8 +166,10 @@ std::vector<std::string> Printer::whattosave(const std::string &filename) const
 
             "time",
             "population_size",
+            "ecotype_size", // per ecotype
             "resources", // per habitat per resource
             "means", // per trait per ecotype
+            "ecotype_means", // per trait per ecotype
             "varP", // per trait
             "varG", // per trait
             "varA", // per trait
