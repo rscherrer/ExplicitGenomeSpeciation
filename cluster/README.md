@@ -51,15 +51,23 @@ N=1
 All entries starting with `#SBATCH` are options to be written to the job file that will be passed to SLURM to launch the simulations. For more information about what SLURM options are available on Peregrine, please refer to the Peregrine wiki (https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki). All entries starting with a dash (e.g. `-mutation`) are interpreted as parameters to be tested. The dash should be immediately followed by a valid parameter name, and then by the values the parameter should take across simulations, separated by spaces. If several parameters with several values are provided, simulations will be launched for all combinations of values provided for these parameters. So, in the above example, simulations will be run for `mutation` = 0.001 -- `ecosel` = 0.1,
 `mutation` = 0.001 -- `ecosel` = 0.2, `mutation` = 0.01 -- `ecosel` = 0.1 and `mutation` = 0.01 -- `ecosel` = 0.2. For parameters that take multiple values, such as `nvertices` that takes one value for each trait, please provide values of a single simulation separated by underscores. For example, `-nvertices 10_10_10 20_20_20` will launch simulations with 10 genes per trait as well as simulations with 20 genes per trait. Any line that does not start with `#SBATCH` or `-` will be ignored. Use a text editor (e.g. `nano` on the cluster) to make or edit a protocol file with the information needed to run your experiment. Parameters that are not mentioned in the protocol will take the values defined in the `parameters.txt` file, located in the target folder (a copy of it is in `cluster`). You can edit this file to set values to parameters that should be kept fixed across all simulations, thereby using the protocol only for those parameters that should vary. Any parameter that is neither in the fixed parameter file nor in the protocol will take default values. `N=5` refers to the number of replicate simulations to run per parameter combination. If no line is found starting with `N=` in the protocol, one replicate simulation will be run.
 
-# Launch the experiment
+# Launch the simulations
 
 From within the target folder, run:
 
 ```{bash}
-./run_experiment.sh protocol.txt
+./run_simulations.sh protocol.txt
 ```
 
-This creates as many folders as there are simulations to be run, inside the target folder. Every simulation folder contains a `job.sh` file and a `parameters.txt` file. All job files are submitted to SLURM in one go, and should start running on the server. Use `squeue -u $USER` to check the status and progression of your jobs. The naming convention for the simulation folders is `sim_parameter1_value1_parameter2_value2_r<replicate_number>`, where `parameter1` and `parameter2` are the names of the parameters supplied in the protocol. For the example protocol above, the list of simulation folders should be:
+This creates as many folders as there are simulations to be run, inside the target folder. Every simulation folder contains a `job.sh` file and a `parameters.txt` file. You can copy and paste extra files into the simulation folders using the same command, for example:
+
+```{bash}
+./run_simulations.sh protocol.txt whattosave.txt
+``` 
+
+will pass file "whattosave.txt" to each of the folders. This is important if you set `choosewhattosave` to 1 when running the simulation, but you can also use it e.g. to pass the same genetic architecture to all the simulation folders.
+
+All job files are submitted to SLURM in one go, and should start running on the server. Use `squeue -u $USER` to check the status and progression of your jobs. The naming convention for the simulation folders is `sim_parameter1_value1_parameter2_value2_r<replicate_number>`, where `parameter1` and `parameter2` are the names of the parameters supplied in the protocol. For the example protocol above, the list of simulation folders should be:
 
 ```
 sim_mutation_0.001_ecosel_0.1_r1
