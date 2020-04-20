@@ -10,10 +10,9 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ExplicitGenomeSpeciation is a program that simulates the evolution of a species using individual-based modelling and incorporating explicit genomes and a flexible genotype-phenotype map.
 
-# Example simulations
+# Example simulation
 
-
-
+[example](pics/example_speciation.png)
 
 # Folder structure
 

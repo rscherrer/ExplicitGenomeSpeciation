@@ -29,7 +29,7 @@ interactionshape 5
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 2000
+tend 3000
 tsave 100
 tfreeze 100
 talkative 1

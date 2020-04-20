@@ -28,7 +28,7 @@ interactionshape 5
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 2000
+tend 3000
 tsave 100
 tfreeze 100
 talkative 1
@@ -42,5 +42,5 @@ parsave 1
 archfile architecture.txt
 parfile paramlog.txt
 orderfile whattosave.txt
-seed 1587383709596907001
+seed 1587392886507184369
 ntrials 1000

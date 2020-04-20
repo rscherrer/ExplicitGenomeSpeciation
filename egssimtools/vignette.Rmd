@@ -163,3 +163,53 @@ find_missing(root = "../build", pattern = "release", pb = FALSE)
 ```
 
 where `root` is where all the simulation folders are, `pattern` is an optional pattern-matching string to find the simulation folders (defaults to "sim_" at the beginning of the simulation folder name) and `pb` controls whether a progress bar is displayed while the function loops through the simulations. Both functions return a vector of simulation folder names where the simulation went missing or extinct, otherwise they return `NULL`.
+
+# Working with the data
+
+You can then use various data wrangling and plotting tools to work around, combine and show those data:
+
+```{r, fig.width=7}
+library(tidyverse)
+library(cowplot)
+
+# Read ecological trait values through time
+data <- read_individuals(simulation, "individual_trait")
+data <- lapply(data, function(data) sapply(data, "[", 1))
+data <- data.frame(time = mrep(as.numeric(names(data)), sapply(data, length)), data = do.call("c", data))
+
+# Plot a density heatmap
+p <- ggplot(data, aes(x = time, y = data)) +
+  geom_bin2d(bins = 15) +
+  theme_bw() +
+  scale_fill_continuous(type = "viridis") +
+  xlab("Time (generations)") +
+  ylab("Ecological trait") +
+  labs(fill = "Count")
+
+# Add mating preference trait values through time
+matepref <- read_individuals(simulation, "individual_trait")
+matepref <- do.call("c", lapply(matepref, function(data) sapply(data, "[", 2)))
+data$matepref <- matepref
+
+# Plot the joint distributions of mating preference and ecological trait
+p2 <- ggplot(data %>% filter(time == 2900), aes(x = matepref, y = data)) +
+  geom_bin2d(bins = 15) +
+  theme_bw() +
+  scale_fill_continuous(type = "viridis") +
+  xlab("Mate preference trait") +
+  ylab("Ecological trait") +
+  labs(fill = "Count") +
+  xlim(c(-3, 3))
+
+# Combine both plots
+ylim <- c(-3, 3)
+p <- p + theme(legend.position = "none") + ylim(ylim)
+p2 <- p2 + ylab(NULL) + ylim(ylim)
+
+p2 <- plot_grid(ggplot() + geom_blank() + theme_void(), p2, rel_widths = c(1, 11))
+
+p3 <- plot_grid(p, p2, labels = c("A", "B"), rel_widths = c(1, 1))
+p3
+
+ggsave("../pics/example_speciation.png", p3, height = 2, width = 6, dpi = 300)
+```
