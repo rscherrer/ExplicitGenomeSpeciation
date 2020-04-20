@@ -13,8 +13,6 @@ ExplicitGenomeSpeciation is a program that simulates the evolution of a species 
 # Example simulations
 
 
-![Simulation](pics/example_speciation_event.png)
-![Simulation](pics/example_speciation_histogram.png)
 
 
 # Folder structure
