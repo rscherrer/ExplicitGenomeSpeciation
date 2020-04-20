@@ -227,6 +227,8 @@ This optional file contains a list of names of variables to save, if record, dat
 
 (Edges are ordered by trait.)
 
+Note that if you are choosing what variables to save, it is important to save "time" because the functions provided in the accompanying R package for analyses assume that this file is present. Also note that if you are going to save individual data, you may want to save "population_size" for the same reason.
+
 # Analysis with egssimtools
 
 The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it.

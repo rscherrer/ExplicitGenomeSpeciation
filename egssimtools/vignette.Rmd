@@ -1,0 +1,127 @@
+---
+title: "egssimtools: tools for analyzing simulation data"
+author: "Rapha&euml;l Scherrer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{egssimtools: tools for analyzing simulation data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This package provides tools to facilitate the analysis and processing of the data saved by the simulation program ExplicitGenomeSpeciation ([https://github.com/rscherrer/ExplicitGenomeSpeciation](https://github.com/rscherrer/ExplicitGenomeSpeciation)). It comes as part of the program repository itself. Here we show how to use it. The repository has a folder where an example simulation was already run, so we will use these data to illustrate the workings of the package. Note that you can choose what variables to save when running the simulations, and so all data files may not be present if you specified otherwise. Here, we assume that all the data are available.
+
+```{r}
+library(egssimtools)
+
+# First set the simulation folder
+simulation <- "../build/release"
+```
+
+You can easily read a list of parameter values for a given simulation by using
+
+```{r}
+pars <- read_parameters(simulation)
+head(pars)
+```
+
+which assumes that the parameter file is called "paramlog.txt". You can change this with the `filename` argument of the function. The parameters are returned as character strings because some of them are not numbers, and as a list because some parameters have more than one value. This returns all the parameters of the simulation, but you can also choose specific parameters to return:
+
+```{r}
+read_parameters(simulation, parnames = c("hsymmetry", "ecosel"))
+```
+
+Here we provide functions to read variables through time. Different kinds of data are saved during the simulations, with different dimensions. All of the functions we provide here wrap around the `read_binary` function, which can read binary files, and all of them assume that "time.dat" is available (which is read using the `read_time` function). Functions for individual-level variables assume that "population_size.dat" was saved (population size is read using the `read_population_size` function). See the README for more details on how to choose what variables are possible to save.
+
+To read population-wide variables use:
+
+```{r}
+read_population(simulation, variable = "EI")
+```
+
+for ecological divergence through time, for example.
+
+Alternatively, you may want to read individual-level data. For this use:
+
+```{r}
+traits <- read_individuals(simulation, "individual_trait", nvalues = 3)
+```
+
+which returns a nested list of individual values (three values per individual in the case of trait values) clustered by time points.
+
+```{r}
+# Trait values of the first individual in the first time point
+traits[[1]][[1]]
+```
+
+The argument `nvalues` is three by default, but can be changed if reading other individual-level variables such as "ecotype" or "habitat". However, we have simplified functions for those, that return the data in the same way:
+
+```{r}
+ecotypes <- read_ecotypes(simulation)
+habitats <- read_habitats(simulation)
+ecotypes[[1]][[1]]
+habitats[[1]][[1]]
+```
+
+We can also read locus-specific variables across the genome, for example:
+
+```{r}
+loci <- read_loci(simulation, "genome_Fst")
+```
+
+which returns a list of vectors of locus-specific values for each time point.
+
+```{r}
+head(loci[[1]]) # at the first time point
+```
+
+Alternatively we can look at edge-specific variables in a network, with
+
+```{r}
+edges <- read_edges(simulation, "network_corgen")
+str(edges[1:3])
+```
+
+which returns a vector of edge-specific values for each trait, for each time point.
+
+Each simulation has a genetic architecture, which is implemeted as its own class in the C++ code. If you chose to save the genetic architecture into a file (see README on how to do that), you can retrieve the information of that file with
+
+```{r}
+arch <- read_architecture(simulation)
+```
+
+which assumes that the architecture file name is "architecture.txt", but you can change that using the `filename` argument. The genetic architecture is stored as a list that matches the organization of the file (explained in the README):
+
+```{r}
+str(arch)
+```
+
+where the first five slots are lists of values across loci, and the last slot contains edge-specific values for the gene networks, sorted by network.
+
+Some simulations may have crashed or not even started. To check if data are unavailable for a simulation use:
+
+```{r}
+is_missing(simulation)
+```
+
+and to check if the simulation went extinct before completion use:
+
+```{r}
+is_extinct(simulation)
+```
+
+You can also use wrap-arounds of those functions to find out whether and which simulations went missing or extinct in a folder containing many simulations.
+
+```{r}
+find_extinct(root = "../build", pattern = "release", pb = FALSE)
+find_missing(root = "../build", pattern = "release", pb = FALSE)
+```
+
+where `root` is where all the simulation folders are, `pattern` is an optional pattern-matching string to find the simulation folders (defaults to "sim_" at the beginning of the simulation folder name) and `pb` controls whether a progress bar is displayed while the function loops through the simulations. Both functions return a vector of simulation folder names where the simulation went missing or extinct, otherwise they return `NULL`.

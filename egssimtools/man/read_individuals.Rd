@@ -4,10 +4,12 @@
 \alias{read_individuals}
 \title{Read individual data}
 \usage{
-read_individuals(folder, variable)
+read_individuals(folder, variable, nvalues = 3)
 }
 \arguments{
 \item{variable}{What to read}
+
+\item{nvalues}{How many values per individual? 3 for traits, 1 for habitat and ecotype}
 
 \item{filename}{Path to the folder}
 }
