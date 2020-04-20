@@ -222,8 +222,8 @@ This optional file contains a list of names of variables to save, if record, dat
 | network_avgj | Second-partner edge-specific epistatic variance in average effect | 1 per edge |
 | individual_ecotype | Individual ecotype | 1 per individual |
 | individual_habitat | Individual habitat | 1 per individual |
-| individual_trait | Individual trait values | 1 per individual |
-| individual_midparent | Individual midparent trait values | 1 per individual |
+| individual_trait | Individual trait values | 1 per individual per trait |
+| individual_midparent | Individual midparent trait values | 1 per individual per trait |
 
 (Edges are ordered by trait.)
 
