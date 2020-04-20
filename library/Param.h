@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_PARAM_H
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "Random.h"
 #include <fstream>
@@ -55,12 +55,14 @@ struct Param {
         talkative(true),
         record(true),
         datsave(true),
+        choosewhattosave(false),
         gensave(false),
         archsave(false),
         archload(false),
         parsave(true),
         archfile("architecture.txt"),        
         parfile("paramlog.txt"),
+        orderfile("whattosave.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
@@ -95,24 +97,24 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    vecUns demesizes;
+    std::vector<size_t> demesizes;
 
     // Genetic parameters
     mutable size_t nloci;
-    mutable vecUns nvertices;
-    mutable vecUns nedges;
+    mutable std::vector<size_t> nvertices;
+    mutable std::vector<size_t> nedges;
     mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
 
     // Genotype-phenotype map
-    vecDbl scaleA;
-    vecDbl scaleD;
-    vecDbl scaleI;
-    vecDbl scaleE;
-    vecDbl locusE;
-    vecDbl skews;
+    std::vector<double> scaleA;
+    std::vector<double> scaleD;
+    std::vector<double> scaleI;
+    std::vector<double> scaleE;
+    std::vector<double> locusE;
+    std::vector<double> skews;
     double effectshape;
     double effectscale;
     double interactionshape;
@@ -127,12 +129,14 @@ struct Param {
     bool talkative;
     bool record;
     bool datsave;
+    bool choosewhattosave;
     bool gensave;
     bool archsave;
     bool archload;
     bool parsave;
     std::string archfile;
     std::string parfile;
+    std::string orderfile;
     size_t seed;
     size_t ntrials;
 

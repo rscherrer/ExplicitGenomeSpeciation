@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(KnownLogisticResourceEquilibrium)
   pars.tburnin = 0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
+  metapop.resetTraits(0u, -1.0, pars); // optimally adapted individuals
   metapop.cycle(pars, arch);
 
   // Predict resource equilibrium after consumption
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
   pars.tburnin = 0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(-1.0, pars); // optimally adapted individuals
+  metapop.resetTraits(0u, -1.0, pars); // optimally adapted individuals
   metapop.cycle(pars, arch);
 
     // Predict resource equilibrium after consumption
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(EcotypeClassification)
   for (size_t i = 0u; i < metapop.getSize(); ++i) {
 
       // Record trait value and ecotype
-    const double x = metapop.getEcoTrait(i);
+    const double x = metapop.getTrait(i, 0u);
     const size_t e = metapop.getEcotype(i);
 
     if (e == 0u && x > xmax0) xmax0 = x;

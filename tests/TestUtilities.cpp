@@ -1,13 +1,13 @@
 #include "tests/TestUtilities.h"
 
-vecDbl tst::readfile(const std::string &filename)
+std::vector<double> tst::readfile(const std::string &filename)
 {
     // Open the input file
   std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
 
     // Prepare storage for values
   double x;
-  vecDbl v;
+  std::vector<double> v;
 
     // If the file is open
   if (file.is_open()) {

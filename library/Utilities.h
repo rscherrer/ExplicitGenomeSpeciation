@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_UTILITIES_H
 #define EXPLICITGENOMESPECIATION_UTILITIES_H
 
-#include "Types.h"
+#include <vector>
 #include <cstddef>
 #include <stddef.h>
 #include <numeric>
@@ -15,22 +15,25 @@ namespace utl
 {
 
     double sqr(const double&);
-    vecDbl ones(const size_t&);
-    Matrix ones(const size_t&, const size_t&);
-    vecDbl zeros(const size_t&);    
-    Matrix zeros(const size_t&, const size_t&);
-    Matx3d zeros(const size_t&, const size_t&, const size_t&);
-    vecUns uzeros(const size_t&); // unsigned zeros
-    MatUns uzeros(const size_t&, const size_t&);
-    vecDbl rep(const double&, const size_t&);
-    vecUns repUns(const size_t&, const size_t&);
-    double sum(vecDbl&);
-    double sum(Matrix&);
-    size_t argmin(vecDbl&);
-    size_t sumu(const vecUns&);
-    void marginalize(Matrix&);
-    void marginalize(MatUns&);
-    Matrix dividemat(const Matrix&, const MatUns&);
+    std::vector<double> ones(const size_t&);
+    std::vector<std::vector<double> > ones(const size_t&, const size_t&);
+    std::vector<double> zeros(const size_t&);    
+    std::vector<std::vector<double> > zeros(const size_t&, const size_t&);
+    std::vector<std::vector<std::vector<double> > > zeros(const size_t&,
+     const size_t&, const size_t&);
+    std::vector<size_t> uzeros(const size_t&); // unsigned zeros
+    std::vector<std::vector<size_t> > uzeros(const size_t&, const size_t&);
+    std::vector<double> rep(const double&, const size_t&);
+    std::vector<size_t> repUns(const size_t&, const size_t&);
+    double sum(std::vector<double>&);
+    double sum(std::vector<std::vector<double> >&);
+    size_t argmin(std::vector<double>&);
+    size_t sumu(const std::vector<size_t>&);
+    void marginalize(std::vector<std::vector<double> >&);
+    void marginalize(std::vector<std::vector<size_t> >&);
+    std::vector<std::vector<double> > dividemat(
+     const std::vector<std::vector<double> >&,
+      const std::vector<std::vector<size_t> >&);
     double size2dbl(const size_t&);
     size_t dbl2size(const double&);
     double round(const double&, const size_t&);
@@ -42,7 +45,7 @@ namespace stf // save to file
 {
     void write(const unsigned long long&, std::shared_ptr<std::ofstream>&);
     void write(const double&, std::shared_ptr<std::ofstream>&);
-    void write(const vecDbl&, std::shared_ptr<std::ofstream>&);
+    void write(const std::vector<double>&, std::shared_ptr<std::ofstream>&);
 }
 
 

@@ -1,9 +1,9 @@
 #include "GenArch.h"
 
-vecDbl GenArch::makeChromosomes(const Param &p) const
+std::vector<double> GenArch::makeChromosomes(const Param &p) const
 {
 
-    vecDbl chromends(p.nchrom);
+    std::vector<double> chromends(p.nchrom);
 
     // Chromosomes all have the same size
     for (size_t chrom = 0u; chrom < p.nchrom; ++chrom)
@@ -13,10 +13,10 @@ vecDbl GenArch::makeChromosomes(const Param &p) const
 
 }
 
-vecUns GenArch::makeEncodedTraits(const Param &p) const
+std::vector<size_t> GenArch::makeEncodedTraits(const Param &p) const
 {
 
-    vecUns encoded(p.nloci);
+    std::vector<size_t> encoded(p.nloci);
 
     // Make an ordered vector of trait indices
     size_t i = 0u;
@@ -34,7 +34,7 @@ vecUns GenArch::makeEncodedTraits(const Param &p) const
 
     assert(encoded.size() == p.nloci);
 
-    vecUns nvertices = utl::uzeros(3u);
+    std::vector<size_t> nvertices = utl::uzeros(3u);
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         ++nvertices[encoded[locus]];
 
@@ -47,9 +47,9 @@ vecUns GenArch::makeEncodedTraits(const Param &p) const
 
 
 
-vecDbl GenArch::makeLocations(const Param &p) const
+std::vector<double> GenArch::makeLocations(const Param &p) const
 {
-    vecDbl positions(p.nloci);
+    std::vector<double> positions(p.nloci);
 
     // Locations are sampled from a uniform distribution between 0 and 1
     auto getlocation = rnd::uniform(0.0, 1.0);
@@ -66,14 +66,14 @@ vecDbl GenArch::makeLocations(const Param &p) const
 }
 
 
-vecDbl GenArch::makeEffects(const Param &p) const
+std::vector<double> GenArch::makeEffects(const Param &p) const
 {
 
-    if (p.effectshape == 0.0 || p.effectscale == 0.0)
-        return utl::zeros(p.nloci);
+    if (p.effectshape == 0.0) return utl::zeros(p.nloci);
+    if (p.effectscale == 0.0) return utl::ones(p.nloci);
 
-    vecDbl effectsizes(p.nloci);
-    vecDbl sss = utl::zeros(3u); // square rooted sum of squares
+    std::vector<double> effectsizes(p.nloci);
+    std::vector<double> sss = utl::zeros(3u); // square rooted sum of squares
 
     // Effect sizes are sampled from a two-sided Gamma distribution
     auto getffect = rnd::gamma(p.effectshape, p.effectscale);
@@ -99,13 +99,13 @@ vecDbl GenArch::makeEffects(const Param &p) const
 }
 
 
-vecDbl GenArch::makeDominances(const Param &p) const
+std::vector<double> GenArch::makeDominances(const Param &p) const
 {
 
-    if (p.dominancevar == 0.0) return utl::zeros(p.nloci);
+    if (p.dominancevar == 0.0) return utl::ones(p.nloci);
 
-    vecDbl coefficients(p.nloci);
-    vecDbl sss = utl::zeros(3u); // square rooted sum of squares
+    std::vector<double> coefficients(p.nloci);
+    std::vector<double> sss = utl::zeros(3u); // square rooted sum of squares
 
     // Dominance coefficients are sampled from a half-normal distribution
     auto getdominance = rnd::normal(0.0, p.dominancevar);
@@ -148,7 +148,7 @@ MultiNet GenArch::makeNetworks(const Param &p) const
 // Functions to write the content of the genetic architecture
 
 // Write vector as a row in text file, with end of line
-void GenArch::write(const vecDbl &v, std::ofstream &file, const char &sep) const
+void GenArch::write(const std::vector<double> &v, std::ofstream &file, const char &sep) const
 {
     for (auto x : v)
         file << x << sep;
@@ -156,7 +156,7 @@ void GenArch::write(const vecDbl &v, std::ofstream &file, const char &sep) const
 }
 
 // Same for vector of integers
-void GenArch::write(const vecUns &v, std::ofstream &file, const char &sep) const
+void GenArch::write(const std::vector<size_t> &v, std::ofstream &file, const char &sep) const
 {
     for (auto x : v)
         file << x << sep;
@@ -164,7 +164,7 @@ void GenArch::write(const vecUns &v, std::ofstream &file, const char &sep) const
 }
 
 // Same for vector of pairs (i determines first or second member)
-void GenArch::write(const vecEdg &v, std::ofstream &file, const bool &i, const char &sep) const
+void GenArch::write(const std::vector<Edge> &v, std::ofstream &file, const bool &i, const char &sep) const
 {
     for (size_t p = 0u; p < v.size(); ++p)
         file << (i ? v[p].second : v[p].first) << sep;
@@ -219,19 +219,19 @@ void GenArch::save(Param &pars) const
 }
 
 
-void GenArch::read(vecDbl &v, const size_t &n, std::ifstream &file)
+void GenArch::read(std::vector<double> &v, const size_t &n, std::ifstream &file)
 {
     for (size_t i = 0u; i < n; ++i)
         file >> v[i];
 }
 
-void GenArch::read(vecUns &v, const size_t &n, std::ifstream &file)
+void GenArch::read(std::vector<size_t> &v, const size_t &n, std::ifstream &file)
 {
     for (size_t i = 0u; i < n; ++i)
         file >> v[i];
 }
 
-void GenArch::read(vecEdg &v, const size_t &n, const bool &id, std::ifstream &file)
+void GenArch::read(std::vector<Edge> &v, const size_t &n, const bool &id, std::ifstream &file)
 {
     double x;
     for (size_t p = 0u; p < n; ++p) {

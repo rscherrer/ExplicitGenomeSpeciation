@@ -27,22 +27,22 @@ BOOST_AUTO_TEST_CASE(LociEncodeTheRightTraits)
   BOOST_CHECK_EQUAL(arch.getSumTraits(), 6u);
 }
 
-BOOST_AUTO_TEST_CASE(EffectSizesAreZeroIfScaleParamIsZero)
+BOOST_AUTO_TEST_CASE(EffectSizesAreOneIfScaleParamIsZero)
 {
   std::clog << "Testing locus effect sizes...\n";
   Param pars;
   pars.effectscale = 0.0;
   GenArch arch = GenArch(pars);
-  BOOST_CHECK_EQUAL(arch.getSumEffects(), 0.0);
+  BOOST_CHECK_EQUAL(arch.getSumEffects(), pars.nloci);
 }
 
-BOOST_AUTO_TEST_CASE(DominancesAreZeroIfVarianceIsZero)
+BOOST_AUTO_TEST_CASE(DominancesAreOneIfVarianceIsZero)
 {
   std::clog << "Testing dominance coefficients...\n";
   Param pars;
   pars.dominancevar = 0.0;
   GenArch arch = GenArch(pars);
-  BOOST_CHECK_EQUAL(arch.getSumDominances(), 0.0);
+  BOOST_CHECK_EQUAL(arch.getSumDominances(), pars.nloci);
 }
 
 BOOST_AUTO_TEST_CASE(NetworksAreEmptyIfNoEdges)
@@ -89,15 +89,15 @@ BOOST_AUTO_TEST_CASE(NetworkWithOneEdgeConnectsNodesZeroAndOne)
  }
  */
 
-BOOST_AUTO_TEST_CASE(InteractionWeightsAreZeroIfScaleParamIsZero)
+BOOST_AUTO_TEST_CASE(InteractionWeightsAreOneIfScaleParamIsZero)
 {
   std::clog << "Testing interaction weights...\n";
   Param pars;
   pars.interactionscale = 0.0;
   GenArch arch = GenArch(pars);
-  BOOST_CHECK_EQUAL(arch.getSumWeights(0u), 0.0);
-  BOOST_CHECK_EQUAL(arch.getSumWeights(1u), 0.0);
-  BOOST_CHECK_EQUAL(arch.getSumWeights(2u), 0.0);
+  BOOST_CHECK_EQUAL(arch.getSumWeights(0u), pars.nedges[0u]);
+  BOOST_CHECK_EQUAL(arch.getSumWeights(1u), pars.nedges[1u]);
+  BOOST_CHECK_EQUAL(arch.getSumWeights(2u), pars.nedges[2u]);
 }
 
   // Test making a genetic architecture, saving it, then making another one by
@@ -121,6 +121,6 @@ BOOST_AUTO_TEST_CASE(ArchitectureSavesAndLoadsProperly)
   const double ssqwgt2 = archloaded.getSsqWeights(0u);
 
   BOOST_CHECK_EQUAL(utl::round(ssqeff1, 4u), utl::round(ssqeff2, 4u));
-  BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));
+  BOOST_CHECK_EQUAL(utl::round(ssqwgt1, 4u), utl::round(ssqwgt2, 4u));  
 
 }

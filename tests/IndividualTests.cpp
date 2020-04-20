@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE(HomogamousFemaleAcceptsIdenticalMale)
   pars.sexsel = 1.0;
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
-  ind.resetEcoTrait(0.0, pars);
-  ind.resetMatePref(1.0); // full assortative mating
+  ind.resetTrait(0u, 0.0, pars);
+  ind.resetTrait(1u, 1.0, pars); // full assortative mating
   BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
 }
 
@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(HeterogamousFemaleRejectsIdenticalMale)
   pars.sexsel = 1.0;
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
-  ind.resetEcoTrait(0.0, pars);
-  ind.resetMatePref(-1.0); // full disassortative mating
+  ind.resetTrait(0u, 0.0, pars);
+  ind.resetTrait(1u, -1.0, pars); // full disassortative mating
   BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 0.0);
 }
 
@@ -58,8 +58,8 @@ BOOST_AUTO_TEST_CASE(RandomMatingFemaleAcceptsAnyone)
   pars.sexsel = 1.0;
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
-  ind.resetEcoTrait(0.0, pars);
-  ind.resetMatePref(0.0); // random mating
+  ind.resetTrait(0u, 0.0, pars);
+  ind.resetTrait(1u, 0.0, pars); // random mating
   BOOST_CHECK_EQUAL(ind.mate(0.0, pars), 1.0);
   BOOST_CHECK_EQUAL(ind.mate(1.0, pars), 1.0);
   BOOST_CHECK_EQUAL(ind.mate(-1.0, pars), 1.0);
@@ -166,9 +166,9 @@ BOOST_AUTO_TEST_CASE(HybridDevelopsWithZeroTraitValuesIfCodominance)
   Individual baby = Individual(pars, arch, mom, dad);
 
     // Without dominance the expression of each trait should be zero
-  BOOST_CHECK_EQUAL(baby.getEcoTrait(), 0.0);
-  BOOST_CHECK_EQUAL(baby.getMatePref(), 0.0);
-  BOOST_CHECK_EQUAL(baby.getNeutral(), 0.0);
+  BOOST_CHECK_EQUAL(baby.getTraitValue(0u), 0.0);
+  BOOST_CHECK_EQUAL(baby.getTraitValue(1u), 0.0);
+  BOOST_CHECK_EQUAL(baby.getTraitValue(2u), 0.0);
 }
 
 

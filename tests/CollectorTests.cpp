@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
   pars.dispersal = 0.0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-  metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
+  metapop.resetTraits(0u, 0u, -1.0, pars); // only trait -1 in habitat 0
+  metapop.resetTraits(0u, 1u, 1.0, pars); // only trait 1 in habitat 1
   metapop.cycle(pars, arch);
   Collector collector = Collector(arch);
   collector.analyze(metapop, pars, arch);
@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsOneIfEcotypesAreSeparated)
   pars.dispersal = 0.0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-  metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
+  metapop.resetTraits(0u, 0u, -1.0, pars); // only trait -1 in habitat 0
+  metapop.resetTraits(0u, 1u, 1.0, pars); // only trait 1 in habitat 1
   metapop.cycle(pars, arch);
   Collector collector = Collector(arch);
   collector.analyze(metapop, pars, arch);
@@ -76,9 +76,9 @@ BOOST_AUTO_TEST_CASE(MatingIsolationIsOneIfMatingIsAssortative)
   pars.dispersal = 0.0;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(0u, -1.0, pars); // only trait -1 in habitat 0
-  metapop.resetEcoTraits(1u, 1.0, pars); // only trait 1 in habitat 1
-  metapop.resetMatePrefs(1.0); // assortative mating
+  metapop.resetTraits(0u, 0u, -1.0, pars); // only trait -1 in habitat 0
+  metapop.resetTraits(0u, 1u, 1.0, pars); // only trait 1 in habitat 1
+  metapop.resetTraits(1u, 1.0, pars); // assortative mating
   metapop.cycle(pars, arch);
   Collector collector = Collector(arch);
   collector.analyze(metapop, pars, arch);
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
   pars.tburnin = 0u;
   GenArch arch = GenArch(pars);
   MetaPop metapop = MetaPop(pars, arch);
-  metapop.resetEcoTraits(-1.0, pars); // should produce only ecotype 0
+  metapop.resetTraits(0u, -1.0, pars); // should produce only ecotype 0
   metapop.cycle(pars, arch);
   Collector collector = Collector(arch);
   collector.analyze(metapop, pars, arch);

@@ -4,7 +4,7 @@
 #include "Param.h"
 #include "Random.h"
 #include "Network.h"
-#include "Types.h"
+
 #include "Utilities.h"
 #include <cassert>
 #include <stddef.h>
@@ -47,11 +47,11 @@ public:
 
     }
 
-    vecDbl chromosomes;     // per chromosome
-    vecUns traits;          // per locus
-    vecDbl locations;       // per locus
-    vecDbl effects;         // per locus
-    vecDbl dominances;      // per locus
+    std::vector<double> chromosomes;     // per chromosome
+    std::vector<size_t> traits;          // per locus
+    std::vector<double> locations;       // per locus
+    std::vector<double> effects;         // per locus
+    std::vector<double> dominances;      // per locus
     MultiNet networks;      // per trait
 
     // Getters called from tests
@@ -117,20 +117,20 @@ public:
 private:
 
     MultiNet makeNetworks(const Param&) const;
-    vecDbl makeChromosomes(const Param&) const;
-    vecUns makeEncodedTraits(const Param&) const;
-    vecDbl makeLocations(const Param&) const;
-    vecDbl makeEffects(const Param&) const;
-    vecDbl makeDominances(const Param&) const;
+    std::vector<double> makeChromosomes(const Param&) const;
+    std::vector<size_t> makeEncodedTraits(const Param&) const;
+    std::vector<double> makeLocations(const Param&) const;
+    std::vector<double> makeEffects(const Param&) const;
+    std::vector<double> makeDominances(const Param&) const;
 
     void save(Param&) const;
-    void write(const vecDbl&, std::ofstream&, const char& = ' ') const;
-    void write(const vecUns&, std::ofstream&, const char& = ' ') const;
-    void write(const vecEdg&, std::ofstream&, const bool&, const char& = ' ') const;
+    void write(const std::vector<double>&, std::ofstream&, const char& = ' ') const;
+    void write(const std::vector<size_t>&, std::ofstream&, const char& = ' ') const;
+    void write(const std::vector<Edge>&, std::ofstream&, const bool&, const char& = ' ') const;
 
-    void read(vecDbl&, const size_t&, std::ifstream&);
-    void read(vecUns&, const size_t&, std::ifstream&);
-    void read(vecEdg&, const size_t&, const bool&, std::ifstream&);
+    void read(std::vector<double>&, const size_t&, std::ifstream&);
+    void read(std::vector<size_t>&, const size_t&, std::ifstream&);
+    void read(std::vector<Edge>&, const size_t&, const bool&, std::ifstream&);
 
 };
 

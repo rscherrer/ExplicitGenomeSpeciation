@@ -10,7 +10,7 @@ bool timetofreeze(const int &t,const Param &p)
     return p.record && p.gensave && t >= 0 && t % p.tfreeze == 0;
 }
 
-int simulate(const vecStrings &args)
+int simulate(const std::vector<std::string> &args)
 {
 
     try
@@ -39,6 +39,10 @@ int simulate(const vecStrings &args)
         // Create an analytical module
         Collector collector = Collector(arch);
 
+        // Create a printer
+        const std::string order = pars.choosewhattosave ? pars.orderfile : "";
+        Printer printer = Printer(order);
+
         std::cout << "Simulation started.\n";
 
         // Loop through time
@@ -54,13 +58,18 @@ int simulate(const vecStrings &args)
 
             // Analyze the metapopulation if needed
             if (timetosave(t, pars)) {
-                collector.analyze(metapop, pars, arch); // collect stats
-                if (pars.datsave) collector.print(t, metapop); // save them to files
+
+                // Collect stats
+                collector.analyze(metapop, pars, arch);
+
+                // Save them to files
+                if (pars.datsave) printer.print(t, collector, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)
             if (timetofreeze(t, pars)) {
-                collector.freeze(metapop, pars);
+                // collector.freeze(metapop, pars);
+                printer.freeze(metapop, pars);
             }
 
             metapop.reproduce(pars, arch);

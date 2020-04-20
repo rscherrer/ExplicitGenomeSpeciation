@@ -1,7 +1,6 @@
 #ifndef EXPLICITGENOMESPECIATION_TESTUTILITIES_H
 #define EXPLICITGENOMESPECIATION_TESTUTILITIES_H
 
-#include "library/Types.h"
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -16,7 +15,7 @@ namespace tst
   void makeInvalidParamValue2();
   void makeParamFileWithArchitecture();
   void makeParamFileWithMissingArchitecture();
-  vecDbl readfile(const std::string&);
+  std::vector<double> readfile(const std::string&);
 
 }
 
