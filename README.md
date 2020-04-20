@@ -1,4 +1,4 @@
-# ExplicitGenomeSpeciation GUI version
+# ExplicitGenomeSpeciation
 
 Branch|[![Travis CI logo](ci_setup/pics/TravisCI.png)](https://travis-ci.org)|[![Codecov logo](ci_setup/pics/Codecov.png)](https://www.codecov.io)
 ---|---|---
@@ -227,6 +227,9 @@ This optional file contains a list of names of variables to save, if record, dat
 
 (Edges are ordered by trait.)
 
+# Analysis with egssimtools
+
+The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it.
 
 # Use on the cluster
 
