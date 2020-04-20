@@ -312,6 +312,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># First set the simulation folder</span></span>
 <span id="cb1-4"><a href="#cb1-4"></a>simulation &lt;-<span class="st"> &quot;../build/release&quot;</span></span></code></pre></div>
+<div id="parameters" class="section level1">
+<h1>Parameters</h1>
 <p>You can easily read a list of parameter values for a given simulation by using</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>pars &lt;-<span class="st"> </span><span class="kw">read_parameters</span>(simulation)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">head</span>(pars)</span>
@@ -339,85 +341,161 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; </span></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; $ecosel</span></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; [1] &quot;1.4&quot;</span></span></code></pre></div>
+</div>
+<div id="population-wide-variables" class="section level1">
+<h1>Population-wide variables</h1>
 <p>Here we provide functions to read variables through time. Different kinds of data are saved during the simulations, with different dimensions. All of the functions we provide here wrap around the <code>read_binary</code> function, which can read binary files, and all of them assume that “time.dat” is available (which is read using the <code>read_time</code> function). Functions for individual-level variables assume that “population_size.dat” was saved (population size is read using the <code>read_population_size</code> function). See the README for more details on how to choose what variables are possible to save.</p>
 <p>To read population-wide variables use:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">read_population</span>(simulation, <span class="dt">variable =</span> <span class="st">&quot;EI&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt;  [1] 0.6219105 0.6670805 0.6725296 0.6806327 0.7137775 0.7247432 0.7273780</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt;  [8] 0.7598032 0.7856653 0.7963782 0.8121315 0.8357514 0.8196376 0.8275657</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [15] 0.8549591 0.8682196 0.8821501 0.8810706 0.8856761 0.8989007</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt;  [1] 0.6343251 0.6656764 0.6576341 0.6806444 0.6871576 0.6922996 0.7094354</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt;  [8] 0.7438057 0.7623610 0.7612966 0.7616859 0.7896772 0.7961648 0.8338955</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [15] 0.8461043 0.8490969 0.8682411 0.8726868 0.9033060 0.9015527</span></span></code></pre></div>
 <p>for ecological divergence through time, for example.</p>
+<p>You can more specifically read the population size through time:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">read_population_size</span>(simulation)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt;  [1] 1332 2982 2812 2507 2875 2796 2992 2847 2972 2996 2870 2467 2962 2883 2967</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; [16] 2723 2979 2915 2758 2944</span></span></code></pre></div>
+<p>or even the population size within each ecotype at each time point</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">read_ecotype_sizes</span>(simulation)[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">#&gt; $`1`</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; [1] 686 646</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">#&gt; </span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt; $`2`</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt; [1] 1481 1501</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; $`3`</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt; [1] 1407 1405</span></span></code></pre></div>
+<p>Similar, you can read the means of the three trait values through time across the whole population,</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">read_means</span>(simulation)[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt; $`0`</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#&gt; [1] -0.99187410 -0.01647177 -1.01275406</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt; </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt; $`100`</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; [1]  0.002390105  0.073062316 -1.031895727</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt; </span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; $`200`</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt; [1]  0.02319618  0.15147944 -0.89230888</span></span></code></pre></div>
+<p>or within each ecotype separately,</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">read_ecotype_means</span>(simulation)[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt; $`0`</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt; $`0`$`1`</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt; [1] -1.287066544 -0.007473722</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; </span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; $`0`$`2`</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; [1] -0.6784035 -0.9959633</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; </span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; $`0`$`3`</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; [1] -0.02494515 -1.03058451</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; </span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; </span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; $`100`</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; $`100`$`1`</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; [1] -0.52618903  0.06473673</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; </span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; $`100`$`2`</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; [1]  0.5239262 -1.0149795</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt; </span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#&gt; $`100`$`3`</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#&gt; [1]  0.08150033 -1.04858659</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#&gt; </span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#&gt; </span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#&gt; $`200`</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#&gt; $`200`$`1`</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="co">#&gt; [1] -0.5455925  0.1601634</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="co">#&gt; </span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="co">#&gt; $`200`$`2`</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="co">#&gt; [1]  0.5927945 -0.8798820</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="co">#&gt; </span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co">#&gt; $`200`$`3`</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co">#&gt; [1]  0.1428078 -0.9047534</span></span></code></pre></div>
+</div>
+<div id="individual-level-variables" class="section level1">
+<h1>Individual-level variables</h1>
 <p>Alternatively, you may want to read individual-level data. For this use:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>traits &lt;-<span class="st"> </span><span class="kw">read_individuals</span>(simulation, <span class="st">&quot;individual_trait&quot;</span>, <span class="dt">nvalues =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>traits &lt;-<span class="st"> </span><span class="kw">read_individuals</span>(simulation, <span class="st">&quot;individual_trait&quot;</span>, <span class="dt">nvalues =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>which returns a nested list of individual values (three values per individual in the case of trait values) clustered by time points.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Trait values of the first individual in the first time point</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>traits[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; [1] -0.9936792 -0.2327907  0.8127390</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Trait values of the first individual in the first time point</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>traits[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; [1] -1.35982026 -0.07795666 -1.30619504</span></span></code></pre></div>
 <p>The argument <code>nvalues</code> is three by default, but can be changed if reading other individual-level variables such as “ecotype” or “habitat”. However, we have simplified functions for those, that return the data in the same way:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>ecotypes &lt;-<span class="st"> </span><span class="kw">read_ecotypes</span>(simulation)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>habitats &lt;-<span class="st"> </span><span class="kw">read_habitats</span>(simulation)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>ecotypes[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a>habitats[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>ecotypes &lt;-<span class="st"> </span><span class="kw">read_ecotypes</span>(simulation)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>habitats &lt;-<span class="st"> </span><span class="kw">read_habitats</span>(simulation)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>ecotypes[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>habitats[[<span class="dv">1</span>]][[<span class="dv">1</span>]]</span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+</div>
+<div id="locus-specific-variables" class="section level1">
+<h1>Locus-specific variables</h1>
 <p>We can also read locus-specific variables across the genome, for example:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>loci &lt;-<span class="st"> </span><span class="kw">read_loci</span>(simulation, <span class="st">&quot;genome_Fst&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>loci &lt;-<span class="st"> </span><span class="kw">read_loci</span>(simulation, <span class="st">&quot;genome_Fst&quot;</span>)</span></code></pre></div>
 <p>which returns a list of vectors of locus-specific values for each time point.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">head</span>(loci[[<span class="dv">1</span>]]) <span class="co"># at the first time point</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt; [1] 0.0003611217 0.0007448260 0.0052053908 0.0013079429 0.0019458267</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="co">#&gt; [6] 0.0015416331</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">head</span>(loci[[<span class="dv">1</span>]]) <span class="co"># at the first time point</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co">#&gt; [1] 5.950065e-04 6.781493e-07 3.931703e-06 3.536203e-04 2.230534e-05</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt; [6] 4.546910e-03</span></span></code></pre></div>
+</div>
+<div id="edge-specific-variables" class="section level1">
+<h1>Edge-specific variables</h1>
 <p>Alternatively we can look at edge-specific variables in a network, with</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>edges &lt;-<span class="st"> </span><span class="kw">read_edges</span>(simulation, <span class="st">&quot;network_corgen&quot;</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">str</span>(edges[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>])</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; List of 3</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt;  $ 0  :List of 3</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#&gt;   ..$ 0: num [1:100] 0.0863 0.0236 0.0513 -0.0404 -0.0124 ...</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;   ..$ 1: num [1:100] -0.01064 -0.0425 -0.00965 -0.04542 -0.00281 ...</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;   ..$ 2: num [1:100] 0.0592 0.0157 0.0373 -0.0793 -0.0159 ...</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="co">#&gt;  $ 100:List of 3</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt;   ..$ 0: num [1:100] 0.027625 -0.005084 -0.036151 0.040351 0.000195 ...</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt;   ..$ 1: num [1:100] -0.01581 -0.02762 -0.02222 -0.00305 0.04552 ...</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#&gt;   ..$ 2: num [1:100] 0.022 0.029 -0.0595 0.0246 -0.0129 ...</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="co">#&gt;  $ 200:List of 3</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="co">#&gt;   ..$ 0: num [1:100] 0.0758 -0.0152 0.0188 0.0587 0.0308 ...</span></span>
-<span id="cb10-14"><a href="#cb10-14"></a><span class="co">#&gt;   ..$ 1: num [1:100] -0.01095 -0.03122 -0.00636 -0.01285 0.03684 ...</span></span>
-<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt;   ..$ 2: num [1:100] -0.00792 -0.01073 0.05337 -0.00989 0.05332 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>edges &lt;-<span class="st"> </span><span class="kw">read_edges</span>(simulation, <span class="st">&quot;network_corgen&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">str</span>(edges[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>])</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="co">#&gt; List of 3</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">#&gt;  $ 0  :List of 3</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co">#&gt;   ..$ 0: num [1:100] 0.0221 0 0 0 0 ...</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co">#&gt;   ..$ 1: num [1:100] 0.01918 0.00377 -0.05731 -0.00626 -0.01103 ...</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="co">#&gt;   ..$ 2: num [1:100] -0.016 0.041 -0.1404 -0.0435 -0.0111 ...</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="co">#&gt;  $ 100:List of 3</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="co">#&gt;   ..$ 0: num [1:100] 0.02136 0 -0.03434 -0.00819 0 ...</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="co">#&gt;   ..$ 1: num [1:100] 0 0 0.00695 -0.03868 0 ...</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="co">#&gt;   ..$ 2: num [1:100] -0.0058 0.01566 0.00685 0.00826 0.03367 ...</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="co">#&gt;  $ 200:List of 3</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="co">#&gt;   ..$ 0: num [1:100] -0.000495 0.025655 0 0 0 ...</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a><span class="co">#&gt;   ..$ 1: num [1:100] -0.04162 0.00822 -0.05655 -0.02674 -0.01301 ...</span></span>
+<span id="cb14-15"><a href="#cb14-15"></a><span class="co">#&gt;   ..$ 2: num [1:100] -0.01115 0.00349 0.00071 0.01428 -0.01165 ...</span></span></code></pre></div>
 <p>which returns a vector of edge-specific values for each trait, for each time point.</p>
+</div>
+<div id="genetic-architecture" class="section level1">
+<h1>Genetic architecture</h1>
 <p>Each simulation has a genetic architecture, which is implemeted as its own class in the C++ code. If you chose to save the genetic architecture into a file (see README on how to do that), you can retrieve the information of that file with</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>arch &lt;-<span class="st"> </span><span class="kw">read_architecture</span>(simulation)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>arch &lt;-<span class="st"> </span><span class="kw">read_architecture</span>(simulation)</span></code></pre></div>
 <p>which assumes that the architecture file name is “architecture.txt”, but you can change that using the <code>filename</code> argument. The genetic architecture is stored as a list that matches the organization of the file (explained in the README):</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">str</span>(arch)</span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="co">#&gt; List of 6</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="co">#&gt;  $ chromosomes: num [1:3] 0.333 0.667 1</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="co">#&gt;  $ traits     : num [1:300] 0 1 0 0 0 2 0 2 1 1 ...</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="co">#&gt;  $ locations  : num [1:300] 0.000644 0.001195 0.008408 0.008765 0.009228 ...</span></span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="co">#&gt;  $ effects    : num [1:300] 0.1279 -0.0838 0.0968 -0.0596 0.0642 ...</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="co">#&gt;  $ dominances : num [1:300] 0.02293 0.00548 0.23688 0.02891 0.17171 ...</span></span>
-<span id="cb12-8"><a href="#cb12-8"></a><span class="co">#&gt;  $ networks   :List of 3</span></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="co">#&gt;   ..$ ecotrait:List of 3</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 221 221 123 123 221 221 221 221 221 183 ...</span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 123 183 183 150 150 288 223 3 34 143 ...</span></span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] 0.0436 0.1317 -0.1225 -0.0981 0.0392 ...</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="co">#&gt;   ..$ matepref:List of 3</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 1 88 88 206 88 1 292 88 292 292 ...</span></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 88 206 292 118 118 118 118 232 154 229 ...</span></span>
-<span id="cb12-16"><a href="#cb12-16"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] -0.0547 -0.0787 0.0886 0.0991 0.0965 ...</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="co">#&gt;   ..$ neutral :List of 3</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 226 226 226 55 226 226 80 259 259 55 ...</span></span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 236 66 55 259 80 126 126 126 76 76 ...</span></span>
-<span id="cb12-20"><a href="#cb12-20"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] 0.1611 -0.1062 -0.0356 -0.0752 0.1822 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">str</span>(arch)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="co">#&gt; List of 6</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="co">#&gt;  $ chromosomes: num [1:3] 0.333 0.667 1</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co">#&gt;  $ traits     : num [1:300] 0 2 2 0 1 0 2 0 0 2 ...</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">#&gt;  $ locations  : num [1:300] 0.00274 0.00986 0.01016 0.0123 0.01335 ...</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co">#&gt;  $ effects    : num [1:300] 0.075 -0.1363 -0.0661 -0.1053 0.1573 ...</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co">#&gt;  $ dominances : num [1:300] 0.0527 0.0235 0.0488 0.0482 0.1225 ...</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="co">#&gt;  $ networks   :List of 3</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co">#&gt;   ..$ ecotrait:List of 3</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 36 36 36 239 173 36 36 36 173 197 ...</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 239 173 197 197 197 31 175 50 50 105 ...</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] -0.0545 -0.0771 0.0675 0.12 -0.0451 ...</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="co">#&gt;   ..$ matepref:List of 3</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 133 133 48 184 133 48 233 52 48 133 ...</span></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 184 48 233 233 233 52 242 182 182 271 ...</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] 0.1112 0.035 0.0878 0.0665 -0.1722 ...</span></span>
+<span id="cb16-17"><a href="#cb16-17"></a><span class="co">#&gt;   ..$ neutral :List of 3</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="co">#&gt;   .. ..$ edges0 : num [1:100] 267 284 267 267 284 218 284 284 267 284 ...</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="co">#&gt;   .. ..$ edges1 : num [1:100] 284 211 211 218 218 84 84 283 82 82 ...</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="co">#&gt;   .. ..$ weights: num [1:100] -0.1101 -0.076 0.0767 -0.1184 0.0616 ...</span></span></code></pre></div>
 <p>where the first five slots are lists of values across loci, and the last slot contains edge-specific values for the gene networks, sorted by network.</p>
+</div>
+<div id="simulation-status" class="section level1">
+<h1>Simulation status</h1>
 <p>Some simulations may have crashed or not even started. To check if data are unavailable for a simulation use:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">is_missing</span>(simulation)</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">is_missing</span>(simulation)</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>and to check if the simulation went extinct before completion use:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">is_extinct</span>(simulation)</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">is_extinct</span>(simulation)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>You can also use wrap-arounds of those functions to find out whether and which simulations went missing or extinct in a folder containing many simulations.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">find_extinct</span>(<span class="dt">root =</span> <span class="st">&quot;../build&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;release&quot;</span>, <span class="dt">pb =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt; NULL</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">find_missing</span>(<span class="dt">root =</span> <span class="st">&quot;../build&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;release&quot;</span>, <span class="dt">pb =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">find_extinct</span>(<span class="dt">root =</span> <span class="st">&quot;../build&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;release&quot;</span>, <span class="dt">pb =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">find_missing</span>(<span class="dt">root =</span> <span class="st">&quot;../build&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;release&quot;</span>, <span class="dt">pb =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>where <code>root</code> is where all the simulation folders are, <code>pattern</code> is an optional pattern-matching string to find the simulation folders (defaults to “sim_” at the beginning of the simulation folder name) and <code>pb</code> controls whether a progress bar is displayed while the function loops through the simulations. Both functions return a vector of simulation folder names where the simulation went missing or extinct, otherwise they return <code>NULL</code>.</p>
+</div>
 
 
 

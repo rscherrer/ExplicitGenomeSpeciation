@@ -22,17 +22,8 @@ read_loci(simulation, "genome_Fst")
 read_edges(simulation, "network_corgen")
 find_extinct("../build", pattern = "release")
 find_missing("../build", pattern = "release")
-
-read_means <- function(folder) {
-
-  data <- read_data(folder, "resources")
-  t <- read_time(folder)
-  t <- rep(t, each = 4) # per time point
-  lapply(split(data, t), split, c(1, 1, 2, 2)) # per habitat
-
-}
-
 read_resources(simulation)
 read_means(simulation)
-
+read_ecotype_means(simulation)
+read_ecotype_sizes(simulation)
 
