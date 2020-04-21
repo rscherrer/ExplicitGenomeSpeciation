@@ -171,14 +171,14 @@ where `root` is where all the simulation folders are, `pattern` is an optional p
 We provide functions that wrap around `ggplot2` tools to make custom plots suited to the kind of data that comes with these simulations. The output of those functions can be further modified as any `ggplot` object. For example, to plot a given trait through time for a simulation, use
 
 ```{r, fig.width=4}
-plot_trait_heatmap(simulation, trait = 1) +
+plot_trait_density(simulation, trait = 1) +
   ylab("Ecological trait")
 ```
 
 If you want to plot the joint densities of two traits, use
 
 ```{r, fig.width=3}
-plot_trait_heatmap2D(simulation, traits = c(2, 1), t = 2900) +
+plot_trait_density2D(simulation, traits = c(2, 1), t = 2900) +
   xlab("Mating preference") +
   ylab("Ecological trait") +
   xlim(c(-3, 3))

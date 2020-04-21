@@ -10,7 +10,7 @@
 #'
 #' @export
 
-plot_trait_heatmap <- function(folder, trait, bins = 15) {
+plot_trait_density <- function(folder, trait, bins = 15) {
 
   library(tidyverse)
 
