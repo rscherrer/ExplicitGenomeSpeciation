@@ -47,120 +47,25 @@ plot_simulations <- function(
   library(tidyverse)
   library(pbapply)
 
-  if (!verbose) pb <- FALSE
-  if (pb) thislapply <- pblapply else thislapply <- lapply
-
-  # Look for missing and extinct simulations
-  if (verbose) message("Looking for missing simulations...")
-  missings <- find_missing(root, pattern = pattern, pb = pb)
-  if (verbose) message("Looking for extinct simulations...")
-  extincts <- find_extinct(root, pattern = pattern, pb = pb)
-
-  # Identify extant simulations
-  simulations <- list.files(root, pattern = pattern, full.names = TRUE)
-  if (!is.null(missings)) simulations <- simulations[!simulations %in% missings]
-  if (!is.null(extincts)) simulations <- simulations[!simulations %in% extincts]
-
-  # Collect the variable of interest from each simulation
-  if (verbose) message("Reading the data...")
-  data <- data.frame(do.call("rbind", thislapply(simulations, read_population, variable)))
-
-  # Add time if available
-  colnames(data) <- read_time_if(simulations[1])
-  timecolumns <- colnames(data)
-
-  # Add simulation identifier
-  data$simulation <- factor(rownames(data))
-
   parnames <- c(facet_rows, facet_cols, color_by)
 
-  # Add parameter values if needed
-  if (!is.null(parnames)) {
-
-    if (verbose) message("Reading parameter values...")
-    parameters <- thislapply(simulations, read_parameters, parnames)
-
-    # Convert parameter values into factors in a data frame
-    parameters <- lapply(parameters, function(parameters) sapply(parameters, function(parameter) paste0(parameter, collapse = " ")))
-    parameters <- data.frame(do.call("rbind", parameters))
-    rownames(parameters) <- NULL
-
-    # Append to the data
-    data <- cbind(data, parameters)
-
-  }
-
-  # Convert from wide to long
-  data <- data %>% gather_("time", variable, timecolumns, convert = TRUE)
-
-  # Add summaries if needed
-  if (!is.null(add_summaries)) data <- cbind(data, add_summaries(data))
-
-  ### Choice 1: plot multiple lines ###
-
-  if (!is.null(reverse_order)) {
-    if (!all(reverse_order %in% parnames)) stop("Factor to reverse was not provided")
-    data[, reverse_order] <- lapply(data.frame(data[, reverse_order]), function(column) factor(column, levels = rev(levels(column))))
-  }
+  # Collect simulation data in the long format
+  data <- collect_simulations(root, variable, parnames, pattern, verbose, pb, add_summaries, reverse_order)
 
   if (verbose) message("Plotting...")
-
-  # Show variable through time
   p <- ggplot(data, aes(x = time, y = get(variable), alpha = simulation))
 
   # Deal with color
-  if (!is.null(color_by)) {
+  p <- add_geom_line_colored(p, color_by, color_by_numeric, colors)
 
-    # Color according to a parameter
-    if (color_by_numeric) thisconvert <- function(x) as.numeric(as.character(x)) else thisconvert <- factor
-    p <- p + geom_line(aes(color = thisconvert(get(color_by)))) + labs(color = color_by)
-
-    if (!is.null(colors)) {
-
-      # Add a custom color scale if provided
-      if (color_by_numeric) {
-
-        # Either a color gradient
-        if (length(colors) != 2) stop("Please provide a lower and upper end for color gradient")
-        p <- p + scale_color_gradient(low = colors[1], high = colors[2])
-
-      } else {
-
-        # Or a custom set of colors
-        if (length(colors) != nlevels(data[, color_by])) stop("Please provide colors for the different levels of the coloring factor")
-        p <- p + scale_color_manual(values = colors)
-      }
-    }
-
-  } else p <- p + geom_line(color = ifelse(is.null(colors), "black", colors[1]))
-
+  # Add general plot components
   p <- p +
     theme_bw() +
     ylab(variable) +
     guides(alpha = FALSE) +
-    scale_alpha_manual(values = runif(min = 0.49, max = 0.51, n = nlevels(data$simulation))) # this is a hack to show multiple lines on the same plot
+    scale_alpha_manual(values = runif(min = 0.49, max = 0.51, n = nlevels(data$simulation)))
 
-  facets <- c(facet_rows, facet_cols)
-
-  # Use facets if needed
-  if (!is.null(facets)) {
-
-    # Setup rows and columns
-    if (!is.null(facet_rows)) lhs <- paste(facet_rows, collapse = " + ") else lhs <- "."
-    if (!is.null(facet_cols)) rhs <- paste(facet_cols, collapse = " + ") else rhs <- "."
-
-    # Choose what type of facetting to use
-    if (facet_wrapped) thisfacet <- facet_wrap else thisfacet <- facet_grid
-
-    # Add custom labels if needed
-    if (is.null(facet_prefixes)) facet_prefixes <- facets
-    labels <- make_facet_labels(data, facets, facet_prefixes, sep = sep, no_use = !label_facets, simplify = FALSE)
-
-    # Split the plot into facets
-    p <- p + thisfacet(formula(paste(lhs, "~", rhs)), labeller = do.call("labeller", labels))
-
-  }
-
-  p
+  # Add facets if needed (the function handle no facet too)
+  facettize(p, facet_rows, facet_cols, facet_wrapped, label_facets, facet_prefixes, sep)
 
 }

@@ -9,17 +9,16 @@
 # How many simulations are missing?
 find_missing <- function(root, pattern = "^sim_", pb = TRUE) {
 
+  library(pbapply)
+
   # Use progress bar?
-  if (pb) {
-    library(pbapply)
-    myapply <- pbsapply
-  } else myapply <- sapply
+  if (pb) thissapply <- pbsapply else thissapply <- sapply
 
   # Get a list of folders in the directory
   folders <- list.files(root, pattern = pattern, full.names = TRUE)
 
   # Check each one for missing data
-  missings <- myapply(folders, is_missing)
+  missings <- thissapply(folders, is_missing)
 
   # Return the names of the extinct folders
   if (any(missings)) return (folders[missings])
