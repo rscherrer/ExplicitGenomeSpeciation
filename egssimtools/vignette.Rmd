@@ -183,3 +183,5 @@ plot_trait_density2D(simulation, traits = c(2, 1), t = 2900) +
   ylab("Ecological trait") +
   xlim(c(-3, 3))
 ```
+
+where argument `t` is optional and tells the function to only plot a certain time point.

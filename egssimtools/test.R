@@ -32,11 +32,11 @@ read_ecotype_means(simulation)
 read_ecotype_sizes(simulation)
 
 # Single plots
-p <- plot_traits_heatmap(simulation, trait = 1) +
+p <- plot_trait_density(simulation, trait = 1) +
   ylab("Ecological trait")
 p
 
-p2 <- plot_trait_heatmap2D(simulation, traits = c(2, 1), t = 2900) +
+p2 <- plot_trait_density2D(simulation, traits = c(2, 1), t = 2900) +
   xlab("Mating preference") +
   ylab("Ecological trait") +
   xlim(c(-3, 3))

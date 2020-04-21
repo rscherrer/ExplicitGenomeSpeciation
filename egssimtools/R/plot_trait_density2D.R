@@ -11,7 +11,7 @@
 #'
 #' @export
 
-plot_trait_density <- function(folder, traits = c(1, 2), t = NULL, bins = 15) {
+plot_trait_density2D <- function(folder, traits = c(1, 2), t = NULL, bins = 15) {
 
   library(tidyverse)
 
