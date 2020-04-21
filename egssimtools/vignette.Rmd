@@ -25,7 +25,9 @@ library(egssimtools)
 simulation <- "../build/release"
 ```
 
-# Parameters
+# Read data
+
+## Parameters
 
 You can easily read a list of parameter values for a given simulation by using
 
@@ -40,7 +42,7 @@ which assumes that the parameter file is called "paramlog.txt". You can change t
 read_parameters(simulation, parnames = c("hsymmetry", "ecosel"))
 ```
 
-# Population-wide variables
+## Population-wide variables
 
 Here we provide functions to read variables through time. Different kinds of data are saved during the simulations, with different dimensions. All of the functions we provide here wrap around the `read_binary` function, which can read binary files, and all of them assume that "time.dat" is available (which is read using the `read_time` function). Functions for individual-level variables assume that "population_size.dat" was saved (population size is read using the `read_population_size` function). See the README for more details on how to choose what variables are possible to save.
 
@@ -76,7 +78,7 @@ or within each ecotype separately,
 read_ecotype_means(simulation)[1:3]
 ```
 
-# Individual-level variables
+## Individual-level variables
 
 Alternatively, you may want to read individual-level data. For this use:
 
@@ -100,7 +102,7 @@ ecotypes[[1]][[1]]
 habitats[[1]][[1]]
 ```
 
-# Locus-specific variables
+## Locus-specific variables
 
 We can also read locus-specific variables across the genome, for example:
 
@@ -114,7 +116,7 @@ which returns a list of vectors of locus-specific values for each time point.
 head(loci[[1]]) # at the first time point
 ```
 
-# Edge-specific variables
+## Edge-specific variables
 
 Alternatively we can look at edge-specific variables in a network, with
 
@@ -125,7 +127,7 @@ str(edges[1:3])
 
 which returns a vector of edge-specific values for each trait, for each time point.
 
-# Genetic architecture
+## Genetic architecture
 
 Each simulation has a genetic architecture, which is implemeted as its own class in the C++ code. If you chose to save the genetic architecture into a file (see README on how to do that), you can retrieve the information of that file with
 
@@ -141,7 +143,7 @@ str(arch)
 
 where the first five slots are lists of values across loci, and the last slot contains edge-specific values for the gene networks, sorted by network.
 
-# Simulation status
+## Simulation status
 
 Some simulations may have crashed or not even started. To check if data are unavailable for a simulation use:
 
@@ -164,52 +166,20 @@ find_missing(root = "../build", pattern = "release", pb = FALSE)
 
 where `root` is where all the simulation folders are, `pattern` is an optional pattern-matching string to find the simulation folders (defaults to "sim_" at the beginning of the simulation folder name) and `pb` controls whether a progress bar is displayed while the function loops through the simulations. Both functions return a vector of simulation folder names where the simulation went missing or extinct, otherwise they return `NULL`.
 
-# Working with the data
+## Plotting
 
-You can then use various data wrangling and plotting tools to work around, combine and show those data:
+We provide functions that wrap around `ggplot2` tools to make custom plots suited to the kind of data that comes with these simulations. The output of those functions can be further modified as any `ggplot` object. For example, to plot a given trait through time for a simulation, use
 
-```{r, fig.width=7}
-library(tidyverse)
-library(cowplot)
+```{r, fig.width=4}
+plot_trait_heatmap(simulation, trait = 1) +
+  ylab("Ecological trait")
+```
 
-# Read ecological trait values through time
-data <- read_individuals(simulation, "individual_trait")
-data <- lapply(data, function(data) sapply(data, "[", 1))
-data <- data.frame(time = mrep(as.numeric(names(data)), sapply(data, length)), data = do.call("c", data))
+If you want to plot the joint densities of two traits, use
 
-# Plot a density heatmap
-p <- ggplot(data, aes(x = time, y = data)) +
-  geom_bin2d(bins = 15) +
-  theme_bw() +
-  scale_fill_continuous(type = "viridis") +
-  xlab("Time (generations)") +
+```{r, fig.width=3}
+plot_trait_heatmap2D(simulation, traits = c(2, 1), t = 2900) +
+  xlab("Mating preference") +
   ylab("Ecological trait") +
-  labs(fill = "Count")
-
-# Add mating preference trait values through time
-matepref <- read_individuals(simulation, "individual_trait")
-matepref <- do.call("c", lapply(matepref, function(data) sapply(data, "[", 2)))
-data$matepref <- matepref
-
-# Plot the joint distributions of mating preference and ecological trait
-p2 <- ggplot(data %>% filter(time == 2900), aes(x = matepref, y = data)) +
-  geom_bin2d(bins = 15) +
-  theme_bw() +
-  scale_fill_continuous(type = "viridis") +
-  xlab("Mate preference trait") +
-  ylab("Ecological trait") +
-  labs(fill = "Count") +
   xlim(c(-3, 3))
-
-# Combine both plots
-ylim <- c(-3, 3)
-p <- p + theme(legend.position = "none") + ylim(ylim)
-p2 <- p2 + ylab(NULL) + ylim(ylim)
-
-p2 <- plot_grid(ggplot() + geom_blank() + theme_void(), p2, rel_widths = c(1, 11))
-
-p3 <- plot_grid(p, p2, labels = c("A", "B"), rel_widths = c(1, 1))
-p3
-
-ggsave("../pics/example_speciation.png", p3, height = 2, width = 6, dpi = 300)
 ```

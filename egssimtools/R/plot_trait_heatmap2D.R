@@ -1,5 +1,7 @@
 #' 2D heatmap of trait densities
 #'
+#' Shows the joint densities of two traits across the population.
+#'
 #' @param filename Path to the folder
 #' @param traits Vector of two traits to plot: (1) ecological trait, (2) mating preference and (3) neutral trait.
 #' @param t What time point to show. All time points together if NULL.

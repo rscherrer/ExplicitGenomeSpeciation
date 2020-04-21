@@ -1,5 +1,7 @@
 #' Heatmap of trait values through time
 #'
+#' Shows the densities of trait values through time.
+#'
 #' @param filename Path to the folder
 #' @param trait What trait to plot? (1) Ecological trait, (2) mating preference and (3) neutral trait.
 #' @param bins Number of bins in the heatmap
