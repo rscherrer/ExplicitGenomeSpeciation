@@ -19,7 +19,8 @@ plot_simulations(
   reverse_order = NULL,
   label_facets = FALSE,
   facet_prefixes = NULL,
-  sep = " = "
+  sep = " = ",
+  add_summaries = NULL
 )
 }
 \arguments{
@@ -52,6 +53,9 @@ plot_simulations(
 \item{facet_prefixes}{Optional prefixes to add to the facet labels of each parameter. Must have one value per facetting parameter. Ignored if label_facets is FALSE. If not specified and label_facets is TRUE, the names of the parameters are used as prefixes.}
 
 \item{sep}{Optional separator to use when adding prefixes. Defaults to " = ".}
+
+\item{add_summaries}{Optional function to add extra columns to the data prior to plotting. This can be useful for mapping more complex values than those read from parameter files, to aesthetics such as facets or colors (e.g. color the lines by value of the mean of the variable over the final few timepoint). The function will be called with a single argument, the long data frame to which ggplot is applied, and must return a table with columns to append to that long data frame. Those added columns can be specified and used in facet_rows, facet_cols and color_by, just as any parameter. Make sure that potential extra arguments are passed by default or within the function body (e.g. the time points over which to measure the mean of the variable). Its output will be appended to the long data frame using cbind(), so make sure that it returns a table with new, summary variables as columns, and the right number of rows. The long table taken as input has at least the columns "simulation" (factor), "time" (integer), the variable to plot and any optional parameters read from parameter files that are requested in facet_rows, facet_cols or color_by. As an example, "add_summaries = function(data) data \%>\% group_by(simulation) \%>\% mutate(x = last(RI)) \%>\% ungroup() \%>\% select(x)" will add a column named "x" containing the last value of variable RI for each simulation, and assumes that RI is the variable to be plotted here. Note that the "plot_simulations" function loads the tidyverse, so no need to load any of it in the function passed to this argument.
+`}
 }
 \value{
 A plot showing a variable through time for multiple simulations.

@@ -45,5 +45,7 @@ find_missing(root, pattern = "sim_")
 
 root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
 
-plot_simulations(root, "RI", color_by = "hsymmetry", colors = c("lightgrey", "darkblue", "black", "yellow", "red"), color_by_numeric = FALSE, facet_rows = "ecosel", facet_cols = "hsymmetry", label_facets = TRUE, facet_prefixes = c("s", "h"), reverse_order = c("ecosel", "hsymmetry"), verbose = TRUE, pb = FALSE)
+add_summaries <- function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)
+
+plot_simulations(root, "RI", add_summaries = add_summaries, color_by = "x", colors = c("lightgrey", "darkblue"), facet_rows = "ecosel", facet_cols = "hsymmetry", label_facets = TRUE, facet_prefixes = c("s", "h"), reverse_order = c("ecosel", "hsymmetry"), verbose = TRUE, pb = FALSE)
 plot_simulations(root, "EI", facet_rows = "hsymmetry", facet_wrapped = TRUE, color_by = "ecosel", label_facets = TRUE, facet_prefixes = "s", verbose = TRUE, pb = FALSE)

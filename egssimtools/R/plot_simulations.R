@@ -17,7 +17,8 @@
 #' @param label_facets Whether to add custom labels to the facets
 #' @param facet_prefixes Optional prefixes to add to the facet labels of each parameter. Must have one value per facetting parameter. Ignored if label_facets is FALSE. If not specified and label_facets is TRUE, the names of the parameters are used as prefixes.
 #' @param sep Optional separator to use when adding prefixes. Defaults to " = ".
-#'
+#' @param add_summaries Optional function to add extra columns to the data prior to plotting. This can be useful for mapping more complex values than those read from parameter files, to aesthetics such as facets or colors (e.g. color the lines by value of the mean of the variable over the final few timepoint). The function will be called with a single argument, the long data frame to which ggplot is applied, and must return a table with columns to append to that long data frame. Those added columns can be specified and used in facet_rows, facet_cols and color_by, just as any parameter. Make sure that potential extra arguments are passed by default or within the function body (e.g. the time points over which to measure the mean of the variable). Its output will be appended to the long data frame using cbind(), so make sure that it returns a table with new, summary variables as columns, and the right number of rows. The long table taken as input has at least the columns "simulation" (factor), "time" (integer), the variable to plot and any optional parameters read from parameter files that are requested in facet_rows, facet_cols or color_by. As an example, "add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)" will add a column named "x" containing the last value of variable RI for each simulation, and assumes that RI is the variable to be plotted here. Note that the "plot_simulations" function loads the tidyverse, so no need to load any of it in the function passed to this argument.
+#'`
 #' @return A plot showing a variable through time for multiple simulations.
 #'
 #' @note The lines have different transparency levels, all very close to 0.5. This is a hack to make sure that all simulations can efficiently be plotted together on the same plot.
@@ -39,7 +40,8 @@ plot_simulations <- function(
   reverse_order = NULL,
   label_facets = FALSE,
   facet_prefixes = NULL,
-  sep = " = "
+  sep = " = ",
+  add_summaries = NULL
 ) {
 
   library(tidyverse)
@@ -47,7 +49,6 @@ plot_simulations <- function(
 
   if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
-  if (is.null(colors)) colors <- "black"
 
   # Look for missing and extinct simulations
   if (verbose) message("Looking for missing simulations...")
@@ -92,6 +93,9 @@ plot_simulations <- function(
   # Convert from wide to long
   data <- data %>% gather_("time", variable, timecolumns, convert = TRUE)
 
+  # Add summaries if needed
+  if (!is.null(add_summaries)) data <- cbind(data, add_summaries(data))
+
   ### Choice 1: plot multiple lines ###
 
   if (!is.null(reverse_order)) {
@@ -110,15 +114,25 @@ plot_simulations <- function(
     # Color according to a parameter
     if (color_by_numeric) thisconvert <- function(x) as.numeric(as.character(x)) else thisconvert <- factor
     p <- p + geom_line(aes(color = thisconvert(get(color_by)))) + labs(color = color_by)
-    if (color_by_numeric & !is.null(colors)) {
-      if (length(colors) != 2) stop("Please provide a lower and upper end for color gradient")
-      p <- p + scale_color_gradient(low = colors[1], high = colors[2])
-    } else {
-      if (length(colors) != nlevels(data[, color_by])) stop("Please provide colors for the different levels of the coloring factor")
-      p <- p + scale_color_manual(values = colors)
+
+    if (!is.null(colors)) {
+
+      # Add a custom color scale if provided
+      if (color_by_numeric) {
+
+        # Either a color gradient
+        if (length(colors) != 2) stop("Please provide a lower and upper end for color gradient")
+        p <- p + scale_color_gradient(low = colors[1], high = colors[2])
+
+      } else {
+
+        # Or a custom set of colors
+        if (length(colors) != nlevels(data[, color_by])) stop("Please provide colors for the different levels of the coloring factor")
+        p <- p + scale_color_manual(values = colors)
+      }
     }
 
-  } else p <- p + geom_line(color = colors[1])
+  } else p <- p + geom_line(color = ifelse(is.null(colors), "black", colors[1]))
 
   p <- p +
     theme_bw() +
