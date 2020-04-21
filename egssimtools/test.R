@@ -41,7 +41,7 @@ find_extinct(root, pattern = "sim_")
 find_missing(root, pattern = "sim_")
 simulations <- find_extant(root, pattern = "sim_", pb = FALSE)
 collect_parameters(simulations, parnames = c("ecosel", "hsymmetry"))
-collect_simulations(root, "RI", parnames = c("ecosel", "hsymmetry"))
+collect_simulations(root, "RI", parnames = c("ecosel", "hsymmetry"), filters = "ecosel == 1")
 
 # High-level functions: produce figures and overall results over multiple simulations
 
@@ -49,4 +49,4 @@ root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
 
 add_summaries <- function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)
 
-plot_simulations(root, "RI", facet_rows = "ecosel", color_by = "x", colors = c("lightgrey", "darkblue"), add_summaries = add_summaries, facet_cols = "hsymmetry", label_facets = TRUE, facet_prefixes = c("s", "h"), reverse_order = "ecosel")
+plot_simulations(root, "RI", filters = "x > 0.9", facet_rows = "ecosel", color_by = "x", colors = c("lightgrey", "darkblue"), add_summaries = add_summaries, facet_cols = "hsymmetry", label_facets = TRUE, facet_prefixes = c("s", "h"), reverse_order = "ecosel")
