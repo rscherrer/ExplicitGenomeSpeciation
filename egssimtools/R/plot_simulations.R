@@ -5,7 +5,9 @@
 #' @param root Where the simulation folders are
 #' @param variable What variable to plot
 #' @param pattern Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".
-#' @param color Color of the lines. Defaults to black.
+#' @param color_by Optional parameter to use to color the lines
+#' @param color_by_numeric Whether the color parameter must be treated as numeric and be mapped to a color gradient. Defaults to TRUE. If FALSE, it is treated as a factor.
+#' @param colors Optional colors of the lines. If color_by is NULL, the color that all the lines must have. If color_by is defined and color_by_numeric is TRUE, the lower and the upper end of the color gradient. If color_by_numeric is FALSE, a set of colors for each level of the color factor. If not defined, default ggplot color(s) will be used.
 #' @param pb Whether to display progress bars
 #' @param verbose Whether to display messages
 #' @param facet_rows Optional parameter name(s) to facet the plot by rows
@@ -26,7 +28,9 @@ plot_simulations <- function(
   root,
   variable,
   pattern = "^sim_",
-  color = "black",
+  color_by = NULL,
+  color_by_numeric = TRUE,
+  colors = NULL,
   pb = TRUE,
   verbose = TRUE,
   facet_rows = NULL,
@@ -35,9 +39,7 @@ plot_simulations <- function(
   reverse_order = NULL,
   label_facets = FALSE,
   facet_prefixes = NULL,
-  sep = " = ",
-  color_by = NULL,
-  color_by_numeric = TRUE
+  sep = " = "
 ) {
 
   library(tidyverse)
@@ -45,6 +47,7 @@ plot_simulations <- function(
 
   if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
+  if (is.null(colors)) colors <- "black"
 
   # Look for missing and extinct simulations
   if (verbose) message("Looking for missing simulations...")
@@ -106,10 +109,16 @@ plot_simulations <- function(
 
     # Color according to a parameter
     if (color_by_numeric) thisconvert <- function(x) as.numeric(as.character(x)) else thisconvert <- factor
-    p <- p + geom_line(aes(color = thisconvert(get(color_by)))) +
-      labs(color = color_by)
+    p <- p + geom_line(aes(color = thisconvert(get(color_by)))) + labs(color = color_by)
+    if (color_by_numeric & !is.null(colors)) {
+      if (length(colors) != 2) stop("Please provide a lower and upper end for color gradient")
+      p <- p + scale_color_gradient(low = colors[1], high = colors[2])
+    } else {
+      if (length(colors) != nlevels(data[, color_by])) stop("Please provide colors for the different levels of the coloring factor")
+      p <- p + scale_color_manual(values = colors)
+    }
 
-  } else p <- p + geom_line(color = color)
+  } else p <- p + geom_line(color = colors[1])
 
   p <- p +
     theme_bw() +

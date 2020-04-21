@@ -8,7 +8,9 @@ plot_simulations(
   root,
   variable,
   pattern = "^sim_",
-  color = "black",
+  color_by = NULL,
+  color_by_numeric = TRUE,
+  colors = NULL,
   pb = TRUE,
   verbose = TRUE,
   facet_rows = NULL,
@@ -27,7 +29,11 @@ plot_simulations(
 
 \item{pattern}{Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".}
 
-\item{color}{Color of the lines. Defaults to black.}
+\item{color_by}{Optional parameter to use to color the lines}
+
+\item{color_by_numeric}{Whether the color parameter must be treated as numeric and be mapped to a color gradient. Defaults to TRUE. If FALSE, it is treated as a factor.}
+
+\item{colors}{Optional colors of the lines. If color_by is NULL, the color that all the lines must have. If color_by is defined and color_by_numeric is TRUE, the lower and the upper end of the color gradient. If color_by_numeric is FALSE, a set of colors for each level of the color factor. If not defined, default ggplot color(s) will be used.}
 
 \item{pb}{Whether to display progress bars}
 
