@@ -15,8 +15,13 @@
 
 make_facet_labels <- function(data, columns, prefixes = NULL, no_use = FALSE, sep = " = ", simplify = TRUE) {
 
+  library(assertthat)
+
+  assert_that(all(columns %in% colnames(data)))
+
   # Read levels for each facetting column
   labels <- lapply(columns, function(column) {
+    assert_that(is.factor(data[, column]))
     labels <- levels(data[, column])
     names(labels) <- labels
     return (labels)

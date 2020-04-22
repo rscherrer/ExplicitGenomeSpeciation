@@ -2,6 +2,8 @@
 #'
 #' Customizable way to split a ggplot into multiple facets depending on facetting variables.
 #'
+#' @param p A ggplot
+#' @param data Data frame used to produce the plot, here used to read the labels
 #' @param facet_rows Optional parameter name(s) to facet the plot by rows
 #' @param facet_cols Optional parameter name(s) to facet the plot by columns
 #' @param facet_wrapped Whether to automatically fill the facets by row with one-dimensional array of parameter combinations. If TRUE, combines the parameters in facet_rows and facet_cols into a single array. Ignored if none of those is specified.
@@ -15,6 +17,7 @@
 
 facettize <- function(
   p,
+  data,
   facet_rows = NULL,
   facet_cols = NULL,
   facet_wrapped = NULL,

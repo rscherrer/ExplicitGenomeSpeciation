@@ -19,6 +19,7 @@
 #' @param sep Optional separator to use when adding prefixes. Defaults to " = ".
 #' @param add_summaries Optional function to add extra columns to the data prior to plotting. This can be useful for mapping more complex values than those read from parameter files, to aesthetics such as facets or colors (e.g. color the lines by value of the mean of the variable over the final few timepoint). The function will be called with a single argument, the long data frame to which ggplot is applied, and must return a table with columns to append to that long data frame. Those added columns can be specified and used in facet_rows, facet_cols and color_by, just as any parameter. Make sure that potential extra arguments are passed by default or within the function body (e.g. the time points over which to measure the mean of the variable). Its output will be appended to the long data frame using cbind(), so make sure that it returns a table with new, summary variables as columns, and the right number of rows. The long table taken as input has at least the columns "simulation" (factor), "time" (integer), the variable to plot and any optional parameters read from parameter files that are requested in facet_rows, facet_cols or color_by. As an example, "add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)" will add a column named "x" containing the last value of variable RI for each simulation, and assumes that RI is the variable to be plotted here. Note that the "plot_simulations" function loads the tidyverse, so no need to load any of it in the function passed to this argument.
 #' @param filters Optional strings to be parsed into a call to the dplyr::filter function, allowing various rules to filter the data. For example, use filters = c("ecosel == 1", "hsymmetry %in% c(0, 1)") to only keep simulations where ecosel is 1 and hsymmetry is either 0 or 1. Those parsed expressions must evaluate to logicals when the function is called.
+#' @param xvariable Optional extra population-wide variable to read from the data files. Replaces "time" as the x-axis.
 #'
 #' @return A plot showing a variable through time for multiple simulations.
 #'
@@ -43,7 +44,8 @@ plot_simulations <- function(
   facet_prefixes = NULL,
   sep = " = ",
   add_summaries = NULL,
-  filters = NULL
+  filters = NULL,
+  xvariable = NULL
 ) {
 
   library(tidyverse)
@@ -52,10 +54,11 @@ plot_simulations <- function(
   parnames <- c(facet_rows, facet_cols, color_by)
 
   # Collect simulation data in the long format
-  data <- collect_simulations(root, variable, parnames, pattern, verbose, pb, add_summaries, reverse_order, filters)
+  data <- collect_simulations(root, variable, parnames, pattern, verbose, pb, add_summaries, reverse_order, filters, xvariable)
 
   if (verbose) message("Plotting...")
-  p <- ggplot(data, aes(x = time, y = get(variable), alpha = simulation))
+  if (is.null(xvariable)) xvariable <- "time"
+  p <- ggplot(data, aes(x = get(xvariable), y = get(variable), alpha = simulation))
 
   # Deal with color
   p <- add_geom_line_colored(p, color_by, color_by_numeric, colors)
@@ -68,6 +71,6 @@ plot_simulations <- function(
     scale_alpha_manual(values = runif(min = 0.49, max = 0.51, n = nlevels(data$simulation)))
 
   # Add facets if needed (the function handle no facet too)
-  facettize(p, facet_rows, facet_cols, facet_wrapped, label_facets, facet_prefixes, sep)
+  facettize(p, data, facet_rows, facet_cols, facet_wrapped, label_facets, facet_prefixes, sep)
 
 }

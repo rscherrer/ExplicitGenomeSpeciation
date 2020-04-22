@@ -49,4 +49,33 @@ root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
 
 add_summaries <- function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)
 
-plot_simulations(root, "RI", filters = "x > 0.9", facet_rows = "ecosel", color_by = "x", colors = c("lightgrey", "darkblue"), add_summaries = add_summaries, facet_cols = "hsymmetry", label_facets = TRUE, facet_prefixes = c("s", "h"), reverse_order = "ecosel")
+plot_simulations(root, "RI", facet_rows = "hsymmetry")
+
+variable <- "RI"
+facet_rows <- NULL
+facet_cols <- "hsymmetry"
+facet_wrapped <- FALSE
+label_facets <- FALSE
+reverse_order <- NULL
+facet_prefixes <- NULL
+color_by <- NULL
+color_by_numeric <- TRUE
+colors <- NULL
+pb <- TRUE
+verbose <- TRUE
+sep <- " "
+add_summaries <- NULL
+filters <- NULL
+xvariable <- NULL
+pattern = "sim_"
+
+plot_simulations(
+  root,
+  "RI",
+  facet_cols = "hsymmetry",
+  facet_rows = "ecosel",
+  reverse_order = "ecosel",
+  color_by = "x",
+  xvariable = "EI",
+  add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)
+)

@@ -6,6 +6,7 @@
 \usage{
 facettize(
   p,
+  data,
   facet_rows = NULL,
   facet_cols = NULL,
   facet_wrapped = NULL,
@@ -15,6 +16,10 @@ facettize(
 )
 }
 \arguments{
+\item{p}{A ggplot}
+
+\item{data}{Data frame used to produce the plot, here used to read the labels}
+
 \item{facet_rows}{Optional parameter name(s) to facet the plot by rows}
 
 \item{facet_cols}{Optional parameter name(s) to facet the plot by columns}
