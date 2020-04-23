@@ -69,6 +69,7 @@ filters <- NULL
 xvariable <- NULL
 pattern = "sim_"
 
+# broken
 plot_simulations(
   root,
   "RI",
@@ -77,5 +78,8 @@ plot_simulations(
   reverse_order = "ecosel",
   color_by = "x",
   xvariable = "EI",
-  add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(RI)) %>% ungroup() %>% select(x)
+  add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(EI)) %>% ungroup() %>% select(x)
 )
+
+data <- collect_simulations(root, "RI", parnames = c("ecosel", "hsymmetry"), xvariables = c("EI", "SI"))
+head(data)
