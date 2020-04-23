@@ -1,13 +1,13 @@
 #' Find missing simulations
 #'
-#' @param root Path to the root directory of the simulations to check
+#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param pb Whether to display a progress bar
 #'
 #' @export
 
 # How many simulations are missing?
-find_missing <- function(root, pattern = "^sim_", pb = TRUE) {
+find_missing <- function(simulations, pattern = "^sim_", pb = TRUE) {
 
   library(pbapply)
 
@@ -15,13 +15,13 @@ find_missing <- function(root, pattern = "^sim_", pb = TRUE) {
   if (pb) thissapply <- pbsapply else thissapply <- sapply
 
   # Get a list of folders in the directory
-  folders <- list.files(root, pattern = pattern, full.names = TRUE)
+  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
 
   # Check each one for missing data
-  missings <- thissapply(folders, is_missing)
+  missings <- thissapply(simulations, is_missing)
 
   # Return the names of the extinct folders
-  if (any(missings)) return (folders[missings])
+  if (any(missings)) return (simulations[missings])
   return (NULL)
 
 }

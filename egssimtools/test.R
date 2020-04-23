@@ -81,5 +81,7 @@ plot_simulations(
   add_summaries = function(data) data %>% group_by(simulation) %>% mutate(x = last(EI)) %>% ungroup() %>% select(x)
 )
 
-data <- collect_simulations(root, "RI", parnames = c("ecosel", "hsymmetry"), xvariables = c("EI", "SI"))
+simulations <- find_extant(root)
+
+data <- collect_simulations(simulations[1:4], "RI", parnames = c("ecosel", "hsymmetry"), xvariables = c("EI", "SI"))
 head(data)

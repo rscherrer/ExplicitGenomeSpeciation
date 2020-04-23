@@ -2,7 +2,7 @@
 #'
 #' Read in population-wide data and parameters from multiple extant simulations
 #'
-#' @param root Where the simulation folders are
+#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
 #' @param variable What variable to plot
 #' @param pattern Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".
 #' @param pb Whether to display progress bars
@@ -12,13 +12,15 @@
 #' @param filters Optional strings to be parsed into a call to the dplyr::filter function, allowing various rules to filter the data. For example, use filters = c("ecosel == 1", "hsymmetry %in% c(0, 1)") to only keep simulations where ecosel is 1 and hsymmetry is either 0 or 1. Those parsed expressions must evaluate to logicals when the function is called.
 #' @param xvariables Optional extra population-wide variables to read from the data files.
 #'
+#' @details At least root or simulations must be provided.
+#'
 #' @return A data frame in the long format, ready for plotting. It contains columns with the variable of interest, time, simulation identifier, parameters if requested and optional extra variables (see add_summaries).
 #'
 #' @export
 
 
 collect_simulations <- function(
-  root,
+  simulations,
   variable,
   parnames = NULL,
   pattern = "^sim_",
@@ -37,7 +39,7 @@ collect_simulations <- function(
   if (pb) thislapply <- pblapply else thislapply <- lapply
 
   # Find the simulations that completed
-  simulations <- find_extant(root, pattern = pattern, verbose = verbose, pb = pb)
+  simulations <- find_extant(simulations, pattern = pattern, verbose = verbose, pb = pb)
 
   # Collect the variable of interest from each simulation
   if (verbose) message("Reading the data...")

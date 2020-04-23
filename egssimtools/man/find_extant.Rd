@@ -4,10 +4,10 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(root, pattern = "^sim_", verbose = TRUE, pb = TRUE)
+find_extant(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE)
 }
 \arguments{
-\item{root}{Path to the root directory of the simulations to check}
+\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 

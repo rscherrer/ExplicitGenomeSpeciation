@@ -4,10 +4,10 @@
 \alias{find_missing}
 \title{Find missing simulations}
 \usage{
-find_missing(root, pattern = "^sim_", pb = TRUE)
+find_missing(simulations, pattern = "^sim_", pb = TRUE)
 }
 \arguments{
-\item{root}{Path to the root directory of the simulations to check}
+\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 

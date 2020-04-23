@@ -5,7 +5,7 @@
 \title{Collect data across simulations}
 \usage{
 collect_simulations(
-  root,
+  simulations,
   variable,
   parnames = NULL,
   pattern = "^sim_",
@@ -14,11 +14,11 @@ collect_simulations(
   add_summaries = NULL,
   reverse_order = NULL,
   filters = NULL,
-  xvariable = NULL
+  xvariables = NULL
 )
 }
 \arguments{
-\item{root}{Where the simulation folders are}
+\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{variable}{What variable to plot}
 
@@ -34,11 +34,14 @@ collect_simulations(
 
 \item{filters}{Optional strings to be parsed into a call to the dplyr::filter function, allowing various rules to filter the data. For example, use filters = c("ecosel == 1", "hsymmetry \%in\% c(0, 1)") to only keep simulations where ecosel is 1 and hsymmetry is either 0 or 1. Those parsed expressions must evaluate to logicals when the function is called.}
 
-\item{xvariable}{Optional extra population-wide variable to read from the data files.}
+\item{xvariables}{Optional extra population-wide variables to read from the data files.}
 }
 \value{
 A data frame in the long format, ready for plotting. It contains columns with the variable of interest, time, simulation identifier, parameters if requested and optional extra variables (see add_summaries).
 }
 \description{
 Read in population-wide data and parameters from multiple extant simulations
+}
+\details{
+At least root or simulations must be provided.
 }
