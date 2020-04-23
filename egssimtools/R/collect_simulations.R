@@ -33,7 +33,7 @@ collect_simulations <- function(
   library(pbapply)
   library(tidyverse)
 
-  if (verbose == FALSE) pb <- FALSE
+  if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
 
   # Find the simulations that completed
@@ -51,10 +51,7 @@ collect_simulations <- function(
   data$simulation <- factor(rownames(data))
 
   # Add parameter values if needed
-  if (!is.null(parnames)) {
-    if (verbose) message("Reading parameter values...")
-    data <- cbind(collect_parameters(simulations, parnames), data)
-  }
+  if (!is.null(parnames)) data <- cbind(collect_parameters(simulations, parnames, pattern = pattern, verbose = verbose), data)
 
   # Convert from wide to long
   data <- data %>% gather_("time", variables[1], timecolumns, convert = TRUE)
