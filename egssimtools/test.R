@@ -83,5 +83,5 @@ plot_simulations(
 
 simulations <- find_extant(root)
 
-data <- collect_simulations(simulations[1:4], "RI", parnames = c("ecosel", "hsymmetry"), xvariables = c("EI", "SI"))
+data <- collect_simulations(simulations[1:4], c("RI", "EI", "SI"), parnames = c("ecosel", "hsymmetry"))
 head(data)
