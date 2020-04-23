@@ -7,18 +7,27 @@
 collect_parameters(
   simulations,
   parnames = NULL,
+  pattern = "^sim_",
+  verbose = TRUE,
   pb = TRUE,
-  filename = "paramlog.txt"
+  filename = "paramlog.txt",
+  check_extant = TRUE
 )
 }
 \arguments{
-\item{simulations}{Paths to the simulations}
+\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{parnames}{optional vector of parameter names (collects all parameters if not specified)}
+
+\item{pattern}{Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".}
+
+\item{verbose}{Whether to display messages}
 
 \item{pb}{Whether to display a progress bar}
 
 \item{filename}{Optional file name}
+
+\item{check_extant}{Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.}
 }
 \value{
 A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.

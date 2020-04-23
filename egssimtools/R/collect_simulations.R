@@ -14,7 +14,7 @@
 #'
 #' @details At least root or simulations must be provided.
 #'
-#' @return A data frame in the long format, ready for plotting. It contains columns with the variable of interest, time, simulation identifier, parameters if requested and optional extra variables (see add_summaries).
+#' @return A data frame in the long format. It contains columns with the variables of interest, time, simulation identifier, parameters if requested and optional extra variables (see add_summaries).
 #'
 #' @export
 
