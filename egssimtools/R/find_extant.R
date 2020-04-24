@@ -13,18 +13,19 @@ find_extant <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRU
 
   library(pbapply)
 
-  if (!verbose) pb <- FALSE
+  if (!verbose) pb <- FALSE else message("Looking for extant simulations...")
   if (pb) thislapply <- pblapply else thislapply <- lapply
 
+  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
+
   # Look for missing and extinct simulations
-  if (verbose) message("Looking for missing simulations...")
-  missings <- find_missing(simulations, pattern = pattern, pb = pb)
-  if (verbose) message("Looking for extinct simulations...")
-  extincts <- find_extinct(simulations, pattern = pattern, pb = pb)
+  missings <- find_missing(simulations, verbose = verbose, pb = pb)
+  completed <- find_completed(simulations, verbose = verbose, pb = pb)
+  extincts <- find_extinct(simulations, verbose = verbose, pb = pb)
 
   # Identify extant simulations
-  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
   if (!is.null(missings)) simulations <- simulations[!simulations %in% missings]
+  if (!is.null(completed)) simulations <- simulations[simulations %in% completed]
   if (!is.null(extincts)) simulations <- simulations[!simulations %in% extincts]
 
   return (simulations)

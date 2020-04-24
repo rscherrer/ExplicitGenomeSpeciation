@@ -1,4 +1,4 @@
-#' Find missing simulations
+#' Collect SLURM exit status
 #'
 #' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
@@ -7,12 +7,11 @@
 #'
 #' @export
 
-# How many simulations are missing?
-find_missing <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE) {
+collect_status <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE) {
 
   library(pbapply)
 
-  if (!verbose) pb <- FALSE else message("Looking for missing simulations...")
+  if (!verbose) pb <- FALSE else message("Collecting SLURM exit status...")
 
   # Use progress bar?
   if (pb) thissapply <- pbsapply else thissapply <- sapply
@@ -20,11 +19,7 @@ find_missing <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TR
   # Get a list of folders in the directory
   if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
 
-  # Check each one for missing data
-  missings <- thissapply(simulations, is_missing)
-
-  # Return the names of the extinct folders
-  if (any(missings)) return (simulations[missings])
-  return (NULL)
+  # Check each one for extinction
+  return (thissapply(simulations, get_status))
 
 }

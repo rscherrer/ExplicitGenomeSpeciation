@@ -4,12 +4,14 @@
 \alias{find_extinct}
 \title{Find extinct simulations}
 \usage{
-find_extinct(simulations, pattern = "^sim_", pb = TRUE)
+find_extinct(simulations, pattern = "^sim_", verbose = TRUE, vpb = TRUE)
 }
 \arguments{
 \item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
+
+\item{verbose}{Whether to display messages}
 
 \item{pb}{Whether to display a progress bar}
 }

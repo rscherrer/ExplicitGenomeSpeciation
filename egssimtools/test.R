@@ -5,6 +5,10 @@ rm(list = ls())
 library(egssimtools)
 library(tidyverse)
 
+root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 2)
+simulations <- find_extant(root)
+pars <- collect_parameters(simulations, parnames = "ecosel")
+data <- collect_simulations(simulations, c("EI", "RI"), parnames = "ecosel")
 
 data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)), function(root) {
   collect_simulations(
@@ -14,9 +18,20 @@ data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)
   )
 })
 
-root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 3)
+root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 2)
+find_completed(root)
+
 data <- collect_simulations(root, c("EI", "SI", "RI"), parnames = "ecosel")
+
+status <- collect_status(root)
+table(status)
+find_extinct(root)
+
 params <- collect_parameters(root, parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI"))
+sims <- list.files(root, pattern = "sim_", full.names = TRUE)
+
+status <- collect_status(root)
+table(status)
 
 get_status(list.files(root, pattern = "^sim_", full.names = TRUE)[1])
 
