@@ -5,18 +5,22 @@ rm(list = ls())
 library(egssimtools)
 library(tidyverse)
 
-root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 2)
-simulations <- find_extant(root)
-pars <- collect_parameters(simulations, parnames = "ecosel")
-data <- collect_simulations(simulations, c("EI", "RI"), parnames = "ecosel")
 
 data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)), function(root) {
   collect_simulations(
     root,
     c("EI", "SI", "RI"),
-    parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI")
+    parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI"),
+    to_numeric = c("ecosel", "hsymmetry", "dispersal", "mutation")
   )
 })
+data <- do.call("rbind", data)
+head(data)
+sapply(data, class)
+
+df <- data %>% mutate_at("dispersal", factor) %>% mutate_at("mutation", function(x) as.numeric(as.character(x)))
+
+df$mutation
 
 root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 2)
 find_completed(root)

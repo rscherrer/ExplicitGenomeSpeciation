@@ -4,6 +4,8 @@
 #'
 #' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
 #' @param variables What variables to collect
+#' @param parnames Optional vector of parameter names (collects all parameters if not specified)
+#' @param to_numeric Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.
 #' @param pattern Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".
 #' @param pb Whether to display progress bars
 #' @param verbose Whether to display messages
@@ -23,6 +25,7 @@ collect_simulations <- function(
   simulations,
   variables,
   parnames = NULL,
+  to_numeric = NULL,
   pattern = "^sim_",
   verbose = TRUE,
   pb = TRUE,
@@ -54,7 +57,7 @@ collect_simulations <- function(
   data$simulation <- factor(rownames(data))
 
   # Add parameter values if needed
-  if (!is.null(parnames)) data <- cbind(collect_parameters(simulations, parnames, pattern = pattern, verbose = verbose, check_extant = FALSE), data)
+  if (!is.null(parnames)) data <- cbind(collect_parameters(simulations, parnames, pattern = pattern, verbose = verbose, check_extant = FALSE, to_numeric = to_numeric), data)
 
   # Convert from wide to long
   data <- data %>% gather_("time", variables[1], timecolumns, convert = TRUE)

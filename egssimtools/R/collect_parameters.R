@@ -1,12 +1,13 @@
 #' Collect parameters from multiple simulations
 #'
 #' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
-#' @param parnames optional vector of parameter names (collects all parameters if not specified)
+#' @param parnames Optional vector of parameter names (collects all parameters if not specified)
 #' @param pattern Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".
 #' @param verbose Whether to display messages
 #' @param pb Whether to display a progress bar
 #' @param filename Optional file name
 #' @param check_extant Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.
+#' @param to_numeric Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.
 #'
 #' @return A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.
 #'
@@ -19,10 +20,12 @@ collect_parameters <- function(
   verbose = TRUE,
   pb = TRUE,
   filename = "paramlog.txt",
-  check_extant = TRUE
+  check_extant = TRUE,
+  to_numeric = NULL
 ) {
 
   library(pbapply)
+  library(tidyverse)
 
   if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
@@ -36,6 +39,13 @@ collect_parameters <- function(
   parameters <- lapply(parameters, function(parameters) sapply(parameters, function(parameter) paste0(parameter, collapse = " ")))
   parameters <- data.frame(do.call("rbind", parameters))
   rownames(parameters) <- NULL
+
+  # Convert specific parameters into numeric
+  if (!is.null(to_numeric)) {
+    parnames <- colnames(parameters)
+    if (!all(to_numeric %in% colnames(parameters))) stop("Unknown parameter to convert into numeric")
+    parameters <- parameters %>% mutate_at(to_numeric, function(x) as.numeric(as.character(x)))
+  }
 
   return (parameters)
 

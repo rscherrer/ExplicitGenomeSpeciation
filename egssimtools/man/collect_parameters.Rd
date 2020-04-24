@@ -11,13 +11,14 @@ collect_parameters(
   verbose = TRUE,
   pb = TRUE,
   filename = "paramlog.txt",
-  check_extant = TRUE
+  check_extant = TRUE,
+  to_numeric = NULL
 )
 }
 \arguments{
 \item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
-\item{parnames}{optional vector of parameter names (collects all parameters if not specified)}
+\item{parnames}{Optional vector of parameter names (collects all parameters if not specified)}
 
 \item{pattern}{Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".}
 
@@ -28,6 +29,8 @@ collect_parameters(
 \item{filename}{Optional file name}
 
 \item{check_extant}{Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.}
+
+\item{to_numeric}{Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.}
 }
 \value{
 A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.

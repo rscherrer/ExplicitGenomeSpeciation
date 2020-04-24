@@ -8,6 +8,7 @@ collect_simulations(
   simulations,
   variables,
   parnames = NULL,
+  to_numeric = NULL,
   pattern = "^sim_",
   verbose = TRUE,
   pb = TRUE,
@@ -21,6 +22,10 @@ collect_simulations(
 \item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{variables}{What variables to collect}
+
+\item{parnames}{Optional vector of parameter names (collects all parameters if not specified)}
+
+\item{to_numeric}{Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.}
 
 \item{pattern}{Optional pattern characteristic of simulation folders. Defaults to starting with "sim_".}
 
