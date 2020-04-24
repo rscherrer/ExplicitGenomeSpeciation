@@ -15,12 +15,41 @@ data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)
   )
 })
 data <- do.call("rbind", data)
+
 head(data)
-sapply(data, class)
 
-df <- data %>% mutate_at("dispersal", factor) %>% mutate_at("mutation", function(x) as.numeric(as.character(x)))
+# here is our heatmap figure, no need for a special function...
+data %>%
+  group_by(hsymmetry, ecosel, dispersal, mutation, scaleA, scaleI, simulation) %>%
+  summarize(EI = last(EI), SI = last(SI), RI = last(RI)) %>%
+  group_by(hsymmetry, ecosel, dispersal, mutation, scaleA, scaleI) %>%
+  summarize(EI = mean(EI), SI = mean(SI), RI = mean(RI)) %>%
+  ungroup() %>%
+  ggplot(aes(x = hsymmetry, y = ecosel, fill = EI)) +
+  facet_grid(mutation ~ scaleI) +
+  geom_tile()
 
-df$mutation
+smr <- data %>%
+  filter(scaleI == "1 0 0", mutation == 0.001) %>%
+  mutate(ecosel = fct_rev(factor(ecosel)), hsymmetry = factor(hsymmetry)) %>%
+  group_by(hsymmetry, ecosel, dispersal, mutation, scaleA, scaleI, simulation) %>%
+  mutate(color = last(SI))
+
+ggplot(smr, aes(x = time, y = EI, alpha = simulation, color = color)) %>%
+  facettize(
+    smr,
+    facet_rows = "ecosel",
+    facet_cols = "hsymmetry",
+    label_facets = TRUE,
+    facet_prefixes = c("s", "h")
+  ) +
+  geom_line() +
+  scale_alpha_manual(values = runif(2000, min = 0.49, max = 0.51)) + # hack
+  guides(alpha = FALSE) +
+  scale_color_gradient(low = "black", high = "coral")
+
+
+
 
 root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 2)
 find_completed(root)

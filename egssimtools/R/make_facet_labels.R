@@ -21,8 +21,9 @@ make_facet_labels <- function(data, columns, prefixes = NULL, no_use = FALSE, se
 
   # Read levels for each facetting column
   labels <- lapply(columns, function(column) {
-    assert_that(is.factor(data[, column]))
-    labels <- levels(data[, column])
+    column <- unlist(data[, column])
+    assert_that(is.factor(column))
+    labels <- levels(column)
     names(labels) <- labels
     return (labels)
   })

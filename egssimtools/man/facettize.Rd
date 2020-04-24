@@ -9,7 +9,7 @@ facettize(
   data,
   facet_rows = NULL,
   facet_cols = NULL,
-  facet_wrapped = NULL,
+  facet_wrapped = FALSE,
   label_facets = FALSE,
   facet_prefixes = NULL,
   sep = " = "

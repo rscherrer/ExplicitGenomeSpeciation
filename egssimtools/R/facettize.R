@@ -20,13 +20,14 @@ facettize <- function(
   data,
   facet_rows = NULL,
   facet_cols = NULL,
-  facet_wrapped = NULL,
+  facet_wrapped = FALSE,
   label_facets = FALSE,
   facet_prefixes = NULL,
   sep = " = "
 ) {
 
   library(tidyverse)
+  library(ggplot2)
 
   facets <- c(facet_rows, facet_cols)
   if (is.null(facets)) return (p)
