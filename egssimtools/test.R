@@ -5,6 +5,24 @@ rm(list = ls())
 library(egssimtools)
 library(tidyverse)
 
+
+data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)), function(root) {
+  collect_simulations(
+    root,
+    c("EI", "SI", "RI"),
+    parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI")
+  )
+})
+
+root <- sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", 3)
+data <- collect_simulations(root, c("EI", "SI", "RI"), parnames = "ecosel")
+params <- collect_parameters(root, parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI"))
+
+get_status(list.files(root, pattern = "^sim_", full.names = TRUE)[1])
+
+nrow(data)
+nrow(params)
+
 simulation <- "../build/release"
 
 # Low-level functions: work on single simulations
@@ -42,6 +60,9 @@ find_missing(root, pattern = "sim_")
 simulations <- find_extant(root, pattern = "sim_", pb = FALSE)
 collect_parameters(simulations[1:4], parnames = c("ecosel", "hsymmetry"))
 collect_simulations(simulations[1:4], "RI", parnames = c("ecosel", "hsymmetry"))
+
+data <- collect_simulations(simulations, c("RI", "EI", "SI"), parnames = c("ecosel", "hsymmetry"))
+head(data)
 
 # High-level functions: produce figures and overall results over multiple simulations
 
