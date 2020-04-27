@@ -1,28 +1,27 @@
-
 rdynamics 1
 capacity 1
 replenish 2375
 inflow 400
 outflow 100
-hsymmetry 0.75
-ecosel 1.4
+hsymmetry 1
+ecosel 5
 dispersal 0.01
 birth 1
 survival 0.8
 sexsel 10
 matingcost 0.01
-demesizes 100 0 
-nvertices 100 100 100 
-nedges 100 100 100 
+demesizes 100 0
+nvertices 100 100 100
+nedges 100 100 100
 nchrom 3
-mutation 0.0001
+mutation 0.001
 recombination 3
 allfreq 0.2
-scaleA 1 1 1 
-scaleD 0 0 0 
-scaleI 0 0 0 
-scaleE 0 0 0 
-skews 1 1 1 
+scaleA 1 1 1
+scaleD 0 0 0
+scaleI 0 0 0
+scaleE 0 0 0
+skews 1 1 1
 effectshape 5
 effectscale 1
 interactionshape 5
@@ -31,12 +30,12 @@ dominancevar 1
 tburnin 1000
 tend 3000
 tsave 100
-tfreeze 100
+tfreeze 20001
 talkative 1
 record 1
 datsave 1
+choosewhattosave 1
 gensave 0
-choosewhattosave 0
 archsave 1
 archload 0
 parsave 1

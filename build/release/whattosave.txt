@@ -1,2 +1,6 @@
-varP_x
-varA_x
+time
+EI
+RI
+SI
+population_size
+individual_trait
