@@ -7,13 +7,35 @@ library(tidyverse)
 
 ###
 
+data <- collect_simulations("/media/raphael/bigass/simulations/EGS/EGS_sim1", variables = "EI", parnames = "ecosel", as_address = TRUE)
+head(data)
+
 # Can I launch a simulation from R?
 
 #
 # Need to be in the target directory
 #
 
-cd
+data <- readRDS("data/population_wide_data.rds")
+head(data)
+
+where <- "../cluster/test"
+exe <- "../EGS"
+parfile <- NULL
+
+lines <- c(
+  "#!/bin/bash",
+  paste("cd", where),
+
+)
+
+jobfile <- file("job.sh")
+writeLines(c("#!/bin/bash", "cd ../cluster/test", '../EGS'), jobfile)
+close(jobfile)
+
+system("chmod u+x ./job.sh")
+system("./job.sh")
+system("ls ../cluster/test")
 
 ###
 

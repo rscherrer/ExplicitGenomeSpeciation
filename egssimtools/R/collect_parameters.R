@@ -8,6 +8,8 @@
 #' @param filename Optional file name
 #' @param check_extant Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.
 #' @param to_numeric Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.
+#' @param add_sim Whether to add simulation identifiers
+#' @param as_address Whether to use the path to the simulation folders as simulation identifiers in the resulting data frame. Defaults to FALSE, but useful to retrieve a particular simulation location
 #'
 #' @return A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.
 #'
@@ -21,7 +23,9 @@ collect_parameters <- function(
   pb = TRUE,
   filename = "paramlog.txt",
   check_extant = TRUE,
-  to_numeric = NULL
+  to_numeric = NULL,
+  add_sim = FALSE,
+  as_address = FALSE
 ) {
 
   library(pbapply)
@@ -39,6 +43,9 @@ collect_parameters <- function(
   parameters <- lapply(parameters, function(parameters) sapply(parameters, function(parameter) paste0(parameter, collapse = " ")))
   parameters <- data.frame(do.call("rbind", parameters))
   rownames(parameters) <- NULL
+
+  if (add_sim) parameters$simulation <- factor(seq_along(simulations))
+  if (add_sim & as_address) parameters$simulation <- factor(simulations)
 
   # Convert specific parameters into numeric
   if (!is.null(to_numeric)) {

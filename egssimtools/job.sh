@@ -1,3 +1,3 @@
-#!/usr/bin/bash
+#!/bin/bash
 cd ../cluster/test
-../EGS ../test/parameters.txt
+../EGS
