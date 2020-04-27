@@ -15,7 +15,8 @@ collect_simulations(
   add_summaries = NULL,
   reverse_order = NULL,
   filters = NULL,
-  check_extant = TRUE
+  check_extant = TRUE,
+  as_address = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ collect_simulations(
 \item{filters}{Optional strings to be parsed into a call to the dplyr::filter function, allowing various rules to filter the data. For example, use filters = c("ecosel == 1", "hsymmetry \%in\% c(0, 1)") to only keep simulations where ecosel is 1 and hsymmetry is either 0 or 1. Those parsed expressions must evaluate to logicals when the function is called.}
 
 \item{check_extant}{Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.}
+
+\item{as_address}{Whether to use the path to the simulation folders as simulation identifiers in the resulting data frame. Defaults to FALSE, but useful to retrieve a particular simulation location}
 }
 \value{
 A data frame in the long format. It contains columns with the variables of interest, time, simulation identifier, parameters if requested and optional extra variables (see add_summaries).

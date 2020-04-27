@@ -7,8 +7,20 @@ library(tidyverse)
 
 ###
 
-data <- collect_simulations("/media/raphael/bigass/simulations/EGS/EGS_sim1", variables = "EI", parnames = "ecosel", as_address = TRUE)
-head(data)
+# We see that when the mutation rate is high, reproductive isolation in asymmetric
+# habitats evolves even less than when mutation is high. Why is that? To answer
+# we compare the trait distributions through time in high and low mutation scenarios...
+# Hypothesis: the high mutation rate increases the variance in ecological trait
+# such that ecotypes are not ecologically isolated enough for RI to be advantageous.
+# If this is true, we should see RI evolving at higher mutation rates, where ecotypes
+# become more isolated.
+
+root <- "/media/raphael/bigass/simulations/EGS_extra/EGS_sim3"
+
+data <- collect_simulations(
+  root, variables = c("EI", "RI", "SI"), parnames = c("ecosel", "hsymmetry"),
+  to_numeric = c("ecosel", "hsymmetry")
+)
 
 # Can I launch a simulation from R?
 

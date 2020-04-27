@@ -12,7 +12,9 @@ collect_parameters(
   pb = TRUE,
   filename = "paramlog.txt",
   check_extant = TRUE,
-  to_numeric = NULL
+  to_numeric = NULL,
+  add_sim = FALSE,
+  as_address = FALSE
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ collect_parameters(
 \item{check_extant}{Whether to filter extant simulations. Defaults to TRUE. Set to FALSE if e.g. you supplied a vector of simulations you know did not go missing or extinct.}
 
 \item{to_numeric}{Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.}
+
+\item{add_sim}{Whether to add simulation identifiers}
+
+\item{as_address}{Whether to use the path to the simulation folders as simulation identifiers in the resulting data frame. Defaults to FALSE, but useful to retrieve a particular simulation location}
 }
 \value{
 A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.

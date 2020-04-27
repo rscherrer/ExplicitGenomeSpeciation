@@ -8,7 +8,8 @@ data <- lapply(sprintf("/media/raphael/bigass/simulations/EGS/EGS_sim%s", seq(6)
     root,
     c("EI", "SI", "RI"),
     parnames = c("ecosel", "hsymmetry", "dispersal", "mutation", "scaleA", "scaleI"),
-    to_numeric = c("ecosel", "hsymmetry", "dispersal", "mutation")
+    to_numeric = c("ecosel", "hsymmetry", "dispersal", "mutation"),
+    as_address = TRUE
   )
 })
 data <- do.call("rbind", data)
