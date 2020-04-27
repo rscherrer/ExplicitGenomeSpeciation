@@ -4,3 +4,4 @@ RI
 SI
 population_size
 individual_trait
+genome_Fst
