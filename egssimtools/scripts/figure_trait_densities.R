@@ -40,5 +40,31 @@ simulations <- simulations[pars$ecosel == 1.6 & pars$hsymmetry == 0]
 plot_trait_density(simulations[1], "EI")
 
 # Can I launch a simulation from R? but the seed on my machine won't be the same as the one on the cluster...
-system("../build/release/EGS")
+system("../cluster/EGS ../cluster/test/parameters.txt")
+
+run_simulation("../EGS", "../test/parameters.txt", "../cluster/test", script_rm = FALSE)
+
+run_simulation <- function(pgrm, paramfile = NULL, to = ".", script = "job.sh", script_rm = TRUE) {
+
+  # Create shell script
+
+  # Prepare lines to write
+  lines <- c("#!/usr/bin/bash", paste("cd", to), paste(pgrm, paramfile))
+
+  # Write the job script
+  jobfile <- file(script)
+  writeLines(lines, jobfile)
+  close(jobfile)
+
+  # Change access rights
+  system(paste("chmod u+x", script))
+
+  # Run the script
+  system(paste0("./", script))
+
+  # Remove the script?
+  if (script_rm) file.remove(script)
+
+}
+
 

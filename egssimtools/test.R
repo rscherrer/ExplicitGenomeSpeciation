@@ -5,7 +5,17 @@ rm(list = ls())
 library(egssimtools)
 library(tidyverse)
 
+###
 
+# Can I launch a simulation from R?
+
+#
+# Need to be in the target directory
+#
+
+cd
+
+###
 
 simulation <- "../build/release"
 
@@ -35,7 +45,7 @@ plot_trait_density(simulation, trait = 1)
 plot_trait_density2D(simulation, traits = c(2, 1), t = 100)
 
 
-# Medium-level functions: can combine and process data from different simulations but the output needs to be processed to produce full-fledged figures and results
+# Higher-level functions
 
 root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
 
