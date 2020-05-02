@@ -2,15 +2,25 @@
 % Please edit documentation in R/read_data.R
 \name{read_data}
 \alias{read_data}
-\title{Read data}
+\title{Read simulation data}
 \usage{
-read_data(folder, variable)
+read_data(folder, variables, by = 1, dupl = 1)
 }
 \arguments{
-\item{variable}{What to read}
+\item{folder}{Path to the folder}
 
-\item{filename}{Path to the folder}
+\item{variables}{What variables to read}
+
+\item{by}{A list. For each variable, length of the chunks to split it by. Recycled if its length is one.}
+
+\item{dupl}{A list. For each variable, how many times to duplicate each row. Provide an integer to duplicate every row the same number of times, a vector of integers to duplicate each row a specific number of times, or a character string to read a vector of number of times from a .dat file. This argument is recycled if its length is one.}
+}
+\value{
+A data frame
 }
 \description{
-Read data
+Function to read simulation data from binary files into a data frame. Can read multiple data files and bind them together.
+}
+\note{
+Do not provide the extension of the files. It is assumed to be .dat.
 }

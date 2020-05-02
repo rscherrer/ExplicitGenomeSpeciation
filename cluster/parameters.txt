@@ -1,0 +1,6 @@
+ecosel 1.2
+hsymmetry 0
+mutation 0.001
+talkative 1
+tburnin 100
+tend 100

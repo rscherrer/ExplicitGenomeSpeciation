@@ -30,11 +30,9 @@ collect_simulations <- function(
   pattern = "^sim_",
   verbose = TRUE,
   pb = TRUE,
-  add_summaries = NULL,
-  reverse_order = NULL,
-  filters = NULL,
   check_extant = TRUE,
-  as_address = FALSE
+  as_address = FALSE,
+  level = 0
 ) {
 
   library(pbapply)
@@ -42,14 +40,14 @@ collect_simulations <- function(
 
   if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
+  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
 
   # Find the simulations that completed
-  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
   if (check_extant) simulations <- find_extant(simulations, verbose = verbose, pb = pb)
 
   # Collect the variable of interest from each simulation
   if (verbose) message("Reading the data...")
-  data <- data.frame(do.call("rbind", thislapply(simulations, read_population, variables[1])))
+  data <- simulations %>% thislapply(read_population, variables[1]) %>% do.call("rbind", .) %>% data.frame()
 
   # Add time if available
   colnames(data) <- read_time_if(simulations[1])
@@ -79,21 +77,6 @@ collect_simulations <- function(
     }))
 
     data <- cbind(data, xdata)
-  }
-
-  # Add summaries if needed
-  if (!is.null(add_summaries)) data <- cbind(data, add_summaries(data))
-
-  # Reverse the order of some factors if needed (e.g. nicer facet or legend plotting)
-  if (!is.null(reverse_order)) {
-    if (!all(reverse_order %in% parnames)) stop("Factor to reverse was not provided")
-    data[, reverse_order] <- lapply(data.frame(data[, reverse_order]), function(column) factor(column, levels = rev(levels(column))))
-  }
-
-  # Filter if needed
-  if (!is.null(filters)) {
-    eval(parse(text = sprintf("thisfilter <- function(data) { filter(data, %s) }", paste0(filters, collapse = ", "))))
-    data <- thisfilter(data)
   }
 
   return (data)

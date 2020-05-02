@@ -4,10 +4,14 @@
 \alias{read_population}
 \title{Read population-wide data}
 \usage{
-read_population(folder, variable)
+read_population(folder, variable, nvalues = 1, add_time = FALSE)
 }
 \arguments{
 \item{variable}{What to read}
+
+\item{nvalues}{Number of values per time point}
+
+\item{add_time}{Whether to try to append a time vector to the result}
 
 \item{filename}{Path to the folder}
 }

@@ -4,21 +4,18 @@
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param pb Whether to display a progress bar
+#' @param level Recursion level
 #'
 #' @export
 
 # How many simulations are missing?
-find_missing <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE) {
+find_missing <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE, level = 0) {
 
   library(pbapply)
 
   if (!verbose) pb <- FALSE else message("Looking for missing simulations...")
-
-  # Use progress bar?
   if (pb) thissapply <- pbsapply else thissapply <- sapply
-
-  # Get a list of folders in the directory
-  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
+  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
 
   # Check each one for missing data
   missings <- thissapply(simulations, is_missing)

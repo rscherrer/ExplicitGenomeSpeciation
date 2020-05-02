@@ -1,0 +1,154 @@
+---
+title: "Report"
+output: html_notebook
+---
+
+# General characterization
+
+## Additive model
+
+We have characterized the ecological conditions that promote divergence for our chemostat-dynamics model. They are similar to the results of Ripa et al. and Rettelbach et al. in that ecological divergence occurs for a narrow range of divergent selction intensity in more homogeneous landscapes (this corresponds to migration-independent competitive speciation), but under a wide range of (low) divergent selection intensities in very heterogeneous landscapes (migration-driven ecological speciation).
+
+```{r, include = FALSE}
+rm(list = ls())
+library(egssimtools)
+library(tidyverse)
+library(cowplot)
+library(ggsim)
+```
+
+```{r, echo = FALSE, fig.width = 8, fig.height = 2.1}
+data <- readRDS("data/simulations.rds")
+list(
+  c("EI", "RI", "SI"), # variables
+  c("lightgreen", "lightblue", "coral") # colors
+) %>%
+  pmap(function(variable, color) {
+    data %>%
+      filter(mutation == 0.0001 & scaleI == "0 0 0") %>%
+      ggheatmap(
+        variable, x = "hsymmetry", y = "ecosel", reduce = "simulation",
+        how = c(last, mean)
+      ) +
+      scale_fill_gradient(low = "black", high = color) +
+      labs(x = "Habitat symmetry", y = "Divergent selection")
+  }) %>%
+  plot_grid(plotlist = ., ncol = 3, labels = c("A", "B", "C"))
+  
+```
+
+Reproductive isolation does not evolve as often in the migration-driven scenario. It actually arises very slowly.
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 9}
+lineplots <- list(
+  c("EI", "RI", "SI"),
+  c("lightgreen", "lightblue", "coral"),
+  c("Ecological divergence", "Reproductive isolation", "Spatial isolation")
+) %>%
+  pmap(function(variable, color, label) {
+    data %>%
+      filter(mutation == 0.0001 & scaleI == "0 0 0") %>%
+      mutate(
+        ecosel = ecosel %>% factor %>% str_replace("^", "s = ") %>% fct_rev,
+        hsymmetry = hsymmetry %>% factor %>% str_replace("^", "h = "),
+        time = time / 1000
+      ) %>%
+      group_by(hsymmetry, ecosel, simulation) %>%
+      mutate(last = last(get(variable))) %>%
+      ungroup() %>%
+      gglineplot(x = "time", y = variable, line = "simulation") +
+      facet_grid(ecosel ~ hsymmetry) +
+      aes(color = last) +
+      scale_color_gradient(low = "black", high = color) +
+      labs(x = "Time (thousands of generations)", y = label, color = variable)
+  })
+lineplots[[2]]
+```
+On the contrary, in this scenario ecotype differentiation happens very fast compared to non-fully-heterogeneous landscapes, even in the absence of a strong trade-off:
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 9}
+lineplots[[1]]
+```
+
+The final spatial distribution is often achieved early during the simulations, and it very well determined by the degree of habitat symmetry:
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 9}
+lineplots[[3]]
+```
+
+We see in these figures that the simulations usually fisrt converge to a transition phase of incomplete ecological differentiation with a higher spatial differentiation than their final value. In a second phase coinciding with the rise of reproductive isolation, ecological differentiation completes and spatial isolation decreases to its equilibrium value. It is best seen when plotting the variables against each other:
+
+```{r, echo = FALSE, fig.width = 6, fig.height = 6}
+data %>%
+  filter(mutation == 0.0001 & scaleI == "0 0 0") %>%
+      mutate(
+        ecosel = ecosel %>% factor %>% str_replace("^", "s = "),
+        hsymmetry = hsymmetry %>% factor %>% str_replace("^", "h = "),
+        time = time / 1000
+      ) %>%
+      ungroup() %>%
+      gglineplot(x = "EI", y = "SI", line = "simulation", alpha = 0.3) +
+      facet_wrap(. ~ ecosel) +
+      aes(color = hsymmetry) +
+      scale_color_manual(values = colorRampPalette(c("coral", "black"))(5)) +
+      labs(x = "Ecological divergence", y = "Spatial isolation", color = NULL)
+```
+## Epistatic genotype-phenotype map
+
+We characterized the behavior of the model, this time with the ecological trait underlain by a gene regulatory network. The network of epistatic interactions either entirely determined the phenotype ($\sigma_I = 1$) or partially, with equal contribution from the additive component of the genotype-phenotype map ($\sigma_I = 0.5$). We compared the results with the additive model presented in the previous section ($\sigma_I = 0$).
+
+```{r, echo = FALSE, fig.width = 5, fig.height = 6}
+list(
+  c("EI", "RI", "SI"),
+  c("lightgreen", "lightblue", "coral")
+) %>%
+  pmap(function(variable, color) {
+    data %>%
+      filter(mutation == 0.0001) %>%
+      mutate(
+        sigmaI = scaleI %>% str_replace(" .*$", "") %>% as.numeric %>%
+          factor %>% str_replace("^", "sigma[I]==")
+      ) %>%
+      ggheatmap(variable, x = "hsymmetry", y = "ecosel", reduce = "simulation", how = c(last, mean), keep = "sigmaI") +
+      facet_grid(. ~ sigmaI, labeller = label_parsed) +
+      scale_fill_gradient(low = "black", high = color) +
+      labs(x = "Habitat symmetry", y = "Divergent selection")
+  }) %>%
+  plot_grid(plotlist = ., nrow = 3, labels = c("A", "B", "C"))
+```
+We see that epistasis only slightly modifies the ecological conditions that are favorable to speciation. In particular, epistatic interactions seem to make speciation happen where the trade-off would otherwise be too weak to allow divergence, and this effect is more pronounced in more asymmetric habitats. Interestingly, speciation seems to be the most constrained when epistasis is at an intermediate level. The patterns of divergence through time were similar in the epistatic and in the additive cases, except that under strong epistasis we sometimes saw the evolution of disassortatively mating, but ecologically differentiated, ecotypes. First, a figure for $\sigma_I = 0.5$:
+
+
+```{r, echo = FALSE, fig.width = 14, fig.height = 9}
+listplots <- list("0.5 0 0", "1 0 0") %>%
+  map(function(scaleI_value) {
+    list(
+    c("EI", "RI", "SI"),
+    c("lightgreen", "lightblue", "coral"),
+    c("Ecological divergence", "Reproductive isolation", "Spatial isolation")
+  ) %>%
+    pmap(function(variable, color, label) {
+      data %>%
+        filter(mutation == 0.0001, scaleI == scaleI_value) %>%
+        mutate(
+          ecosel = ecosel %>% factor %>% str_replace("^", "s = ") %>% fct_rev,
+          hsymmetry = hsymmetry %>% factor %>% str_replace("^", "h = "),
+          time = time / 1000
+        ) %>%
+        group_by(hsymmetry, ecosel, simulation) %>%
+        mutate(last = last(get(variable))) %>%
+        ungroup() %>%
+        gglineplot(x = "time", y = variable, line = "simulation") +
+        facet_grid(ecosel ~ hsymmetry) +
+        aes(color = last) +
+        scale_color_gradient(low = "black", high = color) +
+        labs(x = "Time (thousands of generations)", y = label, color = variable)
+    }) %>%
+    plot_grid(plotlist = ., ncol = 3, labels = c("A", "B", "C"))
+  })
+```
+And the one for $\sigma_I = 1$:
+
+```{r, echo = FALSE, fig.width = 13, fig.height = 9}
+listplots[[2]]
+```

@@ -4,7 +4,13 @@
 \alias{find_extinct}
 \title{Find extinct simulations}
 \usage{
-find_extinct(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE)
+find_extinct(
+  simulations,
+  pattern = "^sim_",
+  verbose = TRUE,
+  pb = TRUE,
+  level = 0
+)
 }
 \arguments{
 \item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
@@ -14,6 +20,8 @@ find_extinct(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE)
 \item{verbose}{Whether to display messages}
 
 \item{pb}{Whether to display a progress bar}
+
+\item{level}{Recursion level}
 }
 \description{
 Find extinct simulations

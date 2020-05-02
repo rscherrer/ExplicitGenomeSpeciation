@@ -7,11 +7,11 @@
 plot_trait_density(folder, trait, bins = 15)
 }
 \arguments{
+\item{folder}{Path to the folder}
+
 \item{trait}{What trait to plot? (1) Ecological trait, (2) mating preference and (3) neutral trait.}
 
 \item{bins}{Number of bins in the heatmap}
-
-\item{filename}{Path to the folder}
 }
 \value{
 A ggplot with the basic needed components. You can add extra layers to it (e.g. change the axis labels) outside the function.

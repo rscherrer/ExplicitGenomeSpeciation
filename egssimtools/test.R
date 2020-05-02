@@ -4,52 +4,7 @@ rm(list = ls())
 
 library(egssimtools)
 library(tidyverse)
-
-###
-
-# We see that when the mutation rate is high, reproductive isolation in asymmetric
-# habitats evolves even less than when mutation is high. Why is that? To answer
-# we compare the trait distributions through time in high and low mutation scenarios...
-# Hypothesis: the high mutation rate increases the variance in ecological trait
-# such that ecotypes are not ecologically isolated enough for RI to be advantageous.
-# If this is true, we should see RI evolving at higher mutation rates, where ecotypes
-# become more isolated.
-
-root <- "/media/raphael/bigass/simulations/EGS_extra/EGS_sim3"
-
-data <- collect_simulations(
-  root, variables = c("EI", "RI", "SI"), parnames = c("ecosel", "hsymmetry"),
-  to_numeric = c("ecosel", "hsymmetry")
-)
-
-# Can I launch a simulation from R?
-
-#
-# Need to be in the target directory
-#
-
-data <- readRDS("data/population_wide_data.rds")
-head(data)
-
-where <- "../cluster/test"
-exe <- "../EGS"
-parfile <- NULL
-
-lines <- c(
-  "#!/bin/bash",
-  paste("cd", where),
-
-)
-
-jobfile <- file("job.sh")
-writeLines(c("#!/bin/bash", "cd ../cluster/test", '../EGS'), jobfile)
-close(jobfile)
-
-system("chmod u+x ./job.sh")
-system("./job.sh")
-system("ls ../cluster/test")
-
-###
+library(ggsim)
 
 simulation <- "../build/release"
 
@@ -77,15 +32,20 @@ read_ecotype_means(simulation)
 read_ecotype_sizes(simulation)
 plot_trait_density(simulation, trait = 1)
 plot_trait_density2D(simulation, traits = c(2, 1), t = 100)
-
+plot_trait_histogram(simulation, trait = 1, t = 2900, color = "seagreen", is_density = TRUE)
+plot_genome_scan(simulation, "genome_Fst", t = 2900, colvar = "trait", col_as_factor = TRUE)
+plot_genome_distribution(simulation, "genome_Fst", graph = list(grouping = "trait", plot_type = "boxplot"))
+plot_genome_heatmap(simulation, "genome_Fst")
 
 # Higher-level functions
 
 root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
 
-find_extinct(root, pattern = "sim_")
-find_missing(root, pattern = "sim_")
-simulations <- find_extant(root, pattern = "sim_", pb = FALSE)
-collect_parameters(simulations[1:4], parnames = c("ecosel", "hsymmetry"))
-collect_simulations(simulations[1:4], "RI", parnames = c("ecosel", "hsymmetry"))
+find_extinct(root, level = 1)
+find_missing(root, level = 1)
+find_extant(root, level = 1)
+find_completed(root, level = 1)
+collect_status(root, level = 1)
+collect_parameters(root, level = 1, parnames = c("ecosel", "hsymmetry"))
+collect_simulations(root, level = 1, "RI", parnames = c("ecosel", "hsymmetry"))
 

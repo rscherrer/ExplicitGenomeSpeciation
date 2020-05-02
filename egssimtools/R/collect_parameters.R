@@ -10,6 +10,7 @@
 #' @param to_numeric Which parameters to convert into numeric. Because all parameters may not be numbers, they are read as factor by default.
 #' @param add_sim Whether to add simulation identifiers
 #' @param as_address Whether to use the path to the simulation folders as simulation identifiers in the resulting data frame. Defaults to FALSE, but useful to retrieve a particular simulation location
+#' @param level Recursion level
 #'
 #' @return A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.
 #'
@@ -25,7 +26,8 @@ collect_parameters <- function(
   check_extant = TRUE,
   to_numeric = NULL,
   add_sim = FALSE,
-  as_address = FALSE
+  as_address = FALSE,
+  level = 0
 ) {
 
   library(pbapply)
@@ -33,9 +35,9 @@ collect_parameters <- function(
 
   if (!verbose) pb <- FALSE
   if (pb) thislapply <- pblapply else thislapply <- lapply
+  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
 
   if (verbose) message("Reading parameter values...")
-  if (length(simulations) == 1) simulations <- list.files(simulations, pattern = pattern, full.names = TRUE)
   if (check_extant) simulations <- find_extant(simulations, verbose = verbose, pb = pb)
   parameters <- thislapply(simulations, read_parameters, parnames, filename)
 

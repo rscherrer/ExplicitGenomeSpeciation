@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ../cluster/test
-../EGS
+../EGS ./paramlog.txt

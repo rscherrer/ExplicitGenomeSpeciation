@@ -14,7 +14,8 @@ collect_parameters(
   check_extant = TRUE,
   to_numeric = NULL,
   add_sim = FALSE,
-  as_address = FALSE
+  as_address = FALSE,
+  level = 0
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ collect_parameters(
 \item{add_sim}{Whether to add simulation identifiers}
 
 \item{as_address}{Whether to use the path to the simulation folders as simulation identifiers in the resulting data frame. Defaults to FALSE, but useful to retrieve a particular simulation location}
+
+\item{level}{Recursion level}
 }
 \value{
 A data frame with parameters in columns and simulations in rows. The parameters are returned as factors.

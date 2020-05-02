@@ -16,7 +16,8 @@ collect_simulations(
   reverse_order = NULL,
   filters = NULL,
   check_extant = TRUE,
-  as_address = FALSE
+  as_address = FALSE,
+  level = 0
 )
 }
 \arguments{
