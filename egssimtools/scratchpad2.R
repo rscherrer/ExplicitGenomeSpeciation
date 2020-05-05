@@ -1,12 +1,11 @@
+# Write an R function that
+
 rm(list = ls())
 
-library(egssimtools)
-library(tidyverse)
+# Take a template file (or blank file if none)
+# For each parameter requested
+# Replace or add the line for this parameter with the requested values
+# Save the file to the requested location
 
-root <- "/media/raphael/bigass/simulations/EGS/EGS_sim1"
-
-roots <- fetch_dirs(root, pattern = "sim_", level = 1)[1:10]
-
-data <- read_data(roots[1], c("time", "EI", "RI", "SI"))
-pars <- read_parameters(roots[1], combine = FALSE, flatten = TRUE, as_numeric = "scaleA")
-pars$scaleA1
+set_param_file(pars = list(scaleA = "5 0 0"), template = "parameters.txt",
+               saveto = "param2.txt")

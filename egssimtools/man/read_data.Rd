@@ -4,7 +4,15 @@
 \alias{read_data}
 \title{Read simulation data}
 \usage{
-read_data(folder, variables, by = 1, dupl = 1)
+read_data(
+  folder,
+  variables,
+  by = 1,
+  dupl = 1,
+  parnames = NULL,
+  combine = FALSE,
+  as_numeric = NULL
+)
 }
 \arguments{
 \item{folder}{Path to the folder}
@@ -14,6 +22,10 @@ read_data(folder, variables, by = 1, dupl = 1)
 \item{by}{A list. For each variable, length of the chunks to split it by. Recycled if its length is one.}
 
 \item{dupl}{A list. For each variable, how many times to duplicate each row. Provide an integer to duplicate every row the same number of times, a vector of integers to duplicate each row a specific number of times, or a character string to read a vector of number of times from a .dat file. This argument is recycled if its length is one.}
+
+\item{parnames}{Character vector of parameter names to append to the simulation data}
+
+\item{combine, as_numeric}{Parameters for \code{read_parameters}}
 }
 \value{
 A data frame

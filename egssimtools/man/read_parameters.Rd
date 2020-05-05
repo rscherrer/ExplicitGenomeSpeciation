@@ -4,7 +4,14 @@
 \alias{read_parameters}
 \title{Read parameters}
 \usage{
-read_parameters(folder, parnames = NULL, filename = "paramlog.txt")
+read_parameters(
+  folder,
+  parnames = NULL,
+  filename = "paramlog.txt",
+  combine = FALSE,
+  flatten = FALSE,
+  as_numeric = NULL
+)
 }
 \arguments{
 \item{folder}{Path to the folder}
@@ -12,6 +19,10 @@ read_parameters(folder, parnames = NULL, filename = "paramlog.txt")
 \item{parnames}{Optional vector of parameter names}
 
 \item{filename}{Optional file name}
+
+\item{combine}{Whether to paste together compound parameters}
+
+\item{flatten}{Whether to return a list of single values. If FALSE, some of the elements may be vectors of multiple values (compound parameters).}
 }
 \description{
 Read parameters

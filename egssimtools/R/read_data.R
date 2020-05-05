@@ -6,6 +6,8 @@
 #' @param variables What variables to read
 #' @param by A list. For each variable, length of the chunks to split it by. Recycled if its length is one.
 #' @param dupl A list. For each variable, how many times to duplicate each row. Provide an integer to duplicate every row the same number of times, a vector of integers to duplicate each row a specific number of times, or a character string to read a vector of number of times from a .dat file. This argument is recycled if its length is one.
+#' @param parnames Character vector of parameter names to append to the simulation data
+#' @param combine,as_numeric Parameters for `read_parameters`
 #'
 #' @return A data frame
 #'
@@ -13,11 +15,11 @@
 #'
 #' @export
 
-read_data <- function(folder, variables, by = 1, dupl = 1) {
+read_data <- function(folder, variables, by = 1, dupl = 1, parnames = NULL, combine = FALSE, as_numeric = NULL) {
 
   library(tidyverse)
 
-  list(variables, by, dupl) %>%
+  data <- list(variables, by, dupl) %>%
     pmap_dfc(function(variable, by, dupl) {
 
       data <- read_binary(paste0(folder, "/", variable, ".dat")) %>%
@@ -31,5 +33,15 @@ read_data <- function(folder, variables, by = 1, dupl = 1) {
       data <- data %>% rename_str(colnames)
 
     })
+
+  if (!is.null(parnames)) {
+
+    pars <- read_parameters(folder, parnames, combine = combine, flatten = TRUE, as_numeric = as_numeric)
+    pars <- pars %>% map_dfc(rep, nrow(data))
+    data <- list(data, pars) %>% bind_cols
+
+  }
+
+  return (data)
 
 }
