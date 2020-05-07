@@ -14,7 +14,7 @@ set_param_file(pars, template = NULL, saveto = NULL)
 \item{saveto}{Optional file where to save the output.}
 }
 \value{
-A vector of parameter entries. Not very useful if \code{saveto} is NULL.
+A vector of parameter entries, only if \code{saveto} is NULL.
 }
 \description{
 Function to create a parameter file with the requested parameter values

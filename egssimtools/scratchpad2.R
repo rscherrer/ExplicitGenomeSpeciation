@@ -1,11 +1,23 @@
-# Write an R function that
+# Read the simulations and assemble them into a data set
 
 rm(list = ls())
 
-# Take a template file (or blank file if none)
-# For each parameter requested
-# Replace or add the line for this parameter with the requested values
-# Save the file to the requested location
+library(egssimtools)
+library(tidyverse)
 
-set_param_file(pars = list(scaleA = "5 0 0"), template = "parameters.txt",
-               saveto = "param2.txt")
+root <- "/media/raphael/bigass/simulations/EGS/genomes/"
+
+root <- list.dirs(root, recursive = FALSE)[1]
+variables <- c("time", "Fst", "Gst", "Qst", "Cst")
+by <- c(1, 3, 3, 3, 3)
+dupl <- c(1, 1, 1, 1, 1)
+parnames <- c("hsymmetry", "ecosel", "scaleI", "seed")
+as_numeric <- parnames
+
+
+data <- collect_sims(
+  root, variables, by = by, dupl = dupl, parnames = parnames,
+  as_numeric = as_numeric, check_extant = FALSE, level = 1, pattern = "sim"
+)
+
+

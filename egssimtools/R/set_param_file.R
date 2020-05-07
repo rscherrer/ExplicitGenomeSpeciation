@@ -6,7 +6,7 @@
 #' @param template Optional file to add or change parameters into (the file is not overwritten).
 #' @param saveto Optional file where to save the output.
 #'
-#' @return A vector of parameter entries. Not very useful if `saveto` is NULL.
+#' @return A vector of parameter entries, only if `saveto` is NULL.
 #'
 #' @export
 
@@ -33,15 +33,12 @@ set_param_file <- function(pars, template = NULL, saveto = NULL) {
     } else{
       tmp <- c(tmp, replacement)
     }
-
-    if (!is.null(saveto)) {
-      out <- file(saveto)
-      writeLines(tmp, out)
-      close(out)
-    }
-
-    return (tmp)
-
   }
+
+  if (is.null(saveto)) return (tmp)
+
+  out <- file(saveto)
+  writeLines(tmp, out)
+  close(out)
 
 }
