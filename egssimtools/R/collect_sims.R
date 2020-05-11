@@ -38,7 +38,7 @@ collect_sims <- function(
 
   # Find extant simulations if needed
   if (check_extant) {
-    root <- find_extant(root, patttern = pattern, verbose = verbose, pb = pb)
+    root <- find_extant(root, pattern = pattern, verbose = verbose, pb = pb)
   }
 
   # Read the data and combine
