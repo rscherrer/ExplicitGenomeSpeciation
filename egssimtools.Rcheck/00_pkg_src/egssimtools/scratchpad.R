@@ -5,13 +5,9 @@ library(tidyverse)
 library(ggsim)
 library(patchwork)
 
-root <- "data"
+# This is saving a hundred genomes
 
-# Fetch simulations folders
-fetch_dirs(roots = root, level = 1)
-
-
-
+root <- "/media/raphael/bigass/simulations/EGS/genomes/"
 data <- readRDS(paste0(root, "simulations.rds"))
 backup <- data
 data <- backup

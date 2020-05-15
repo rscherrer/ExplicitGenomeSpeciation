@@ -15,10 +15,7 @@
 #'
 #' @export
 
-read_data <- function(
-  folder, variables, by = 1, dupl = 1, parnames = NULL, combine = FALSE,
-  as_numeric = NULL
-) {
+read_data <- function(folder, variables, by = 1, dupl = 1, parnames = NULL, combine = FALSE, as_numeric = NULL) {
 
   library(tidyverse)
 
@@ -29,11 +26,7 @@ read_data <- function(
         split(rep(seq(length(.) / by), each = by)) %>%
         do.call("rbind", .) %>%
         data.frame
-      if (ncol(data) > 1) {
-        colnames <- paste0(variable, seq(ncol(data)))
-      } else {
-        colnames <- variable
-      }
+      if (ncol(data) > 1) colnames <- paste0(variable, seq(ncol(data))) else colnames <- variable
       if (is.character(dupl)) dupl <- read_binary(paste0(folder, "/", dupl, ".dat"))
       if (length(dupl) == 1) dupl <- rep(dupl, nrow(data))
       data <- data[mrep(seq(nrow(data)), n = dupl), ] %>% data.frame
