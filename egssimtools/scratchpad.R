@@ -2,13 +2,18 @@ rm(list = ls())
 
 library(egssimtools)
 library(tidyverse)
+library(ggsim)
+library(patchwork)
 
-root <- "/media/raphael/bigass/simulations/EGS/mutator/"
+# This is saving a hundred genomes
 
-variables <- c("time", "EI", "RI", "SI")
-parnames <- c("hsymmetry", "ecosel", "scaleA", "scaleI")
+root <- "/media/raphael/bigass/simulations/EGS/genomes/"
+data <- readRDS(paste0(root, "simulations.rds"))
+backup <- data
+data <- backup
 
-data <- collect_sims(root, level = 2, pattern = "sim_", variables = variables,
-                     parnames = parnames, check_extant = TRUE,
-                     as_numeric = parnames)
-data
+head(data)
+
+data <- data %>% filter(time == 19900)
+
+ggplot
