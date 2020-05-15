@@ -31,12 +31,17 @@ Each simulation is stored in a simulation folder. The content of a simulation fo
 
 ## Read data
 
-The most important function is `read_data`. This function allows the user to read the data from one simulation. The user provides the names of the variables to be read, optional parameters to be read too, and the output is returned in a data frame, suitable for further analyses or merging with other data frames. We can for example read speciation metrics through time for one simulation:
+The most important function is `read_data`. This function allows the user to read the data from one simulation. The user provides the names of the variables to be read, optional parameters to be read too, and the output is returned in a data frame, suitable for further analyses or merging with other data frames. We can for example read speciation metrics through time for one simulation, and add a specific set of parameters to them:
 
 ```{r}
 root <- "../data/example_1"
-data <- read_data(root, variables = c("time", "EI", "RI", "SI"))
+data <- read_data(root, variables = c("time", "EI", "RI", "SI"), parnames = c("ecosel", "hsymmetry"))
 head(data, 4)
 ```
+
+For these variables, there is one value per time point throughout the simulation, while the values of the two parameters are unique to the simulation. Parameter values are therefore duplicated as many times as there are rows in the resulting table.
+
+Here, all variables have the same length (one value per time point). Simulation output sometimes has different dimensions (see the main page for details). Genome-wide Fst, for example, is computed for each of the three traits separately at each time point, and saved into the same linear binary file. The file `Fst.dat` is therefore three times as long as `time.dat`, and we need to split the former in three columns to be able to append it to the latter. We use the `by` argument for that:
+
 
 
