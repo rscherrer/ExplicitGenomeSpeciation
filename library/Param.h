@@ -1,8 +1,9 @@
 #ifndef EXPLICITGENOMESPECIATION_PARAM_H
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
-#include "Types.h"
+
 #include "Utilities.h"
+#include "Random.h"
 #include <fstream>
 #include <iostream>
 #include <chrono>
@@ -16,26 +17,25 @@
 struct Param {
 
     Param() :
-        rdynamics(0u),
-        inflow(1.0),
-        outflow(1000.0),
-        capacity(100.0),
-        replenish(10.0),
-        hsymmetry(1.0),
-        ecosel(1.0),
-        dispersal(1.0E-3),
-        birth(4.0),
-        survival(0.6),
+        rdynamics(1u),
+        capacity(1.0),
+        replenish(2375.0),
+        inflow(400.0),
+        outflow(100.0),
+        hsymmetry(0.0),
+        ecosel(1.8),
+        dispersal(1.0E-2),
+        birth(1.0),
+        survival(0.8),
         sexsel(10.0),
         matingcost(0.01),
-        maxfeed(4.0E-4),
-        demesizes({ 10u, 0u }),        
-        nloci(300u), // cannot be provided
-        nvertices({ 100u, 100u, 100u }),
-        nedges({ 0u, 0u, 0u }),
+        demesizes({ 100u, 0u }),
+        nloci(90u), // cannot be provided
+        nvertices({ 30u, 30u, 30u }),
+        nedges({ 30u, 0u, 0u }),
         nchrom(3u),
-        mutation(1.0E-6),
-        recombination(0.01),
+        mutation(1.0E-3),
+        recombination(3.0),
         allfreq(0.2),
         scaleA({ 1.0, 1.0, 1.0 }),
         scaleD({ 0.0, 0.0, 0.0 }),
@@ -48,34 +48,48 @@ struct Param {
         interactionshape(5.0),
         interactionscale(1.0),
         dominancevar(1.0),
-        tburnin(10),
+        tburnin(0),
         tend(10),
         tsave(10),
+        tfreeze(100),
+        talkative(true),
         record(true),
+        datsave(true),
+        choosewhattosave(false),
+        gensave(false),
+        archsave(false),
+        archload(false),
+        parsave(true),
+        archfile("architecture.txt"),        
+        parfile("paramlog.txt"),
+        orderfile("whattosave.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
-        // Make sure there are no more edges than feasible
-        capEdges();
 
         // Make sure parameter values make sense
-        checkParams();
+        check();
+
+        // Seed the random number generator
+        rnd::rng.seed(seed);
     }
 
     void read(const std::string&);
     void update();
-
     void import(std::ifstream&);
-    void capEdges();
-    void checkParams();
+
+    void write(std::ofstream&) const;
+    void save() const;
+    void check() const;
+
     size_t makeDefaultSeed();
 
     // Ecological parameters    
     size_t rdynamics;
-    double inflow;
-    double outflow;
     double capacity;
     double replenish;
+    double inflow;
+    double outflow;
     double hsymmetry;
     double ecosel;
     double dispersal;
@@ -83,25 +97,24 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    double maxfeed;
-    vecUns demesizes;
+    std::vector<size_t> demesizes;
 
     // Genetic parameters
-    size_t nloci;
-    vecUns nvertices;
-    vecUns nedges;
-    size_t nchrom;
+    mutable size_t nloci;
+    mutable std::vector<size_t> nvertices;
+    mutable std::vector<size_t> nedges;
+    mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
 
     // Genotype-phenotype map
-    vecDbl scaleA;
-    vecDbl scaleD;
-    vecDbl scaleI;
-    vecDbl scaleE;
-    vecDbl locusE;
-    vecDbl skews;
+    std::vector<double> scaleA;
+    std::vector<double> scaleD;
+    std::vector<double> scaleI;
+    std::vector<double> scaleE;
+    std::vector<double> locusE;
+    std::vector<double> skews;
     double effectshape;
     double effectscale;
     double interactionshape;
@@ -112,7 +125,18 @@ struct Param {
     int  tburnin;
     int  tend;
     int  tsave;
+    int  tfreeze;
+    bool talkative;
     bool record;
+    bool datsave;
+    bool choosewhattosave;
+    bool gensave;
+    bool archsave;
+    bool archload;
+    bool parsave;
+    std::string archfile;
+    std::string parfile;
+    std::string orderfile;
     size_t seed;
     size_t ntrials;
 

@@ -5,7 +5,7 @@
 #include "GenArch.h"
 #include "Individual.h"
 #include "Utilities.h"
-#include "Types.h"
+
 #include <cassert>
 
 typedef std::vector<Individual> Crowd;
@@ -14,6 +14,7 @@ class MetaPop
 {
 
     friend class Collector;
+    friend class Printer;
 
 public:
 
@@ -24,9 +25,6 @@ public:
         sexcounts(utl::uzeros(2u, 2u))
     {
 
-        // Test right number of individuals
-        // Test right number of individuals in each habitat
-
     }
 
     ~MetaPop() {}
@@ -34,6 +32,11 @@ public:
     void cycle(const Param&, const GenArch&);
     void exitburnin();
     bool isextinct() const;
+
+    void disperse(const Param&);
+    void consume(const Param&);
+    void reproduce(const Param&, const GenArch&);
+    void survive(const Param&);
 
     // Getters called from outside
     size_t getSize() const
@@ -73,18 +76,12 @@ public:
         const size_t n = population.size();
         return ssq / n - utl::sqr(sum / n);
     }
-    double getMeanEcoTrait(const size_t &h) const // can be removed
+    double getMeanTrait(const size_t &trait) const
     {
         double mean = 0.0;
-        size_t n = 0u;
-        for (size_t i = 0u; i < population.size(); ++i) {
-            if (population[i].getHabitat() == h) {
-                ++n;
-                mean += population[i].getEcoTrait();
-            }
-        }
-        mean /= n;
-        return mean;
+        for (size_t i = 0u; i < population.size(); ++i)
+            mean += population[i].getTraitValue(trait);
+        return mean / population.size();
     }
     double getMeanEcotype(const size_t &h) const // can be removed
     {
@@ -99,15 +96,6 @@ public:
         mean /= n;
         return mean;
     }
-    double getMeanMatePref() const // can be removed
-    {
-        double mean = 0.0;
-        for (size_t i = 0u; i < population.size(); ++i) {
-            mean += population[i].getMatePref();
-        }
-        mean /= population.size();
-        return mean;
-    }
     double getFitness(const size_t &i) const // can be removed
     {
         return population[i].getFitness();
@@ -116,26 +104,36 @@ public:
     {
         return population[i].getFeeding(r);
     }
+    size_t getEcotype(const size_t &i) const
+    {
+        return population[i].getEcotype();
+    }
+    size_t getHabitat(const size_t &i) const
+    {
+        return population[i].getHabitat();
+    }
+    double getTrait(const size_t &i, const size_t &trait) const
+    {
+        return population[i].getTraitValue(trait);
+    }
+    double getMidparent(const size_t &i, const size_t &trait) const
+    {
+        return population[i].getMidparent(trait);
+    }
 
     // Resetters used in tests
-    void resetEcoTraits(const double &x, const Param &p)
+    void resetTraits(const size_t &trait, const double &x, const Param &p)
     {
         for (size_t i = 0u; i < population.size(); ++i){
-            population[i].resetEcoTrait(x, p);
+            population[i].resetTrait(trait, x, p);
         }
     }
-    void resetEcoTraits(const size_t &h, const double &x, const Param &p)
+    void resetTraits(const size_t &trait, const size_t &h, const double &x,
+                     const Param &p)
     {
-        for (size_t i = 0u; i < population.size(); ++i) {
-            if (population[i].getHabitat() == h) {
-                population[i].resetEcoTrait(x, p);
-            }
-        }
-    }
-    void resetMatePrefs(const double &x)
-    {
-        for (size_t i = 0u; i < population.size(); ++i) {
-            population[i].resetMatePref(x);
+        for (size_t i = 0u; i < population.size(); ++i){
+            if (population[i].getHabitat() == h)
+                population[i].resetTrait(trait, x, p);
         }
     }
     void resetGenders(const bool &sex)
@@ -149,16 +147,11 @@ private:
 
     Crowd populate(const Param&, const GenArch&);
 
-    void disperse(const Param&);
-    void consume(const Param&);
-    void reproduce(const Param&, const GenArch&);
-    void survive(const Param&);
-
     Crowd population;
     bool isburnin;
 
-    Matrix resources; // per habitat per resource
-    MatUns sexcounts; // per habitat per sex
+    std::vector<std::vector<double> > resources; // per habitat per resource
+    std::vector<std::vector<size_t> > sexcounts; // per habitat per sex
 
 };
 

@@ -1,11 +1,10 @@
 #ifndef EXPLICITGENOMESPECIATION_COLLECTOR_H
 #define EXPLICITGENOMESPECIATION_COLLECTOR_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "MetaPop.h"
 #include "GenArch.h"
-#include <fstream>
 #include <cassert>
 
 struct Locus
@@ -19,41 +18,83 @@ struct Locus
         varN(utl::zeros(3u)),
         varD(0.0),
         varI(0.0),
+        varZ(0.0),
+        varX(0.0),
         Pst(0.0),
         Gst(0.0),
         Qst(0.0),
         Cst(0.0),
-        Fst(0.0)
+        Fst(0.0),
+        alpha(0.0),
+        beta(utl::zeros(3u)),
+        meang(0.0),
+        freq(0.0)
     {}
 
     size_t id;
     size_t trait;
 
-    vecDbl varG; // per ecotype
-    vecDbl varP; // per ecotype
-    vecDbl varA; // per ecotype
-    vecDbl varN; // per ecotype
+    std::vector<double> varG; // per ecotype
+    std::vector<double> varP; // per ecotype
+    std::vector<double> varA; // per ecotype
+    std::vector<double> varN; // per ecotype
     double varD;
     double varI;
+    double varZ;
+    double varX;
 
     double Pst;
     double Gst;
     double Qst;
     double Cst;
     double Fst;
+
+    double alpha;
+    std::vector<double> beta; // per genotype
+    double meang;
+    double freq;
 };
 
-typedef std::vector<Locus> vecLoci;
-typedef std::vector<std::shared_ptr<std::ofstream> > vecStreams;
+struct Connexion
+{
+    Connexion(const size_t &e, const size_t &i, const size_t &j,
+     const size_t &t) :
+        id(e),
+        loc1(i),
+        loc2(j),
+        trait(t),
+        corgen(0.0),
+        corbreed(0.0),
+        corfreq(0.0),
+        avgi(0.0),
+        avgj(0.0)
+    {}
+
+    size_t id;
+    size_t loc1;
+    size_t loc2;
+    size_t trait;
+
+    // Correlations in genetic values, breeding values and allele freq
+    double corgen;
+    double corbreed;
+    double corfreq;
+
+    // Variation in average effect due to epistasis
+    double avgi;
+    double avgj;
+};
+
+typedef std::shared_ptr<std::ofstream> Stream;
 
 class Collector
 {
 
+    friend class Printer;
+
 public:
 
     Collector(const GenArch &arch) :
-        filenames(whattosave()),
-        files({ }),
         counts(utl::uzeros(3u, 3u)),
         means(utl::zeros(3u, 3u, 3u)),
         varG(utl::zeros(3u, 3u)),
@@ -62,41 +103,20 @@ public:
         varN(utl::zeros(3u, 3u)),
         varD(utl::zeros(3u)),
         varI(utl::zeros(3u)),
+        varT(utl::zeros(3u)),
         Pst(utl::zeros(3u)),
         Gst(utl::zeros(3u)),
         Qst(utl::zeros(3u)),
         Cst(utl::zeros(3u)),
         Fst(utl::zeros(3u)),
         genomescan(emptyloci(arch)),
+        networkscan(emptyconnexions(arch)),
         EI(0.0),
         SI(0.0),
         RI(0.0)
-    {
+    {}
 
-        files.reserve(filenames.size());
-
-        // Open files
-        for (size_t f = 0u; f < filenames.size(); ++f) {
-
-            const std::string filename = filenames[f] + ".dat";
-            std::shared_ptr<std::ofstream> out(new std::ofstream);
-            out->open(filename.c_str(), std::ios::binary);
-            if (!out->is_open()) {
-                std::string msg = "Unable to open output file " + filename;
-                throw std::runtime_error(msg);
-            }
-            files.push_back(out);
-        }
-    }
-
-    ~Collector()
-    {
-        // Close files
-        for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
-    }
-
-    void analyze(const MetaPop&, const Param&);
-    void print(const size_t&, const MetaPop&);
+    void analyze(const MetaPop&, const Param&, const GenArch&);
 
     // Getters called in tests
     double getEI() const
@@ -112,32 +132,51 @@ public:
         return RI;
     }
 
+
+    double getVarP(const size_t &t) const // used in test
+    {
+        return varP[t][2u];
+    }
+
+    // these getters are used in plotting
+    // they are not optimized - they are not called that often.
+    std::vector<double> get_Fst() const;
+    std::vector<double> get_Gst() const;
+    std::vector<double> get_eco_trait(const MetaPop &m) const;
+    std::vector<double> get_eco_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
+    std::vector<double> get_sex_trait(const MetaPop &m) const;
+    std::vector<double> get_sex_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
+    std::vector<double> get_neu_trait(const MetaPop &m) const;
+    std::vector<double> get_neu_trait_deme(const MetaPop &m,
+                                           size_t deme) const;
+
 private:
 
-    vecStrings whattosave() const;
-    vecLoci emptyloci(const GenArch&) const;
+    std::vector<Locus> emptyloci(const GenArch&) const;
+    std::vector<Connexion> emptyconnexions(const GenArch&) const;
 
-    vecStrings filenames;
-    vecStreams files;
+    std::vector<std::vector<size_t> > counts; // per habitat per ecotype
 
-    MatUns counts; // per habitat per ecotype
+    std::vector<std::vector<std::vector<double> > > means; // per trait per habitat per ecotype
 
-    Matx3d means; // per trait per habitat per ecotype
+    std::vector<std::vector<double> > varG; // per trait per ecotype
+    std::vector<std::vector<double> > varP; // per trait per ecotype
+    std::vector<std::vector<double> > varA; // per trait per ecotype
+    std::vector<std::vector<double> > varN; // per trait per ecotype
+    std::vector<double> varD; // per trait
+    std::vector<double> varI; // per trait
+    std::vector<double> varT; // per trait
 
-    Matrix varG; // per trait per ecotype
-    Matrix varP; // per trait per ecotype
-    Matrix varA; // per trait per ecotype
-    Matrix varN; // per trait per ecotype
-    vecDbl varD; // per trait
-    vecDbl varI; // per trait
+    std::vector<double> Pst; // per trait
+    std::vector<double> Gst; // per trait
+    std::vector<double> Qst; // per trait
+    std::vector<double> Cst; // per trait
+    std::vector<double> Fst; // per trait
 
-    vecDbl Pst; // per trait
-    vecDbl Gst; // per trait
-    vecDbl Qst; // per trait
-    vecDbl Cst; // per trait
-    vecDbl Fst; // per trait
-
-    vecLoci genomescan; // per locus
+    std::vector<Locus> genomescan; // per locus
+    std::vector<Connexion> networkscan; // per edge
 
     double EI;
     double SI;
@@ -145,7 +184,6 @@ private:
 
 };
 
-double Xst(const vecDbl&, const vecUns&);
-
+double Xst(const std::vector<double>&, const std::vector<size_t>&);
 
 #endif

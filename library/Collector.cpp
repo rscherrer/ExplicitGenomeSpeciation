@@ -1,23 +1,6 @@
 #include "Collector.h"
 
-vecStrings Collector::whattosave() const
-{
-    return { "time", "ecotype0", "ecotype1", "popsize0", "popsize1",
-     "nfemales0", "nfemales1", "resource00", "resource01", "resource10",
-      "resource11", "mean_eco0", "mean_eco1", "mean_eco", "varP_eco",
-       "varG_eco", "varA_eco", "varD_eco", "varI_eco", "varN_eco", "Pst_eco",
-        "Gst_eco", "Qst_eco", "Cst_eco", "Fst_eco", "mean_mat0", "mean_mat1",
-         "mean_mat", "varP_mat", "varG_mat", "varA_mat", "varD_mat", "varI_mat",
-          "varN_mat", "Pst_mat", "Gst_mat", "Qst_mat", "Cst_mat", "Fst_mat",
-           "mean_ntr0", "mean_ntr1", "mean_ntr", "varP_ntr", "varG_ntr",
-            "varA_ntr", "varD_ntr", "varI_ntr", "varN_ntr", "Pst_ntr",
-             "Gst_ntr", "Qst_ntr", "Cst_ntr", "Fst_ntr", "ecological_iso",
-              "spatial_iso", "mating_iso", "varP_scan", "varG_scan",
-               "varA_scan", "varD_scan", "varI_scan", "varN_scan", "Pst_scan",
-                "Gst_scan", "Qst_scan", "Cst_scan", "Fst_scan" };
-}
-
-vecLoci Collector::emptyloci(const GenArch &arch) const
+std::vector<Locus> Collector::emptyloci(const GenArch &arch) const
 {
     std::vector<Locus> loci;
     loci.reserve(arch.traits.size());
@@ -27,7 +10,27 @@ vecLoci Collector::emptyloci(const GenArch &arch) const
     return loci;
 }
 
-double Xst(const vecDbl &v, const vecUns &n)
+std::vector<Connexion> Collector::emptyconnexions(const GenArch &arch) const
+{
+    std::vector<Connexion> connexions;
+    const size_t nedges = arch.getNetworkSize();
+
+    if (!nedges) return connexions;
+
+    connexions.reserve(nedges);
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        for (size_t edge = 0u; edge < arch.getNetworkSize(trait); ++edge) {
+            const size_t i = arch.networks[trait].edges[edge].first;
+            const size_t j = arch.networks[trait].edges[edge].second;
+            connexions.push_back(Connexion(edge, i, j, trait));
+        }
+    }
+
+    assert(connexions.size() == nedges);
+    return connexions;
+}
+
+double Xst(const std::vector<double> &v, const std::vector<size_t> &n)
 {
 
     assert(v.size() == 3u);
@@ -55,7 +58,7 @@ double Xst(const vecDbl &v, const vecUns &n)
     return xst;
 }
 
-void Collector::analyze(const MetaPop &m, const Param &p)
+void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 {
 
     // Indices for readability
@@ -64,6 +67,9 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     const size_t aa = 0u;
     const size_t Aa = 1u;
     const size_t AA = 2u;
+    const size_t bb = aa;
+    const size_t Bb = Aa;
+    const size_t BB = AA;
 
     // Reset
     counts = utl::uzeros(3u, 3u); // per habitat per ecotype
@@ -74,6 +80,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     varN = utl::zeros(3u, 3u); // per trait per ecotype
     varD = utl::zeros(3u); // per trait
     varI = utl::zeros(3u); // per trait
+    varT = utl::zeros(3u); // per trait
     Pst = utl::zeros(3u); // per trait
     Gst = utl::zeros(3u); // per trait
     Qst = utl::zeros(3u); // per trait
@@ -84,17 +91,18 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     RI = 0.0;
 
     // Create tables for counts
-    Matx3d sumgen = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d sumphe = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d ssqgen = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
-    Matx3d ssqphe = utl::zeros(3u, 3u, 3u); // per trait per habitat per ecotype
+    // per trait per habitat per ecotype
+    std::vector<std::vector<std::vector<double> > > sumgen = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > sumphe = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > ssqgen = utl::zeros(3u, 3u, 3u);
+    std::vector<std::vector<std::vector<double> > > ssqphe = utl::zeros(3u, 3u, 3u);
 
     // Calculate sums within ecotypes and habitats
     for (size_t i = 0u; i < m.population.size(); ++i) {
 
         // Count densities
-        const size_t eco = m.population[i].getEcotype();
-        const size_t hab = m.population[i].getHabitat();
+        const size_t eco = m.getEcotype(i);
+        const size_t hab = m.getHabitat(i);
         ++counts[hab][eco];
 
         // Accumulate trait and genetic values
@@ -110,6 +118,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
     // Counts across ecotypes and across habitats
     utl::marginalize(counts);
+
+    assert(counts[0u][0u] + counts[0u][1u] + counts[1u][0u] + counts[1u][1u] == m.getSize());
 
     // For each trait...
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -134,13 +144,14 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     }
 
     // From now use only counts across habitats
-    vecUns ecounts = counts[2u]; // per ecotype
+    std::vector<size_t> ecounts = counts[2u]; // per ecotype
     assert(ecounts[tot] = m.population.size());
     assert(ecounts[tot] == ecounts[0u] + ecounts[1u]);
-    Matrix esumgen = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix esumphe = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix essqgen = utl::zeros(3u, 3u); // per trait per ecotype
-    Matrix essqphe = utl::zeros(3u, 3u); // per trait per ecotype
+    // per trait per ecotype
+    std::vector<std::vector<double> > esumgen = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > esumphe = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > essqgen = utl::zeros(3u, 3u);
+    std::vector<std::vector<double> > essqphe = utl::zeros(3u, 3u);
 
     for (size_t trait = 0u; trait < 3u; ++trait) {
         esumgen[trait] = sumgen[trait][2u];
@@ -150,8 +161,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     }
 
     // Initialize genome-wide variances in heterozygosity
-    vecDbl varS = utl::zeros(3u); // per trait
-    vecDbl varT = utl::zeros(3u); // per trait
+    std::vector<double> varS = utl::zeros(3u); // per trait
 
     // Scan the genome and compute locus-specific variances
     for (size_t l = 0u; l < genomescan.size(); ++l) {
@@ -163,25 +173,31 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].varN = utl::zeros(3u); // per ecotype
         genomescan[l].varD = 0.0;
         genomescan[l].varI = 0.0;
+        genomescan[l].varZ = 0.0;
+        genomescan[l].varX = 0.0;
         genomescan[l].Pst = 0.0;
         genomescan[l].Gst = 0.0;
         genomescan[l].Qst = 0.0;
         genomescan[l].Cst = 0.0;
         genomescan[l].Fst = 0.0;
+        genomescan[l].alpha = 0.0;
+        genomescan[l].beta = utl::zeros(3u); // per genotype
+        genomescan[l].meang = 0.0;
+        genomescan[l].freq = 0.0;
 
         const double locusvarE = p.locusE[genomescan[l].trait];
 
         // Create count tables
-        MatUns gcounts = utl::uzeros(3u, 4u); // per ecotype per genotype
-        Matrix gsumgen = utl::zeros(3u, 4u); // per ecotype per genotype
-        Matrix gssqgen = utl::zeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<size_t> > gcounts = utl::uzeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<double> > gsumgen = utl::zeros(3u, 4u); // per ecotype per genotype
+        std::vector<std::vector<double> > gssqgen = utl::zeros(3u, 4u); // per ecotype per genotype
 
         // Calculate sums within ecotypes and genotypes
         for (size_t i = 0u; i < m.population.size(); ++i) {
 
             const size_t eco = m.population[i].getEcotype();
             const double gen = m.population[i].getLocusValue(genomescan[l].id);
-            const double zyg = m.population[i].getZygosity(genomescan[l].id);
+            const size_t zyg = m.population[i].getZygosity(genomescan[l].id);
 
             ++gcounts[eco][zyg];
             gsumgen[eco][zyg] += gen;
@@ -202,7 +218,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         }
 
         // Calculate allele frequencies within and across ecotypes
-        vecDbl allfreq = utl::zeros(3u);
+        std::vector<double> allfreq = utl::zeros(3u);
         for (size_t eco = 0u; eco < 3u; ++eco) {
             if (ecounts[eco]) {
                 allfreq[eco] = gcounts[eco][AA] + 0.5 * gcounts[eco][Aa];
@@ -211,6 +227,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
             assert(allfreq[eco] >= 0.0);
             assert(allfreq[eco] <= 1.0);
         }
+
+        genomescan[l].freq = allfreq[tot];
 
         // Regress genetic values on allele counts
 
@@ -223,6 +241,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         // meang = mean genetic value
 
         const double meang = gsumgen[tot][all] / ecounts[tot];
+        genomescan[l].meang = meang;
 
         // varq = variance in allele count
 
@@ -233,6 +252,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         varq = (4.0 * gcounts[tot][AA] + gcounts[tot][Aa]) / ecounts[tot];
         varq -= utl::sqr(meanq);
         assert(varq >= 0.0);
+
+        genomescan[l].varZ = varq;
 
         // covqg = covariance between allele count and genetic value
 
@@ -245,8 +266,24 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
         // alpha = average effect of a mutation
 
-        double alpha = 0.0;
-        if (varq != 0.0) alpha = covqg / varq;
+        const double alpha = varq == 0.0 ? 0.0 : covqg / varq;
+        genomescan[l].alpha = alpha;
+
+        // Variance in gene expression
+
+        const double scaleD = p.scaleD[genomescan[l].trait];
+
+        double varx = gcounts[tot][Aa] * utl::sqr(scaleD * a.dominances[l]);
+        varx += gcounts[tot][AA];
+        varx += gcounts[tot][aa];
+        varx /= ecounts[tot];
+        double meanx = gcounts[tot][Aa] * scaleD * a.dominances[l];
+        meanx += gcounts[tot][AA];
+        meanx -= gcounts[tot][aa];
+        meanx /= ecounts[tot];
+        varx -= utl::sqr(meanx);
+        assert(varx >= 0.0);
+        genomescan[l].varX = varx;
 
         // Calculate genotype-specific statistics
 
@@ -259,10 +296,10 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         // expec(AA) = meang(all) + beta(AA)
         // beta(AA) = alpha (AA - meanq)
 
-        vecDbl gbeta = utl::zeros(3u); // per genotype
-        vecDbl gexpec = utl::zeros(3u); // per genotype
-        vecDbl gmeans = utl::zeros(3u); // per genotype
-        vecDbl gdelta = utl::zeros(3u); // per genotype
+        std::vector<double> gbeta = utl::zeros(3u); // per genotype
+        std::vector<double> gexpec = utl::zeros(3u); // per genotype
+        std::vector<double> gmeans = utl::zeros(3u); // per genotype
+        std::vector<double> gdelta = utl::zeros(3u); // per genotype
         for (size_t zyg : { aa, Aa, AA }) {
             if (gcounts[tot][zyg]) {
                 gbeta[zyg] = alpha * (zyg - meanq);
@@ -271,6 +308,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
                 gdelta[zyg] = gmeans[zyg] - gexpec[zyg];
             }
         }
+
+        genomescan[l].beta = gbeta;
 
         // Calculate variance components within and across ecotypes
         for (size_t eco = 0u; eco < 3u; ++eco) {
@@ -350,7 +389,7 @@ void Collector::analyze(const MetaPop &m, const Param &p)
         genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
         genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
         genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
-        genomescan[l].varI *= 2.0;
+        genomescan[l].varI *= -2.0;
         genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
         genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);
         genomescan[l].varI += gcounts[tot][AA] * utl::sqr(gmeans[AA]);
@@ -467,8 +506,8 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     // Mating isolation
 
     // Sort males and females in the population
-    vecUns males;
-    vecUns females;
+    std::vector<size_t> males;
+    std::vector<size_t> females;
     males.reserve(m.population.size());
     females.reserve(m.population.size());
     for (size_t i =0u; i < m.population.size(); ++i) {
@@ -480,24 +519,29 @@ void Collector::analyze(const MetaPop &m, const Param &p)
 
     if (females.size() && males.size()) {
 
-        MatUns crosses = utl::uzeros(2u, 2u);
+        std::vector<std::vector<size_t> > crosses = utl::uzeros(2u, 2u);
         size_t ntrials = p.ntrials;
+
+        // Sample from a distribution of males and a distribution of females
+        auto femalepool = rnd::random(0u, females.size() - 1u);
+        auto malepool = rnd::random(0u, males.size() - 1u);
 
         // Sample many pairs of males and females with replacement
         while (ntrials) {
 
-            const size_t fem = females[rnd::random(females.size())];
-            const size_t mal = males[rnd::random(males.size())];
+            const size_t fem = females[femalepool(rnd::rng)];
+            const size_t mal = males[malepool(rnd::rng)];
 
             // See if the female accepts the male or not
-            const double maletrait = m.population[mal].getEcoTrait();
+            const double maletrait = m.population[mal].getTraitValue(0u);
             const double prob = m.population[fem].mate(maletrait, p);
+            auto ismating = rnd::bernoulli(prob);
 
             const size_t ecof = m.population[fem].getEcotype();
             const size_t ecom = m.population[mal].getEcotype();
 
-            // Count the homogamic and heterogamic crosses
-            if (rnd::bernoulli(prob)) ++crosses[ecof][ecom];
+            // Count homogamic and heterogamic crosses
+            if (ismating(rnd::rng)) ++crosses[ecof][ecom];
 
             --ntrials;
         }
@@ -519,92 +563,203 @@ void Collector::analyze(const MetaPop &m, const Param &p)
     assert(RI >= -1.0);
     assert(RI <= 1.0);
 
+    // Network scan
+    for (size_t e = 0u; e < a.getNetworkSize(); ++e) {
+
+        // Reset the edge information
+        networkscan[e].corgen = 0.0;
+        networkscan[e].corbreed = 0.0;
+        networkscan[e].corfreq = 0.0;
+        networkscan[e].avgi = 0.0;
+        networkscan[e].avgj = 0.0;
+
+        // Compute the statistics
+
+        const size_t i = networkscan[e].loc1;
+        const size_t j = networkscan[e].loc2;
+
+        double covgen = 0.0;
+        std::vector<std::vector<size_t> > ggcounts = utl::uzeros(3u, 3u);
+
+        // Loop through individuals
+        for (size_t k = 0u; k < m.getSize(); ++k) {
+
+            const double geni = m.population[k].getLocusValue(i);
+            const double genj = m.population[k].getLocusValue(j);
+            const size_t zygi = m.population[k].getZygosity(i);
+            const size_t zygj = m.population[k].getZygosity(j);
+
+            covgen += geni * genj;
+            ++ggcounts[zygi][zygj];
+
+        }
+
+        // Correlation in genetic value between partners
+
+        covgen /= ecounts[tot];
+        const double meangi = genomescan[i].meang;
+        const double meangj = genomescan[j].meang;
+        covgen -= meangi * meangj;
+
+        const double vargeni = genomescan[i].varG[tot];
+        const double vargenj = genomescan[j].varG[tot];
+
+        norm = sqrt(vargeni * vargenj);
+        const double corgen = norm == 0.0 ? 0.0 : covgen / norm;
+
+        networkscan[e].corgen = corgen;
+
+        // Correlation in breeding values between partners
+
+        const double varbreedi = genomescan[i].varA[tot];
+        const double varbreedj = genomescan[j].varA[tot];
+
+        const std::vector<double> breedi = genomescan[i].beta;
+        const std::vector<double> breedj = genomescan[j].beta;
+
+        double covbreed = 0.0;
+        for (size_t zygi : { aa, Aa, AA }) {
+            for (size_t zygj : {bb, Bb, BB}) {
+                covbreed += ggcounts[zygi][zygj] * breedi[zygi] * breedj[zygj];
+            }
+        }
+        covbreed /= ecounts[tot];
+
+        norm = sqrt(varbreedi * varbreedj);
+        const double corbreed = norm == 0.0 ? 0.0 : covbreed / norm;
+
+        networkscan[e].corbreed = corbreed;
+
+        // Correlation in allele counts between partners
+
+        const double varzygi = genomescan[i].varZ;
+        const double varzygj = genomescan[j].varZ;
+
+        double covzyg = 4.0 * ggcounts[AA][BB];
+        covzyg += 2.0 * ggcounts[Aa][BB];
+        covzyg += 2.0 * ggcounts[AA][Bb];
+        covzyg += ggcounts[Aa][Bb]; // aa and bb do not count
+        covzyg /= ecounts[tot];
+        covzyg -= 4.0 * genomescan[i].freq * genomescan[j].freq;
+
+        norm = sqrt(varzygi * varzygj);
+        const double corfreq = norm == 0.0 ? 0.0 : covzyg / norm;
+
+        networkscan[e].corfreq = corfreq;
+
+        // Variance in average effect due to epistasis
+
+        const double varexpi = genomescan[i].varX;
+        const double varexpj = genomescan[j].varX;
+
+        const size_t id = networkscan[e].id;
+        const size_t trait = networkscan[e].trait;
+
+        const double weight = a.networks[trait].weights[id];
+
+        const double scaleA = p.scaleA[trait];
+        const double scaleI = p.scaleI[trait];
+
+        const double additi = scaleA * a.effects[i];
+        const double additj = scaleA * a.effects[j];
+
+        const double ratioi = additi == 0.0 ? 0.0 : scaleI * weight / additi;
+        const double ratioj = additj == 0.0 ? 0.0 : scaleI * weight / additj;
+
+        const double alphai = genomescan[i].alpha;
+        const double alphaj = genomescan[j].alpha;
+
+        const double avgi = utl::sqr(utl::sqr(alphaj * ratioj) * varexpi);
+        const double avgj = utl::sqr(utl::sqr(alphai * ratioi) * varexpj);
+
+        networkscan[e].avgi = avgi; // for partner i
+        networkscan[e].avgj = avgj; // for partner j
+
+    }
 }
 
-namespace stf // save to file
+std::vector<double> Collector::get_Fst() const
 {
-    void write(const double &x, std::shared_ptr<std::ofstream> &out)
-    {
-        out->write((char *) &x, sizeof(x));
+    std::vector<double> output(genomescan.size());
+    for(size_t i = 0; i < genomescan.size(); ++i) {
+        output[i] = genomescan[i].Fst;
     }
-
-    void write(const vecDbl &vec, std::shared_ptr<std::ofstream> &out)
-    {
-        if (vec.size() > 0.0)
-            for (size_t i = 0u; i < vec.size(); ++i)
-                stf::write(vec[i], out);
-    }
+    return output;
 }
 
-void Collector::print(const size_t &t, const MetaPop &m)
+std::vector<double> Collector::get_Gst() const
 {
-    size_t f = 0u; // file id
-
-    // Time
-    stf::write(utl::size2dbl(t), files[0u]); ++f;
-
-    // Census
-    stf::write(utl::size2dbl(counts[2u][2u]), files[f]); ++f; // total
-    stf::write(utl::size2dbl(counts[0u][2u]), files[f]); ++f; // eco 0
-    stf::write(utl::size2dbl(counts[1u][2u]), files[f]); ++f; // eco 1
-    stf::write(utl::size2dbl(counts[2u][0u]), files[f]); ++f; // hab 0
-    stf::write(utl::size2dbl(counts[2u][1u]), files[f]); ++f; // hab 1
-    stf::write(utl::size2dbl(counts[0u][0u]), files[f]); ++f; // eco 0 hab 0
-    stf::write(utl::size2dbl(counts[0u][1u]), files[f]); ++f; // eco 0 hab 1
-    stf::write(utl::size2dbl(counts[1u][0u]), files[f]); ++f; // eco 1 hab 0
-    stf::write(utl::size2dbl(counts[1u][1u]), files[f]); ++f; // eco 1 hab 1
-    stf::write(utl::size2dbl(m.sexcounts[0u][0u]), files[f]); ++f; // fem hab 0
-    stf::write(utl::size2dbl(m.sexcounts[0u][1u]), files[f]); ++f; // fem hab 1
-
-    // Resources in each habitat
-    stf::write(m.resources[0u][0u], files[f]); ++f; // hab 0 res 0
-    stf::write(m.resources[0u][1u], files[f]); ++f; // hab 0 res 1
-    stf::write(m.resources[1u][0u], files[f]); ++f; // hab 1 res 0
-    stf::write(m.resources[1u][1u], files[f]); ++f; // hab 1 res 1
-
-    // Quantitative genetics
-    for (size_t trait = 0u; trait < 3u; ++trait) {
-        stf::write(means[trait][0u][0u], files[f]); ++f; // eco 0 hab 0
-        stf::write(means[trait][0u][1u], files[f]); ++f; // eco 0 hab 1
-        stf::write(means[trait][1u][0u], files[f]); ++f; // eco 1 hab 0
-        stf::write(means[trait][1u][1u], files[f]); ++f; // eco 1 hab 1
-        stf::write(means[trait][0u][2u], files[f]); ++f; // eco 0
-        stf::write(means[trait][1u][2u], files[f]); ++f; // eco 1
-        stf::write(means[trait][2u][0u], files[f]); ++f; // hab 0
-        stf::write(means[trait][2u][1u], files[f]); ++f; // hab 1
-        stf::write(varP[trait], files[f]); ++f;
-        stf::write(varG[trait], files[f]); ++f;
-        stf::write(varA[trait], files[f]); ++f;
-        stf::write(varD[trait], files[f]); ++f;
-        stf::write(varI[trait], files[f]); ++f;
-        stf::write(varN[trait], files[f]); ++f;
-        stf::write(Pst[trait], files[f]); ++f;
-        stf::write(Gst[trait], files[f]); ++f;
-        stf::write(Qst[trait], files[f]); ++f;
-        stf::write(Cst[trait], files[f]); ++f;
-        stf::write(Fst[trait], files[f]); ++f;
+    std::vector<double> output(genomescan.size());
+    for(size_t i = 0; i < genomescan.size(); ++i) {
+        output[i] = genomescan[i].Gst;
     }
+    return output;
+}
 
-    // Speciation metrics
-    stf::write(EI, files[f]); ++f;
-    stf::write(SI, files[f]); ++f;
-    stf::write(RI, files[f]); ++f;
+std::vector<double> Collector::get_eco_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getTraitValue(0u);
+   }
+   return output;
+}
 
-    // Genome scans
-    for (size_t l = 0u; l < genomescan.size(); ++l) {
-        size_t off = 0u;
-        stf::write(genomescan[l].varP, files[f + off]); ++off;
-        stf::write(genomescan[l].varG, files[f + off]); ++off;
-        stf::write(genomescan[l].varA, files[f + off]); ++off;
-        stf::write(genomescan[l].varD, files[f + off]); ++off;
-        stf::write(genomescan[l].varI, files[f + off]); ++off;
-        stf::write(genomescan[l].varN, files[f + off]); ++off;
-        stf::write(genomescan[l].Pst, files[f + off]); ++off;
-        stf::write(genomescan[l].Gst, files[f + off]); ++off;
-        stf::write(genomescan[l].Qst, files[f + off]); ++off;
-        stf::write(genomescan[l].Cst, files[f + off]); ++off;
-        stf::write(genomescan[l].Fst, files[f + off]); ++off;
-    }
+std::vector<double> Collector::get_eco_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getTraitValue(0u));
+       }
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_sex_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getTraitValue(1u);
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_sex_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getTraitValue(1u));
+       }
+   }
+   return output;
 }
 
 
+
+std::vector<double> Collector::get_neu_trait(const MetaPop &m) const
+{
+   std::vector<double> output(m.population.size());
+   for(size_t i = 0; i < m.population.size(); ++i) {
+       output[i] = m.population[i].getTraitValue(2u);
+   }
+   return output;
+}
+
+std::vector<double> Collector::get_neu_trait_deme(const MetaPop &m,
+                                       size_t deme) const
+{
+   std::vector<double> output;
+   for(size_t i = 0; i < m.population.size(); ++i) {
+
+       if(m.population[i].getHabitat() == deme) {
+           output.push_back(m.population[i].getTraitValue(2u));
+       }
+   }
+   return output;
+}

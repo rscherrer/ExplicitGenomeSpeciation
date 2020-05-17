@@ -1,4 +1,4 @@
-#include "maindialog.h"
+#include "gui/maindialog.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
