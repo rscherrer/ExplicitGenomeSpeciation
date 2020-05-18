@@ -31,17 +31,104 @@ Each simulation is stored in a simulation folder. The content of a simulation fo
 
 ## Read data
 
+### Read a single simulation
+
 The most important function is `read_data`. This function allows the user to read the data from one simulation. The user provides the names of the variables to be read, optional parameters to be read too, and the output is returned in a data frame, suitable for further analyses or merging with other data frames. We can for example read speciation metrics through time for one simulation, and add a specific set of parameters to them:
 
 ```{r}
 root <- "../data/example_1"
-data <- read_data(root, variables = c("time", "EI", "RI", "SI"), parnames = c("ecosel", "hsymmetry"))
+data <- read_data(
+  root, variables = c("time", "EI", "RI", "SI"), 
+  parnames = c("ecosel", "hsymmetry")
+)
 head(data, 4)
 ```
 
 For these variables, there is one value per time point throughout the simulation, while the values of the two parameters are unique to the simulation. Parameter values are therefore duplicated as many times as there are rows in the resulting table.
 
-Here, all variables have the same length (one value per time point). Simulation output sometimes has different dimensions (see the main page for details). Genome-wide Fst, for example, is computed for each of the three traits separately at each time point, and saved into the same linear binary file. The file `Fst.dat` is therefore three times as long as `time.dat`, and we need to split the former in three columns to be able to append it to the latter. We use the `by` argument for that:
+Here, all variables have the same length (one value per time point). Simulation output sometimes has different dimensions (see the main page for details). Genome-wide Fst, for example, is computed for each of the three traits at every time point, resulting in a linear, binary data file that is three times as long as `time.dat`. To append genome-wide Fst to time points, we need to split the `Fst.dat` file in three columns. We do this using the `by` argument:
 
+```{r}
+data <- read_data(root, variables = c("time", "Fst"), by = c(1, 3))
+head(data, 4)
+```
 
+The argument `by` specifies how many columns to split each data vector into. We can also use it, for example, to split locus-specific Fst (calculated on a per locus per time point basis) into as many columns as there are loci:
+
+```{r}
+data <- read_data(root, variables = c("time", "genome_Fst"), by = c(1, 300))
+head(data[, 1:6], 4)
+```
+
+But we may also want to add to this dataset other locus-specific data such as allele frequencies or locus-specific additive variance. Then, keeping the variables as single columns would allow to easily identify multiple values measured at a specific locus at a specific time by finding its row. To bind data recorded on a per locus, per time point basis to time point data, for example, we need to duplicate the time column by the number of loci. We do this using the `dupl` argument:
+
+```{r}
+data <- read_data(
+  root, variables = c("time", "genome_Fst", "genome_freq", "genome_varA"), 
+  dupl = c(300, 1, 1, 1)
+)
+```
+
+The combination of `by` and `dupl` allows to perform all kinds of combinations of data computed at different frequencies and with different dimensions.
+
+### Read parameters
+
+Simulation parameters can be added to the resulting dataset by specifying the names of the parameters to read in `parnames`. Parameter values will be read from a parameter file, assuming it exists in the simulation folder. By default the function looks for a file called `paramlog.txt`, but this can be changed. Not all parameter values are numbers, and for this reason the parameters are read as factors. You can specify in `as_numeric` the names of parameters to convert into numeric. Some parameters are composite and contain multiple values, such as `nvertices` which contains the number of loci for each trait. Use `combine = FALSE` to split these parameters into their constituent values and give one column to each.
+
+Note that it is possible to only read the parameters of a simulation by using the `read_parameters` function, which returns a list, e.g.:
+
+```{r}
+read_parameters(root, c("ecosel", "hsymmetry"))
+```
+
+## Combining simulations
+
+Use the `collect_sims` function to combine the data from multiple simulations. For example, we can combine speciation metrics across all simulations in our toy data folder:
+
+```{r, message = FALSE}
+data <- collect_sims(
+  root = "../data", 
+  variables = c("time", "EI"), 
+  parnames = c("ecosel",  "hsymmetry"), 
+  id_column = "sim", 
+  level = 1,
+  pattern = "example",
+  verbose = FALSE)
+head(data, 4)
+```
+
+This will run the `read_data` function on the simulation folders found in the `root` directory, and bind the resulting data frames together by rows. Arguments of `read_data` can therefore be used in `collect_sims`. The argument `id_column` gives the name of the column that should identify the different simulations.
+
+The argument `root` can be a vector of paths to each of the simulation folders, but can also (as in the example) be one (or multiple) folder(s) where to find the simulations. If folders where simulations are stored are provided, the function will recursively look into these folders for a `pattern` characterizing simulation folders. The level of recursion can be specified by `level`, where zero (the default) means that `root` is assumed to be a vector of simulation folders. Use, for example, `level = 1` to access simulations from one or several parent directories. The recursive search for simulation folders is done with the `fetch_dirs` function, which may be useful in a number of cases where folder search is needed.
+
+The `collect_sims` function has a `check_extant` argument. If TRUE, the function will specifically look for non-missing, non-extinct, completed simulations. The two latter conditions rely on SLURM output log files being present in the folder, and so are applicable only for simulations run on the cluster. For simulations run locally, set this argument to FALSE.
+
+Note that in many of the functions dealing with multiple simulations, there is a `verbose` argument specifying whether to display messages, and a `pb` argument to display progress bars.
+
+## Genetic architecture
+
+The genetic architecture can be retrieved from an architecture text file. Use `read_architecture` to do so and store the genetic architecture into a list with various fields, like this:
+
+```{r}
+arch <- read_architecture(root)
+str(arch)
+```
+
+Note that by default this function looks for a file called "architecture.txt", but another name can be specified using the `filename` argument.
+
+Alternatively, the function `read_genome_architecture` returns a locus-based data frame version of the architecture, therefore omitting elements specific to network edges, but with additional information such as chromosome location or degree.
+
+```{r}
+loci <- read_genome_architecture(root)
+head(loci, 4)
+```
+
+Another one for networks specifically? I would have to look into network plotting functions to see what sort of stuff they can handle...
+
+## Plotting functions
+
+- line plot
+- 2D-density plot
+- density or histogram
+- plot genome scan + genome heatmap through time
 
