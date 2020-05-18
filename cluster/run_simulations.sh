@@ -31,14 +31,11 @@ if [ "$1" != "" ]; then
 			cp job.sh $folder
 
 			# Pass extra optional files into the simulation folders
-			for folder in $(ls -d target*)
+			for i in "${@:2}"
 			do
-				for i in "${@:2}"
-				do
-					if [ -f $i ]; then
-						cp $i $folder
-	    			fi
-				done
+				if [ -f $i ]; then
+					cp $i $folder
+	    		fi
 			done
 
 			# launches

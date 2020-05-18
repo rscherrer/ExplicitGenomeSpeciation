@@ -1,0 +1,47 @@
+collect_parameters      Collect parameters from multiple simulations
+collect_sims            Collect simulation data
+collect_status          Collect SLURM exit status
+fetch_dirs              Fetch directories within directories
+find_completed          Find completed simulations
+find_extant             Find extant simulations
+find_extinct            Find extinct simulations
+find_missing            Find missing simulations
+get_chromosomes         Get locus chromosomal locations
+get_degrees             Get locus degrees
+get_status              SLURM status
+hello                   Hello, World!
+is_extinct              Did a simulation go extinct?
+is_missing              Is a simulation missing?
+mrep                    Repeat multiple elements multiple times
+plot_genome_distribution
+                        Plot densities from genome data
+plot_genome_heatmap     Genome heatmap
+plot_genome_scan        Genome scan
+plot_trait_density      Heatmap of trait values through time
+plot_trait_density2D    2D heatmap of trait densities
+plot_trait_histogram    Histogram of trait values at a given time
+read_archfile           Read an architecture file
+read_architecture       Read architecture
+read_binary             Read binary file
+read_data               Read simulation data
+read_ecotype_means      Read ecotype trait means
+read_ecotype_sizes      Read ecotype population size
+read_ecotypes           Read individual ecotypes
+read_edges              Read edge-specific data
+read_genome_architecture
+                        Read locus-specific genome architecture
+read_habitats           Read individual habitats
+read_individuals        Read individual data
+read_loci               Read locus-specific data
+read_means              Read trait means
+read_parameters         Read parameters
+read_paramfile          Read a parameter file
+read_population         Read population-wide data
+read_population_size    Read total population size
+read_resources          Read resource concentrations
+read_time               Read time record
+read_time_if            Read time only if available
+rename_str              Function to rename the columns of a data frame
+                        given a character vector
+set_param_file          Set up parameter file
+str2vec                 String to numeric vector

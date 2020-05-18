@@ -35,7 +35,6 @@
 .idea
 cmake-build-debug/
 cmake-build-release/
-build/
 __pycache__/
 *.pro.user
 *.pro.user.*

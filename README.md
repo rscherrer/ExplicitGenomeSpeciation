@@ -10,12 +10,9 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ExplicitGenomeSpeciation is a program that simulates the evolution of a species using individual-based modelling and incorporating explicit genomes and a flexible genotype-phenotype map.
 
-# Example simulations
+# Example simulation
 
-
-![Simulation](pics/example_speciation_event.png)
-![Simulation](pics/example_speciation_histogram.png)
-
+![example](pics/example_speciation.png)
 
 # Folder structure
 
@@ -233,7 +230,7 @@ Note that if you are choosing what variables to save, it is important to save "t
 
 # Analysis with egssimtools
 
-The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it.
+The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it. Check out the [vignette](egssimtools/doc/vignette.pdf) in `egsimtools/doc`.
 
 # Use on the cluster
 
