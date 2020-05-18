@@ -27,6 +27,8 @@ collect_sims(
 
 \item{by, dupl, parnames, combine, as_numeric}{Parameters to be passed to \code{read_data}}
 
+\item{check_extant}{Whether to check for non-extinct and non-crashed simulation folders}
+
 \item{pattern}{Optional pattern to look for if simulation folders are searched by recursion}
 
 \item{level}{Level of recursion. Defaults to 0 for no recursion (hen assumes that \code{root} is a vector of simulation folder paths).}
@@ -34,8 +36,6 @@ collect_sims(
 \item{verbose, pb}{Whether to display messages and progress bars}
 
 \item{id_column}{Optional name of the simulation identifier column}
-
-\item{check_eextant}{Whether to check for non-extinct and non-crashed simulation folders}
 }
 \value{
 A data frame

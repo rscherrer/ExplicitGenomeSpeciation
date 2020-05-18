@@ -11,7 +11,10 @@ read_data(
   dupl = 1,
   parnames = NULL,
   combine = FALSE,
-  as_numeric = NULL
+  as_numeric = NULL,
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 )
 }
 \arguments{
@@ -26,6 +29,12 @@ read_data(
 \item{parnames}{Character vector of parameter names to append to the simulation data}
 
 \item{combine, as_numeric}{Parameters for \code{read_parameters}}
+
+\item{architecture}{Whether to read and append locus-wise genetic architecture. Make sure then that you are reading \code{variables} that are locus-specific variables in long-format (one column per variable).}
+
+\item{archfile}{Name of the architecture file, if needed}
+
+\item{parfile}{Name of the parameter file, if needed}
 }
 \value{
 A data frame

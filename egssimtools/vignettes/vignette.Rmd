@@ -1,6 +1,9 @@
 ---
 title: "egssimtools: an R package for the analysis of a model of speciation"
-output: rmarkdown::html_vignette
+output:
+  pdf_document: default
+  html_document:
+    keep_md: yes
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -25,6 +28,7 @@ Let us now load the package.
 ```{r, message = FALSE}
 library(egssimtools)
 library(tidyverse)
+library(cowplot)
 ```
 
 Each simulation is stored in a simulation folder. The content of a simulation folder depends on the settings used when running the program (see detailed [description](https://github.com/rscherrer/ExplicitGenomeSpeciation)). This package introduces functions to retrieve data, but also parameters and genetic architectures saved during the simulations.
@@ -67,9 +71,22 @@ data <- read_data(
   root, variables = c("time", "genome_Fst", "genome_freq", "genome_varA"), 
   dupl = c(300, 1, 1, 1)
 )
+head(data, 4)
 ```
 
 The combination of `by` and `dupl` allows to perform all kinds of combinations of data computed at different frequencies and with different dimensions.
+
+One important note is that `dupl` can also take a character string as one of its elements. In this case, the function is expecting this character string to be the name of a binary file to read, in which are stored the numbers of times that each element of the corresponding variable must be repeated. This is useful when different values must be duplicated different numbers of times. A typical example is the case of individual trait values through time, because the number of individual varies from one generation to the next. The syntax may look like this:
+
+```{r}
+data <- read_data(
+  root, variables = c("time", "individual_trait"), by = c(1, 3),
+  dupl = list("population_size", 1)
+)
+head(data, 4)
+```
+
+Here, `individual_trait` is split into three columns (one per trait), then each element in the `time` column (i.e. each time point) is repeated as many times as there are individuals in this time point, which is read in `population_size.dat`. Note that `dupl` is now a list because we cannot combine a character string and an integer into the same vector.
 
 ### Read parameters
 
@@ -127,8 +144,68 @@ Another one for networks specifically? I would have to look into network plottin
 
 ## Plotting functions
 
-- line plot
-- 2D-density plot
-- density or histogram
-- plot genome scan + genome heatmap through time
+Diagnostic plotting functions to eyeball single simulation results are provided. To visualize a genome scan of a given locus-specific variable at a specified time point (which defaults to the last time point if `t` is unspecified), for example, use:
+
+```{r, fig.width = 4}
+dplot_genome_scan(root, y = "genome_Fst")
+```
+
+The output of these quick-plotting functions are all `ggplot` objects, so they can be further customized, e.g.
+
+```{r, fig.width = 5}
+dplot_genome_scan(root, y = "genome_Fst", t = 19900) + 
+  aes(color = factor(trait)) +
+  labs(x = "Locus", y = parse(text = "F[ST]"), color = "Trait") +
+  scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey"))
+```
+
+For more details on how to make and customize plots using `ggplot2`, please refer to relevant online [documentation](https://ggplot2.tidyverse.org/).
+
+It is also possible to plot a genome scan through the entire duration of the simulation using a heatmap:
+
+```{r, fig.width = 5}
+dplot_genome_heatmap(root, y = "genome_Fst") +
+  scale_fill_gradient(low = "darkred", high = "gold") +
+  labs(x = "Time (generations)", y = "Locus", fill = parse(text = "F[ST]"))
+```
+
+Yet another way to explore genome scans is to look at densities of a given variable across groups of loci, e.g., loci underlying different traits:
+
+```{r, fig.width = 4}
+dplot_genome_violin(root, y = "genome_Fst", x = "trait") +
+  aes(color = factor(trait)) +
+  scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey")) +
+  labs(x = "Trait", y = parse(text = "F[ST]"), color = "Trait")
+```
+
+We can also plot individual attributes such as trait values across the population at a certain time to make sure that speciation has happened:
+
+```{r, fig.width = 3}
+dplot_population_density(
+  root, y = "individual_trait", by = 3, j = 1, fill = "lightgreen"
+) +
+  labs(x = "Ecological trait", y = "Density") +
+  xlim(c(-2, 2))
+```
+
+Here, by setting `j = 1` we specify that we want to plot the density of the first trait. Because `individual_trait.dat` contains information for three traits for each individual, this long vector has to be split into three columns in `read_data`, hence the `by = 3`. Again, a `t` argument can be specified, and if not the last time point is shown.
+
+```{r, fig.width = 5}
+dplot_population_bin2d(
+  root, y = "individual_trait", by = 3, j = 1, bins = 100
+) +
+  labs(x = "Time (generations)", y = "Ecological trait", fill = "Count") +
+  scale_fill_continuous(type = "viridis")
+```
+
+It is possible, of course to plot simulation-wise observation through time or against each other. For example, we can plot the genome-wide Fst for all loci underlying the ecological trait through time (A), or we may want to show how reproductive isolation builds up with ecological divergence (B):
+
+```{r, fig.width = 6}
+p1 <- dplot_simulation_line(root, y = "Fst", by = 3, j = 1) +
+  labs(x = "Time (generations)", y = parse(text = "F[ST]"))
+p2 <- dplot_simulation_line(root, y = "RI", x = "EI") +
+  labs(x = "Ecological divergence", y = "Reproductive isolation")
+plot_grid(p1, p2, labels = c("A", "B"))
+```
+
 

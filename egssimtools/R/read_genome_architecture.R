@@ -14,6 +14,7 @@ read_genome_architecture <- function(folder, filename = "architecture.txt") {
   arch <- read_architecture(folder, filename)
 
   data.frame(
+    locus = seq(arch$location),
     location = arch$locations,
     trait = arch$traits,
     effect = arch$effects,

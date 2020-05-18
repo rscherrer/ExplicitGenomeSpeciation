@@ -8,6 +8,9 @@
 #' @param dupl A list. For each variable, how many times to duplicate each row. Provide an integer to duplicate every row the same number of times, a vector of integers to duplicate each row a specific number of times, or a character string to read a vector of number of times from a .dat file. This argument is recycled if its length is one.
 #' @param parnames Character vector of parameter names to append to the simulation data
 #' @param combine,as_numeric Parameters for `read_parameters`
+#' @param architecture Whether to read and append locus-wise genetic architecture. Make sure then that you are reading `variables` that are locus-specific variables in long-format (one column per variable).
+#' @param archfile Name of the architecture file, if needed
+#' @param parfile Name of the parameter file, if needed
 #'
 #' @return A data frame
 #'
@@ -17,7 +20,7 @@
 
 read_data <- function(
   folder, variables, by = 1, dupl = 1, parnames = NULL, combine = FALSE,
-  as_numeric = NULL
+  as_numeric = NULL, architecture = FALSE, archfile = "architecture.txt", parfile = "paramlog.txt"
 ) {
 
   library(tidyverse)
@@ -43,9 +46,18 @@ read_data <- function(
 
   if (!is.null(parnames)) {
 
-    pars <- read_parameters(folder, parnames, combine = combine, flatten = TRUE, as_numeric = as_numeric)
+    pars <- read_parameters(folder, parnames, combine = combine, flatten = TRUE, as_numeric = as_numeric, filename = parfile)
     pars <- pars %>% map_dfc(rep, nrow(data))
     data <- list(data, pars) %>% bind_cols
+
+  }
+
+  if (architecture) {
+
+    arch <- read_genome_architecture(root, filename = archfile)
+    ntimes <- nrow(data) / nrow(arch)
+    arch <- map_dfr(seq(ntimes), ~ arch)
+    data <- cbind(data, arch)
 
   }
 
