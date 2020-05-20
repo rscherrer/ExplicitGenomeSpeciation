@@ -27,6 +27,8 @@ dplot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
   ggplot(data, aes(x = time, y = locus, fill = get(y))) +
     geom_tile() +
     theme_bw() +
-    labs(fill = y)
+    labs(fill = y) +
+    scale_fill_gradient(low = "black", high = "yellow") +
+    labs(x = "Time", y = "Locus", fill = y)
 
 }

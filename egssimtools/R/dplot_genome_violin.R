@@ -23,24 +23,14 @@ dplot_genome_violin <- function(root, y, x = NULL, t = NULL) {
 
   if (is.null(t)) t <- last(data$time)
 
-  rmaxis <- FALSE
-  if (is.null(x)) {
-    x.. <- "1"
-    x <- "x.."
-    rmaxis <- TRUE
-  }
-
   data <- data %>% filter(time == t)
-  p <- ggplot(data, aes(x = factor(get(x)), y = get(y))) +
+
+  p <- ggplot(data, aes(x = factor(get(x)), y = get(y), color = factor(trait))) +
     geom_violin() +
     theme_bw() +
-    labs(x = x, y = y)
-
-  if (rmaxis) p <- p + theme(
-    axis.ticks.x = element_blank(),
-    axis.title.x = element_blank(),
-    axis.text.x = element_blank()
-  )
+    labs(x = x, y = y) +
+    scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey")) +
+    labs(x = "Trait", y = y, color = "Trait")
 
   return(p)
 

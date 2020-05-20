@@ -61,41 +61,36 @@ str(arch)
 loci <- read_genome_architecture(root)
 head(loci, 4)
 
-## ---- fig.width = 4-----------------------------------------------------------
+## ---- fig.width = 6, fig.height = 2, align = "center"-------------------------
 dplot_genome_scan(root, y = "genome_Fst")
 
-## ---- fig.width = 5-----------------------------------------------------------
-dplot_genome_scan(root, y = "genome_Fst", t = 19900) + 
-  aes(color = factor(trait)) +
-  labs(x = "Locus", y = parse(text = "F[ST]"), color = "Trait") +
-  scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey"))
+## ---- fig.width = 4, fig.height = 5-------------------------------------------
+dplot_genome_heatmap(root, y = "genome_Fst")
 
-## ---- fig.width = 5-----------------------------------------------------------
-dplot_genome_heatmap(root, y = "genome_Fst") +
-  scale_fill_gradient(low = "darkred", high = "gold") +
-  labs(x = "Time (generations)", y = "Locus", fill = parse(text = "F[ST]"))
+## ---- fig.width = 3, fig.height = 2-------------------------------------------
+dplot_genome_violin(root, y = "genome_Fst", x = "trait")
 
 ## ---- fig.width = 4-----------------------------------------------------------
-dplot_genome_violin(root, y = "genome_Fst", x = "trait") +
-  aes(color = factor(trait)) +
-  scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey")) +
-  labs(x = "Trait", y = parse(text = "F[ST]"), color = "Trait")
+dplot_genome_ridges(root, y = "genome_Fst", times = c(0, 1000, 5000, 10000, 15000))
 
-## ---- fig.width = 3-----------------------------------------------------------
+## ---- fig.width = 4-----------------------------------------------------------
+dplot_genome_lines(root, y = "genome_Fst")
+
+## ---- fig.width = 3, fig.height = 2-------------------------------------------
 dplot_population_density(
   root, y = "individual_trait", by = 3, j = 1, fill = "lightgreen"
 ) +
   labs(x = "Ecological trait", y = "Density") +
   xlim(c(-2, 2))
 
-## ---- fig.width = 5-----------------------------------------------------------
+## ---- fig.width = 5, fig.height = 3-------------------------------------------
 dplot_population_bin2d(
   root, y = "individual_trait", by = 3, j = 1, bins = 100
 ) +
   labs(x = "Time (generations)", y = "Ecological trait", fill = "Count") +
   scale_fill_continuous(type = "viridis")
 
-## ---- fig.width = 6-----------------------------------------------------------
+## ---- fig.width = 6, fig.height = 2-------------------------------------------
 p1 <- dplot_simulation_line(root, y = "Fst", by = 3, j = 1) +
   labs(x = "Time (generations)", y = parse(text = "F[ST]"))
 p2 <- dplot_simulation_line(root, y = "RI", x = "EI") +
