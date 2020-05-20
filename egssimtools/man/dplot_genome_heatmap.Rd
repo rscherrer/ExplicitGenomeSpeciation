@@ -4,12 +4,14 @@
 \alias{dplot_genome_heatmap}
 \title{Diagnostic genome heatmap through time}
 \usage{
-dplot_genome_heatmap(root, y)
+dplot_genome_heatmap(root, y, archfile = "architecture.txt")
 }
 \arguments{
 \item{root}{Path to the simulation folder}
 
 \item{y}{Name of the variable to plot.}
+
+\item{archfile}{The architecture file to look for. Defaults to "architecture.txt"}
 }
 \value{
 A ggplot

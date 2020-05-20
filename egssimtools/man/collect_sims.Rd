@@ -17,7 +17,10 @@ collect_sims(
   level = 0,
   verbose = TRUE,
   pb = TRUE,
-  id_column = "sim"
+  id_column = "sim",
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 )
 }
 \arguments{
@@ -36,6 +39,12 @@ collect_sims(
 \item{verbose, pb}{Whether to display messages and progress bars}
 
 \item{id_column}{Optional name of the simulation identifier column}
+
+\item{architecture}{Whether to read a genetic architecture with the (locus-wise) data}
+
+\item{archfile}{Name of the architecture file}
+
+\item{parfile}{Name of the parameter fiel}
 }
 \value{
 A data frame

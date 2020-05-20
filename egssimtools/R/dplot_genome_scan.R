@@ -24,9 +24,10 @@ dplot_genome_scan <- function(root, y, x = "locus", t = NULL) {
   if (is.null(t)) t <- last(data$time)
 
   data <- data %>% filter(time == t)
-  ggplot(data, aes(x = get(x), y = get(y))) +
+  ggplot(data, aes(x = get(x), y = get(y), color = factor(trait))) +
     geom_point() +
     theme_bw() +
-    labs(x = x, y = y)
+    labs(x = x, y = y, color = "Trait") +
+    scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey"))
 
 }

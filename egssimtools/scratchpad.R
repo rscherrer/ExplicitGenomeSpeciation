@@ -25,8 +25,10 @@ ggplot(data, aes(x = location, y = genome_Fst)) +
 dplot_genome_scan(root, y = "genome_Fst")
 dplot_genome_heatmap(root, "genome_Fst")
 dplot_genome_violin(root, y = "genome_Fst", x = "trait")
+dplot_genome_ridges(root, y = "genome_Fst", times = seq(0, 19900, 1000))
 
 dplot_population_density(root, y = "individual_trait", by = 3, j = 1)
 dplot_population_bin2d(root, y = "individual_trait", by = 3, j = 1)
 
 dplot_simulation_line(root, y = "EI", by = 1, j = 1)
+
