@@ -19,8 +19,16 @@
 #' @export
 
 read_data <- function(
-  folder, variables, by = 1, dupl = 1, parnames = NULL, combine = FALSE,
-  as_numeric = NULL, architecture = FALSE, archfile = "architecture.txt", parfile = "paramlog.txt"
+  folder,
+  variables,
+  by = 1,
+  dupl = 1,
+  parnames = NULL,
+  combine = FALSE,
+  as_numeric = NULL,
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 ) {
 
   library(tidyverse)
@@ -54,7 +62,7 @@ read_data <- function(
 
   if (architecture) {
 
-    arch <- read_genome_architecture(root, filename = archfile)
+    arch <- read_genome_architecture(folder, filename = archfile)
     ntimes <- nrow(data) / nrow(arch)
     arch <- map_dfr(seq(ntimes), ~ arch)
     data <- cbind(data, arch)
