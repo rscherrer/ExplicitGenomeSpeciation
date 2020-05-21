@@ -2,33 +2,14 @@ rm(list = ls())
 
 library(egssimtools)
 library(tidyverse)
-library(ggsim)
-library(patchwork)
+library(tidygraph)
+library(ggraph)
 
-root <- "data"
+root <- "/media/raphael/bigass/simulations/EGS/genomes"
+roots <- fetch_dirs(root, level = 2, pattern = "sim")
+arch <- read_genome_architecture(roots[[1]])
 
-# Fetch simulations folders
-fetch_dirs(roots = root, level = 1)
 
-root <- "data/example_1"
-variables <- c("time", "genome_Fst")
-data <- read_data(root, variables, dupl = c(300, 1), architecture = TRUE)
-head(data)
 
-# Genome scan at a certain time
-t <- 19900
-data <- data %>% filter(time == t)
-ggplot(data, aes(x = location, y = genome_Fst)) +
-  geom_point() +
-  theme_bw()
-
-dplot_genome_scan(root, y = "genome_Fst")
-dplot_genome_heatmap(root, "genome_Fst")
-dplot_genome_violin(root, y = "genome_Fst", x = "trait")
-dplot_genome_ridges(root, y = "genome_Fst", times = seq(0, 19900, 1000))
-
-dplot_population_density(root, y = "individual_trait", by = 3, j = 1)
-dplot_population_bin2d(root, y = "individual_trait", by = 3, j = 1)
-
-dplot_simulation_line(root, y = "EI", by = 1, j = 1)
-
+arch <- read_network_architecture(roots[[1]])
+arch
