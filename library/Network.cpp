@@ -5,7 +5,7 @@ bool checkedges(const size_t &e, const size_t &n)
     return e <= n * (n - 1u) / 2u; // max number of edges given number of nodes
 }
 
-vecEdg Network::makeMap(const Param& p) const
+std::vector<Edge> Network::makeMap(const Param& p) const
 {
 
     // There is a total number of vertices
@@ -19,10 +19,10 @@ vecEdg Network::makeMap(const Param& p) const
     assert(p.nvertices[trait] > 1u);
     assert(checkedges(p.nedges[trait], p.nvertices[trait]));
 
-    vecEdg connexions;
+    std::vector<Edge> connexions;
     if (!p.nedges[trait]) return connexions;
     connexions.reserve(p.nedges[trait]);
-    vecUns degrees = utl::uzeros(p.nvertices[trait]);
+    std::vector<size_t> degrees = utl::uzeros(p.nvertices[trait]);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
@@ -52,7 +52,7 @@ vecEdg Network::makeMap(const Param& p) const
         }
 
         // Assign attachment probabilities
-        vecDbl probs(vertex);
+        std::vector<double> probs(vertex);
         for (size_t node = 0u; node < vertex; ++node)
             probs[node] = pow(degrees[node], p.skews[trait]);
 
@@ -89,9 +89,9 @@ vecEdg Network::makeMap(const Param& p) const
 
 }
 
-vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
+std::vector<size_t> Network::makeUnderlyingLoci(const Param &p, const std::vector<size_t> &traits) const
 {
-    vecUns underlying(p.nvertices[trait]);
+    std::vector<size_t> underlying(p.nvertices[trait]);
 
     // The current trait must be a field of the network
     // Loop throughout the genome's vector of encoded traits
@@ -105,15 +105,17 @@ vecUns Network::makeUnderlyingLoci(const Param &p, const vecUns &traits) const
         }
     }
 
+    std::shuffle(underlying.begin(), underlying.end(), rnd::rng);
+
     assert(underlying.size() == p.nvertices[trait]);
 
     return underlying;
 }
 
-vecEdg Network::makeEdges(const Param &p) const
+std::vector<Edge> Network::makeEdges(const Param &p) const
 {
 
-    vecEdg mapped(p.nedges[trait]);
+    std::vector<Edge> mapped(p.nedges[trait]);
 
     // Loop through the pairs in the map
     // Use the map id to find the loci in the vector of underlying loci
@@ -129,12 +131,12 @@ vecEdg Network::makeEdges(const Param &p) const
 
 }
 
-vecDbl Network::makeWeights(const Param &p) const
+std::vector<double> Network::makeWeights(const Param &p) const
 {
-    if (p.interactionshape == 0.0 || p.interactionscale == 0.0)
-        return utl::zeros(p.nedges[trait]);
+    if (p.interactionshape == 0.0) return utl::zeros(p.nedges[trait]);
+    if (p.interactionscale == 0.0) return utl::ones(p.nedges[trait]);
 
-    vecDbl intweights(p.nedges[trait]);
+    std::vector<double> intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares
 
     // Interaction weights are sampled from a two-sided Gamma distribution

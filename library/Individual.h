@@ -3,8 +3,7 @@
 
 #include "GenArch.h"
 #include "Utilities.h"
-#include "Types.h"
-#include "Gamete.h"
+
 #include "Random.h"
 #include <cassert>
 #include <stddef.h>
@@ -23,9 +22,7 @@ public:
         locivalues(utl::zeros(pars.nloci)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(0.0),
-        matepref(0.0),
-        neutrait(0.0),
+        midparents(utl::zeros(3u)),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -53,9 +50,7 @@ public:
         locivalues(utl::zeros(pars.nloci)),
         genvalues(utl::zeros(3u)),
         traitvalues(utl::zeros(3u)),
-        ecotrait(0.0),
-        matepref(0.0),
-        neutrait(0.0),
+        midparents(calcmidparent(mom, dad)),
         fitness(1.0),
         feeding(utl::zeros(2u)),
         ecotype(0u),
@@ -80,7 +75,7 @@ public:
     // Life history
     bool isalive() const;
     void disperse();
-    void feed(const vecDbl&);
+    void feed(const std::vector<double>&);
     double mate(const double&, const Param&) const;
     void survive(const bool&);
     void classify(const double&);
@@ -98,18 +93,6 @@ public:
     {
         return habitat;
     }
-    double getEcoTrait() const
-    {
-        return ecotrait;
-    }
-    double getMatePref() const
-    {
-        return matepref;
-    }
-    double getNeutral() const
-    {
-        return neutrait;
-    }
     double getFitness() const
     {
         return fitness;
@@ -117,6 +100,10 @@ public:
     double getTraitValue(const size_t &trait) const
     {
         return traitvalues[trait];
+    }
+    double getMidparent(const size_t &trait) const
+    {
+        return midparents[trait];
     }
     double getGenValue(const size_t &trait) const
     {
@@ -137,6 +124,16 @@ public:
         assert(zyg == 0u || zyg == 1u || zyg == 2u);
         return zyg;
     }
+    unsigned long long getByte(const size_t &B) const
+    {
+        std::bitset<64u> byte;
+        const size_t start = B * 64u;
+        size_t end = (B + 1u) * 64u;
+        if (end > genome.size()) end = genome.size();
+        for (size_t l = start, b = 0u; l < end; ++l, ++b)
+            if (genome.test(l)) byte.set(b);
+        return byte.to_ullong();
+    }
     size_t getAlleleSum() const
     {
         return genome.count();
@@ -151,22 +148,17 @@ public:
     }
 
     // Force resetters
-    void resetEcoTrait(const double &x, const Param &p)
+    void resetTrait(const size_t &trait, const double &newvalue, const Param &p)
     {
-        ecotrait = x;
-        traitvalues[0u] = x;
-        const double max = p.rdynamics ? 1.0 : p.maxfeed;
-        feeding[0u] = max * exp(-p.ecosel * utl::sqr(ecotrait + 1.0));
-        feeding[1u] = max * exp(-p.ecosel * utl::sqr(ecotrait - 1.0));
-        assert(feeding[0u] >= 0.0);
-        assert(feeding[1u] >= 0.0);
-        assert(feeding[0u] <= 1.0);
-        assert(feeding[1u] <= 1.0);
-    }
-    void resetMatePref(const double &y)
-    {
-        matepref = y;
-        traitvalues[1u] = y;
+        traitvalues[trait] = newvalue;
+        if (trait == 0u) {
+            feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] + 1.0));
+            feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] - 1.0));
+            assert(feeding[0u] >= 0.0);
+            assert(feeding[1u] >= 0.0);
+            assert(feeding[0u] <= 1.0);
+            assert(feeding[1u] <= 1.0);
+        }
     }
     void resetEcotype(const size_t &e)
     {
@@ -189,17 +181,16 @@ private:
     void develop(const Param&, const GenArch&);
 
     bool determinesex() const;
+    std::vector<double> calcmidparent(const Individual&, const Individual&) const;
 
     Genome genome;
-    vecDbl transcriptome;
-    vecDbl locivalues;
-    vecDbl genvalues;
-    vecDbl traitvalues;
-    double ecotrait;
-    double matepref;
-    double neutrait;
+    std::vector<double> transcriptome;
+    std::vector<double> locivalues;
+    std::vector<double> genvalues;
+    std::vector<double> traitvalues;
+    std::vector<double> midparents;
     double fitness;
-    vecDbl feeding;
+    std::vector<double> feeding;
     size_t ecotype;
     size_t habitat;
     bool gender;

@@ -68,7 +68,7 @@ void MetaPop::disperse(const Param &p)
 
         // Use binomial if uncommon
         auto getnmigrants = rnd::binomial(p.dispersal);
-        vecUns inds(getSize());
+        std::vector<size_t> inds(getSize());
         std::iota(inds.begin(), inds.end(), 0);
         auto getmigrant = rndutils::make_shuffle_sampler(inds.cbegin(), inds.cend());
         size_t nmig = getnmigrants(rnd::rng);
@@ -95,11 +95,11 @@ void MetaPop::consume(const Param &p)
 {
 
     // Calculate the sum of feeding efficiencies in each habitat
-    Matrix sumfeed = utl::zeros(2u, 2u);
+    std::vector<std::vector<double> > sumfeed = utl::zeros(2u, 2u);
     double sumx = 0.0;
     for (size_t i = 0u; i < population.size(); ++i) {
 
-        sumx += population[i].getEcoTrait();
+        sumx += population[i].getTraitValue(0u);
 
         const size_t hab = population[i].getHabitat();
         sumfeed[hab][0u] += population[i].getFeeding(0u);
@@ -133,14 +133,15 @@ void MetaPop::consume(const Param &p)
 
         // CHEMOSTAT
 
-        // Calculate the resource equilibrium = 1 / (1 + tau C)
+        // Calculate the resource equilibrium = B / (1 + tau C)
         resources[0u][0u] = 1.0;
         resources[0u][1u] = isburnin ? 0.0 : p.hsymmetry;
         resources[1u][0u] = p.hsymmetry;
         resources[1u][1u] = isburnin ? 0.0 : 1.0;
         for (size_t hab = 0u; hab < 2u; ++hab) {
             for (size_t res = 0u; res < 2u; ++res) {
-                resources[hab][res] /= 1.0 + p.trenewal * sumfeed[hab][res];
+                resources[hab][res] *= p.inflow;
+                resources[hab][res] /= p.outflow + sumfeed[hab][res];
                 assert(resources[hab][res] >= 0.0);
             }
         }
@@ -151,8 +152,6 @@ void MetaPop::consume(const Param &p)
         population[i].feed(resources[population[i].getHabitat()]);
         population[i].classify(meanx);
     }
-
-
 }
 
 void MetaPop::reproduce(const Param &p, const GenArch &arch)
@@ -167,12 +166,12 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
     if (!seasonend) return;
 
-    std::vector<vecUns> females;
-    std::vector<vecUns> males;
+    std::vector<std::vector<size_t>> females;
+    std::vector<std::vector<size_t>> males;
 
     for (size_t hab = 0u; hab < 2u; ++hab) {
-        vecUns fem;
-        vecUns mal;
+        std::vector<size_t> fem;
+        std::vector<size_t> mal;
         fem.reserve(getSize());
         mal.reserve(getSize());
         females.push_back(fem);
@@ -212,7 +211,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
         if (!nm) continue;
         if (!nf) continue;
 
-        vecDbl fit(nm);
+        std::vector<double> fit(nm);
 
         size_t i = 0u;
         double sum = 0.0;
@@ -225,7 +224,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             // Modified in burn-in
             if (isburnin) {
-                const double y = population[m].getMatePref();
+                const double y = population[m].getTraitValue(1u);
                 fit[i] *= exp(-p.ecosel * utl::sqr(y));
             }
 
@@ -251,7 +250,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             // Modified during burn-in
             if (isburnin) {
-                const double y = population[f].getMatePref();
+                const double y = population[f].getTraitValue(1u);
                 fecundity *= exp(-p.ecosel * utl::sqr(y));
             }
 
@@ -265,7 +264,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
             size_t t = seasonend;
 
-            vecDbl probs = fit;
+            std::vector<double> probs = fit;
 
             // While the season is not over and mating hasn't occured
             while (t) {
@@ -275,7 +274,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
                 // Sample a male and evaluate
                 const size_t idm = getmale(rnd::rng);
                 const size_t m = males[hab][idm];
-                const double xm = population[m].getEcoTrait();
+                const double xm = population[m].getTraitValue(0u);
                 auto ismating = rnd::bernoulli(population[f].mate(xm, p));
 
                 // Produce offspring and add them to the population if accepted
@@ -303,7 +302,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 }
 
 // Lambda for removing dead individuals
-auto burry = [&](Individual ind) -> bool
+auto burry = [](Individual ind) -> bool
 {
     return !ind.isalive();
 };

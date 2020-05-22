@@ -1,7 +1,7 @@
 #ifndef EXPLICITGENOMESPECIATION_PARAM_H
 #define EXPLICITGENOMESPECIATION_PARAM_H
 
-#include "Types.h"
+
 #include "Utilities.h"
 #include "Random.h"
 #include <fstream>
@@ -18,17 +18,17 @@ struct Param {
 
     Param() :
         rdynamics(1u),
-        trenewal(0.001),
-        capacity(100.0),
-        replenish(1.0),
+        capacity(1.0),
+        replenish(2375.0),
+        inflow(400.0),
+        outflow(100.0),
         hsymmetry(0.0),
         ecosel(1.8),
         dispersal(1.0E-2),
-        birth(4.0),
+        birth(1.0),
         survival(0.8),
         sexsel(10.0),
         matingcost(0.01),
-        maxfeed(4.0E-4),
         demesizes({ 100u, 0u }),
         nloci(90u), // cannot be provided
         nvertices({ 30u, 30u, 30u }),
@@ -51,13 +51,18 @@ struct Param {
         tburnin(0),
         tend(10),
         tsave(10),
+        tfreeze(100),
         talkative(true),
         record(true),
+        datsave(true),
+        choosewhattosave(false),
+        gensave(false),
         archsave(false),
         archload(false),
         parsave(true),
         archfile("architecture.txt"),        
         parfile("paramlog.txt"),
+        orderfile("whattosave.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
@@ -81,9 +86,10 @@ struct Param {
 
     // Ecological parameters    
     size_t rdynamics;
-    double trenewal;
     double capacity;
     double replenish;
+    double inflow;
+    double outflow;
     double hsymmetry;
     double ecosel;
     double dispersal;
@@ -91,25 +97,24 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    double maxfeed;
-    vecUns demesizes;
+    std::vector<size_t> demesizes;
 
     // Genetic parameters
     mutable size_t nloci;
-    mutable vecUns nvertices;
-    mutable vecUns nedges;
+    mutable std::vector<size_t> nvertices;
+    mutable std::vector<size_t> nedges;
     mutable size_t nchrom;
     double  mutation;
     double  recombination;
     double  allfreq;
 
     // Genotype-phenotype map
-    vecDbl scaleA;
-    vecDbl scaleD;
-    vecDbl scaleI;
-    vecDbl scaleE;
-    vecDbl locusE;
-    vecDbl skews;
+    std::vector<double> scaleA;
+    std::vector<double> scaleD;
+    std::vector<double> scaleI;
+    std::vector<double> scaleE;
+    std::vector<double> locusE;
+    std::vector<double> skews;
     double effectshape;
     double effectscale;
     double interactionshape;
@@ -120,13 +125,18 @@ struct Param {
     int  tburnin;
     int  tend;
     int  tsave;
+    int  tfreeze;
     bool talkative;
     bool record;
+    bool datsave;
+    bool choosewhattosave;
+    bool gensave;
     bool archsave;
     bool archload;
     bool parsave;
     std::string archfile;
     std::string parfile;
+    std::string orderfile;
     size_t seed;
     size_t ntrials;
 

@@ -31,9 +31,10 @@ void Param::import(std::ifstream &file)
     while (file >> input) {
 
         if (input == "rdynamics") file >> rdynamics;
-        else if (input == "trenewal") file >> trenewal;
         else if (input == "capacity") file >> capacity;
         else if (input == "replenish") file >> replenish;
+        else if (input == "inflow") file >> inflow;
+        else if (input == "outflow") file >> outflow;
         else if (input == "hsymmetry") file >> hsymmetry;
         else if (input == "ecosel") file >> ecosel;
         else if (input == "dispersal") file >> dispersal;
@@ -41,7 +42,6 @@ void Param::import(std::ifstream &file)
         else if (input == "survival") file >> survival;
         else if (input == "sexsel") file >> sexsel;
         else if (input == "matingcost") file >> matingcost;
-        else if (input == "maxfeed") file >> maxfeed;
         else if (input == "demesizes")
             for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
         else if (input == "nvertices")
@@ -70,13 +70,18 @@ void Param::import(std::ifstream &file)
         else if (input == "tburnin") file >> tburnin;
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
-        else if (input == "record") file >> record;
+        else if (input == "tfreeze") file >> tfreeze;
         else if (input == "talkative") file >> talkative;
+        else if (input == "record") file >> record;
+        else if (input == "datsave") file >> datsave;
+        else if (input == "choosewhattosave") file >> choosewhattosave;
+        else if (input == "gensave") file >> gensave;
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
+        else if (input == "orderfile") file >> orderfile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -93,6 +98,7 @@ void Param::import(std::ifstream &file)
 
 void Param::update()
 {
+    rnd::rng.seed(seed);
     nloci = utl::sumu(nvertices);
     check();
 }
@@ -124,16 +130,16 @@ void Param::check() const
         msg = "Mate preference strength should be positive";
     if (matingcost < 0.0)
         msg = "Mate evaluation cost should be positive";
-    if (maxfeed < 0.0)
-        msg = "Maximum feeding rate should be positive";
     if (capacity <= 0.0)
         msg = "Maximum resource capacity should be positive";
     if (replenish <= 0.0)
         msg = "Maximum resource growth should be positive";
     if (rdynamics > 1u)
         msg = "Resource dynamics is either 0 (logistic) or 1 (chemostat)";
-    if (trenewal <= 0.0)
-        msg = "Resource renewal time rate should be positive";
+    if (inflow <= 0.0)
+        msg = "Resource inflow rate should be positive";
+    if (outflow <= 0.0)
+        msg = "Resource outflow rate should be positive";
     if (nvertices[0u] <= 1u)
         msg = "Numer of ecological loci should be at least two";
     if (nvertices[1u] <= 1u)
@@ -156,17 +162,17 @@ void Param::check() const
         msg = "Recombination rate should be positive";
     for (size_t i = 0u; i < 3u; ++i) {
         if (skews[i] < 0.0)
-            msg = "Skewness should be positive for trait " + i;
+            msg = "Skewness should be positive";
         if (scaleA[i] < 0.0)
-            msg = "Additive scaling should be positive for trait " + i;
+            msg = "Additive scaling should be positive";
         if (scaleD[i] < 0.0)
-            msg = "Dominance scaling should be positive for trait " + i;
+            msg = "Dominance scaling should be positive";
         if (scaleI[i] < 0.0)
-            msg = "Interaction scaling should be positive for trait " + i;
+            msg = "Interaction scaling should be positive";
         if (scaleE[i] < 0.0)
-            msg = "Environmental scaling should be positive for trait " + i;
+            msg = "Environmental scaling should be positive";
         if (nedges[i] >= nvertices[i] * (nvertices[i] - 1u) / 2u)
-            msg = "Number of edges is too large for trait " + i;
+            msg = "Number of edges is too large";
     }
     if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
@@ -184,6 +190,8 @@ void Param::check() const
         msg = "End time should be positive";
     if (tsave <= 0)
         msg = "Save time should be positive";
+    if (tfreeze <= 0)
+        msg = "Freezing time should be positive";
     if (ntrials == 0u)
         msg = "Number of mating trials should be at least one";
 
@@ -203,9 +211,10 @@ void Param::save() const
 void Param::write(std::ofstream &file) const
 {
     file << "rdynamics " << rdynamics << '\n';
-    file << "trenewal " << trenewal << '\n';
     file << "capacity " << capacity << '\n';
     file << "replenish " << replenish << '\n';
+    file << "inflow " << inflow << '\n';
+    file << "outflow " << outflow << '\n';
     file << "hsymmetry " << hsymmetry << '\n';
     file << "ecosel " << ecosel << '\n';
     file << "dispersal " << dispersal << '\n';
@@ -213,7 +222,6 @@ void Param::write(std::ofstream &file) const
     file << "survival " << survival << '\n';
     file << "sexsel " << sexsel << '\n';
     file << "matingcost " << matingcost << '\n';
-    file << "maxfeed " << maxfeed << '\n';
     file << "demesizes ";
     for (size_t i = 0u; i < 2u; ++i) file << demesizes[i] << ' ';
     file << '\n';
@@ -250,13 +258,18 @@ void Param::write(std::ofstream &file) const
     file << "tburnin " << tburnin << '\n';
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
-    file << "record " << record << '\n';
+    file << "tfreeze " << tfreeze << '\n';
     file << "talkative " << talkative << '\n';
+    file << "record " << record << '\n';
+    file << "datsave " << datsave << '\n';
+    file << "choosewhattosave " << choosewhattosave << '\n';
+    file << "gensave " << gensave << '\n';
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
+    file << "orderfile " << orderfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }

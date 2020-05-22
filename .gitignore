@@ -31,10 +31,11 @@
 *.out
 *.app
 
-# Don't track content of these folders
+# Don't track the following contents
 .idea
 cmake-build-debug/
 cmake-build-release/
+__pycache__/
 *.pro.user
 *.pro.user.*
 .qmake.stash
@@ -44,3 +45,4 @@ Makefile.Release
 *.dat
 egs_gui_plugin_import.cpp
 ui_maindialog.h
+.Rproj.user
