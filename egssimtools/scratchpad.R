@@ -2,33 +2,28 @@ rm(list = ls())
 
 library(egssimtools)
 library(tidyverse)
-library(ggsim)
-library(patchwork)
+library(tidygraph)
+library(ggraph)
 
-root <- "data"
+root <- "/media/raphael/bigass/simulations/EGS/genomes"
+roots <- fetch_dirs(root, level = 2, pattern = "sim")
+arch <- read_genome_architecture(roots[[1]])
 
-# Fetch simulations folders
-fetch_dirs(roots = root, level = 1)
+arch <- read_network_architecture(roots[[1]])
+arch
 
-root <- "data/example_1"
-variables <- c("time", "genome_Fst")
-data <- read_data(root, variables, dupl = c(300, 1), architecture = TRUE)
-head(data)
+arch
 
-# Genome scan at a certain time
-t <- 19900
-data <- data %>% filter(time == t)
-ggplot(data, aes(x = location, y = genome_Fst)) +
-  geom_point() +
-  theme_bw()
+col_vls <- c("forestgreen", "goldenrod", "grey")
+col_lbs <- 0:2
+col_nm <- "Trait"
 
-dplot_genome_scan(root, y = "genome_Fst")
-dplot_genome_heatmap(root, "genome_Fst")
-dplot_genome_violin(root, y = "genome_Fst", x = "trait")
-dplot_genome_ridges(root, y = "genome_Fst", times = seq(0, 19900, 1000))
+ggraph(arch, layout = "graphopt") +
+  geom_edge_link(aes(color = factor(trait), alpha = abs(weight))) +
+  geom_node_point(aes(fill = factor(trait), size = degree), shape = 21) +
+  scale_edge_color_manual(values = col_vls, labels = col_lbs, name = col_nm) +
+  scale_fill_manual(values = col_vls, labels = col_lbs, name = col_nm) +
+  labs(size = "Degree", edge_alpha = "|Weight|") +
+  theme_void()
 
-dplot_population_density(root, y = "individual_trait", by = 3, j = 1)
-dplot_population_bin2d(root, y = "individual_trait", by = 3, j = 1)
-
-dplot_simulation_line(root, y = "EI", by = 1, j = 1)
 
