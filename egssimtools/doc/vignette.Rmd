@@ -182,6 +182,12 @@ dplot_genome_lines(root, y = "genome_Fst")
 
 which takes a `span` argument determining the span of the smoothing of the curves used.
 
+It is also possible to map locus-wise variables onto the gene network itself:
+
+```{r, fig.width = 6, fig.height = 5}
+dplot_network(root, y = "genome_Fst")
+```
+
 ### Individual-wise variables
 
 We can also plot individual attributes such as trait values across the population at a certain time to make sure that speciation has happened:
