@@ -76,6 +76,9 @@ dplot_genome_ridges(root, y = "genome_Fst", times = c(0, 1000, 5000, 10000, 1500
 ## ---- fig.width = 4-----------------------------------------------------------
 dplot_genome_lines(root, y = "genome_Fst")
 
+## ---- fig.width = 6, fig.height = 5-------------------------------------------
+dplot_network(root, y = "genome_Fst")
+
 ## ---- fig.width = 3, fig.height = 2-------------------------------------------
 dplot_population_density(
   root, y = "individual_trait", by = 3, j = 1, fill = "lightgreen"

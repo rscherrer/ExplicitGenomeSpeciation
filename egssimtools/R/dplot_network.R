@@ -13,7 +13,6 @@ dplot_network <- function(root, y, t = NULL) {
   library(tidyverse)
   library(ggraph)
   library(tidygraph)
-  library(patchwork)
 
   time <- read_data(root, "time")
   X <- read_data(root, y)
@@ -40,6 +39,6 @@ dplot_network <- function(root, y, t = NULL) {
     theme_void() +
     guides(edge_color = FALSE)
 
-  wrap_plots(p, ncol = 1) + plot_layout(guides = "collect")
+  p
 
 }
