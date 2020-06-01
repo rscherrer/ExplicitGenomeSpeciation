@@ -13,7 +13,7 @@ read_genome_architecture <- function(folder, filename = "architecture.txt") {
 
   arch <- read_architecture(folder, filename)
 
-  data.frame(
+  arch <- data.frame(
     locus = seq(arch$location),
     location = arch$locations,
     trait = arch$traits,
