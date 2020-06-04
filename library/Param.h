@@ -32,7 +32,7 @@ struct Param {
         demesizes({ 100u, 0u }),
         nloci(90u), // cannot be provided
         nvertices({ 30u, 30u, 30u }),
-        nedges({ 30u, 0u, 0u }),
+        nedges({ 30u, 30u, 30u }),
         nchrom(3u),
         mutation(1.0E-3),
         recombination(3.0),

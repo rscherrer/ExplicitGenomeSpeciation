@@ -12,7 +12,7 @@ sexsel	10
 matingcost	0.01
 demesizes	100	100
 nvertices	40	20	40
-nedges	20	10	0
+nedges	50	50	50
 nchrom	3
 mutation	1e-05
 recombination	0.01

@@ -55,6 +55,10 @@ public:
     MultiNet networks;      // per trait
 
     // Getters called from tests
+    bool isConnected(const size_t &trait) const
+    {
+        return networks[trait].isConnected();
+    }
     size_t getNetworkSize() const
     {
         size_t nedges = 0u;
