@@ -63,7 +63,8 @@ int simulate(const std::vector<std::string> &args)
                 collector.analyze(metapop, pars, arch);
 
                 // Save them to files
-                if (pars.datsave) printer.print(t, collector, metapop);
+                const size_t tu = static_cast<size_t>(t);
+                if (pars.datsave) printer.print(tu, collector, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)

@@ -50,7 +50,7 @@ double Xst(const std::vector<double> &v, const std::vector<size_t> &n)
 
     double xst = 1.0 - (n[0u] * v[0u] + n[1u] * v[1u]) / (n[2u] * v[2u]);
 
-    utl::correct(xst, 0.0, 1.0E-5);
+    utl::correct(xst, 0.0, 1.0E-5); // make sure we do not have negative values
 
     assert(xst >= 0.0);
     assert(xst <= 1.0);    

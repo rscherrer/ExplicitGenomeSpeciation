@@ -38,7 +38,9 @@ public:
         assert(realnedges <= pars.nedges[character]);
 
         if (realnedges < pars.nedges[character]) {
-            throw std::runtime_error("The requested number of edges was not realized for trait " + character);
+            std::string msg = "The requested number of edges was not realized for trait ";
+            msg += static_cast<char>(character);
+            throw std::runtime_error(msg);
         }
     }
 

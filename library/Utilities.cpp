@@ -208,9 +208,10 @@ double utl::round(const double &x, const size_t &i)
     return std::round(x * p) / p;
 }
 
+// Correct a float to a lower bound
 void utl::correct(double &x, const double &x0, const double &d)
 {
-    x = x < x0 + d && x > x0 - d ? x0 : x;
+    x = x < x0 + d ? x0 : x;
 }
 
 // Convert unsigned integer to double

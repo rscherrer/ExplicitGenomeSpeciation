@@ -237,9 +237,9 @@ void GenArch::read(std::vector<Edge> &v, const size_t &n, const bool &id, std::i
     for (size_t p = 0u; p < n; ++p) {
         file >> x;
         if (id)
-            v[p].second = x;
+            v[p].second = static_cast<size_t>(x);
         else
-            v[p].first = x;
+            v[p].first = static_cast<size_t>(x);
     }
 
 }
@@ -261,7 +261,7 @@ void GenArch::load(const Param &pars)
 
     // Prepare to read parameters
     std::string field;
-    size_t nchrom;
+    size_t nchrom = 1u;
     size_t nloci = 0u;
 
     // Read in parameters of interest first
@@ -295,8 +295,8 @@ void GenArch::load(const Param &pars)
     assert(dominances.size() == nloci);
 
     // Prepare to read architecture
-    size_t trait;
-    size_t nedges;
+    size_t trait = 0u;
+    size_t nedges = 0u;
 
     // Read in architecture
     while (file >> field) {
