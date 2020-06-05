@@ -6,35 +6,26 @@ double utl::sqr(const double &number)
     return number * number;
 }
 
-// Vector of ones
-std::vector<double> utl::ones(const size_t &n)
-{
-    return std::vector<double>(n, 1.0);
-}
-
-std::vector<std::vector<double> > utl::ones(const size_t &nrow,
- const size_t &ncol)
-{
+std::vector<std::vector<double> > utl::ones(
+        const size_t &nrow,
+        const size_t &ncol
+) {
     std::vector<std::vector<double> > mat;
     mat.reserve(nrow);
     for (size_t i = 0u; i < nrow; ++i)
-        mat.push_back(utl::ones(ncol));
+        mat.push_back(std::vector<double>(ncol, 1.0));
     return mat;
 }
 
-// Vector of zeros
-std::vector<double> utl::zeros(const size_t &n)
-{
-    return std::vector<double>(n, 0.0);
-}
-
-// std::vector<std::vector<double> > of zeros
-std::vector<std::vector<double> > utl::zeros(const size_t &nrow, const size_t &ncol)
-{
+// Matrix of zeros
+std::vector<std::vector<double> > utl::zeros(
+        const size_t &nrow,
+        const size_t &ncol
+) {
     std::vector<std::vector<double> > mat;
     mat.reserve(nrow);
     for (size_t i = 0u; i < nrow; ++i)
-        mat.push_back(utl::zeros(ncol));
+        mat.push_back(std::vector<double>(ncol, 0.0));
     return mat;
 }
 
@@ -49,34 +40,17 @@ std::vector<std::vector<std::vector<double> > > utl::zeros(const size_t &n0,
     return mat;
 }
 
-// Unsigned zeros
-std::vector<size_t> utl::uzeros(const size_t &n)
-{
-    return std::vector<size_t>(n, 0u);
-}
-
-// std::vector<std::vector<double> > of unsigned zeros
-std::vector<std::vector<size_t> > utl::uzeros(const size_t &nrow, const size_t &ncol)
-{
+// Matrix of unsigned zeros
+std::vector<std::vector<size_t> > utl::uzeros(
+        const size_t &nrow,
+        const size_t &ncol
+) {
     std::vector<std::vector<size_t> > mat;
     mat.reserve(nrow);
     for (size_t i = 0u; i < nrow; ++i)
-        mat.push_back(utl::uzeros(ncol));
+        mat.push_back(std::vector<size_t>(ncol, 0u));
     return mat;
 }
-
-// Repeat a number many times
-std::vector<double> utl::rep(const double &x, const size_t &n)
-{
-    return std::vector<double>(n, x);
-}
-
-// Repeat an unsigned integer many times
-std::vector<size_t> utl::repUns(const size_t &x, const size_t &n)
-{
-    return std::vector<size_t>(n, x);
-}
-
 
 // Sum of doubles
 double utl::sum(std::vector<double> &v)
@@ -93,17 +67,17 @@ double utl::sum(std::vector<std::vector<double> > &m)
     return res;
 }
 
+// Sum of unsigned integers
+size_t utl::sum(const std::vector<size_t> &v) {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < v.size(); ++i) sum += v[i];
+    return sum;
+}
+
 // Find the position of the minimum element in a vector of floats
 size_t utl::argmin(std::vector<double> &v)
 {
     return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
-}
-
-// Sum of unsigned integers
-size_t utl::sumu(const std::vector<size_t> &v) {
-    size_t sum = 0u;
-    for (size_t i = 0u; i < v.size(); ++i) sum += v[i];
-    return sum;
 }
 
 // Calculate sums in the margins of a matrix
@@ -171,8 +145,10 @@ void utl::marginalize(std::vector<std::vector<size_t> > &m)
 }
 
 // Pairwise division between two matrices (the second contains unsigned int)
-std::vector<std::vector<double> > utl::dividemat(const std::vector<std::vector<double> > &m1, const std::vector<std::vector<size_t> > &m2)
-{
+std::vector<std::vector<double> > utl::dividemat(
+        const std::vector<std::vector<double> > &m1,
+        const std::vector<std::vector<size_t> > &m2
+) {
 
     const size_t nrow = m1.size();
     const size_t ncol = m1[0u].size();

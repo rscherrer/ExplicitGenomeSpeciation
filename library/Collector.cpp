@@ -78,14 +78,14 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     varP = utl::zeros(3u, 3u); // per trait per ecotype
     varA = utl::zeros(3u, 3u); // per trait per ecotype
     varN = utl::zeros(3u, 3u); // per trait per ecotype
-    varD = utl::zeros(3u); // per trait
-    varI = utl::zeros(3u); // per trait
-    varT = utl::zeros(3u); // per trait
-    Pst = utl::zeros(3u); // per trait
-    Gst = utl::zeros(3u); // per trait
-    Qst = utl::zeros(3u); // per trait
-    Cst = utl::zeros(3u); // per trait
-    Fst = utl::zeros(3u); // per trait
+    varD = std::vector<double>(3u, 0.0); // per trait
+    varI = std::vector<double>(3u, 0.0); // per trait
+    varT = std::vector<double>(3u, 0.0); // per trait
+    Pst = std::vector<double>(3u, 0.0); // per trait
+    Gst = std::vector<double>(3u, 0.0); // per trait
+    Qst = std::vector<double>(3u, 0.0); // per trait
+    Cst = std::vector<double>(3u, 0.0); // per trait
+    Fst = std::vector<double>(3u, 0.0); // per trait
     EI = 0.0;
     SI = 0.0;
     RI = 0.0;
@@ -161,16 +161,16 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
     }
 
     // Initialize genome-wide variances in heterozygosity
-    std::vector<double> varS = utl::zeros(3u); // per trait
+    std::vector<double> varS = std::vector<double>(3u, 0.0); // per trait
 
     // Scan the genome and compute locus-specific variances
     for (size_t l = 0u; l < genomescan.size(); ++l) {
 
         // Reset locus
-        genomescan[l].varG = utl::zeros(3u); // per ecotype
-        genomescan[l].varP = utl::zeros(3u); // per ecotype
-        genomescan[l].varA = utl::zeros(3u); // per ecotype
-        genomescan[l].varN = utl::zeros(3u); // per ecotype
+        genomescan[l].varG = std::vector<double>(3u, 0.0); // per ecotype
+        genomescan[l].varP = std::vector<double>(3u, 0.0); // per ecotype
+        genomescan[l].varA = std::vector<double>(3u, 0.0); // per ecotype
+        genomescan[l].varN = std::vector<double>(3u, 0.0); // per ecotype
         genomescan[l].varD = 0.0;
         genomescan[l].varI = 0.0;
         genomescan[l].varZ = 0.0;
@@ -181,7 +181,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         genomescan[l].Cst = 0.0;
         genomescan[l].Fst = 0.0;
         genomescan[l].alpha = 0.0;
-        genomescan[l].beta = utl::zeros(3u); // per genotype
+        genomescan[l].beta = std::vector<double>(3u, 0.0); // per genotype
         genomescan[l].meang = 0.0;
         genomescan[l].freq = 0.0;
 
@@ -218,7 +218,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         }
 
         // Calculate allele frequencies within and across ecotypes
-        std::vector<double> allfreq = utl::zeros(3u);
+        std::vector<double> allfreq = std::vector<double>(3u, 0.0);
         for (size_t eco = 0u; eco < 3u; ++eco) {
             if (ecounts[eco]) {
                 allfreq[eco] = gcounts[eco][AA] + 0.5 * gcounts[eco][Aa];
@@ -296,10 +296,10 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         // expec(AA) = meang(all) + beta(AA)
         // beta(AA) = alpha (AA - meanq)
 
-        std::vector<double> gbeta = utl::zeros(3u); // per genotype
-        std::vector<double> gexpec = utl::zeros(3u); // per genotype
-        std::vector<double> gmeans = utl::zeros(3u); // per genotype
-        std::vector<double> gdelta = utl::zeros(3u); // per genotype
+        std::vector<double> gbeta = std::vector<double>(3u, 0.0); // per genotype
+        std::vector<double> gexpec = std::vector<double>(3u, 0.0); // per genotype
+        std::vector<double> gmeans = std::vector<double>(3u, 0.0); // per genotype
+        std::vector<double> gdelta = std::vector<double>(3u, 0.0) ; // per genotype
         for (size_t zyg : { aa, Aa, AA }) {
             if (gcounts[tot][zyg]) {
                 gbeta[zyg] = alpha * (zyg - meanq);

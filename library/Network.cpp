@@ -21,7 +21,7 @@ std::vector<Edge> Network::makeMap(const Param& p) const
 
     std::vector<Edge> connexions;
     connexions.reserve(p.nedges[trait]);
-    std::vector<size_t> degrees = utl::uzeros(p.nvertices[trait]);
+    std::vector<size_t> degrees = std::vector<size_t>(p.nvertices[trait], 0u);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
@@ -134,8 +134,10 @@ std::vector<Edge> Network::makeEdges(const Param &p) const
 
 std::vector<double> Network::makeWeights(const Param &p) const
 {
-    if (p.interactionshape == 0.0) return utl::zeros(p.nedges[trait]);
-    if (p.interactionscale == 0.0) return utl::ones(p.nedges[trait]);
+    if (p.interactionshape == 0.0)
+        return std::vector<double>(p.nedges[trait], 0.0);
+    if (p.interactionscale == 0.0)
+        return std::vector<double>(p.nedges[trait], 1.0);
 
     std::vector<double> intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares

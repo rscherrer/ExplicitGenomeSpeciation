@@ -99,7 +99,7 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     rnd::rng.seed(seed);
-    nloci = utl::sumu(nvertices);
+    nloci = utl::sum(nvertices);
     check();
 }
 

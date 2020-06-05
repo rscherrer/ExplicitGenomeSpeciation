@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(NetworkWithOneEdgeConnectsNodesZeroAndOne)
 {
   std::clog << "Testing single edge network...\n";
   Param pars;
-  pars.nvertices = utl::repUns(2u, 3u);
+  pars.nvertices = {2u, 2u, 2u};
   pars.nedges = { 1u, 1u, 1u };
   pars.update();
   GenArch arch = GenArch(pars);
