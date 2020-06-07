@@ -11,6 +11,9 @@ read_architecture(folder, filename = "architecture.txt")
 
 \item{filename}{Optional file name}
 }
+\value{
+A list with all the fields of a genetic architecture
+}
 \description{
 Read architecture
 }

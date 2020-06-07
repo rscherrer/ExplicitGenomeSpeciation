@@ -43,5 +43,5 @@ A data frame
 Function to read simulation data from binary files into a data frame. Can read multiple data files and bind them together.
 }
 \note{
-Do not provide the extension of the files. It is assumed to be .dat.
+Do not provide the extension of the files. It is assumed to be \code{.dat}.
 }

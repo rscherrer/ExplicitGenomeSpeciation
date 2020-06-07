@@ -16,7 +16,6 @@ collect_sims(
   pattern = "sim_",
   level = 0,
   verbose = TRUE,
-  pb = TRUE,
   id_column = "sim",
   architecture = FALSE,
   archfile = "architecture.txt",
@@ -36,7 +35,7 @@ collect_sims(
 
 \item{level}{Level of recursion. Defaults to 0 for no recursion (hen assumes that \code{root} is a vector of simulation folder paths).}
 
-\item{verbose, pb}{Whether to display messages and progress bars}
+\item{verbose}{Whether to display messages and progress bars}
 
 \item{id_column}{Optional name of the simulation identifier column}
 

@@ -11,7 +11,7 @@ plot_genome_heatmap(root, y, archfile = "architecture.txt")
 
 \item{y}{Name of the variable to plot.}
 
-\item{archfile}{The architecture file to look for. Defaults to "architecture.txt"}
+\item{archfile}{The architecture file to look for}
 }
 \value{
 A ggplot

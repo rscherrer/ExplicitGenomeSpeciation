@@ -4,7 +4,7 @@
 #'
 #' @param root Path to the simulation folder
 #' @param y Name of the variable to plot.
-#' @param archfile The architecture file to look for. Defaults to "architecture.txt"
+#' @param archfile The architecture file to look for
 #'
 #' @return A ggplot
 #'

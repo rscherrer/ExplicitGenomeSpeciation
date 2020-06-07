@@ -4,22 +4,14 @@
 \alias{find_missing}
 \title{Find missing simulations}
 \usage{
-find_missing(
-  simulations,
-  pattern = "^sim_",
-  verbose = TRUE,
-  pb = TRUE,
-  level = 0
-)
+find_missing(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 }
 \arguments{
-\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{sims}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 
 \item{verbose}{Whether to display messages}
-
-\item{pb}{Whether to display a progress bar}
 
 \item{level}{Recursion level}
 }

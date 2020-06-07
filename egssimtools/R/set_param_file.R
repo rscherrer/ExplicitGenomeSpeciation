@@ -12,8 +12,6 @@
 
 set_param_file <- function(pars, template = NULL, saveto = NULL) {
 
-  library(stringr)
-
   tmp <- character()
   if (!is.null(template)) tmp <- as.character(read.delim(template)[, 1])
 

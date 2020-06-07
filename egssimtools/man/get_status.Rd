@@ -9,6 +9,9 @@ get_status(folder)
 \arguments{
 \item{folder}{Path to the folder}
 }
+\value{
+A character
+}
 \description{
 Read the exit status of the simulation from the SLURM output file
 }

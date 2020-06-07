@@ -3,6 +3,8 @@
 #' @param filename Path to the parameter file
 #' @param parnames Optional vector of parameter names
 #'
+#' @return A list of parameter values
+#'
 #' @export
 
 read_paramfile <- function(filename, parnames = NULL) {

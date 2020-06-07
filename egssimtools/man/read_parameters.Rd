@@ -24,6 +24,9 @@ read_parameters(
 
 \item{flatten}{Whether to return a list of single values. If FALSE, some of the elements may be vectors of multiple values (compound parameters).}
 }
+\value{
+A list of parameter values
+}
 \description{
 Read parameters
 }

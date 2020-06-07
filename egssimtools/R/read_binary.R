@@ -3,6 +3,8 @@
 #' @param filename Path to the file
 #' @param digits Encoding
 #'
+#' @return A numeric vector
+#'
 #' @export
 
 read_binary <- function(filename, digits = 8) {

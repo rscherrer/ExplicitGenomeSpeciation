@@ -2,6 +2,8 @@
 #'
 #' @param folder Path to the folder
 #'
+#' @return A logical
+#'
 #' @export
 
 is_missing <- function(folder) {

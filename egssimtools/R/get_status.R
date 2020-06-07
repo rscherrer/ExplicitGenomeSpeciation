@@ -4,6 +4,8 @@
 #'
 #' @param folder Path to the folder
 #'
+#' @return A character
+#'
 #' @export
 
 get_status <- function(folder) {

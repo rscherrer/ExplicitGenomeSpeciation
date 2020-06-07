@@ -5,11 +5,11 @@
 #'
 #' @details This function looks for the word "extinct" in the log file of the simulation
 #'
+#' @return A logical
+#'
 #' @export
 
 is_extinct <- function(folder, logfile = "log.txt") {
-
-  # Look for the word "extinct" in the SLURM output file
 
   i <- grep(logfile, list.files(folder))
   i <- i[length(i)]

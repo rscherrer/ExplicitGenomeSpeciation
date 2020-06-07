@@ -8,11 +8,12 @@
 
 get_degrees <- function(arch) {
 
-  library(tidyverse)
-
   degrees <- rep(0, length(arch$locations))
-  connected <- table(do.call("c", arch$networks %>% map(~ do.call("c", .x[1:2]))))
+  connected <- table(
+    do.call("c", purrr::map(arch$networks, ~ do.call("c", .x[1:2])))
+  )
   degrees[as.numeric(names(connected)) + 1] <- connected
+  # numbering starts at zero in C++
   return(degrees)
 
 }

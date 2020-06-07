@@ -11,6 +11,9 @@ read_binary(filename, digits = 8)
 
 \item{digits}{Encoding}
 }
+\value{
+A numeric vector
+}
 \description{
 Read binary file
 }

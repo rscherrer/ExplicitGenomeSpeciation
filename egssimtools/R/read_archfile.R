@@ -2,6 +2,8 @@
 #'
 #' @param filename Path to the architecture file
 #'
+#' @return A list with all the fields of a genetic architecture
+#'
 #' @export
 
 read_archfile <- function(filename) {
@@ -9,12 +11,19 @@ read_archfile <- function(filename) {
   archfile <- read.delim(filename, header = FALSE)[, 1]
 
   begin <- grep("^Architecture:$", archfile)
-  if (length(begin) == 0) stop(paste0("Cannot find the beginning of the genetic architecture in file ", filename))
+  if (length(begin) == 0) stop(
+    paste0(
+      "Cannot find the beginning of the genetic architecture in file ",
+      filename
+    )
+  )
   begin <- begin + 1
   archfile <- archfile[begin:length(archfile)]
 
   fields <- c("chromosomes", "traits", "locations", "effects", "dominances")
-  arch <- lapply(fields, function(x) str2vec(archfile[which(archfile == x)[1] + 1]))
+  arch <- lapply(fields, function(x) {
+    str2vec(archfile[which(archfile == x)[1] + 1])
+  })
   names(arch) <- fields
 
   ii <- grep("network", archfile)
@@ -26,6 +35,6 @@ read_archfile <- function(filename) {
   names(networks) <- c("ecotrait", "matepref", "neutral")
   arch$networks <- networks
 
-  return (arch)
+  return(arch)
 
 }

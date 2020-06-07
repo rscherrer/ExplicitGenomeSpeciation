@@ -14,7 +14,7 @@
 #'
 #' @return A data frame
 #'
-#' @note Do not provide the extension of the files. It is assumed to be .dat.
+#' @note Do not provide the extension of the files. It is assumed to be `.dat`.
 #'
 #' @export
 
@@ -31,10 +31,8 @@ read_data <- function(
   parfile = "paramlog.txt"
 ) {
 
-  library(tidyverse)
-
   data <- list(variables, by, dupl) %>%
-    pmap_dfc(function(variable, by, dupl) {
+    purrr::pmap_dfc(function(variable, by, dupl) {
 
       data <- read_binary(paste0(folder, "/", variable, ".dat")) %>%
         split(rep(seq(length(.) / by), each = by)) %>%
@@ -45,7 +43,9 @@ read_data <- function(
       } else {
         colnames <- variable
       }
-      if (is.character(dupl)) dupl <- read_binary(paste0(folder, "/", dupl, ".dat"))
+      if (is.character(dupl)) {
+        dupl <- read_binary(paste0(folder, "/", dupl, ".dat"))
+      }
       if (length(dupl) == 1) dupl <- rep(dupl, nrow(data))
       data <- data[mrep(seq(nrow(data)), n = dupl), ] %>% data.frame
       data <- data %>% rename_str(colnames)
@@ -54,9 +54,12 @@ read_data <- function(
 
   if (!is.null(parnames)) {
 
-    pars <- read_parameters(folder, parnames, combine = combine, flatten = TRUE, as_numeric = as_numeric, filename = parfile)
-    pars <- pars %>% map_dfc(rep, nrow(data))
-    data <- list(data, pars) %>% bind_cols
+    pars <- read_parameters(
+      folder, parnames, combine = combine, flatten = TRUE,
+      as_numeric = as_numeric, filename = parfile
+    )
+    pars <- pars %>% purrr::map_dfc(rep, nrow(data))
+    data <- list(data, pars) %>% dplyr::bind_cols
 
   }
 
@@ -64,7 +67,7 @@ read_data <- function(
 
     arch <- read_genome_architecture(folder, filename = archfile)
     ntimes <- nrow(data) / nrow(arch)
-    arch <- map_dfr(seq(ntimes), ~ arch)
+    arch <- purrr::map_dfr(seq(ntimes), ~ arch)
     data <- cbind(data, arch)
 
   }

@@ -11,6 +11,9 @@ read_paramfile(filename, parnames = NULL)
 
 \item{parnames}{Optional vector of parameter names}
 }
+\value{
+A list of parameter values
+}
 \description{
 Read a parameter file
 }

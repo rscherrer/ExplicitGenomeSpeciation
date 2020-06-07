@@ -8,7 +8,6 @@
 
 get_chromosomes <- function(arch) {
 
-  library(tidyverse)
-  arch$locations %>% map_int(~ min(which(.x <= arch$chromosomes)))
+   purrr::map_int(arch$locations, ~ min(which(.x <= arch$chromosomes)))
 
 }

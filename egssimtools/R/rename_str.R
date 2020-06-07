@@ -9,7 +9,9 @@
 
 rename_str <- function(df, newcols) {
 
-  if (length(newcols) != ncol(df)) stop("Please provide the right number of column names")
+  if (length(newcols) != ncol(df)) {
+    stop("Please provide the right number of column names")
+  }
   colnames(df) <- newcols
   return (df)
 

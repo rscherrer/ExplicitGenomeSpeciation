@@ -9,6 +9,9 @@ read_archfile(filename)
 \arguments{
 \item{filename}{Path to the architecture file}
 }
+\value{
+A list with all the fields of a genetic architecture
+}
 \description{
 Read an architecture file
 }

@@ -13,7 +13,6 @@
 #'
 #' @export
 
-
 read_indiv <- function(
   folder,
   variables,
