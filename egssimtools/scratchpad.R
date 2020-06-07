@@ -9,7 +9,5 @@ root <- roots[1]
 read_data(root, c("time", "Fst"), by = c(1, 3))
 read_sim(root, "Fst", by = 3)
 read_indiv(root, "individual_trait")
-guess_nloci(root)
-
 
 read_edges()

@@ -42,5 +42,6 @@ parsave 1
 archfile architecture.txt
 parfile paramlog.txt
 orderfile whattosave.txt
+logfile log.txt
 seed 42
 ntrials 20

@@ -82,6 +82,7 @@ void Param::import(std::ifstream &file)
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
         else if (input == "orderfile") file >> orderfile;
+        else if (input == "logfile") file >> logfile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -271,6 +272,7 @@ void Param::write(std::ofstream &file) const
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
+    file << "logfile " << logfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }

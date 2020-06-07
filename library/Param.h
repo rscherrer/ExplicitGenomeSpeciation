@@ -63,6 +63,7 @@ struct Param {
         archfile("architecture.txt"),        
         parfile("paramlog.txt"),
         orderfile("whattosave.txt"),
+        logfile("log.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
@@ -137,6 +138,7 @@ struct Param {
     std::string archfile;
     std::string parfile;
     std::string orderfile;
+    std::string logfile;
     size_t seed;
     size_t ntrials;
 
