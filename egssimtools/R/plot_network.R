@@ -8,7 +8,7 @@
 #'
 #' @export
 
-dplot_network <- function(root, y, t = NULL) {
+plot_network <- function(root, y, t = NULL) {
 
   library(tidyverse)
   library(ggraph)

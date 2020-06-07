@@ -8,7 +8,7 @@
 #'
 #' @export
 
-dplot_genome_ridges <- function(root, y, times = NULL) {
+plot_genome_ridges <- function(root, y, times = NULL) {
 
   library(ggplot2)
   library(ggridges)

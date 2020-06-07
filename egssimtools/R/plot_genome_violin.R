@@ -11,7 +11,7 @@
 #'
 #' @export
 
-dplot_genome_violin <- function(root, y, x = NULL, t = NULL) {
+plot_genome_violin <- function(root, y, x = NULL, t = NULL) {
 
   library(ggplot2)
 

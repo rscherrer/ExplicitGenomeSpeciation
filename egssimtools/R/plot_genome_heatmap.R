@@ -10,7 +10,7 @@
 #'
 #' @export
 
-dplot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
+plot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
 
   library(ggplot2)
 

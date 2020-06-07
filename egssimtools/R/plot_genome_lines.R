@@ -8,7 +8,7 @@
 #'
 #' @export
 
-dplot_genome_lines <- function(root, y, span = 0.2) {
+plot_genome_lines <- function(root, y, span = 0.2) {
 
   library(ggplot2)
   library(ggridges)

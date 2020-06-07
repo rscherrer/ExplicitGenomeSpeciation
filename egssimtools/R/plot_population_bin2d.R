@@ -1,17 +1,16 @@
-#' Diagnose density of a given variable across the population
+#' Diagnose density of a given variable across the population through time
 #'
 #' @param root Path to the simulation folder
 #' @param y Variable to plot the density for
 #' @param by How many columns to split the variable into? See `?read_data`.
 #' @param j If the variable is splitted, which column to show?
-#' @param t Optional time point to filter. Defaults to the last time point
-#' @param fill Optional fill color
+#' @param bins Number of bins for `geom_bin2d`
 #'
 #' @return A ggplot
 #'
 #' @export
 
-dplot_population_density <- function(root, y, by = 1, j = 1, t = NULL, fill = "lightgrey") {
+plot_population_bin2d <- function(root, y, by = 1, j = 1, bins = 50) {
 
   library(ggplot2)
 
@@ -20,11 +19,9 @@ dplot_population_density <- function(root, y, by = 1, j = 1, t = NULL, fill = "l
 
   if (is.null(t)) t <- last(data$time)
 
-  data <- data %>% filter(time == t)
-
-  ggplot(data, aes(x = get(colnames(data)[2]))) +
-    geom_density(fill = fill) +
+  ggplot(data, aes(x = time, y = get(colnames(data)[2]))) +
+    geom_bin2d(bins = bins) +
     theme_bw() +
-    xlab(colnames(data)[2])
+    ylab(colnames(data)[2])
 
 }

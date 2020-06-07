@@ -11,7 +11,7 @@
 #'
 #' @export
 
-dplot_genome_scan <- function(root, y, x = "locus", t = NULL) {
+plot_genome_scan <- function(root, y, x = "locus", t = NULL) {
 
   library(ggplot2)
 

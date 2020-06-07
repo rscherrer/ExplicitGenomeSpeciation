@@ -11,7 +11,7 @@
 #'
 #' @export
 
-dplot_simulation_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {
+plot_simulation_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {
 
   library(ggplot2)
 
