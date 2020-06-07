@@ -102,6 +102,7 @@ The following table shows all the parameters of the program and their default va
 | archfile | Architecture file | architecture.txt |
 | parfile | Parameter log file | paramlog.txt |
 | orderfile | File listing variables to save | whattosave.txt |
+| logfile | File capturing the console output | log.txt |
 | seed | Random seed | randomly generated |  
 | ntrials | Number of mating trials | 100 |
 
