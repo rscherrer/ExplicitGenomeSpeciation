@@ -116,7 +116,7 @@ Useful information about the parameters:
 
 * nvertices: must be at least 2 for each trait
 
-* nedges: cannot be higher than n (n - 1) / 2 (complete graph) if n is the number of vertice for a given trait. In practice, the preferential attachment algorithm may fail to produce a network if nedges is very high relative to the number of vertices. Because this is a stochastic process, it is not possible to provide a clear cut-off.
+* nedges: cannot be higher than n (n - 1) / 2 (complete graph), if n is the number of vertice for a given trait. In practice, the preferential attachment algorithm may fail to attach all the requested edges of the network if nedges is close to the maximum possible number of edges. In this case the program will return an error. The number of edges should be at least n-1, which ensures that the network is connected (all the nodes are attached).
 
 * recombination: this is not a proportion, but the rate of an exponential distribution describing the distance between successive crossover points. It is more-or-less equivalent to the number of crossovers per genome per meiosis event.
 
