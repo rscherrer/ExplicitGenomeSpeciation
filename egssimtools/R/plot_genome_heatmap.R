@@ -23,7 +23,6 @@ plot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
     ggplot2::geom_tile() +
     ggplot2::theme_bw() +
     ggplot2::labs(fill = y) +
-    ggplot2::scale_fill_gradient(low = "black", high = "yellow") +
     ggplot2::labs(x = "time", y = "locus", fill = y)
 
 }

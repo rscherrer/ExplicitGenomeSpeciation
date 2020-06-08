@@ -9,8 +9,9 @@ plot_genome_scan(
   y,
   x = "locus",
   t = NULL,
-  color_by = NULL,
-  archfile = "architecture.txt"
+  mapping = NULL,
+  archfile = "architecture.txt",
+  ...
 )
 }
 \arguments{
@@ -18,23 +19,28 @@ plot_genome_scan(
 
 \item{y}{Name of the variable to plot}
 
-\item{x}{Optional x-axis, defaults to locus identity but could also be e.g. "location" for locus position along the genome}
+\item{x}{Optional x-axis, defaults to locus identity but could also be e.g.
+"location" for locus position along the genome}
 
-\item{t}{Time point at which to show the scan. If unspecified, last time point.}
+\item{t}{Time point at which to show the scan. If unspecified, last time
+point.}
 
-\item{color_by}{Variable to color according to}
+\item{mapping}{Named list of extra mappings to be passed to
+\code{ggplot2::aes_string}}
 
 \item{archfile}{Optional architecture file name}
+
+\item{...}{Extra parameters for \code{ggplot2::geom_point}}
 }
 \value{
 A ggplot
 }
 \description{
-Quick-plots a genome scan of a given variable at a given time point
+Plots a genome scan of a given variable at a given time point
 }
 \examples{
 
 root <- system.file("extdata", "example_1", package = "egssimtools")
-plot_genome_scan(root, "genome_Fst", color_by = "trait")
+plot_genome_scan(root, "genome_Fst", mapping = list(color = "trait"))
 
 }

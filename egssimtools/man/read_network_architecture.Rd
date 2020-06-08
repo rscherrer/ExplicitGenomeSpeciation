@@ -4,15 +4,19 @@
 \alias{read_network_architecture}
 \title{Read gene network architecture}
 \usage{
-read_network_architecture(folder, filename = "architecture.txt")
+read_network_architecture(folder, filename = "architecture.txt", as_df = FALSE)
 }
 \arguments{
 \item{folder}{Path to the simulation}
 
 \item{filename}{Optional architecture file name}
+
+\item{as_df}{Whether to return the output at a list of two data frames
+instead of a \code{tbl_graph}.}
 }
 \value{
-A \code{tbl_graph} object
+A \code{tbl_graph} object (useful for plotting using the \code{ggraph}
+package), or a list of data frames if applicable
 }
 \description{
 Reads a genetic architecture and stores it into a \code{tbl_graph} object

@@ -45,13 +45,115 @@ root <- system.file("extdata", "example_1", package = "egssimtools")
 
 The EGS simulations are complex and can save many different kinds of data, with different units of observation: simulation-wise data (e.g. ecological divergence through time), individual-wise data (e.g. individual trait values), locus-wise data or edge-wise data. Again, please refer to the main page of the program for a detailed description.
 
-To plot a simulation-wise variable through time, use
+### Simulation-wide variable
 
-```{r}
-plot_simulation_line(root, "EI")
+To plot a simulation-wide variable through time, use
+
+```{r, fig.width = 4, fig.height = 3}
+# Ecological isolation through time
+plot_sim_line(root, "EI")
 ```
 
+This function can also be used to plot variables against each other, for example:
 
+```{r, fig.width = 4, fig.height = 3}
+# Reproductive versus ecological isolation
+plot_sim_line(root, "RI", x = "EI")
+```
+
+Even better, you can plot against each other variables that belong to the same `.dat` data file, for example:
+
+```{r, fig.width = 4, fig.height = 3}
+# Fst of the ecological trait versus that of the mating trait
+plot_sim_line(root, y = "Fst", x = "Fst", by = 3, j = 1, k = 2)
+```
+
+### Individual-specific variable
+
+To plot the distribution of an individual variable at a certain time point, use:
+
+```{r, fig.width = 4, fig.height = 3}
+# Plot the distribution of ecological trait values at the end of the simulation
+plot_pop_density(
+  root, "individual_trait", by = 3, j = 1, plot_type = "density"
+)
+```
+
+And to get a distribution through time, use:
+
+```{r, fig.width = 4, fig.height = 3}
+plot_pop_bin2d(root, "individual_trait", by = 3, j = 1)
+```
+
+It is also possible to plot the co-distribution of two individual-specific variables at a specific time point,
+
+```{r, fig.width = 4, fig.height = 3}
+plot_pop_bin2d(
+  root, y = "individual_trait", x = "individual_trait", by = 3, j = 1, k = 2
+)
+```
+
+### Locus-specific variables
+
+For locus-specific variables, use the `plot_genome_*` family of functions, such as, for a genome scan at a specific time point,
+
+```{r, fig.width = 4, fig.height = 2}
+plot_genome_scan(root, "genome_Fst")
+```
+
+It is possible to map different variables of the genetic architecture to some aesthetics of the plot, like color:
+
+```{r, fig.width = 4, fig.height = 2}
+plot_genome_scan(root, "genome_Fst", mapping = list(color = "trait"))
+```
+
+Genome scans through time can be viewed using:
+
+```{r, fig.width = 4, fig.height = 4}
+plot_genome_heatmap(root, "genome_Fst")
+```
+
+To plot distributions over the genome, use:
+
+```{r, fig.width = 4, fig.height = 3}
+plot_genome_density(root, "genome_Fst", plot_type = "histogram", bins = 50)
+```
+
+Which can itself take different aesthetic mappings and take different forms, such as violin plots:
+
+```{r, fig.width = 4, fig.height = 3}
+plot_genome_density(
+  root, "genome_Fst", x = "trait", mapping = list(fill = "trait"), 
+  plot_type = "violin"
+)
+```
+
+It is also possible to visualize distributions through time,
+
+```{r, fig.width = 4, fig.height = 3, message = FALSE}
+plot_genome_ridges(
+  root, "genome_Fst", times = c(100, 200, 300), facet_by = "trait"
+)
+```
+
+### Plot the gene network
+
+(FIX THIS RAPH)
+
+To plot a variable mapped onto the gene regulatory network at a certain time point, use:
+
+```{r, fig.width = 4, fig.height = 3}
+# Plot Fst mapped onto the network (takes a while)
+plot_network(root, "genome_Fst")
+```
+
+One can also plot a gene network without any simulated data through time, and instead map as the size aesthetics a variable from the genetic architecture (such as the degree or effect size of a node), or no mapping at all:
+
+```{r, fig.width = 4, fig.height = 3}
+plot_network_blank(root)
+```
+
+### Note
 
 ### Read a single simulation
 

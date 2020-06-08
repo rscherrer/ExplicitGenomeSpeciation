@@ -4,8 +4,11 @@
 #'
 #' @param folder Path to the simulation
 #' @param filename Optional architecture file name
+#' @param as_df Whether to return the output at a list of two data frames
+#' instead of a `tbl_graph`.
 #'
-#' @return A `tbl_graph` object
+#' @return A `tbl_graph` object (useful for plotting using the `ggraph`
+#' package), or a list of data frames if applicable
 #'
 #' @examples
 #'
@@ -14,7 +17,11 @@
 #'
 #' @export
 
-read_network_architecture <- function(folder, filename = "architecture.txt") {
+read_network_architecture <- function(
+  folder,
+  filename = "architecture.txt",
+  as_df = FALSE
+) {
 
   # Read the nodes
   nodes <- read_genome_architecture(folder, filename)
@@ -30,6 +37,8 @@ read_network_architecture <- function(folder, filename = "architecture.txt") {
   edges <- edges %>% dplyr::select(from, to, weight, trait)
 
   # Return a tidygraph object suitable for plotting networks
-  tidygraph::tbl_graph(nodes = nodes, edges = edges)
+  network <- tidygraph::tbl_graph(nodes = nodes, edges = edges)
+  if (as_df) network <- as.data.frame(network)
+  return (network)
 
 }

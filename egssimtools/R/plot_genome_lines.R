@@ -43,8 +43,6 @@ plot_genome_lines <- function(
     tidyr::unnest(cols = c(data, smooth)) %>%
     dplyr::ungroup()
 
-  colors <- c("forestgreen", "goldenrod", "lightgrey")
-
   p <- ggsim::gglineplot(
     data,
     x = "time",
@@ -52,18 +50,12 @@ plot_genome_lines <- function(
     line = "locus",
     alpha = 0.5
   )
-  if (!is.null(facet_by)) {
-    p <- p +
-      ggplot2::aes(color = factor(trait)) +
-      ggplot2::scale_color_manual(values = colors)
-  }
+  if (!is.null(facet_by)) p <- p + ggplot2::aes(color = trait)
   p <- p +
     ggplot2::labs(x = "time", y = y) +
     ggplot2::theme(legend.position = "none")
   if (!is.null(facet_by)) p <- p + ggplot2::labs(color = facet_by)
-
   p <- p + ggplot2::ylim(c(0, max(data[[y]])))
-
   p %>% ggsim::facettize(rows = facet_by, prepend = paste0(facet_by, " "))
 
 }

@@ -4,20 +4,22 @@
 \alias{plot_sim_line}
 \title{Plot a simulation-wise variable}
 \usage{
-plot_sim_line(root, y, x = "time", by = 1, j = 1, color = "black")
+plot_sim_line(root, y, x = "time", by = NULL, j = 1, k = 1, ...)
 }
 \arguments{
 \item{root}{Path to the simulation folder}
 
-\item{y}{Variable to track}
+\item{y}{Variable to plot}
 
 \item{x}{Optional variable for the horizontal axis. Defaults to "time".}
 
-\item{j}{If the variable is splitted, which column to show?}
+\item{by}{Numbers of columns in which to split variable \code{x} (only if \code{x} is not "time") and \code{y}. See \code{?read_data}.}
 
-\item{color}{Optional color of the line}
+\item{j}{If variable \code{y} is splitted, which column to show?}
 
-\item{bins}{Number of bins for \code{geom_bin2d}}
+\item{k}{If variable \code{x} is splitted, which column to show?}
+
+\item{...}{Parameters to be passed to \code{geom_path}}
 }
 \value{
 A ggplot
@@ -29,5 +31,6 @@ Plot a simulation-wise variable
 
 root <- system.file("extdata", "example_1", package = "egssimtools")
 plot_sim_line(root, "EI")
+plot_sim_line(root, "RI", x = "EI")
 
 }

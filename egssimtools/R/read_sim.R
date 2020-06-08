@@ -21,7 +21,7 @@
 read_sim <- function(
   folder,
   variables,
-  by = 1,
+  by = rep(1, length(variables)),
   parnames = NULL,
   combine = FALSE,
   as_numeric = NULL,

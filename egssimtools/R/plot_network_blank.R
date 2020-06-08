@@ -1,8 +1,8 @@
-#' Plot gene network
+#' Plot gene network without evolving variable
 #'
 #' @param root Path to the simulation folder
-#' @param y Name of the variable to map as node size aesthetics
-#' @param t What time point? Defaults to last time point
+#' @param y Optional name of the variable to map as node size aesthetics.
+#' Should be in the fields returned by `read_genome_architecture`.
 #' @param archfile Optional architecture file name
 #'
 #' @return A ggplot
@@ -10,27 +10,22 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' plot_network(root, "genome_Fst")
+#' plot_network_blank(root, y = "degree")
 #'
 #' @export
 
-plot_network <- function(root, y, t = NULL, archfile = "architecture.txt") {
-
-  data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
-
-  if (is.null(t)) t <- dplyr::last(data$time)
-  data <- data %>% dplyr::filter(time == t)
+plot_network_blank <- function(root, y = NULL, archfile = "architecture.txt") {
 
   arch <- read_network_architecture(root)
   arch <- arch %>%
-    tidygraph::activate(nodes) %>%
-    dplyr::right_join(data)
+    tidygraph::activate(edges) %>%
+    dplyr::mutate(trait = factor(trait))
 
   p <- ggraph::ggraph(
     arch, layout = "graphopt", charge = 0.1, mass = 30, niter = 100000
   ) +
     ggraph::geom_edge_link(
-      ggplot2::aes_string(color = "trait"), width = 2, alpha = 0.6
+      ggplot2::aes(color = factor(trait)), width = 2, alpha = 0.6
     ) +
     ggraph::geom_node_point(
       ggplot2::aes_string(fill = "trait", size = y), shape = 21

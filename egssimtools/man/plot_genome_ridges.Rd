@@ -9,7 +9,8 @@ plot_genome_ridges(
   y,
   times = NULL,
   facet_by = NULL,
-  archfile = "architecture.txt"
+  archfile = "architecture.txt",
+  ...
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ plot_genome_ridges(
 \item{facet_by}{Variable to facet by}
 
 \item{archfile}{Optional architecture file name}
+
+\item{...}{Parameters to be passed to \code{ggridges::geom_density_ridges}}
 }
 \value{
 A ggplot

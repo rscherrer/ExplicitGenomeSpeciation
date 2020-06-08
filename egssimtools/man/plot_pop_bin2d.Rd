@@ -4,18 +4,27 @@
 \alias{plot_pop_bin2d}
 \title{Plot population distribution through time}
 \usage{
-plot_pop_bin2d(root, y, by = 1, j = 1, bins = 50)
+plot_pop_bin2d(root, y, x = "time", by = 1, j = 1, k = 1, t = NULL, ...)
 }
 \arguments{
 \item{root}{Path to the simulation folder}
 
 \item{y}{Variable to plot the density for}
 
-\item{by}{How many columns to split the variable into? See \code{?read_data}.}
+\item{x}{Optional variable for the horizontal axis. Defaults to "time".}
 
-\item{j}{If the variable is splitted, which column to show?}
+\item{by}{Numbers of columns in which to split variable \code{x} (only if \code{x} is
+not "time" and not \code{y}) and \code{y}. See \code{?read_data}.}
 
-\item{bins}{Number of bins for \code{geom_bin2d}}
+\item{j}{If variable \code{y} is splitted, which column to show?}
+
+\item{k}{If variable \code{x} is splitted, which column to show?}
+
+\item{t}{Optional time point to subset (makes sense if the heatmap is not
+through time). Provide a negative number to automatically filter only the
+last time point.}
+
+\item{...}{Parameters to be passed to \code{geom_path}}
 }
 \value{
 A ggplot
@@ -27,5 +36,11 @@ Plot population distribution through time
 
 root <- system.file("extdata", "example_1", package = "egssimtools")
 plot_pop_bin2d(root, "individual_trait", by = 3, j = 1)
+
+# Plot the mating versus ecological trait
+plot_pop_bin2d(
+  root, "individual_trait", x = "individual_trait", by = 3,
+  j = 2, k = 1
+)
 
 }
