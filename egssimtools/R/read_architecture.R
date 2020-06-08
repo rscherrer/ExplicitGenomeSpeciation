@@ -5,6 +5,11 @@
 #'
 #' @return A list with all the fields of a genetic architecture
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_architecture(root)
+#'
 #' @export
 
 read_architecture <- function(folder, filename = "architecture.txt") {

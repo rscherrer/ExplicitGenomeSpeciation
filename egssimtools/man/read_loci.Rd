@@ -31,3 +31,9 @@ Wrapper around \code{read_data} to read locus-wise data
 \details{
 The file \code{time.dat} must be present
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_loci(root, "genome_Fst")
+
+}

@@ -15,3 +15,9 @@ A logical
 \description{
 Is a simulation missing?
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+is_missing(root)
+
+}

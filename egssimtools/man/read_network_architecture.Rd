@@ -17,3 +17,9 @@ A \code{tbl_graph} object
 \description{
 Reads a genetic architecture and stores it into a \code{tbl_graph} object
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_network_architecture(root)
+
+}

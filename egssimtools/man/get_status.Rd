@@ -15,3 +15,9 @@ A character
 \description{
 Read the exit status of the simulation from the SLURM output file
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+get_status(root)
+
+}

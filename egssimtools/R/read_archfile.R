@@ -4,6 +4,12 @@
 #'
 #' @return A list with all the fields of a genetic architecture
 #'
+#' @examples
+#'
+#' f <- system.file("extdata", "example_1", package = "egssimtools")
+#' f <- file.path(f, "architecture.txt")
+#' read_archfile(f)
+#'
 #' @export
 
 read_archfile <- function(filename) {

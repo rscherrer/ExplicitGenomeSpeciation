@@ -8,6 +8,11 @@
 #'
 #' @return A ggplot
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_population_bin2d(root, "individual_trait", by = 3, j = 1)
+#'
 #' @export
 
 plot_population_bin2d <- function(root, y, by = 1, j = 1, bins = 50) {

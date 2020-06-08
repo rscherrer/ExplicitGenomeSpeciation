@@ -32,3 +32,9 @@ Wrapper around \code{read_data} to read timepoint-wise summary data
 \details{
 The file \code{time.dat} must be present
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_sim(root, "EI")
+
+}

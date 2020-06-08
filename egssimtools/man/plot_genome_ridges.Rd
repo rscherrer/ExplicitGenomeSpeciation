@@ -21,3 +21,9 @@ A ggplot
 \description{
 Genome-wide distributions through time
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_genome_ridges(root, "genome_Fst")
+
+}

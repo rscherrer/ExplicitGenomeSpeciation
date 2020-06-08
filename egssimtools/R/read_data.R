@@ -16,6 +16,11 @@
 #'
 #' @note Do not provide the extension of the files. It is assumed to be `.dat`.
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_data(root, c("time", "genome_Fst"), by = c(1, 300))
+#'
 #' @export
 
 read_data <- function(

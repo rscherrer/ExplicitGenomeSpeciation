@@ -25,3 +25,9 @@ A ggplot
 \description{
 Diagnose a simulation variable
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_simulation_line(root, "EI")
+
+}

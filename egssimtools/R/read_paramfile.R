@@ -5,6 +5,12 @@
 #'
 #' @return A list of parameter values
 #'
+#' @examples
+#'
+#' f <- system.file("extdata", package = "egssimtools")
+#' f <- file.path(f, "example_1/parameters.txt")
+#' read_paramfile(f)
+#'
 #' @export
 
 read_paramfile <- function(filename, parnames = NULL) {

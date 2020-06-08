@@ -5,7 +5,15 @@
 #' @param verbose Whether to display messages
 #' @param level Recursion level
 #'
+#' @details Finds completed simulations by checking the SLURM exit status.
+#' Applicable only to simulations run on a server with SLURM.
+#'
 #' @return A character vector with the paths to completed simulations
+#'
+#' @examples
+#'
+#' root <- system.file("extdata", package = "egssimtools")
+#' find_completed(root, pattern = "example_", level = 1)
 #'
 #' @export
 

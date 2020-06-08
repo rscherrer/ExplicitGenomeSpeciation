@@ -32,3 +32,9 @@ Wrapper around \code{read_data} to read individual-wise data
 \details{
 The files \code{time.dat} and \code{population_size.dat} must be present
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_indiv(root, "individual_trait", by = 3)
+
+}

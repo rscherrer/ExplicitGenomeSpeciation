@@ -7,6 +7,11 @@
 #'
 #' @return A ggplot
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_genome_ridges(root, "genome_Fst")
+#'
 #' @export
 
 plot_genome_ridges <- function(

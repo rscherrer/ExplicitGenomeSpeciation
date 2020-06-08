@@ -4,6 +4,12 @@
 #'
 #' @return A vector of degrees across loci
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' arch <- read_architecture(root)
+#' get_degrees(arch)
+#'
 #' @export
 
 get_degrees <- function(arch) {

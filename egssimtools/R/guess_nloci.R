@@ -9,6 +9,11 @@
 #'
 #' @return An integer
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' guess_nloci(root)
+#'
 #' @export
 
 guess_nloci <- function(folder, variable = "genome_Fst") {

@@ -4,6 +4,10 @@
 #' @param n A vector of how many times to repeat each thing
 #'
 #' @return A vector of the same type as `x`
+#'
+#' @examples
+#'
+#' mrep(1:3, 1:3)
 
 mrep <- function(x, n) {
 

@@ -5,6 +5,11 @@
 #'
 #' @return A renamed data frame
 #'
+#' @examples
+#'
+#' df <- data.frame(a = 1, b = 1)
+#' rename_str(df, c("aa", "bb"))
+#'
 #' @export
 
 rename_str <- function(df, newcols) {

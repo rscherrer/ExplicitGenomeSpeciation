@@ -8,6 +8,11 @@
 #'
 #' @return A list of parameter values
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_parameters(root)
+#'
 #' @export
 
 read_parameters <- function(

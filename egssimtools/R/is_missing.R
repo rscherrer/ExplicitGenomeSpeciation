@@ -4,6 +4,11 @@
 #'
 #' @return A logical
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' is_missing(root)
+#'
 #' @export
 
 is_missing <- function(folder) {

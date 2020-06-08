@@ -1,9 +1,21 @@
 #' Find missing simulations
 #'
-#' @param sims Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param sims Either path to a root directory containing simulation folders, or
+#'   a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param level Recursion level
+#'
+#' @details Uses the absence of `.dat` output files as a clue for missing
+#' simulations
+#'
+#' @return A character vector of missing simulations, or NULL if no simulation
+#'   is missing
+#'
+#' @examples
+#'
+#' root <- system.file("extdata", package = "egssimtools")
+#' find_missing(root, pattern = "example_", level = 1)
 #'
 #' @export
 

@@ -4,7 +4,14 @@
 \alias{plot_genome_violin}
 \title{Diagnostic violin plot}
 \usage{
-plot_genome_violin(root, y, x = NULL, t = NULL, archfile = "architecture.txt")
+plot_genome_violin(
+  root,
+  y,
+  x = NULL,
+  t = NULL,
+  is_color = FALSE,
+  archfile = "architecture.txt"
+)
 }
 \arguments{
 \item{root}{Path to the simulation folder}
@@ -15,6 +22,8 @@ plot_genome_violin(root, y, x = NULL, t = NULL, archfile = "architecture.txt")
 
 \item{t}{Time point at which to show the scan. If unspecified, last time point.}
 
+\item{is_color}{Whether to color by \code{x}}
+
 \item{archfile}{Optional architecture file name}
 }
 \value{
@@ -22,4 +31,11 @@ A ggplot
 }
 \description{
 Quick-plots a variable across the genome, possibly split between categories
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_genome_violin(root, "genome_Fst")
+plot_genome_violin(root, "genome_Fst", x = "trait", is_color = TRUE)
+
 }

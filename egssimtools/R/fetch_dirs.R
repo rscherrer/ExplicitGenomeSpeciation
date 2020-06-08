@@ -6,6 +6,11 @@
 #'
 #' @return A vector of directory full names
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", package = "egssimtools")
+#' fetch_dirs(root, pattern = "example", level = 1)
+#'
 #' @export
 
 fetch_dirs <- function(roots, pattern = "^.*$", level = 0) {

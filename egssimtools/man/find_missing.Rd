@@ -7,7 +7,8 @@
 find_missing(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{sims}{Either path to a root directory containing simulation folders, or
+a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 
@@ -15,6 +16,20 @@ find_missing(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 
 \item{level}{Recursion level}
 }
+\value{
+A character vector of missing simulations, or NULL if no simulation
+is missing
+}
 \description{
 Find missing simulations
+}
+\details{
+Uses the absence of \code{.dat} output files as a clue for missing
+simulations
+}
+\examples{
+
+root <- system.file("extdata", package = "egssimtools")
+find_missing(root, pattern = "example_", level = 1)
+
 }

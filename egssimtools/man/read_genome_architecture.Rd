@@ -17,3 +17,9 @@ A data frame with, for each locus, its location, trait, effect, dominance, chrom
 \description{
 Make a table from locus-specific genetic architecture details
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_genome_architecture(root)
+
+}

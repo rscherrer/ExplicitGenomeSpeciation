@@ -9,6 +9,12 @@
 #'
 #' @return A ggplot
 #'
+#' @examples
+#'
+#' # Plot the distribution of the ecological trait
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_population_density(root, "individual_trait", by = 3, j = 1)
+#'
 #' @export
 
 plot_population_density <- function(

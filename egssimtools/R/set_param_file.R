@@ -4,9 +4,14 @@
 #'
 #' @param pars A named list or vector of parameter values. Numeric values will be coerced to character. Please provide compound parameters as strings with space-separated values. Names should be the names of the parameters.
 #' @param template Optional file to add or change parameters into (the file is not overwritten).
-#' @param saveto Optional file where to save the output.
+#' @param saveto Optional file where to save the output. If unspecified, the
+#' output is returned to the prompt.
 #'
 #' @return A vector of parameter entries, only if `saveto` is NULL.
+#'
+#' @examples
+#'
+#' set_param_file(list(ecosel = 1.4, nvertices = "100 100 100"))
 #'
 #' @export
 

@@ -17,3 +17,10 @@ A numeric vector
 \description{
 Read binary file
 }
+\examples{
+
+f <- system.file("extdata", package = "egssimtools")
+f <- file.path(f, "example_1/time.dat")
+read_binary(f)
+
+}

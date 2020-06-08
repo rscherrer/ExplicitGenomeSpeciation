@@ -17,3 +17,9 @@ A renamed data frame
 \description{
 Function to rename the columns of a data frame given a character vector
 }
+\examples{
+
+df <- data.frame(a = 1, b = 1)
+rename_str(df, c("aa", "bb"))
+
+}

@@ -11,6 +11,11 @@
 #'
 #' @return A data frame
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_indiv(root, "individual_trait", by = 3)
+#'
 #' @export
 
 read_indiv <- function(

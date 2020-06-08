@@ -7,6 +7,11 @@
 #'
 #' @return A logical
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' is_extinct(root)
+#'
 #' @export
 
 is_extinct <- function(folder, logfile = "log.txt") {

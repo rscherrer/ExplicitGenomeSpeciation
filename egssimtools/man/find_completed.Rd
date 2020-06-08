@@ -21,3 +21,13 @@ A character vector with the paths to completed simulations
 \description{
 Find completed simulations
 }
+\details{
+Finds completed simulations by checking the SLURM exit status.
+Applicable only to simulations run on a server with SLURM.
+}
+\examples{
+
+root <- system.file("extdata", package = "egssimtools")
+find_completed(root, pattern = "example_", level = 1)
+
+}

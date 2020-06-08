@@ -45,3 +45,9 @@ Function to read simulation data from binary files into a data frame. Can read m
 \note{
 Do not provide the extension of the files. It is assumed to be \code{.dat}.
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_data(root, c("time", "genome_Fst"), by = c(1, 300))
+
+}

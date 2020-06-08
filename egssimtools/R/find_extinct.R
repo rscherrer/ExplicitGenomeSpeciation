@@ -5,6 +5,14 @@
 #' @param verbose Whether to display messages
 #' @param level Recursion level
 #'
+#' @return A character vector of extinct simulations, or NULL if no simulation
+#'   is extinct
+#'
+#' @examples
+#'
+#' root <- system.file("extdata", package = "egssimtools")
+#' find_extinct(root, pattern = "example_", level = 1)
+#'
 #' @export
 
 # How many simulations did go extinct?

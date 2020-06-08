@@ -15,3 +15,10 @@ A vector of chromosome indices for each locus
 \description{
 Get locus chromosomal locations
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+arch <- read_architecture(root)
+get_chromosomes(arch)
+
+}

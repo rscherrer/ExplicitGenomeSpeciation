@@ -9,6 +9,11 @@
 #'
 #' @return A ggplot
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_simulation_line(root, "EI")
+#'
 #' @export
 
 plot_simulation_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {

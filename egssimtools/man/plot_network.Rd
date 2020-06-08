@@ -21,3 +21,9 @@ A ggplot
 \description{
 Plot gene network
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_network(root, "genome_Fst")
+
+}

@@ -6,6 +6,11 @@
 #'
 #' @return A character
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' get_status(root)
+#'
 #' @export
 
 get_status <- function(folder) {

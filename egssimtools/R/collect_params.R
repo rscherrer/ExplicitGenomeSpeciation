@@ -37,7 +37,7 @@ collect_params <- function(
 
   # Read the parameters and combine
   if (verbose) message("Reading parameters...")
-  map_dfr(root, function(root) {
+  purrr::map_dfr(root, function(root) {
     pars <- read_parameters(
       root, parnames, filename, combine, flatten = TRUE, as_numeric
     )

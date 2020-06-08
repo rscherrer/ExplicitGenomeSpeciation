@@ -7,6 +7,11 @@
 #'
 #' @return A vector of names of the simulation that did not go extinct
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", package = "egssimtools")
+#' find_extant(root, pattern = "example_", level = 1)
+#'
 #' @export
 
 find_extant <- function(

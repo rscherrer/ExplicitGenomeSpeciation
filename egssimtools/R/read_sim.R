@@ -11,6 +11,11 @@
 #'
 #' @return A data frame
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_sim(root, "EI")
+#'
 #' @export
 
 read_sim <- function(

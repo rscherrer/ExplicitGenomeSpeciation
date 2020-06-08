@@ -17,3 +17,10 @@ A list of parameter values
 \description{
 Read a parameter file
 }
+\examples{
+
+f <- system.file("extdata", package = "egssimtools")
+f <- file.path(f, "example_1/parameters.txt")
+read_paramfile(f)
+
+}

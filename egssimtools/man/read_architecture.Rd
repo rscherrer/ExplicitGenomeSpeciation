@@ -17,3 +17,9 @@ A list with all the fields of a genetic architecture
 \description{
 Read architecture
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_architecture(root)
+
+}

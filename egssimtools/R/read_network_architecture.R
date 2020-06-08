@@ -7,6 +7,11 @@
 #'
 #' @return A `tbl_graph` object
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' read_network_architecture(root)
+#'
 #' @export
 
 read_network_architecture <- function(folder, filename = "architecture.txt") {
@@ -17,7 +22,7 @@ read_network_architecture <- function(folder, filename = "architecture.txt") {
   # Read the edges
   edges <- read_architecture(folder, filename)
   edges <- purrr::map_dfr(
-    edges$networks, ~ do.call("tibble", .x), .id = "trait"
+    edges$networks, ~ do.call("data.frame", .x), .id = "trait"
   )
   edges <- edges %>% dplyr::mutate(trait = as.numeric(factor(trait)) - 1)
   edges <- edges %>% dplyr::rename(from = edges0, to = edges1, weight = weights)

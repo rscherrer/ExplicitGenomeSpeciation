@@ -2,7 +2,12 @@ rm(list = ls())
 
 library(egssimtools)
 
-root <- "/media/raphael/bigass/simulations/EGS/genomes3/"
+root <- "data"
+collect_params(root, parnames = c("ecosel", "hsymmetry"), level = 1)
+
+roots <- fetch_dirs(root, "example", 1)
+read_parameters(roots[1])
+
 roots <- fetch_dirs(root, pattern = "sim_", level = 2)
 root <- roots[1]
 

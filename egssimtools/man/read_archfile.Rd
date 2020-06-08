@@ -15,3 +15,10 @@ A list with all the fields of a genetic architecture
 \description{
 Read an architecture file
 }
+\examples{
+
+f <- system.file("extdata", "example_1", package = "egssimtools")
+f <- file.path(f, "architecture.txt")
+read_archfile(f)
+
+}

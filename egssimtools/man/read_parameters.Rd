@@ -30,3 +30,9 @@ A list of parameter values
 \description{
 Read parameters
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_parameters(root)
+
+}

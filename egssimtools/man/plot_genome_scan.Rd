@@ -4,7 +4,14 @@
 \alias{plot_genome_scan}
 \title{Diagnostic genome scan}
 \usage{
-plot_genome_scan(root, y, x = "locus", t = NULL)
+plot_genome_scan(
+  root,
+  y,
+  x = "locus",
+  t = NULL,
+  color_by = NULL,
+  archfile = "architecture.txt"
+)
 }
 \arguments{
 \item{root}{Path to the simulation folder}
@@ -14,10 +21,20 @@ plot_genome_scan(root, y, x = "locus", t = NULL)
 \item{x}{Optional x-axis, defaults to locus identity but could also be e.g. "location" for locus position along the genome}
 
 \item{t}{Time point at which to show the scan. If unspecified, last time point.}
+
+\item{color_by}{Variable to color according to}
+
+\item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot
 }
 \description{
 Quick-plots a genome scan of a given variable at a given time point
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_genome_scan(root, "genome_Fst", color_by = "trait")
+
 }

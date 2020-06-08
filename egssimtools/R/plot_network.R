@@ -7,6 +7,11 @@
 #'
 #' @return A ggplot
 #'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_network(root, "genome_Fst")
+#'
 #' @export
 
 plot_network <- function(root, y, t = NULL, archfile = "architecture.txt") {

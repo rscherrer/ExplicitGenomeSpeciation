@@ -23,3 +23,9 @@ A ggplot
 \description{
 Diagnose density of a given variable across the population through time
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_population_bin2d(root, "individual_trait", by = 3, j = 1)
+
+}

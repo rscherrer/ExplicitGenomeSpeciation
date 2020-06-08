@@ -15,6 +15,16 @@ find_extinct(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 
 \item{level}{Recursion level}
 }
+\value{
+A character vector of extinct simulations, or NULL if no simulation
+is extinct
+}
 \description{
 Find extinct simulations
+}
+\examples{
+
+root <- system.file("extdata", package = "egssimtools")
+find_extinct(root, pattern = "example_", level = 1)
+
 }

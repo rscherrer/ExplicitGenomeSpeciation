@@ -20,3 +20,9 @@ Function to find out the number of loci in a given simulation
 \details{
 The file \code{time.dat} must be present
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+guess_nloci(root)
+
+}
