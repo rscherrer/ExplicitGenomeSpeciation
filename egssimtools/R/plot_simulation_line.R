@@ -13,16 +13,14 @@
 
 plot_simulation_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {
 
-  library(ggplot2)
-
-  data <- read_data(root, c(x, y), by = c(1, by))
+  data <- read_sim(root, y, by)
   data <- data[, c(1, j + 1)]
 
-  if (is.null(t)) t <- last(data$time)
+  if (is.null(t)) t <- dplyr::last(data$time)
 
-  ggplot(data, aes(x = get(x), y = get(colnames(data)[2]))) +
-    geom_path(color = color) +
-    theme_bw() +
-    labs(x = x, y = colnames(data)[2])
+  ggplot2::ggplot(data, ggplot2::aes(x = get(x), y = get(colnames(data)[2]))) +
+    ggplot2::geom_path(color = color) +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = x, y = colnames(data)[2])
 
 }

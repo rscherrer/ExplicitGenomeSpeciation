@@ -12,16 +12,14 @@
 
 plot_population_bin2d <- function(root, y, by = 1, j = 1, bins = 50) {
 
-  library(ggplot2)
-
-  data <- read_data(root, c("time", y), by = c(1, by), dupl = list("population_size", 1))
+  data <- read_indiv(root, y, by)
   data <- data[, c(1, j + 1)]
 
-  if (is.null(t)) t <- last(data$time)
+  if (is.null(t)) t <- dplyr::last(data$time)
 
-  ggplot(data, aes(x = time, y = get(colnames(data)[2]))) +
-    geom_bin2d(bins = bins) +
-    theme_bw() +
-    ylab(colnames(data)[2])
+  ggplot2::ggplot(data, ggplot2::aes(x = time, y = get(colnames(data)[2]))) +
+    ggplot2::geom_bin2d(bins = bins) +
+    ggplot2::theme_bw() +
+    ggplot2::ylab(colnames(data)[2])
 
 }

@@ -12,23 +12,13 @@
 
 plot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
 
-  library(ggplot2)
+  data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
 
-  time <- read_data(root, "time")
-  X <- read_data(root, y)
-  nloci <- nrow(X) / nrow(time)
-
-  data <- read_data(
-    root, c("time", y), dupl = c(nloci, 1),
-    architecture = TRUE,
-    archfile = archfile
-  )
-
-  ggplot(data, aes(x = time, y = locus, fill = get(y))) +
-    geom_tile() +
-    theme_bw() +
-    labs(fill = y) +
-    scale_fill_gradient(low = "black", high = "yellow") +
-    labs(x = "Time", y = "Locus", fill = y)
+  ggplot2::ggplot(data, ggplot2::aes(x = time, y = locus, fill = get(y))) +
+    ggplot2::geom_tile() +
+    ggplot2::theme_bw() +
+    ggplot2::labs(fill = y) +
+    ggplot2::scale_fill_gradient(low = "black", high = "yellow") +
+    ggplot2::labs(x = "Time", y = "Locus", fill = y)
 
 }

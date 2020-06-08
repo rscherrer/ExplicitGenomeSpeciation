@@ -1,24 +1,22 @@
 #' Plot locus-specific lines through time
 #'
-#' @param roooooooot Path to the simulation
+#' @param root Path to the simulation
 #' @param y Variable to plot
 #' @param span Optional span parameter for LOESS smoothing (no smoothing if 0)
+#' @param archfile Optional architecture file name
 #'
 #' @return A ggplot
 #'
 #' @export
 
-plot_genome_lines <- function(root, y, span = 0.2) {
+plot_genome_lines <- function(
+  root,
+  y,
+  span = 0.2,
+  archfile = "architecture.txt"
+) {
 
-  library(ggplot2)
-  library(ggridges)
-  library(ggsim)
-
-  time <- read_data(root, "time")
-  X <- read_data(root, y)
-  nloci <- nrow(X) / nrow(time)
-
-  data <- read_data(root, c("time", y), dupl = c(nloci, 1), architecture = TRUE)
+  data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
 
   if (span > 0) {
     smoothen <- function(data) {
@@ -31,20 +29,28 @@ plot_genome_lines <- function(root, y, span = 0.2) {
   }
 
   data <- data %>%
-    group_by(locus) %>%
-    nest() %>%
-    mutate(smooth = map(data, smoothen)) %>%
-    unnest(cols = c(data, smooth)) %>%
-    ungroup()
+    dplyr::group_by(locus) %>%
+    tidyr::nest() %>%
+    dplyr::mutate(smooth = purrr::map(data, smoothen)) %>%
+    tidyr::unnest(cols = c(data, smooth)) %>%
+    dplyr::ungroup()
 
-  p <- gglineplot(data, x = "time", y = "smooth", line = "locus", alpha = 0.5) +
-    aes(color = factor(trait)) +
-    scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey")) +
-    labs(x = "Time (generations)", y = y, color = "Trait") +
-    theme(legend.position = "none")
+  colors <- c("forestgreen", "goldenrod", "lightgrey")
 
-  p <- p + ylim(c(0, max(data[[y]])))
+  p <- ggsim::gglineplot(
+    data,
+    x = "time",
+    y = "smooth",
+    line = "locus",
+    alpha = 0.5
+  ) +
+    ggplot2::aes(color = factor(trait)) +
+    ggplot2::scale_color_manual(values = colors) +
+    ggplot2::labs(x = "Time (generations)", y = y, color = "Trait") +
+    ggplot2::theme(legend.position = "none")
 
-  p %>% facettize(rows = "trait", prepend = "Trait ")
+  p <- p + ggplot2::ylim(c(0, max(data[[y]])))
+
+  p %>% ggsim::facettize(rows = "trait", prepend = "Trait ")
 
 }

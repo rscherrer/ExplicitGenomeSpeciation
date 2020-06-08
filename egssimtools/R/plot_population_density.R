@@ -11,20 +11,25 @@
 #'
 #' @export
 
-plot_population_density <- function(root, y, by = 1, j = 1, t = NULL, fill = "lightgrey") {
+plot_population_density <- function(
+  root,
+  y,
+  by = 1,
+  j = 1,
+  t = NULL,
+  fill = "lightgrey"
+) {
 
-  library(ggplot2)
-
-  data <- read_data(root, c("time", y), by = c(1, by), dupl = list("population_size", 1))
+  data <- read_indiv(root, y, by)
   data <- data[, c(1, j + 1)]
 
-  if (is.null(t)) t <- last(data$time)
+  if (is.null(t)) t <- dplyr::last(data$time)
 
-  data <- data %>% filter(time == t)
+  data <- data %>% dplyr::filter(time == t)
 
-  ggplot(data, aes(x = get(colnames(data)[2]))) +
-    geom_density(fill = fill) +
-    theme_bw() +
-    xlab(colnames(data)[2])
+  ggplot2::ggplot(data, ggplot2::aes(x = get(colnames(data)[2]))) +
+    ggplot2::geom_density(fill = fill) +
+    ggplot2::theme_bw() +
+    ggplot2::xlab(colnames(data)[2])
 
 }

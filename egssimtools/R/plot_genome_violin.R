@@ -6,31 +6,37 @@
 #' @param y Name of the variable to plot
 #' @param x Optional grouping variable
 #' @param t Time point at which to show the scan. If unspecified, last time point.
+#' @param archfile Optional architecture file name
 #'
 #' @return A ggplot
 #'
 #' @export
 
-plot_genome_violin <- function(root, y, x = NULL, t = NULL) {
+plot_genome_violin <- function(
+  root,
+  y,
+  x = NULL,
+  t = NULL,
+  archfile = "architecture.txt"
+) {
 
-  library(ggplot2)
+  data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
 
-  time <- read_data(root, "time")
-  X <- read_data(root, y)
-  nloci <- nrow(X) / nrow(time)
+  if (is.null(t)) t <- dplyr::last(data$time)
 
-  data <- read_data(root, c("time", y), dupl = c(nloci, 1), architecture = TRUE)
+  data <- data %>% dplyr::filter(time == t)
 
-  if (is.null(t)) t <- last(data$time)
+  colors <- c("forestgreen", "goldenrod", "lightgrey")
 
-  data <- data %>% filter(time == t)
-
-  p <- ggplot(data, aes(x = factor(get(x)), y = get(y), color = factor(trait))) +
-    geom_violin() +
-    theme_bw() +
-    labs(x = x, y = y) +
-    scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey")) +
-    labs(x = "Trait", y = y, color = "Trait")
+  p <- ggplot2::ggplot(
+    data,
+    ggplot2::aes(x = factor(get(x)), y = get(y), color = factor(trait))
+  ) +
+    ggplot2::geom_violin() +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = x, y = y) +
+    ggplot2::scale_color_manual(values = colors) +
+    ggplot2::labs(x = "Trait", y = y, color = "Trait")
 
   return(p)
 

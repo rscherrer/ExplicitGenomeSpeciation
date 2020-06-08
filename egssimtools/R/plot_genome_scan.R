@@ -13,21 +13,20 @@
 
 plot_genome_scan <- function(root, y, x = "locus", t = NULL) {
 
-  library(ggplot2)
+  data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
 
-  time <- read_data(root, "time")
-  X <- read_data(root, y)
-  nloci <- nrow(X) / nrow(time)
+  if (is.null(t)) t <- dplyr::last(data$time)
 
-  data <- read_data(root, c("time", y), dupl = c(nloci, 1), architecture = TRUE)
+  colors <- c("forestgreen", "goldenrod", "lightgrey")
 
-  if (is.null(t)) t <- last(data$time)
-
-  data <- data %>% filter(time == t)
-  ggplot(data, aes(x = get(x), y = get(y), color = factor(trait))) +
-    geom_point() +
-    theme_bw() +
-    labs(x = x, y = y, color = "Trait") +
-    scale_color_manual(values = c("forestgreen", "goldenrod", "lightgrey"))
+  data <- data %>% dplyr::filter(time == t)
+  ggplot2::ggplot(
+    data,
+    ggplot2::aes(x = get(x), y = get(y), color = factor(trait))
+  ) +
+    ggplot2::geom_point() +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = x, y = y, color = "Trait") +
+    ggplot2::scale_color_manual(values = colors)
 
 }
