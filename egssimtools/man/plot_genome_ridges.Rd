@@ -2,9 +2,15 @@
 % Please edit documentation in R/plot_genome_ridges.R
 \name{plot_genome_ridges}
 \alias{plot_genome_ridges}
-\title{Genome-wide distributions through time}
+\title{Plot genome distribution through time}
 \usage{
-plot_genome_ridges(root, y, times = NULL, archfile = "architecture.txt")
+plot_genome_ridges(
+  root,
+  y,
+  times = NULL,
+  facet_by = NULL,
+  archfile = "architecture.txt"
+)
 }
 \arguments{
 \item{root}{Path to the simulation}
@@ -13,17 +19,22 @@ plot_genome_ridges(root, y, times = NULL, archfile = "architecture.txt")
 
 \item{times}{Optional vector of time points to show}
 
+\item{facet_by}{Variable to facet by}
+
 \item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot
 }
 \description{
-Genome-wide distributions through time
+Plot genome distribution through time
 }
 \examples{
 
 root <- system.file("extdata", "example_1", package = "egssimtools")
-plot_genome_ridges(root, "genome_Fst")
+plot_genome_ridges(root, "genome_Fst", times = c(100, 200, 300))
+plot_genome_ridges(
+ root, "genome_Fst", times = c(100, 200, 300), facet_by = "trait"
+)
 
 }

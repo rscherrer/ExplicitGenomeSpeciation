@@ -1,11 +1,18 @@
-#' Plot locus-specific lines through time
+#' Plot locus variables through time
 #'
 #' @param root Path to the simulation
 #' @param y Variable to plot
 #' @param span Optional span parameter for LOESS smoothing (no smoothing if 0)
+#' @param facet_by Variable to facet by
 #' @param archfile Optional architecture file name
 #'
 #' @return A ggplot
+#'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_genome_lines(root, "genome_Fst")
+#' plot_genome_lines(root, "genome_Fst", facet_by = "trait")
 #'
 #' @export
 
@@ -13,6 +20,7 @@ plot_genome_lines <- function(
   root,
   y,
   span = 0.2,
+  facet_by = NULL,
   archfile = "architecture.txt"
 ) {
 
@@ -43,14 +51,19 @@ plot_genome_lines <- function(
     y = "smooth",
     line = "locus",
     alpha = 0.5
-  ) +
-    ggplot2::aes(color = factor(trait)) +
-    ggplot2::scale_color_manual(values = colors) +
-    ggplot2::labs(x = "Time (generations)", y = y, color = "Trait") +
+  )
+  if (!is.null(facet_by)) {
+    p <- p +
+      ggplot2::aes(color = factor(trait)) +
+      ggplot2::scale_color_manual(values = colors)
+  }
+  p <- p +
+    ggplot2::labs(x = "time", y = y) +
     ggplot2::theme(legend.position = "none")
+  if (!is.null(facet_by)) p <- p + ggplot2::labs(color = facet_by)
 
   p <- p + ggplot2::ylim(c(0, max(data[[y]])))
 
-  p %>% ggsim::facettize(rows = "trait", prepend = "Trait ")
+  p %>% ggsim::facettize(rows = facet_by, prepend = paste0(facet_by, " "))
 
 }

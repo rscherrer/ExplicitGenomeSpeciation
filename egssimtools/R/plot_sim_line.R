@@ -1,4 +1,4 @@
-#' Diagnose a simulation variable
+#' Plot a simulation-wise variable
 #'
 #' @param root Path to the simulation folder
 #' @param y Variable to track
@@ -12,11 +12,11 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' plot_simulation_line(root, "EI")
+#' plot_sim_line(root, "EI")
 #'
 #' @export
 
-plot_simulation_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {
+plot_sim_line <- function(root, y, x = "time", by = 1, j = 1, color = "black") {
 
   data <- read_sim(root, y, by)
   data <- data[, c(1, j + 1)]

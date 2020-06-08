@@ -2,9 +2,15 @@
 % Please edit documentation in R/plot_genome_lines.R
 \name{plot_genome_lines}
 \alias{plot_genome_lines}
-\title{Plot locus-specific lines through time}
+\title{Plot locus variables through time}
 \usage{
-plot_genome_lines(root, y, span = 0.2, archfile = "architecture.txt")
+plot_genome_lines(
+  root,
+  y,
+  span = 0.2,
+  facet_by = NULL,
+  archfile = "architecture.txt"
+)
 }
 \arguments{
 \item{root}{Path to the simulation}
@@ -13,11 +19,20 @@ plot_genome_lines(root, y, span = 0.2, archfile = "architecture.txt")
 
 \item{span}{Optional span parameter for LOESS smoothing (no smoothing if 0)}
 
+\item{facet_by}{Variable to facet by}
+
 \item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot
 }
 \description{
-Plot locus-specific lines through time
+Plot locus variables through time
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_genome_lines(root, "genome_Fst")
+plot_genome_lines(root, "genome_Fst", facet_by = "trait")
+
 }

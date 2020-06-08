@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_genome_heatmap.R
 \name{plot_genome_heatmap}
 \alias{plot_genome_heatmap}
-\title{Diagnostic genome heatmap through time}
+\title{Genome heatmap through time}
 \usage{
 plot_genome_heatmap(root, y, archfile = "architecture.txt")
 }
@@ -18,4 +18,10 @@ A ggplot
 }
 \description{
 Quick-plots a given variable across the genome and through time
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+plot_genome_heatmap(root, "genome_Fst")
+
 }

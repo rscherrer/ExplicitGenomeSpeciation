@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_genome_scan.R
 \name{plot_genome_scan}
 \alias{plot_genome_scan}
-\title{Diagnostic genome scan}
+\title{Plot genome scan}
 \usage{
 plot_genome_scan(
   root,

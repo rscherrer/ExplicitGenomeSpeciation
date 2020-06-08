@@ -1,4 +1,4 @@
-#' Diagnostic genome heatmap through time
+#' Genome heatmap through time
 #'
 #' Quick-plots a given variable across the genome and through time
 #'
@@ -7,6 +7,11 @@
 #' @param archfile The architecture file to look for
 #'
 #' @return A ggplot
+#'
+#' @examples
+#'
+#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' plot_genome_heatmap(root, "genome_Fst")
 #'
 #' @export
 
@@ -19,6 +24,6 @@ plot_genome_heatmap <- function(root, y, archfile = "architecture.txt") {
     ggplot2::theme_bw() +
     ggplot2::labs(fill = y) +
     ggplot2::scale_fill_gradient(low = "black", high = "yellow") +
-    ggplot2::labs(x = "Time", y = "Locus", fill = y)
+    ggplot2::labs(x = "time", y = "locus", fill = y)
 
 }

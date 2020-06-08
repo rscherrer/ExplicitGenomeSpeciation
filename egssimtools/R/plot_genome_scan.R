@@ -1,4 +1,4 @@
-#' Diagnostic genome scan
+#' Plot genome scan
 #'
 #' Quick-plots a genome scan of a given variable at a given time point
 #'

@@ -21,7 +21,7 @@ read_genome_architecture <- function(folder, filename = "architecture.txt") {
   data.frame(
     locus = seq(arch$location),
     location = arch$locations,
-    trait = arch$traits,
+    trait = factor(arch$traits),
     effect = arch$effects,
     dominance = arch$dominances,
     chromosome = get_chromosomes(arch),
