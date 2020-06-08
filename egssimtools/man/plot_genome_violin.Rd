@@ -4,7 +4,7 @@
 \alias{plot_genome_violin}
 \title{Diagnostic violin plot}
 \usage{
-plot_genome_violin(root, y, x = NULL, t = NULL)
+plot_genome_violin(root, y, x = NULL, t = NULL, archfile = "architecture.txt")
 }
 \arguments{
 \item{root}{Path to the simulation folder}
@@ -14,6 +14,8 @@ plot_genome_violin(root, y, x = NULL, t = NULL)
 \item{x}{Optional grouping variable}
 
 \item{t}{Time point at which to show the scan. If unspecified, last time point.}
+
+\item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot

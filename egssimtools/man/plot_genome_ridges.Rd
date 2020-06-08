@@ -4,7 +4,7 @@
 \alias{plot_genome_ridges}
 \title{Genome-wide distributions through time}
 \usage{
-plot_genome_ridges(root, y, times = NULL)
+plot_genome_ridges(root, y, times = NULL, archfile = "architecture.txt")
 }
 \arguments{
 \item{root}{Path to the simulation}
@@ -12,6 +12,8 @@ plot_genome_ridges(root, y, times = NULL)
 \item{y}{Variable to show}
 
 \item{times}{Optional vector of time points to show}
+
+\item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot

@@ -4,14 +4,16 @@
 \alias{plot_genome_lines}
 \title{Plot locus-specific lines through time}
 \usage{
-plot_genome_lines(root, y, span = 0.2)
+plot_genome_lines(root, y, span = 0.2, archfile = "architecture.txt")
 }
 \arguments{
+\item{root}{Path to the simulation}
+
 \item{y}{Variable to plot}
 
 \item{span}{Optional span parameter for LOESS smoothing (no smoothing if 0)}
 
-\item{roooooooot}{Path to the simulation}
+\item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot

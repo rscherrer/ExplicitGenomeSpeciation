@@ -4,7 +4,7 @@
 \alias{plot_network}
 \title{Plot gene network}
 \usage{
-plot_network(root, y, t = NULL)
+plot_network(root, y, t = NULL, archfile = "architecture.txt")
 }
 \arguments{
 \item{root}{Path to the simulation folder}
@@ -12,6 +12,8 @@ plot_network(root, y, t = NULL)
 \item{y}{Name of the variable to map as node size aesthetics}
 
 \item{t}{What time point? Defaults to last time point}
+
+\item{archfile}{Optional architecture file name}
 }
 \value{
 A ggplot
