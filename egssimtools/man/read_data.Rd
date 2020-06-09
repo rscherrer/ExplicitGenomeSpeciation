@@ -51,3 +51,6 @@ root <- system.file("extdata", "example_1", package = "egssimtools")
 read_data(root, c("time", "genome_Fst"), by = c(1, 300))
 
 }
+\seealso{
+\code{read_sim}, \code{read_pop}, \code{read_genome}
+}

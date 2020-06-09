@@ -11,8 +11,8 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' data <- read_loci(root, "genome_Fst", architecture = TRUE)
+#' root <- ""
+#' data <- read_genome(root, "genome_Fst", architecture = TRUE)
 #' smoothen_data(data, "time", "genome_Fst", line = "locus")
 #'
 #' @export

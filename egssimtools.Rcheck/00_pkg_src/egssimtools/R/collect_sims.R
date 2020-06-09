@@ -8,8 +8,11 @@
 #' @param check_extant Whether to check for non-extinct and non-crashed simulation folders
 #' @param pattern Optional pattern to look for if simulation folders are searched by recursion
 #' @param level Level of recursion. Defaults to 0 for no recursion (hen assumes that `root` is a vector of simulation folder paths).
-#' @param verbose,pb Whether to display messages and progress bars
+#' @param verbose Whether to display messages and progress bars
 #' @param id_column Optional name of the simulation identifier column
+#' @param architecture Whether to read a genetic architecture with the (locus-wise) data
+#' @param archfile Name of the architecture file
+#' @param parfile Name of the parameter fiel
 #'
 #' @return A data frame
 #'
@@ -27,18 +30,18 @@ collect_sims <- function(
   pattern = "sim_",
   level = 0,
   verbose = TRUE,
-  pb = TRUE,
-  id_column = "sim"
+  id_column = "sim",
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 ) {
-
-  if (!verbose) pb <- FALSE
 
   # Fetch simulation folders
   root <- fetch_dirs(root, pattern = pattern, level = level)
 
   # Find extant simulations if needed
   if (check_extant) {
-    root <- find_extant(root, pattern = pattern, verbose = verbose, pb = pb)
+    root <- find_extant(root, pattern = pattern, verbose = verbose)
   }
 
   # Read the data and combine
@@ -46,7 +49,7 @@ collect_sims <- function(
   data <- root %>%
     purrr::map_dfr(
       read_data, variables, by, dupl, parnames, combine, as_numeric,
-      .id = id_column
+      architecture, archfile, parfile, .id = id_column
     )
 
 }

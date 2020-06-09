@@ -16,8 +16,10 @@ collect_sims(
   pattern = "sim_",
   level = 0,
   verbose = TRUE,
-  pb = TRUE,
-  id_column = "sim"
+  id_column = "sim",
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 )
 }
 \arguments{
@@ -27,15 +29,21 @@ collect_sims(
 
 \item{by, dupl, parnames, combine, as_numeric}{Parameters to be passed to \code{read_data}}
 
+\item{check_extant}{Whether to check for non-extinct and non-crashed simulation folders}
+
 \item{pattern}{Optional pattern to look for if simulation folders are searched by recursion}
 
 \item{level}{Level of recursion. Defaults to 0 for no recursion (hen assumes that \code{root} is a vector of simulation folder paths).}
 
-\item{verbose, pb}{Whether to display messages and progress bars}
+\item{verbose}{Whether to display messages and progress bars}
 
 \item{id_column}{Optional name of the simulation identifier column}
 
-\item{check_eextant}{Whether to check for non-extinct and non-crashed simulation folders}
+\item{architecture}{Whether to read a genetic architecture with the (locus-wise) data}
+
+\item{archfile}{Name of the architecture file}
+
+\item{parfile}{Name of the parameter fiel}
 }
 \value{
 A data frame

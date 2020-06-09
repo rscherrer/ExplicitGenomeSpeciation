@@ -4,10 +4,6 @@
 #' @param sep The separator between numbers
 #'
 #' @return A numeric vector
-#'
-#' @examples
-#'
-#' str2vec("1 1 1 1")
 
 str2vec <- function(string, sep = ' ') {
 

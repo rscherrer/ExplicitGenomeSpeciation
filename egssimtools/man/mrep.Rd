@@ -17,7 +17,3 @@ A vector of the same type as \code{x}
 \description{
 Repeat many elements many times
 }
-\examples{
-
-mrep(1:3, 1:3)
-}

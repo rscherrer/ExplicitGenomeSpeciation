@@ -7,7 +7,7 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' arch <- read_architecture(root)
+#' arch <- read_arch(root)
 #' get_chromosomes(arch)
 #'
 #' @export

@@ -17,7 +17,3 @@ A numeric vector
 \description{
 String to numeric vector
 }
-\examples{
-
-str2vec("1 1 1 1")
-}
