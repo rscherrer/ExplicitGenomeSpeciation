@@ -11,7 +11,9 @@
 #'
 #' @examples
 #'
-#' root <- ""
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
+#'
 #' data <- read_genome(root, "genome_Fst", architecture = TRUE)
 #' smoothen_data(data, "time", "genome_Fst", line = "locus")
 #'

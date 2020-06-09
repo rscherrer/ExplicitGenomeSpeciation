@@ -12,7 +12,9 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
+#'
 #' read_arch_network(root)
 #'
 #' @export

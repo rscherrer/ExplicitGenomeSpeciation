@@ -7,6 +7,15 @@
 #'
 #' @return A character vector
 #'
+#' @examples
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' # Should return not found with the example data because these simulations
+#' # were run locally, not on SLURM
+#' collect_status(root, pattern = "example", level = 1)
+#'
 #' @export
 
 collect_status <- function(

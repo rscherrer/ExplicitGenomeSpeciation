@@ -12,6 +12,17 @@
 #'
 #' @return A data frame
 #'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' collect_param(root, c("ecosel", "hsymmetry"), pattern = "example", level = 1)
+#'
+#' }
+#'
 #' @export
 
 collect_param <- function(

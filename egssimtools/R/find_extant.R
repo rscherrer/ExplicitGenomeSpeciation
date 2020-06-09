@@ -9,7 +9,9 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data"
+#'
 #' find_extant(root, pattern = "example_", level = 1)
 #'
 #' @export

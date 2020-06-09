@@ -7,8 +7,10 @@
 #'
 #' @examples
 #'
-#' f <- system.file("extdata", package = "egssimtools")
-#' f <- file.path(f, "example_1/time.dat")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
+#'
+#' f <- file.path(root, "example_1/time.dat")
 #' read_binary(f)
 #'
 #' @export

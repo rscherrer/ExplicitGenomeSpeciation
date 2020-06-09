@@ -13,7 +13,8 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
 #'
 #' # Read the ecological divergence through time
 #' read_sim(root, "EI")

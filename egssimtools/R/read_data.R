@@ -20,7 +20,9 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
+#'
 #' read_data(root, c("time", "genome_Fst"), by = c(1, 300))
 #'
 #' @export

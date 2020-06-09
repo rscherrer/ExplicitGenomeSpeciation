@@ -13,7 +13,8 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
 #'
 #' # Read individual trait values through time
 #' read_pop(root, "individual_trait", by = 3)

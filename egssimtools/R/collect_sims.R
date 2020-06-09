@@ -12,9 +12,19 @@
 #' @param id_column Optional name of the simulation identifier column
 #' @param architecture Whether to read a genetic architecture with the (locus-wise) data
 #' @param archfile Name of the architecture file
-#' @param parfile Name of the parameter fiel
+#' @param parfile Name of the parameter file
 #'
 #' @return A data frame
+#'
+#' @examples
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' collect_sims(
+#'   root, c("time", "EI"), pattern = "example", level = 1,
+#'   check_extant = FALSE
+#' )
 #'
 #' @export
 
@@ -51,5 +61,7 @@ collect_sims <- function(
       read_data, variables, by, dupl, parnames, combine, as_numeric,
       architecture, archfile, parfile, .id = id_column
     )
+
+  return(data)
 
 }

@@ -8,7 +8,9 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' # Location of the simulation folder
+#' root <- "egsimtools/data/example_1"
+#'
 #' get_status(root)
 #'
 #' @export
