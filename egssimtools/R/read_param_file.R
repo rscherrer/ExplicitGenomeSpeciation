@@ -9,11 +9,11 @@
 #'
 #' f <- system.file("extdata", package = "egssimtools")
 #' f <- file.path(f, "example_1/parameters.txt")
-#' read_paramfile(f)
+#' read_param_file(f)
 #'
 #' @export
 
-read_paramfile <- function(filename, parnames = NULL) {
+read_param_file <- function(filename, parnames = NULL) {
 
   # Give it the path to the parameter file
   # And optionally the parameters you want it to read

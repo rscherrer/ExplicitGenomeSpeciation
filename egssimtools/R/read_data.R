@@ -16,6 +16,8 @@
 #'
 #' @note Do not provide the extension of the files. It is assumed to be `.dat`.
 #'
+#' @seealso `read_sim`, `read_pop`, `read_genome`
+#'
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
@@ -59,7 +61,7 @@ read_data <- function(
 
   if (!is.null(parnames)) {
 
-    pars <- read_parameters(
+    pars <- read_param(
       folder, parnames, combine = combine, flatten = TRUE,
       as_numeric = as_numeric, filename = parfile
     )
@@ -70,7 +72,7 @@ read_data <- function(
 
   if (architecture) {
 
-    arch <- read_genome_architecture(folder, filename = archfile)
+    arch <- read_arch_genome(folder, filename = archfile)
     ntimes <- nrow(data) / nrow(arch)
     arch <- purrr::map_dfr(seq(ntimes), ~ arch)
     data <- cbind(data, arch)

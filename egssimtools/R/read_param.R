@@ -11,11 +11,11 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' read_parameters(root)
+#' read_param(root)
 #'
 #' @export
 
-read_parameters <- function(
+read_param <- function(
   folder,
   parnames = NULL,
   filename = "paramlog.txt",
@@ -24,7 +24,7 @@ read_parameters <- function(
   as_numeric = NULL
 ) {
 
-  params <- read_paramfile(paste0(folder, '/', filename), parnames)
+  params <- read_param_file(paste0(folder, '/', filename), parnames)
   if (combine) params <- purrr::map_if(
     params, ~ length(.x) > 1, ~ paste0(.x, collapse = " ")
   )
