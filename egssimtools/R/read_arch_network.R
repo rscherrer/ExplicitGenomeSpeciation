@@ -13,21 +13,21 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' read_network_architecture(root)
+#' read_arch_network(root)
 #'
 #' @export
 
-read_network_architecture <- function(
+read_arch_network <- function(
   folder,
   filename = "architecture.txt",
   as_df = FALSE
 ) {
 
   # Read the nodes
-  nodes <- read_genome_architecture(folder, filename)
+  nodes <- read_arch_genome(folder, filename)
 
   # Read the edges
-  edges <- read_architecture(folder, filename)
+  edges <- read_arch(folder, filename)
   edges <- purrr::map_dfr(
     edges$networks, ~ do.call("data.frame", .x), .id = "trait"
   )

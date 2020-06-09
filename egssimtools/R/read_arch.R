@@ -8,12 +8,12 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' read_architecture(root)
+#' read_arch(root)
 #'
 #' @export
 
 read_architecture <- function(folder, filename = "architecture.txt") {
 
-  read_archfile(paste0(folder, '/', filename))
+  read_arch_file(paste0(folder, '/', filename))
 
 }

@@ -8,11 +8,11 @@
 #'
 #' f <- system.file("extdata", "example_1", package = "egssimtools")
 #' f <- file.path(f, "architecture.txt")
-#' read_archfile(f)
+#' read_arch_file(f)
 #'
 #' @export
 
-read_archfile <- function(filename) {
+read_arch_file <- function(filename) {
 
   archfile <- read.delim(filename, header = FALSE)[, 1]
 

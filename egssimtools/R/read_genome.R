@@ -13,11 +13,11 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' read_loci(root, "genome_Fst")
+#' read_genome(root, "genome_Fst")
 #'
 #' @export
 
-read_loci <- function(
+read_genome <- function(
   folder,
   variables,
   parnames = NULL,

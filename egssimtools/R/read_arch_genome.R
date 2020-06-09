@@ -10,13 +10,13 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
-#' read_genome_architecture(root)
+#' read_arch_genome(root)
 #'
 #' @export
 
-read_genome_architecture <- function(folder, filename = "architecture.txt") {
+read_arch_genome <- function(folder, filename = "architecture.txt") {
 
-  arch <- read_architecture(folder, filename)
+  arch <- read_arch(folder, filename)
 
   data.frame(
     locus = seq(arch$location),

@@ -12,17 +12,17 @@ archfile <- root %>%
   str_replace("^.*arch", "arch") %>%
   str_replace("txt.*$", "txt")
 
-data <- read_data(
-  root, c("time", "genome_Fst"), by = c(1, 1), dupl = c(300, 1),
-  architecture = TRUE, archfile = archfile
-)
 
+
+data <- read_loci(root, "genome_Fst", architecture = TRUE, archfile = archfile)
 data <- data %>% mutate(locus = factor(locus))
 nloci <- length(unique(data$locus))
 
-data <- smoothen_data(data, x = "time", y = "genome_Fst", line = "locus", span = 0.2)
+# Plot densities through time
 
-# Plot locus Fst through time for each trait
+
+# Plot lines
+data <- smoothen_data(data, x = "time", y = "genome_Fst", line = "locus", span = 0.2)
 p <- gglineplot(
   data, x = "time", y = "genome_Fst", line = "locus",
   mapping = aes(color = trait)
