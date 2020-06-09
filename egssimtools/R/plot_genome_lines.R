@@ -26,6 +26,9 @@ plot_genome_lines <- function(
 
   data <- read_loci(root, y, architecture = TRUE, archfile = archfile)
 
+  data <- smoothen_data(data, "time", y, span, line = "locus")
+
+
   if (span > 0) {
     smoothen <- function(data) {
       loess(

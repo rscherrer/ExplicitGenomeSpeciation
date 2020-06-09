@@ -7,9 +7,8 @@
 #' not "time" and not `y`) and `y`. See `?read_data`.
 #' @param j If variable `y` is splitted, which column to show?
 #' @param k If variable `x` is splitted, which column to show?
-#' @param t Optional time point to subset (makes sense if the heatmap is not
-#' through time). Provide a negative number to automatically filter only the
-#' last time point.
+#' @param t What time point? Defaults to last time point, only if `x` is not
+#' "time"
 #' @param ... Parameters to be passed to `geom_path`
 #'
 #' @return A ggplot
@@ -45,8 +44,8 @@ plot_pop_bin2d <- function(
   xcol <- colnames(data)[grep(x, colnames(data))][k]
   ycol <- colnames(data)[grep(y, colnames(data))][j]
 
-  if (!is.null(t)) {
-    if (t < 0) t <- dplyr::last(data$time)
+  if (x != "time") {
+    if (is.null(t)) t <- dplyr::last(data$time)
     data <- data %>% dplyr::filter(time == t)
   }
 

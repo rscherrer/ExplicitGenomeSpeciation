@@ -34,7 +34,7 @@ read_loci <- function(
     folder,
     c("time", variables),
     by = rep(1, length(variables) + 1),
-    dupl = list(nloci, rep(1, length(variables))),
+    dupl = c(nloci, rep(1, length(variables))),
     parnames = parnames,
     combine = combine,
     as_numeric = as_numeric,

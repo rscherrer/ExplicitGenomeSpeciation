@@ -20,9 +20,8 @@ not "time" and not \code{y}) and \code{y}. See \code{?read_data}.}
 
 \item{k}{If variable \code{x} is splitted, which column to show?}
 
-\item{t}{Optional time point to subset (makes sense if the heatmap is not
-through time). Provide a negative number to automatically filter only the
-last time point.}
+\item{t}{What time point? Defaults to last time point, only if \code{x} is not
+"time"}
 
 \item{...}{Parameters to be passed to \code{geom_path}}
 }
