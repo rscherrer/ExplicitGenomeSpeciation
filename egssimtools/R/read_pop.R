@@ -40,7 +40,7 @@ read_pop <- function(
     folder,
     c("time", variables),
     by = c(1, by),
-    dupl = list("population_size", rep(1, length(variables))),
+    dupl = c("population_size", as.list(rep(1, length(variables)))),
     parnames = parnames,
     combine = combine,
     as_numeric = as_numeric,
