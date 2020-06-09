@@ -5,6 +5,7 @@
 #' @param folder Path to the folder
 #' @param variables What variables to read (`time` is included by default)
 #' @param parnames,combine,as_numeric,architecture,archfile,parfile Parameters for `read_data`
+#' @param nloci Number of loci (automatically guessed if unspecified)
 #'
 #' @details The file `time.dat` must be present
 #'
@@ -13,7 +14,12 @@
 #' @examples
 #'
 #' root <- system.file("extdata", "example_1", package = "egssimtools")
+#'
+#' # Read Fst throughout the genome
 #' read_genome(root, "genome_Fst")
+#'
+#' # Read multiple metrics and attach architecture
+#' read_genome(root, c("genome_Fst", "genome_Cst"), architecture = TRUE)
 #'
 #' @export
 
@@ -25,12 +31,13 @@ read_genome <- function(
   as_numeric = NULL,
   architecture = FALSE,
   archfile = "architecture.txt",
-  parfile = "paramlog.txt"
+  parfile = "paramlog.txt",
+  nloci = NULL
 ) {
 
-  nloci <- guess_nloci(folder, variables[1])
+  if (is.null(nloci)) nloci <- guess_nloci(folder, variables[1])
 
-  read_data(
+  data <- read_data(
     folder,
     c("time", variables),
     by = rep(1, length(variables) + 1),
@@ -42,5 +49,11 @@ read_genome <- function(
     archfile = archfile,
     parfile = parfile
   )
+
+  if (!"locus" %in% colnames(data)) {
+    data$locus <- rep(seq(nloci), nrow(data) / nloci)
+  }
+
+  return(data)
 
 }
