@@ -12,34 +12,34 @@ sexsel 10
 matingcost 0.01
 demesizes 100 0
 nvertices 100 100 100
-nedges 100 100 100
+nedges 1000 1000 1000
 nchrom 3
 mutation 0.0001
 recombination 3
 allfreq 0.2
-scaleA 1 1 1
+scaleA 0.5 0.5 0.5
 scaleD 0 0 0
-scaleI 0 0 0
+scaleI 0.5 0.5 0.5
 scaleE 0 0 0
 skews 1 1 1
 effectshape 5
 effectscale 1
-interactionshape 5
+interactionshape 1
 interactionscale 1
 dominancevar 1
 tburnin 1000
-tend 20000
+tend 2000
 tsave 100
 tfreeze 20001
-talkative 0
+talkative 1
 record 1
 datsave 1
 choosewhattosave 1
 gensave 0
-archsave 0
-archload 1
+archsave 1
+archload 0
 parsave 1
-archfile arch1.txt
+archfile architecture.txt
 parfile paramlog.txt
 orderfile whattosave.txt
 ntrials 1000
