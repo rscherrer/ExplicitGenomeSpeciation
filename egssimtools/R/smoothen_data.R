@@ -19,12 +19,6 @@
 
 smoothen_data <- function(data, x, y, span = 0.2, line = NULL) {
 
-  smoothen <- function(data) {
-    loess(
-      as.formula(paste(y, "~", x)), degree = 1, span = span, data = data
-    )$fitted
-  }
-
   if (is.null(line)) {
     data <- data %>% dplyr::mutate(linecol = 1)
     line <- "linecol"
@@ -33,9 +27,16 @@ smoothen_data <- function(data, x, y, span = 0.2, line = NULL) {
   data <- data %>%
     dplyr::group_by_at(line) %>%
     tidyr::nest() %>%
-    dplyr::mutate(smooth = purrr::map(data, smoothen)) %>%
+    dplyr::mutate(smooth = purrr::map(
+      data,
+      ~ loess(
+        as.formula(paste(y, "~ time")), degree = 1, span = span, data = .x
+      )$fitted
+    )) %>%
     tidyr::unnest(cols = c(data, smooth)) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::mutate_at(y, ~ smooth) %>%
+    dplyr::select(-smooth)
 
   if ("linecol" %in% colnames(data)) data <- data %>% dplyr::select(-linecol)
 

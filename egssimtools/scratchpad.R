@@ -20,7 +20,7 @@ data <- read_data(
 data <- data %>% mutate(locus = factor(locus))
 nloci <- length(unique(data$locus))
 
-
+data <- smoothen_data(data, x = "time", y = "genome_Fst", line = "locus", span = 0.2)
 
 # Plot locus Fst through time for each trait
 p <- gglineplot(
@@ -29,4 +29,3 @@ p <- gglineplot(
 )
 p <- facettize(p, rows = "trait", prepend = "trait ")
 p
-p + aes(color = trait)
