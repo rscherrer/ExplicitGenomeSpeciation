@@ -14,7 +14,7 @@ pivot_data(data, variables, newnames = NULL)
 \item{newnames}{Optional character vector of new names for \code{variables}}
 }
 \value{
-A data frame
+A tibble
 }
 \description{
 Can be useful when plotting with facets.

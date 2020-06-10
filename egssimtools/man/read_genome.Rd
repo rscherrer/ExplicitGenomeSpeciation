@@ -27,7 +27,7 @@ for \code{read_data}}
 \item{nloci}{Number of loci (automatically guessed if unspecified)}
 }
 \value{
-A data frame
+A tibble
 }
 \description{
 Wrapper around \code{read_data} to read locus-wise data

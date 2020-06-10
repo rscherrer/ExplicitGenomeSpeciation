@@ -114,19 +114,19 @@ ggplot(data, aes(x = time, y = value)) +
 
 ## Compare genome-wide Fst across simulations
 
-Here, we want to plot the genome-wide Fst for each trait and each simulation. Because we want to read data from multiple simulations, we use `collect_sims` instead of `read_*`:
+Here, we want to plot the genome-wide Fst for each trait and each simulation. Because we want to read data from multiple simulations, we use `collect_data` instead of `read_*`:
 
 ```{r}
 variables <- c("time", "Fst")
-data <- collect_sims(
+data <- collect_data(
   roots, variables, by = c(1, 3), check_extant = FALSE, level = 0
 )
 data
 ```
 
-The `collect_sims` function assembles data from multiple simulations into a single data frame. It internally calls `fetch_dirs`, hence the `level` argument, and so it can go find simulation folders in a nested folder structure provided a certain `pattern` in the naming.
+The `collect_data` function assembles data from multiple simulations into a single data frame. It internally calls `fetch_dirs`, hence the `level` argument, and so it can go find simulation folders in a nested folder structure provided a certain `pattern` in the naming.
 
-Here, we explicitly provided `time` as a variable to read, in contrast to our calls to `read_sim` and `read_pop` in the previous sections. This is because these previous functions are wrappers around a more general function called `read_data`, which does not read in `time.dat` by default. The `collect_sims` function internally calls `read_data` and is the equivalent of this function for multiple simulations. It does not have a simplified equivalent for specific types of data, unlike `read_data`.
+Here, we explicitly provided `time` as a variable to read, in contrast to our calls to `read_sim` and `read_pop` in the previous sections. This is because these previous functions are wrappers around a more general function called `read_data`, which does not read in `time.dat` by default. The `collect_data` function internally calls `read_data` and is the equivalent of this function for multiple simulations. It does not have a simplified equivalent for specific types of data, unlike `read_data`.
 
 This also means that the `by` argument must be provided for each variable separately. Here, the `time.dat` file contains a single column while `Fst.dat` must be splitted into three columns, one for each trait.
 
@@ -146,10 +146,10 @@ ggplot(data, aes(x = time, y = value, color = sim)) +
 
 ### Compare genome scans across simulations
 
-Here we want to plot the genome-wide scan of Fst values at the end of the simulation, for each simulation. Again we use `collect_sims` to combine data from multiple simulations:
+Here we want to plot the genome-wide scan of Fst values at the end of the simulation, for each simulation. Again we use `collect_data` to combine data from multiple simulations:
 
 ```{r}
-data <- collect_sims(
+data <- collect_data(
   roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
   level = 0, architecture = TRUE
 )
@@ -178,7 +178,7 @@ Here we want to produce line plots showing the trajectories through time of all 
 As always, we start with reading the data:
 
 ```{r}
-data <- collect_sims(
+data <- collect_data(
   roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
   level = 0, architecture = TRUE
 )
@@ -289,4 +289,11 @@ Similarly, the `read_genome` function, which returns a locus-wise table, will ta
 
 Locus-wise reading will often involve attaching locus-wise information from the genetic architecture to the data, using the `architecture` argument in `read_genome`. The `read_genome` and `read_data` both internally call `read_arch_genome`, which will read genetic architecture parameters from a dedicated file and append it to the data.
 
-The `collect_sims` function is the equivalent of `read_data` for multiple simulations. It works pretty much in the same way.
+The `collect_data` function is the equivalent of `read_data` for multiple simulations. It works pretty much in the same way. Similar to `read_data`, `collect_data` has simplified equivalents for simulation-wise, individual-wise and locus-wise data, respectively:
+
+* `collect_sim`
+* `collect_pop`
+* `collect_genome`
+
+Note, however, that `collect_genome` cannot (yet) guess the number of loci and requires you to enter it explicitly, assuming that all simulations have the same number of loci. So, to combine simulations with different numbers of loci, make a custom assemblage using individual `read_data` or `read_genome` statements.
+

@@ -32,14 +32,12 @@
 read_pop <- function(
   folder,
   variables,
-  by = NULL,
+  by = rep(1, length(variables)),
   parnames = NULL,
   combine = FALSE,
   as_numeric = NULL,
   parfile = "paramlog.txt"
 ) {
-
-  if (is.null(by)) by <- rep(1, length(variables))
 
   read_data(
     folder,

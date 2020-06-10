@@ -12,7 +12,7 @@ read_arch_genome(folder, filename = "architecture.txt")
 \item{filename}{Name of the architecture file}
 }
 \value{
-A data frame with, for each locus, its location, trait, effect,
+A tibble with, for each locus, its location, trait, effect,
 dominance, chromosome and degree
 }
 \description{

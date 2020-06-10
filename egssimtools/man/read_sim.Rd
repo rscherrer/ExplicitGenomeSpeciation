@@ -24,7 +24,7 @@ read_sim(
 \item{parnames, combine, as_numeric, parfile}{Parameters for \code{read_data}}
 }
 \value{
-A data frame
+A tibble
 }
 \description{
 Wrapper around \code{read_data} to read timepoint-wise summary data

@@ -45,7 +45,7 @@ locus-specific variables in long-format (one column per variable).}
 \item{parfile}{Name of the parameter file, if needed}
 }
 \value{
-A data frame
+A tibble
 }
 \description{
 Function to read simulation data from binary files into a data frame. Can

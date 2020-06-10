@@ -47,7 +47,6 @@ read_sim <- function(
   parfile = "paramlog.txt"
 ) {
 
-  if (is.null(by)) by <- rep(1, length(variables))
   read_data(
     folder,
     variables = c("time", variables),
