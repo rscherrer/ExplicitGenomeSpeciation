@@ -1,33 +1,48 @@
 #' Find extant simulations
 #'
-#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param sims Either path to a root directory containing simulation folders,
+#' or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
-#' @param pb Whether to display a progress bar
 #' @param level Recursion level
 #'
-#' @return A vector of names of the simulation folders that completed
+#' @return A vector of names of the simulation that did not go extinct
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' find_extant(root, pattern = "example_", level = 1)
+#'
+#' }
 #'
 #' @export
 
-find_extant <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE, level = 0) {
+find_extant <- function(
+  sims,
+  pattern = "^sim_",
+  verbose = TRUE,
+  level = 0
+) {
 
-  library(pbapply)
-
-  if (!verbose) pb <- FALSE else message("Looking for extant simulations...")
-  if (pb) thislapply <- pblapply else thislapply <- lapply
-  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
+  if (verbose) message("Looking for extant simulations...")
+  if (level > 0) sims <- fetch_dirs(
+    sims, pattern = pattern, level = level
+  )
 
   # Look for missing and extinct simulations
-  missings <- find_missing(simulations, verbose = verbose, pb = pb)
-  completed <- find_completed(simulations, verbose = verbose, pb = pb)
-  extincts <- find_extinct(simulations, verbose = verbose, pb = pb)
+  missings <- find_missing(sims, verbose = verbose)
+  completed <- find_completed(sims, verbose = verbose)
+  extincts <- find_extinct(sims, verbose = verbose)
 
   # Identify extant simulations
-  if (!is.null(missings)) simulations <- simulations[!simulations %in% missings]
-  if (!is.null(completed)) simulations <- simulations[simulations %in% completed]
-  if (!is.null(extincts)) simulations <- simulations[!simulations %in% extincts]
+  if (!is.null(missings)) sims <- sims[!sims %in% missings]
+  if (!is.null(completed)) sims <- sims[sims %in% completed]
+  if (!is.null(extincts)) sims <- sims[!sims %in% extincts]
 
-  return (simulations)
+  return (sims)
 
 }

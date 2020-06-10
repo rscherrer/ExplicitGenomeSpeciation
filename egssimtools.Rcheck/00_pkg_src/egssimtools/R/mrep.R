@@ -1,13 +1,12 @@
-#' Repeat multiple elements multiple times
+#' Repeat many elements many times
 #'
-#' @param x Vector of what to repeat
-#' @param n Vector of how many times
+#' @param x A vector of things to repeat
+#' @param n A vector of how many times to repeat each thing
 #'
-#' @export
+#' @return A vector of the same type as `x`
 
 mrep <- function(x, n) {
 
-  if (all(n == n[1])) return (rep(x, each = n[1]))
-  do.call("c", mapply(rep, x, n))
+  do.call("c", purrr::map2(x, n, ~ rep(.x, .y)))
 
 }

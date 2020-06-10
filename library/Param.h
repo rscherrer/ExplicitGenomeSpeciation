@@ -32,7 +32,7 @@ struct Param {
         demesizes({ 100u, 0u }),
         nloci(90u), // cannot be provided
         nvertices({ 30u, 30u, 30u }),
-        nedges({ 30u, 0u, 0u }),
+        nedges({ 30u, 30u, 30u }),
         nchrom(3u),
         mutation(1.0E-3),
         recombination(3.0),
@@ -63,6 +63,7 @@ struct Param {
         archfile("architecture.txt"),        
         parfile("paramlog.txt"),
         orderfile("whattosave.txt"),
+        logfile("log.txt"),
         seed(makeDefaultSeed()),
         ntrials(100u)
     {
@@ -137,6 +138,7 @@ struct Param {
     std::string archfile;
     std::string parfile;
     std::string orderfile;
+    std::string logfile;
     size_t seed;
     size_t ntrials;
 

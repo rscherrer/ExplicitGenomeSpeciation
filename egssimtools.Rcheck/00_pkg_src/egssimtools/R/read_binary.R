@@ -3,6 +3,14 @@
 #' @param filename Path to the file
 #' @param digits Encoding
 #'
+#' @return A numeric vector
+#'
+#' @examples
+#'
+#' f <- system.file("extdata", package = "egssimtools")
+#' f <- file.path(f, "example_1/time.dat")
+#' read_binary(f)
+#'
 #' @export
 
 read_binary <- function(filename, digits = 8) {

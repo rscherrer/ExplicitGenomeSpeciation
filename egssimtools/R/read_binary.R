@@ -3,6 +3,20 @@
 #' @param filename Path to the file
 #' @param digits Encoding
 #'
+#' @return A numeric vector
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' f <- file.path(root, "time.dat")
+#' read_binary(f)
+#'
+#' }
+#'
 #' @export
 
 read_binary <- function(filename, digits = 8) {

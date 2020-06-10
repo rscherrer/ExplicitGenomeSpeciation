@@ -11,6 +11,9 @@ str2vec(string, sep = " ")
 
 \item{sep}{The separator between numbers}
 }
+\value{
+A numeric vector
+}
 \description{
 String to numeric vector
 }

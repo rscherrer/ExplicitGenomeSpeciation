@@ -6,13 +6,22 @@
 #'
 #' @return A vector of directory full names
 #'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' fetch_dirs(root, pattern = "example", level = 1)
+#'
+#' }
+#'
 #' @export
 
 fetch_dirs <- function(roots, pattern = "^.*$", level = 0) {
 
-  library(tidyverse)
-
-  if (level > 0) for (i in 1:level) roots <- roots %>% list.dirs(recursive = FALSE)
-  roots[str_detect(str_replace(roots, "^.*/", ""), pattern)]
+  if (level > 0) for (i in 1:level) roots <- list.dirs(roots, recursive = FALSE)
+  roots[stringr::str_detect(stringr::str_replace(roots, "^.*/", ""), pattern)]
 
 }

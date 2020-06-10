@@ -82,6 +82,7 @@ void Param::import(std::ifstream &file)
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
         else if (input == "orderfile") file >> orderfile;
+        else if (input == "logfile") file >> logfile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -99,7 +100,7 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     rnd::rng.seed(seed);
-    nloci = utl::sumu(nvertices);
+    nloci = utl::sum(nvertices);
     check();
 }
 
@@ -140,12 +141,15 @@ void Param::check() const
         msg = "Resource inflow rate should be positive";
     if (outflow <= 0.0)
         msg = "Resource outflow rate should be positive";
-    if (nvertices[0u] <= 1u)
-        msg = "Numer of ecological loci should be at least two";
-    if (nvertices[1u] <= 1u)
-        msg = "Number of mating loci should be at least two";
-    if (nvertices[2u] <= 1u)
-        msg = "Number of neutral loci should be at least two";
+    for (size_t i = 0u; i < 3u; ++i)
+        if (nvertices[i] < 2u)
+            msg = "Number of loci per trait should be at least two";
+    for (size_t i = 0u; i < 3u; ++i) {
+        const size_t n = nvertices[i];
+        const bool cond = nedges[i] >= n - 1u && nedges[i] <= n * (n - 1u) / 2u;
+        if (!cond)
+            msg = "Number of edges per trait should be between n-1 and n(n-1)/2";
+    }
     if (nchrom == 0u)
         msg = "Number of chromosomes should be at least one";
     if (nloci <= 5u)
@@ -171,8 +175,6 @@ void Param::check() const
             msg = "Interaction scaling should be positive";
         if (scaleE[i] < 0.0)
             msg = "Environmental scaling should be positive";
-        if (nedges[i] >= nvertices[i] * (nvertices[i] - 1u) / 2u)
-            msg = "Number of edges is too large";
     }
     if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
@@ -270,6 +272,7 @@ void Param::write(std::ofstream &file) const
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
+    file << "logfile " << logfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }

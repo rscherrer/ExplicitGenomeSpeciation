@@ -8,8 +8,6 @@
 
 #include <cassert>
 
-typedef std::vector<Individual> Crowd;
-
 class MetaPop
 {
 
@@ -145,9 +143,9 @@ public:
 
 private:
 
-    Crowd populate(const Param&, const GenArch&);
+    std::vector<Individual> populate(const Param&, const GenArch&);
 
-    Crowd population;
+    std::vector<Individual> population;
     bool isburnin;
 
     std::vector<std::vector<double> > resources; // per habitat per resource

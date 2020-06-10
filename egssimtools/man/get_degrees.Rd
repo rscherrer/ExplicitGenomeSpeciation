@@ -15,3 +15,16 @@ A vector of degrees across loci
 \description{
 Get locus degrees
 }
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+arch <- read_arch(root)
+get_degrees(arch)
+
+}
+
+}

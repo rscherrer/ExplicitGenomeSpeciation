@@ -11,6 +11,22 @@ read_binary(filename, digits = 8)
 
 \item{digits}{Encoding}
 }
+\value{
+A numeric vector
+}
 \description{
 Read binary file
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+f <- file.path(root, "time.dat")
+read_binary(f)
+
+}
+
 }

@@ -9,6 +9,21 @@ is_missing(folder)
 \arguments{
 \item{folder}{Path to the folder}
 }
+\value{
+A logical
+}
 \description{
 Is a simulation missing?
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+is_missing(root)
+
+}
+
 }

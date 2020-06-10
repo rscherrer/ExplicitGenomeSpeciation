@@ -8,6 +8,7 @@ For the simulations to be able to run on Peregrine, make sure some modules are m
 module add Python/3.6.4-foss-2018a
 module add libpng/1.6.37-GCCcore-8.3.0
 module add PCRE2/10.33-GCCcore-8.3.0
+module add double-conversion/3.1.5-GCCcore-9.3.0
 ```
 
 # Clone the repository

@@ -42,7 +42,6 @@ __pycache__/
 Makefile
 Makefile.Debug
 Makefile.Release
-*.dat
 egs_gui_plugin_import.cpp
 ui_maindialog.h
 .Rproj.user

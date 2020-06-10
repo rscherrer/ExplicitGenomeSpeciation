@@ -20,35 +20,36 @@ std::vector<Edge> Network::makeMap(const Param& p) const
     assert(checkedges(p.nedges[trait], p.nvertices[trait]));
 
     std::vector<Edge> connexions;
-    if (!p.nedges[trait]) return connexions;
     connexions.reserve(p.nedges[trait]);
-    std::vector<size_t> degrees = utl::uzeros(p.nvertices[trait]);
+    std::vector<size_t> degrees = std::vector<size_t>(p.nvertices[trait], 0u);
 
     // First connexion
     connexions.push_back(std::make_pair(0u, 1u));
     ++degrees[0u];
     ++degrees[1u];
 
-    size_t nleft = p.nedges[trait] - 1u; // number of edges left to make
+    size_t eleft = p.nedges[trait] - 1u; // number of edges left to make
+    if (!p.nedges[trait]) return connexions;
 
     // For each vertex...
-    for (size_t vertex = 2u; nleft && vertex < p.nvertices[trait]; ++vertex) {
+    for (size_t vertex = 2u; eleft && vertex < p.nvertices[trait]; ++vertex) {
 
         // Sample number of partners from a binomial
         // This procedure conditions on the average of the degree distribution
         // being nedges / nvertices
 
-        const double prob = 1.0 / (p.nvertices[trait] - vertex);
+        const size_t nleft = p.nvertices[trait] - vertex;
+        const double prob = 1.0 / nleft;
         assert(prob >= 0.0);
         assert(prob <= 1.0);
 
         size_t npartners;
         if (vertex == p.nvertices[trait] - 1u) {
-            npartners = nleft;
+            npartners = eleft;
         }
         else {
-            auto seekpartners = rnd::binomial(nleft, prob);
-            npartners = seekpartners(rnd::rng);
+            auto seekpartners = rnd::binomial(eleft - nleft, prob);
+            npartners = 1u + seekpartners(rnd::rng);
         }
 
         // Assign attachment probabilities
@@ -57,7 +58,7 @@ std::vector<Edge> Network::makeMap(const Param& p) const
             probs[node] = pow(degrees[node], p.skews[trait]);
 
         // For each edge of that vertex
-        for (size_t edge = 0u; nleft && edge < npartners; ++edge) {
+        for (size_t edge = 0u; eleft && edge < npartners; ++edge) {
 
             if (utl::sum(probs) < 1.0) break;
 
@@ -73,7 +74,7 @@ std::vector<Edge> Network::makeMap(const Param& p) const
             ++degrees[partner];
             assert(degrees[vertex] < p.nedges[trait]);
             assert(degrees[partner] < p.nedges[trait]);
-            --nleft;
+            --eleft;
         }
     }
 
@@ -83,7 +84,7 @@ std::vector<Edge> Network::makeMap(const Param& p) const
     if (connexions.size() != p.nedges[trait])
         throw std::runtime_error("Required sized network could not be made.");
 
-    assert(nleft == 0u);
+    assert(eleft == 0u);
 
     return connexions;
 
@@ -133,8 +134,10 @@ std::vector<Edge> Network::makeEdges(const Param &p) const
 
 std::vector<double> Network::makeWeights(const Param &p) const
 {
-    if (p.interactionshape == 0.0) return utl::zeros(p.nedges[trait]);
-    if (p.interactionscale == 0.0) return utl::ones(p.nedges[trait]);
+    if (p.interactionshape == 0.0)
+        return std::vector<double>(p.nedges[trait], 0.0);
+    if (p.interactionscale == 0.0)
+        return std::vector<double>(p.nedges[trait], 1.0);
 
     std::vector<double> intweights(p.nedges[trait]);
     double sss = 0.0; // square rooted sum of squares

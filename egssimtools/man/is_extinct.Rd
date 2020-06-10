@@ -4,11 +4,32 @@
 \alias{is_extinct}
 \title{Did a simulation go extinct?}
 \usage{
-is_extinct(folder)
+is_extinct(folder, logfile = "log.txt")
 }
 \arguments{
 \item{folder}{Path to the folder}
+
+\item{logfile}{Name of the log file to read}
+}
+\value{
+A logical
 }
 \description{
 Did a simulation go extinct?
+}
+\details{
+This function looks for the word "extinct" in the log file of the
+simulation
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+is_extinct(root)
+
+}
+
 }

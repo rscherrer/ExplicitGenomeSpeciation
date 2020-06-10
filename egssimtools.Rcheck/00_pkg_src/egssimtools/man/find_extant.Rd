@@ -4,28 +4,26 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(
-  simulations,
-  pattern = "^sim_",
-  verbose = TRUE,
-  pb = TRUE,
-  level = 0
-)
+find_extant(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 }
 \arguments{
-\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{sims}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 
 \item{verbose}{Whether to display messages}
 
-\item{pb}{Whether to display a progress bar}
-
 \item{level}{Recursion level}
 }
 \value{
-A vector of names of the simulation folders that completed
+A vector of names of the simulation that did not go extinct
 }
 \description{
 Find extant simulations
+}
+\examples{
+
+root <- system.file("extdata", package = "egssimtools")
+find_extant(root, pattern = "example_", level = 1)
+
 }

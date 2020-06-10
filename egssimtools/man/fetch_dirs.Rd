@@ -19,3 +19,15 @@ A vector of directory full names
 \description{
 Fetch directories within directories
 }
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
+fetch_dirs(root, pattern = "example", level = 1)
+
+}
+
+}

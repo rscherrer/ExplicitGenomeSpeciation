@@ -11,23 +11,27 @@
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
 * checking if there is a namespace ... OK
-* checking for executable files ... OK
+* checking for executable files ... WARNING
+Found the following executable file:
+  inst/extdata/example_3/individual_midparent.dat
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
 * checking for hidden files and directories ... OK
 * checking for portable file names ... OK
 * checking for sufficient/correct file permissions ... OK
 * checking serialization versions ... OK
 * checking whether package ‘egssimtools’ can be installed ... OK
-* checking installed package size ... OK
+* checking installed package size ... NOTE
+  installed size is 16.1Mb
+  sub-directories of 1Mb or more:
+    extdata  15.8Mb
 * checking package directory ... OK
 * checking for future file timestamps ... OK
 * checking ‘build’ directory ... OK
-* checking DESCRIPTION meta-information ... WARNING
-Non-standard license specification:
-  What license is it under?
-Standardizable: FALSE
+* checking DESCRIPTION meta-information ... OK
 * checking top-level files ... NOTE
-Non-standard files/directories found at top level:
-  ‘gmon.out’ ‘scratchpad.R’ ‘test.R’
+Non-standard file/directory found at top level:
+  ‘gmon.out’
 * checking for left-over files ... OK
 * checking index information ... OK
 * checking package subdirectories ... OK
@@ -39,139 +43,31 @@ Non-standard files/directories found at top level:
 * checking whether the namespace can be loaded with stated dependencies ... OK
 * checking whether the namespace can be unloaded cleanly ... OK
 * checking loading without being on the library search path ... OK
-* checking dependencies in R code ... WARNING
-'::' or ':::' import not declared from: ‘purrr’
-'library' or 'require' calls not declared from:
-  ‘pbapply’ ‘stringr’ ‘tidyverse’
-'library' or 'require' calls in package code:
-  ‘pbapply’ ‘stringr’ ‘tidyverse’
-  Please use :: or requireNamespace() instead.
-  See section 'Suggested packages' in the 'Writing R Extensions' manual.
+* checking dependencies in R code ... OK
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
 * checking R code for possible problems ... NOTE
-read_ecotype_sizes: warning in read_data(folder, variable =
-  "ecotype_size"): partial argument match of 'variable' to 'variables'
-read_population_size: warning in read_data(folder, variable =
-  "population_size"): partial argument match of 'variable' to
-  'variables'
-collect_parameters: no visible binding for global variable ‘pblapply’
-collect_parameters: no visible global function definition for ‘%>%’
-collect_parameters: no visible global function definition for
-  ‘mutate_at’
-collect_sims: no visible global function definition for ‘%>%’
-collect_status: no visible binding for global variable ‘pbsapply’
-fetch_dirs: no visible global function definition for ‘%>%’
-fetch_dirs: no visible global function definition for ‘str_detect’
-fetch_dirs: no visible global function definition for ‘str_replace’
-find_extant: no visible binding for global variable ‘pblapply’
-find_extinct: no visible binding for global variable ‘pbsapply’
-find_missing: no visible binding for global variable ‘pbsapply’
-get_chromosomes: no visible global function definition for ‘%>%’
-get_chromosomes: no visible global function definition for ‘map_int’
-get_degrees: no visible global function definition for ‘%>%’
-get_degrees: no visible global function definition for ‘map’
 get_status: no visible global function definition for ‘read.delim’
 is_extinct: no visible global function definition for ‘read.delim’
-plot_genome_distribution: no visible global function definition for
-  ‘last’
-plot_genome_heatmap: no visible global function definition for ‘%>%’
-plot_genome_heatmap: no visible global function definition for ‘gather’
-plot_genome_heatmap: no visible global function definition for ‘mutate’
-plot_genome_heatmap: no visible binding for global variable ‘time’
-plot_genome_heatmap: no visible global function definition for
-  ‘group_by’
-plot_genome_heatmap: no visible global function definition for ‘n’
-plot_genome_heatmap: no visible global function definition for ‘ggplot’
-plot_genome_heatmap: no visible global function definition for ‘aes’
-plot_genome_heatmap: no visible binding for global variable ‘locus’
-plot_genome_heatmap: no visible global function definition for
-  ‘geom_tile’
-plot_genome_heatmap: no visible global function definition for ‘labs’
-plot_genome_heatmap: no visible global function definition for
-  ‘scale_fill_continuous’
-plot_genome_heatmap: no visible global function definition for
-  ‘theme_bw’
-plot_genome_scan: no visible global function definition for ‘last’
-plot_genome_scan: no visible global function definition for ‘ggplot’
-plot_genome_scan: no visible global function definition for ‘aes’
-plot_genome_scan: no visible binding for global variable ‘y’
-plot_genome_scan: no visible global function definition for ‘geom_line’
-plot_genome_scan: no visible global function definition for
-  ‘geom_point’
-plot_genome_scan: no visible global function definition for ‘theme_bw’
-plot_genome_scan: no visible global function definition for ‘ylab’
-plot_genome_scan: no visible global function definition for ‘xlab’
-plot_genome_scan: no visible global function definition for ‘labs’
-plot_trait_density: no visible global function definition for ‘ggplot’
-plot_trait_density: no visible global function definition for ‘aes’
-plot_trait_density: no visible binding for global variable ‘time’
-plot_trait_density: no visible global function definition for
-  ‘geom_bin2d’
-plot_trait_density: no visible global function definition for
-  ‘theme_bw’
-plot_trait_density: no visible global function definition for
-  ‘scale_fill_continuous’
-plot_trait_density: no visible global function definition for ‘xlab’
-plot_trait_density: no visible global function definition for ‘labs’
-plot_trait_density2D: no visible global function definition for ‘%>%’
-plot_trait_density2D: no visible global function definition for
-  ‘filter’
-plot_trait_density2D: no visible binding for global variable ‘time’
-plot_trait_density2D: no visible global function definition for
-  ‘ggplot’
-plot_trait_density2D: no visible global function definition for ‘aes’
-plot_trait_density2D: no visible binding for global variable ‘X1’
-plot_trait_density2D: no visible binding for global variable ‘X2’
-plot_trait_density2D: no visible global function definition for
-  ‘geom_bin2d’
-plot_trait_density2D: no visible global function definition for
-  ‘theme_bw’
-plot_trait_density2D: no visible global function definition for
-  ‘scale_fill_continuous’
-plot_trait_density2D: no visible global function definition for ‘labs’
-plot_trait_histogram: no visible global function definition for ‘%>%’
-plot_trait_histogram: no visible global function definition for
-  ‘filter’
-plot_trait_histogram: no visible binding for global variable ‘time’
-plot_trait_histogram: no visible global function definition for
-  ‘ggplot’
-plot_trait_histogram: no visible global function definition for ‘aes’
-plot_trait_histogram: no visible global function definition for
-  ‘geom_density’
-plot_trait_histogram: no visible global function definition for
-  ‘geom_histogram’
-plot_trait_histogram: no visible global function definition for
-  ‘theme_bw’
-plot_trait_histogram: no visible global function definition for ‘xlab’
-plot_trait_histogram: no visible global function definition for ‘labs’
-read_archfile: no visible global function definition for ‘read.delim’
-read_data: no visible global function definition for ‘%>%’
-read_data: no visible global function definition for ‘pmap_dfc’
-read_data : <anonymous>: no visible global function definition for
-  ‘%>%’
+read_arch_file: no visible global function definition for ‘read.delim’
+read_arch_network: no visible binding for global variable ‘trait’
+read_arch_network: no visible binding for global variable ‘edges0’
+read_arch_network: no visible binding for global variable ‘edges1’
+read_arch_network: no visible binding for global variable ‘weights’
+read_arch_network: no visible binding for global variable ‘from’
+read_arch_network: no visible binding for global variable ‘to’
+read_arch_network: no visible binding for global variable ‘weight’
 read_data : <anonymous>: no visible binding for global variable ‘.’
-read_data: no visible global function definition for ‘map_dfc’
-read_data: no visible binding for global variable ‘bind_cols’
-read_parameters: no visible global function definition for ‘%>%’
-read_parameters: no visible global function definition for ‘map_if’
-read_parameters: no visible global function definition for ‘map’
-read_paramfile: no visible global function definition for ‘read.delim’
-read_population: no visible global function definition for ‘%>%’
-read_population: no visible binding for global variable ‘.’
-read_population: no visible global function definition for ‘rename_all’
-read_population: no visible binding for global variable ‘str_replace’
-read_population: no visible global function definition for ‘mutate’
+read_param_file: no visible global function definition for ‘read.delim’
 set_param_file: no visible global function definition for ‘read.delim’
+smoothen_data: no visible binding for global variable ‘smooth’
+smoothen_data: no visible binding for global variable ‘linecol’
 Undefined global functions or variables:
-  %>% . X1 X2 aes bind_cols filter gather geom_bin2d geom_density
-  geom_histogram geom_line geom_point geom_tile ggplot group_by labs
-  last locus map map_dfc map_if map_int mutate mutate_at n pblapply
-  pbsapply pmap_dfc read.delim rename_all scale_fill_continuous
-  str_detect str_replace theme_bw time xlab y ylab
+  . edges0 edges1 from linecol read.delim smooth to trait weight
+  weights
 Consider adding
-  importFrom("stats", "filter", "time")
+  importFrom("stats", "smooth", "weights")
   importFrom("utils", "read.delim")
 to your NAMESPACE file.
 * checking Rd files ... OK
@@ -179,113 +75,18 @@ to your NAMESPACE file.
 * checking Rd line widths ... OK
 * checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
-* checking for code/documentation mismatches ... WARNING
-Functions or methods with usage in documentation object 'hello' but not in code:
-  ‘hello’
-
-* checking Rd \usage sections ... WARNING
-Undocumented arguments in documentation object 'collect_sims'
-  ‘check_extant’
-Documented arguments not in \usage in documentation object 'collect_sims':
-  ‘check_eextant’
-
-Undocumented arguments in documentation object 'plot_genome_scan'
-  ‘col_as_factor’
-
-Undocumented arguments in documentation object 'plot_trait_density2D'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'plot_trait_density2D':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_ecotype_means'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_ecotype_means':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_ecotype_sizes'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_ecotype_sizes':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_ecotypes'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_ecotypes':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_edges'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_edges':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_habitats'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_habitats':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_individuals'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_individuals':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_means'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_means':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_parameters'
-  ‘as_numeric’
-
-Undocumented arguments in documentation object 'read_population'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_population':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_population_size'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_population_size':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_resources'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_resources':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_time'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_time':
-  ‘filename’
-
-Undocumented arguments in documentation object 'read_time_if'
-  ‘folder’
-Documented arguments not in \usage in documentation object 'read_time_if':
-  ‘filename’
-
-Functions with \usage entries need to have the appropriate \alias
-entries, and all their arguments documented.
-The \usage entries must correspond to syntactically valid R code.
-See chapter ‘Writing R documentation files’ in the ‘Writing R
-Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... OK
+* checking sizes of PDF files under ‘inst/doc’ ... OK
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... ERROR
-Running examples in ‘egssimtools-Ex.R’ failed
-The error most likely occurred in:
-
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: hello
-> ### Title: Hello, World!
-> ### Aliases: hello
-> 
-> ### ** Examples
-> 
-> hello()
-Error in hello() : could not find function "hello"
-Execution halted
-* checking for unstated dependencies in vignettes ... OK
+* checking examples ... OK
+* checking for unstated dependencies in vignettes ... NOTE
+'library' or 'require' call not declared from: ‘tidyverse’
 * checking package vignettes in ‘inst/doc’ ... OK
 * checking re-building of vignette outputs ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 4 WARNINGs, 2 NOTEs
+Status: 1 WARNING, 4 NOTEs

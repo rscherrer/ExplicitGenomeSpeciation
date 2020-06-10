@@ -9,6 +9,15 @@ is_missing(folder)
 \arguments{
 \item{folder}{Path to the folder}
 }
+\value{
+A logical
+}
 \description{
 Is a simulation missing?
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+is_missing(root)
+
 }

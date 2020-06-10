@@ -3,16 +3,16 @@ capacity 1
 replenish 2375
 inflow 400
 outflow 100
-hsymmetry 1
-ecosel 5
+hsymmetry 0
+ecosel 1.8
 dispersal 0.01
 birth 1
 survival 0.8
 sexsel 10
 matingcost 0.01
 demesizes 100 0 
-nvertices 100 100 100 
-nedges 100 100 100 
+nvertices 30 30 30 
+nedges 30 30 30 
 nchrom 3
 mutation 0.001
 recombination 3
@@ -22,25 +22,26 @@ scaleD 0 0 0
 scaleI 0 0 0 
 scaleE 0 0 0 
 skews 1 1 1 
-effectshape 5
+effectshape 2
 effectscale 1
 interactionshape 5
 interactionscale 1
 dominancevar 1
-tburnin 1000
-tend 3000
-tsave 100
-tfreeze 20001
+tburnin 0
+tend 10
+tsave 10
+tfreeze 100
 talkative 1
 record 1
 datsave 1
-choosewhattosave 1
+choosewhattosave 0
 gensave 0
-archsave 1
+archsave 0
 archload 0
 parsave 1
 archfile architecture.txt
 parfile paramlog.txt
 orderfile whattosave.txt
-seed 1587990748613225606
-ntrials 1000
+logfile log.txt
+seed 1591704128873753424
+ntrials 100

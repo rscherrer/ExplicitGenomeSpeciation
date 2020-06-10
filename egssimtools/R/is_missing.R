@@ -2,6 +2,19 @@
 #'
 #' @param folder Path to the folder
 #'
+#' @return A logical
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' is_missing(root)
+#'
+#' }
+#'
 #' @export
 
 is_missing <- function(folder) {
