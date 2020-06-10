@@ -33,6 +33,10 @@ In a first part we will cover several use-cases with short snippets of code as m
 
 As this package comes as part of the `ExplicitGenomeSpeciation` repository, it cannot be installed from GitHub using `devtools::install_github`. Instead, you can install it by running `devtools::install()` from within the `egssimtools` folder, or by opening the project `egssimtools.Rproj` in RStudio and clicking on "Install and Restart", in the "Build" menu.
 
+# Overview
+
+Here we provide an overview of the functions of the package. The central function is `read_data`
+
 # Use cases
 
 Here we show how to use the package through a series of examples. You can find all examples in the `scripts/examples.R` script. 
@@ -69,6 +73,7 @@ The following code chunks read and plot ecological divergence, reproductive and 
 data <- read_sim(root, c("EI", "RI", "SI"))
 data
 ```
+
 Here, `read_sim` reads `EI.dat`, `RI.dat` and `SI.dat` data files from the simulation and assembles them into a data frame. This function also reads `time.dat` by default. 
 
 Next, we pivot the data frame to the long format (as opposed to the wide format in the tidyverse nomenclature) so the three variables are gathered into a single column (this will make plotting easier):
@@ -119,20 +124,17 @@ ggplot(data, aes(x = time, y = value)) +
 Here, we want to plot the genome-wide Fst for each trait and each simulation. Because we want to read data from multiple simulations, we use `collect_data` instead of `read_*`:
 
 ```{r}
-variables <- c("time", "Fst")
-data <- collect_data(
-  roots, variables, by = c(1, 3), check_extant = FALSE, level = 0
-)
+data <- combine_data(roots, variables = "Fst", by = 3, level = 0, type = "sim")
 data
 ```
 
-The `collect_data` function assembles data from multiple simulations into a single data frame. It internally calls `fetch_dirs`, hence the `level` argument, and so it can go find simulation folders in a nested folder structure provided a certain `pattern` in the naming.
+The `combine_data` function assembles data from multiple simulations into a single data frame. It internally calls `fetch_dirs`, hence the `level` argument, and so it can go find simulation folders in a nested folder structure provided a certain `pattern` in the naming.
 
-Here, we explicitly provided `time` as a variable to read, in contrast to our calls to `read_sim` and `read_pop` in the previous sections. This is because these previous functions are wrappers around a more general function called `read_data`, which does not read in `time.dat` by default. The `collect_data` function internally calls `read_data` and is the equivalent of this function for multiple simulations. It does not have a simplified equivalent for specific types of data, unlike `read_data`.
+`combine_data` internally calls `read_this`, which is an alias for one of the `read_*` functions. The `type` argument tells `read_this` what type of `read_*` function to become. Here, we make internal use of `read_sim`, for example, which means that `combine_data` will expect you to provide the arguments that `read_sim` expects. See the "Guided tour" section to know more about the `read_*` functions.
 
 This also means that the `by` argument must be provided for each variable separately. Here, the `time.dat` file contains a single column while `Fst.dat` must be splitted into three columns, one for each trait.
 
-The `check_extant` option can be used to find out which simulations did succesfully complete and retain only those. It specifically looks for simulations that went extinct before the end, or that did not run at all.
+There is a `check_extant` option that can be used to find out which simulations did succesfully complete and retain only those. It specifically looks for simulations that went extinct before the end, or that did not run at all.
 
 Again, we pivot the data by gathering the `Fst` columns into one, and we plot the data by facetting by trait:
 

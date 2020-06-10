@@ -10,7 +10,6 @@ collect_param(
   filename = "paramlog.txt",
   combine = FALSE,
   as_numeric = NULL,
-  verbose = TRUE,
   pattern = "sim_",
   level = 0,
   id_column = "sim",
@@ -22,8 +21,6 @@ collect_param(
 which to recurse to look for simulation folders}
 
 \item{parnames, filename, combine, as_numeric}{Parameters for \code{read_parameters}}
-
-\item{verbose}{Whether to display messages}
 
 \item{pattern}{Optional pattern to look for if simulation folders are
 searched by recursion}

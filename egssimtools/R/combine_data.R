@@ -5,21 +5,15 @@
 #'
 #' @param root One of multiple paths to simulation folders or folders into
 #' which to recurse to look for simulation folders.
-#' @param variables Names of the variables to extract
-#' @param by,dupl,parnames,combine,as_numeric Parameters to be passed to
-#' `read_data`
 #' @param check_extant Whether to check for non-extinct and non-crashed
 #'  simulation folders
 #' @param pattern Optional pattern to look for if simulation folders are
 #' searched by recursion
 #' @param level Level of recursion. Defaults to 0 for no recursion (then assumes
 #' that `root` is a vector of simulation folder paths).
-#' @param verbose Whether to display messages and progress bars
+#' @param type The `type` argument of `read_this`
 #' @param id_column Optional name of the simulation identifier column
-#' @param architecture Whether to read a genetic architecture with the
-#' (locus-wise) data
-#' @param archfile Name of the architecture file
-#' @param parfile Name of the parameter file
+#' @param ... Parameters to be passed to `read_this`
 #'
 #' @return A tibble
 #'
@@ -31,52 +25,43 @@
 #' root <- "data"
 #'
 #' # Collect simulation data with some parameters
-#' collect_data(
-#'   root, c("time", "EI"), pattern = "example", level = 1,
-#'   check_extant = FALSE, parnames = c("ecosel", "hsymmetry")
+#' combine_data(
+#'   root, variables = c("time", "EI"), pattern = "example", level = 1,
+#'   parnames = c("ecosel", "hsymmetry")
+#' )
+#'
+#' combine_data(
+#'   root, variables = "genome_Fst", pattern = "example", level = 1,
+#'   parnames = c("ecosel", "hsymmetry"), architecture = TRUE, type = "genome"
+#' )
+#'
+#' combine_data(
+#'   root, variables = "network_corbreed", pattern = "example", level = 1,
+#'   parnames = c("ecosel", "hsymmetry"), architecture = TRUE, type = "network"
 #' )
 #'
 #' }
 #'
 #' @export
 
-collect_data <- function(
+combine_data <- function(
   root,
-  variables,
-  by = 1,
-  dupl = 1,
-  parnames = NULL,
-  combine = FALSE,
-  as_numeric = NULL,
-  check_extant = TRUE,
+  check_extant = FALSE,
   pattern = "sim_",
   level = 0,
-  verbose = TRUE,
+  type = "data",
   id_column = "sim",
-  architecture = FALSE,
-  archfile = "architecture.txt",
-  parfile = "paramlog.txt"
+  ...
 ) {
 
   # Fetch simulation folders
   if (level > 0) root <- fetch_dirs(root, pattern = pattern, level = level)
 
   # Find extant simulations if needed
-  if (check_extant) {
-    root <- find_extant(
-      root,
-      pattern = pattern,
-      verbose = verbose
-    )
-  }
+  if (check_extant) root <- find_extant(root)
 
   # Read the data and combine
-  if (verbose) message("Reading data...")
-  data <- root %>%
-    purrr::map_dfr(
-      read_data, variables, by, dupl, parnames, combine, as_numeric,
-      architecture, archfile, parfile, .id = id_column
-    )
+  data <- purrr::map_dfr(root, read_this, type, ..., .id = id_column)
 
   return(data)
 
