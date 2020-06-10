@@ -15,10 +15,6 @@
 #' @param parnames Character vector of parameter names to append to the
 #' simulation data
 #' @param combine,as_numeric Parameters for `read_parameters`
-#' @param architecture Whether to read and append locus-wise genetic
-#' architecture. Make sure then that you are reading `variables` that are
-#' locus-specific variables in long-format (one column per variable).
-#' @param archfile Name of the architecture file, if needed
 #' @param parfile Name of the parameter file, if needed
 #'
 #' @return A tibble
@@ -52,8 +48,6 @@ read_data <- function(
   parnames = NULL,
   combine = FALSE,
   as_numeric = NULL,
-  architecture = FALSE,
-  archfile = "architecture.txt",
   parfile = "paramlog.txt"
 ) {
 
@@ -86,15 +80,6 @@ read_data <- function(
     )
     pars <- pars %>% purrr::map_dfc(rep, nrow(data))
     data <- dplyr::bind_cols(data, pars)
-
-  }
-
-  if (architecture) {
-
-    arch <- read_arch_genome(folder, filename = archfile)
-    ntimes <- nrow(data) / nrow(arch)
-    arch <- purrr::map_dfr(seq(ntimes), ~ arch)
-    data <- cbind(data, arch)
 
   }
 

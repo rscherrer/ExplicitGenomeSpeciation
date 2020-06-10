@@ -1,6 +1,6 @@
-#' Read locus-specific data through time
+#' Read edge-specific data through time
 #'
-#' Wrapper around `read_data` to read locus-wise data
+#' Wrapper around `read_data` to read edge-wise data
 #'
 #' @param folder Path to the folder
 #' @param variables What variables to read (`time` is included by default)
@@ -8,7 +8,7 @@
 #' for `read_data`
 #' @param architecture Whether to attach genetic architecture data
 #' @param archfile Optional name of the genetic architecture file
-#' @param nloci Number of loci (automatically guessed if unspecified)
+#' @param nedges Number of edges (automatically guessed if unspecified)
 #'
 #' @details The file `time.dat` must be present
 #'
@@ -22,16 +22,17 @@
 #' root <- "data/example_1"
 #'
 #' # Read Fst throughout the genome
-#' read_genome(root, "genome_Fst")
+#' read_edges(root, "network_corbreed")
 #'
 #' # Read multiple metrics and attach architecture
-#' read_genome(root, c("genome_Fst", "genome_Cst"), architecture = TRUE)
+#' variables <- paste0("network_", c("corbreed", "corfreq"))
+#' read_network(root, variables, architecture = TRUE)
 #'
 #' }
 #'
 #' @export
 
-read_genome <- function(
+read_network <- function(
   folder,
   variables,
   parnames = NULL,
@@ -40,26 +41,25 @@ read_genome <- function(
   architecture = FALSE,
   archfile = "architecture.txt",
   parfile = "paramlog.txt",
-  nloci = NULL
+  nedges = NULL
 ) {
 
-  if (is.null(nloci)) nloci <- guess_nloci(folder, variables[1])
-
+  if (is.null(nedges)) nedges <- guess_nedges(folder, variables[1])
   data <- read_data(
     folder,
     c("time", variables),
-    dupl = c(nloci, rep(1, length(variables))),
+    dupl = c(nedges, rep(1, length(variables))),
     parnames = parnames,
     combine = combine,
     as_numeric = as_numeric,
     parfile = parfile
   )
-  data$locus <- rep(seq(nloci), nrow(data) / nloci)
+  data$edge <- rep(seq(nedges), nrow(data) / nedges)
 
   if (architecture) {
 
-    ntimes <- nrow(data) / nloci
-    arch <- read_arch_genome(folder, archfile)
+    ntimes <- nrow(data) / nedges
+    arch <- read_arch_network(folder, archfile, as_list = TRUE)$edges
     arch <- purrr::map_dfr(seq(ntimes), ~ arch)
     data <- data %>% dplyr::right_join(arch)
 
