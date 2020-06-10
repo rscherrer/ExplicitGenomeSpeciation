@@ -21,6 +21,12 @@ BOOST_AUTO_TEST_CASE(DivergenceIsZeroIfTotalVarianceIsZero)
   BOOST_CHECK_EQUAL(Xst({ 0.0, 0.0, 0.0 }, { 10u, 10u, 20u }), 0.0);
 }
 
+BOOST_AUTO_TEST_CASE(DivergenceIsAlwaysPositive)
+{
+  std::clog << "Testing positive variance partitioning...\n";
+  BOOST_CHECK(Xst({ 0.2, 0.1, 0.1 }, { 10u, 10u, 20u }) >= 0.0);
+}
+
   // Test that monomorphic ecotypes indeed have zero variance
 BOOST_AUTO_TEST_CASE(EcologicalIsolationIsOneIfEcotypesAreMonomorphic)
 {
@@ -63,7 +69,7 @@ BOOST_AUTO_TEST_CASE(SpatialIsolationIsOneIfEcotypesAreSeparated)
   BOOST_CHECK_EQUAL(collector.getSI(), 1.0);
 }
 
-  // Test case: a population with mating isolation = 1
+// Test case: a population with mating isolation = 1
 BOOST_AUTO_TEST_CASE(MatingIsolationIsOneIfMatingIsAssortative)
 {
   std::clog << "Testing complete mating differentiation...\n";
@@ -139,4 +145,3 @@ BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
   BOOST_CHECK_EQUAL(collector.getSI(), 0.0);
   BOOST_CHECK_EQUAL(collector.getRI(), 0.0);
 }
-

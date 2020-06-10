@@ -11,7 +11,10 @@ read_data(
   dupl = 1,
   parnames = NULL,
   combine = FALSE,
-  as_numeric = NULL
+  as_numeric = NULL,
+  architecture = FALSE,
+  archfile = "architecture.txt",
+  parfile = "paramlog.txt"
 )
 }
 \arguments{
@@ -26,6 +29,12 @@ read_data(
 \item{parnames}{Character vector of parameter names to append to the simulation data}
 
 \item{combine, as_numeric}{Parameters for \code{read_parameters}}
+
+\item{architecture}{Whether to read and append locus-wise genetic architecture. Make sure then that you are reading \code{variables} that are locus-specific variables in long-format (one column per variable).}
+
+\item{archfile}{Name of the architecture file, if needed}
+
+\item{parfile}{Name of the parameter file, if needed}
 }
 \value{
 A data frame
@@ -34,5 +43,14 @@ A data frame
 Function to read simulation data from binary files into a data frame. Can read multiple data files and bind them together.
 }
 \note{
-Do not provide the extension of the files. It is assumed to be .dat.
+Do not provide the extension of the files. It is assumed to be \code{.dat}.
+}
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+read_data(root, c("time", "genome_Fst"), by = c(1, 300))
+
+}
+\seealso{
+\code{read_sim}, \code{read_pop}, \code{read_genome}
 }

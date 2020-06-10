@@ -1,22 +1,39 @@
 #' Collect SLURM exit status
 #'
-#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param simulations Either path to a root directory containing simulation
+#' folders, or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
-#' @param pb Whether to display a progress bar
 #' @param level Recursion level
+#'
+#' @return A character vector
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' # Should return not found with the example data because these simulations
+#' # were run locally, not on SLURM
+#' collect_status(root, pattern = "example", level = 1)
+#'
+#' }
 #'
 #' @export
 
-collect_status <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE, level = 0) {
+collect_status <- function(
+  simulations,
+  pattern = "^sim_",
+  verbose = TRUE,
+  level = 0
+) {
 
-  library(pbapply)
-
-  if (!verbose) pb <- FALSE else message("Collecting SLURM exit status...")
-  if (pb) thissapply <- pbsapply else thissapply <- sapply
-  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
-
-  # Check each one for extinction
-  return (thissapply(simulations, get_status))
+  if (verbose) message("Collecting SLURM exit status...")
+  if (level > 0) simulations <- fetch_dirs(
+    simulations, pattern = pattern, level = level
+  )
+  return (sapply(simulations, get_status))
 
 }

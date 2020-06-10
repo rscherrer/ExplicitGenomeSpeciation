@@ -3,7 +3,7 @@
 #' @param string A string containing numbers
 #' @param sep The separator between numbers
 #'
-#' @export
+#' @return A numeric vector
 
 str2vec <- function(string, sep = ' ') {
 

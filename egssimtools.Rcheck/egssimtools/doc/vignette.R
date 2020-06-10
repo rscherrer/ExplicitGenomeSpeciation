@@ -4,6 +4,8 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ----setup--------------------------------------------------------------------
+## ---- message = FALSE---------------------------------------------------------
 library(egssimtools)
+library(tidyverse)
+library(cowplot)
 

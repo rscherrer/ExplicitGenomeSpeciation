@@ -1,27 +1,46 @@
 #' Find missing simulations
 #'
-#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param sims Either path to a root directory containing simulation folders, or
+#'   a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
-#' @param pb Whether to display a progress bar
 #' @param level Recursion level
+#'
+#' @details Uses the absence of `.dat` output files as a clue for missing
+#' simulations
+#'
+#' @return A character vector of missing simulations, or NULL if no simulation
+#'   is missing
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data"
+#'
+#' find_missing(root, pattern = "example_", level = 1)
+#'
+#' }
 #'
 #' @export
 
 # How many simulations are missing?
-find_missing <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE, level = 0) {
+find_missing <- function(
+  sims,
+  pattern = "^sim_",
+  verbose = TRUE,
+  level = 0
+) {
 
-  library(pbapply)
-
-  if (!verbose) pb <- FALSE else message("Looking for missing simulations...")
-  if (pb) thissapply <- pbsapply else thissapply <- sapply
-  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
+  if (verbose) message("Looking for missing simulations...")
+  if (level > 0) sims <- fetch_dirs(sims, pattern = pattern, level = level)
 
   # Check each one for missing data
-  missings <- thissapply(simulations, is_missing)
+  missings <- sapply(sims, is_missing)
 
   # Return the names of the extinct folders
-  if (any(missings)) return (simulations[missings])
+  if (any(missings)) return (sims[missings])
   return (NULL)
 
 }

@@ -15,3 +15,10 @@ A vector of degrees across loci
 \description{
 Get locus degrees
 }
+\examples{
+
+root <- system.file("extdata", "example_1", package = "egssimtools")
+arch <- read_arch(root)
+get_degrees(arch)
+
+}

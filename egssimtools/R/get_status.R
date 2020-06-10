@@ -4,6 +4,19 @@
 #'
 #' @param folder Path to the folder
 #'
+#' @return A character
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' get_status(root)
+#'
+#' }
+#'
 #' @export
 
 get_status <- function(folder) {

@@ -2,15 +2,18 @@
 % Please edit documentation in R/mrep.R
 \name{mrep}
 \alias{mrep}
-\title{Repeat multiple elements multiple times}
+\title{Repeat many elements many times}
 \usage{
 mrep(x, n)
 }
 \arguments{
-\item{x}{Vector of what to repeat}
+\item{x}{A vector of things to repeat}
 
-\item{n}{Vector of how many times}
+\item{n}{A vector of how many times to repeat each thing}
+}
+\value{
+A vector of the same type as \code{x}
 }
 \description{
-Repeat multiple elements multiple times
+Repeat many elements many times
 }

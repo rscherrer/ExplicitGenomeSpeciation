@@ -11,11 +11,17 @@ set_param_file(pars, template = NULL, saveto = NULL)
 
 \item{template}{Optional file to add or change parameters into (the file is not overwritten).}
 
-\item{saveto}{Optional file where to save the output.}
+\item{saveto}{Optional file where to save the output. If unspecified, the
+output is returned to the prompt.}
 }
 \value{
 A vector of parameter entries, only if \code{saveto} is NULL.
 }
 \description{
 Function to create a parameter file with the requested parameter values
+}
+\examples{
+
+set_param_file(list(ecosel = 1.4, nvertices = "100 100 100"))
+
 }

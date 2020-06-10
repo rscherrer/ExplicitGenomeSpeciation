@@ -3,14 +3,14 @@
 
 // Initialization
 
-Crowd MetaPop::populate(const Param &p, const GenArch &arch)
+std::vector<Individual> MetaPop::populate(const Param &p, const GenArch &arch)
 {
 
     // Generate a pool of individuals
-    const size_t n = utl::sumu(p.demesizes);
+    const size_t n = utl::sum(p.demesizes);
     size_t n0 = p.demesizes[0u];
     assert(n0 <= n);
-    Crowd indivs;
+    std::vector<Individual> indivs;
     indivs.reserve(n);
 
     for (size_t ind = 0u; ind < n; ++ind) {
@@ -237,7 +237,7 @@ void MetaPop::reproduce(const Param &p, const GenArch &arch)
 
         // Set all probabilities to one if all fitnesses are the same
         const double var = ssq / nm - utl::sqr(sum / nm);
-        if (var < 1.0E-6) fit = utl::ones(nm);
+        if (var < 1.0E-6) fit = std::vector<double>(nm, 1.0);
 
         // Initialize a mutable discrete distribution with uniform zero-policy
         auto getmale = rnd::mdiscrete();

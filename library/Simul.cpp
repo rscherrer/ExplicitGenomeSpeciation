@@ -43,14 +43,20 @@ int simulate(const std::vector<std::string> &args)
         const std::string order = pars.choosewhattosave ? pars.orderfile : "";
         Printer printer = Printer(order);
 
+        // Open a log file
+        std::ofstream logfile(pars.logfile);
         std::cout << "Simulation started.\n";
+        logfile << "Simulation started.\n";
 
         // Loop through time
         for (int t = -pars.tburnin; t < pars.tend; ++t) {
 
             if (t == 0) metapop.exitburnin();
 
-            if (pars.talkative) std::clog << t << '\n';
+            if (pars.talkative) {
+                std::cout << t << '\n';
+                logfile << t << '\n';
+            }
 
             // Life cycle of the metapopulation
             metapop.disperse(pars);
@@ -63,7 +69,8 @@ int simulate(const std::vector<std::string> &args)
                 collector.analyze(metapop, pars, arch);
 
                 // Save them to files
-                if (pars.datsave) printer.print(t, collector, metapop);
+                const size_t tu = static_cast<size_t>(t);
+                if (pars.datsave) printer.print(tu, collector, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)
@@ -78,11 +85,15 @@ int simulate(const std::vector<std::string> &args)
             // Is the population still there?
             if (metapop.isextinct()) {
                 std::cout << "The population went extinct at t = " << t << '\n';
+                logfile << "The population went extinct at t = " << t << '\n';
                 break;
             }
         }
 
         std::cout << "Simulation ended.\n";
+        logfile << "Simulation ended.\n";
+        logfile.close();
+
         return 0;
     }
     catch (const std::exception& err)
