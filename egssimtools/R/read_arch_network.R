@@ -4,7 +4,7 @@
 #'
 #' @param folder Path to the simulation
 #' @param filename Optional architecture file name
-#' @param as_df Whether to return the output at a list of two data frames
+#' @param as_list Whether to return the output at a list of two data frames
 #' instead of a `tbl_graph`.
 #'
 #' @return A `tbl_graph` object (useful for plotting using the `ggraph`
@@ -26,7 +26,7 @@
 read_arch_network <- function(
   folder,
   filename = "architecture.txt",
-  as_df = FALSE
+  as_list = FALSE
 ) {
 
   # Read the nodes
@@ -44,7 +44,7 @@ read_arch_network <- function(
 
   # Return a tidygraph object suitable for plotting networks
   network <- tidygraph::tbl_graph(nodes = nodes, edges = edges)
-  if (as_df) network <- as.data.frame(network)
+  if (as_list) network <- as.list(network)
   return (network)
 
 }

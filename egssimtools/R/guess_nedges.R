@@ -1,10 +1,10 @@
-#' Guess the number of loci
+#' Guess the number of edges
 #'
-#' Function to find out the number of loci in a given simulation
+#' Function to find out the number of edges in a given simulation
 #'
 #' @param folder Path to the folder
-#' @param variable The locus-specific variable to use to guess the number of
-#' loci
+#' @param variable The edge-specific variable to use to guess the number of
+#' edges
 #'
 #' @details The file `time.dat` must be present
 #'
@@ -17,13 +17,13 @@
 #' # Location of the simulation folder
 #' root <- "data/example_1"
 #'
-#' guess_nloci(root)
+#' guess_nedges(root)
 #'
 #' }
 #'
 #' @export
 
-guess_nloci <- function(folder, variable = "genome_Fst") {
+guess_nedges <- function(folder, variable = "network_corfreq") {
 
   guess_nrows(folder, variable)
 
