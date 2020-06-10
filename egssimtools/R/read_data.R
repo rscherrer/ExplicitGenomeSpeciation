@@ -1,18 +1,27 @@
 #' Read simulation data
 #'
-#' Function to read simulation data from binary files into a data frame. Can read multiple data files and bind them together.
+#' Function to read simulation data from binary files into a data frame. Can
+#' read multiple data files and bind them together.
 #'
 #' @param folder Path to the folder
 #' @param variables What variables to read
-#' @param by A list. For each variable, length of the chunks to split it by. Recycled if its length is one.
-#' @param dupl A list. For each variable, how many times to duplicate each row. Provide an integer to duplicate every row the same number of times, a vector of integers to duplicate each row a specific number of times, or a character string to read a vector of number of times from a .dat file. This argument is recycled if its length is one.
-#' @param parnames Character vector of parameter names to append to the simulation data
+#' @param by A list. For each variable, length of the chunks to split it by.
+#' Recycled if its length is one.
+#' @param dupl A list. For each variable, how many times to duplicate each row.
+#' Provide an integer to duplicate every row the same number of times, a vector
+#' of integers to duplicate each row a specific number of times, or a character
+#' string to read a vector of number of times from a .dat file. This argument
+#' is recycled if its length is one.
+#' @param parnames Character vector of parameter names to append to the
+#' simulation data
 #' @param combine,as_numeric Parameters for `read_parameters`
-#' @param architecture Whether to read and append locus-wise genetic architecture. Make sure then that you are reading `variables` that are locus-specific variables in long-format (one column per variable).
+#' @param architecture Whether to read and append locus-wise genetic
+#' architecture. Make sure then that you are reading `variables` that are
+#' locus-specific variables in long-format (one column per variable).
 #' @param archfile Name of the architecture file, if needed
 #' @param parfile Name of the parameter file, if needed
 #'
-#' @return A data frame
+#' @return A tibble
 #'
 #' @note Do not provide the extension of the files. It is assumed to be `.dat`.
 #'
@@ -20,10 +29,18 @@
 #'
 #' @examples
 #'
-#' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' \dontrun{
 #'
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' # Read Fst across the genome
 #' read_data(root, c("time", "genome_Fst"), by = c(1, 300))
+#'
+#' # Attach parameter values to the simulation data
+#' read_data(root, c("time", "EI"), parnames = "ecosel")
+#'
+#' }
 #'
 #' @export
 
@@ -56,7 +73,7 @@ read_data <- function(
         dupl <- read_binary(paste0(folder, "/", dupl, ".dat"))
       }
       if (length(dupl) == 1) dupl <- rep(dupl, nrow(data))
-      data <- data[mrep(seq(nrow(data)), n = dupl), ] %>% data.frame
+      data <- data.frame(data[egssimtools:::mrep(seq(nrow(data)), n = dupl), ])
       data <- data %>% rename_str(colnames)
 
     })
@@ -68,7 +85,7 @@ read_data <- function(
       as_numeric = as_numeric, filename = parfile
     )
     pars <- pars %>% purrr::map_dfc(rep, nrow(data))
-    data <- list(data, pars) %>% dplyr::bind_cols
+    data <- dplyr::bind_cols(data, pars)
 
   }
 
@@ -81,6 +98,6 @@ read_data <- function(
 
   }
 
-  return (data)
+  return (tibble::tibble(data))
 
 }

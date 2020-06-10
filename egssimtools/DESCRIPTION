@@ -26,5 +26,7 @@ Imports:
     ggraph,
     ggridges,
     tidygraph,
-    ggsim
+    ggsim,
+    tidyselect,
+    forcats
 Remotes: rscherrer/ggsim

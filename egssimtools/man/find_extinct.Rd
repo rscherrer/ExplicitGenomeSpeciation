@@ -7,7 +7,8 @@
 find_extinct(sims, pattern = "^sim_", verbose = TRUE, level = 0)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{sims}{Either path to a root directory containing simulation folders,
+or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 
@@ -24,7 +25,13 @@ Find extinct simulations
 }
 \examples{
 
-root <- system.file("extdata", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
 find_extinct(root, pattern = "example_", level = 1)
+
+}
 
 }

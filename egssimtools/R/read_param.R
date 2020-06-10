@@ -4,17 +4,22 @@
 #' @param parnames Optional vector of parameter names
 #' @param filename Optional file name
 #' @param combine Whether to paste together compound parameters
-#' @param flatten Whether to return a list of single values. If FALSE, some of the elements may be vectors of multiple values (compound parameters).
+#' @param flatten Whether to return a list of single values. If FALSE, some of
+#' the elements may be vectors of multiple values (compound parameters).
 #' @param as_numeric Which parameters to convert to numeric?
 #'
 #' @return A list of parameter values
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' read_param(root)
+#'
+#' }
 #'
 #' @export
 

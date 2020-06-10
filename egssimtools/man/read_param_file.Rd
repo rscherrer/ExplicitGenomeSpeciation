@@ -19,8 +19,14 @@ Read a parameter file
 }
 \examples{
 
-f <- system.file("extdata", package = "egssimtools")
-f <- file.path(f, "example_1/parameters.txt")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+f <- file.path(root, "parameters.txt")
 read_param_file(f)
+
+}
 
 }

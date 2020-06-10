@@ -1,16 +1,23 @@
 #' Collect simulation data
 #'
-#' Collect specified variables and parameters from across multiple simulation folders
+#' Collect specified variables and parameters from across multiple simulation
+#' folders
 #'
-#' @param root One of multiple paths to simulation folders or folders into which to recurse to look for simulation folders.
+#' @param root One of multiple paths to simulation folders or folders into
+#' which to recurse to look for simulation folders.
 #' @param variables Names of the variables to extract
-#' @param by,dupl,parnames,combine,as_numeric Parameters to be passed to `read_data`
-#' @param check_extant Whether to check for non-extinct and non-crashed simulation folders
-#' @param pattern Optional pattern to look for if simulation folders are searched by recursion
-#' @param level Level of recursion. Defaults to 0 for no recursion (hen assumes that `root` is a vector of simulation folder paths).
+#' @param by,dupl,parnames,combine,as_numeric Parameters to be passed to
+#' `read_data`
+#' @param check_extant Whether to check for non-extinct and non-crashed
+#'  simulation folders
+#' @param pattern Optional pattern to look for if simulation folders are
+#' searched by recursion
+#' @param level Level of recursion. Defaults to 0 for no recursion (hen assumes
+#' that `root` is a vector of simulation folder paths).
 #' @param verbose Whether to display messages and progress bars
 #' @param id_column Optional name of the simulation identifier column
-#' @param architecture Whether to read a genetic architecture with the (locus-wise) data
+#' @param architecture Whether to read a genetic architecture with the
+#' (locus-wise) data
 #' @param archfile Name of the architecture file
 #' @param parfile Name of the parameter file
 #'
@@ -18,13 +25,18 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
 #' root <- "data"
 #'
+#' # Collect simulation data with some parameters
 #' collect_sims(
 #'   root, c("time", "EI"), pattern = "example", level = 1,
-#'   check_extant = FALSE
+#'   check_extant = FALSE, parnames = c("ecosel", "hsymmetry")
 #' )
+#'
+#' }
 #'
 #' @export
 
@@ -47,11 +59,15 @@ collect_sims <- function(
 ) {
 
   # Fetch simulation folders
-  root <- fetch_dirs(root, pattern = pattern, level = level)
+  if (level > 0) root <- fetch_dirs(root, pattern = pattern, level = level)
 
   # Find extant simulations if needed
   if (check_extant) {
-    root <- find_extant(root, pattern = pattern, verbose = verbose)
+    root <- find_extant(
+      root,
+      pattern = pattern,
+      verbose = verbose
+    )
   }
 
   # Read the data and combine

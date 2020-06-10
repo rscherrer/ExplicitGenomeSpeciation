@@ -19,8 +19,14 @@ Read binary file
 }
 \examples{
 
-f <- system.file("extdata", package = "egssimtools")
-f <- file.path(f, "example_1/time.dat")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+f <- file.path(root, "time.dat")
 read_binary(f)
+
+}
 
 }

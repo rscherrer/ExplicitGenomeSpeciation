@@ -29,7 +29,13 @@ simulations
 }
 \examples{
 
-root <- system.file("extdata", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
 find_missing(root, pattern = "example_", level = 1)
+
+}
 
 }

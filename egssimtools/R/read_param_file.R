@@ -7,11 +7,15 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' f <- file.path(root, "parameters.txt")
 #' read_param_file(f)
+#'
+#' }
 #'
 #' @export
 

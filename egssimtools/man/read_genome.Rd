@@ -21,7 +21,8 @@ read_genome(
 
 \item{variables}{What variables to read (\code{time} is included by default)}
 
-\item{parnames, combine, as_numeric, architecture, archfile, parfile}{Parameters for \code{read_data}}
+\item{parnames, combine, as_numeric, architecture, archfile, parfile}{Parameters
+for \code{read_data}}
 
 \item{nloci}{Number of loci (automatically guessed if unspecified)}
 }
@@ -36,12 +37,17 @@ The file \code{time.dat} must be present
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
 
 # Read Fst throughout the genome
 read_genome(root, "genome_Fst")
 
 # Read multiple metrics and attach architecture
 read_genome(root, c("genome_Fst", "genome_Cst"), architecture = TRUE)
+
+}
 
 }

@@ -9,12 +9,14 @@
 #'
 #' @details The file `time.dat` must be present
 #'
-#' @return A data frame
+#' @return A tibble
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' # Read the ecological divergence through time
 #' read_sim(root, "EI")
@@ -30,6 +32,8 @@
 #'
 #' # Even locus-specific data in the wide-format
 #' read_sim(root, "genome_Fst", by = 300)
+#'
+#' }
 #'
 #' @export
 

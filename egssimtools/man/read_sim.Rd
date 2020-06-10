@@ -34,7 +34,10 @@ The file \code{time.dat} must be present
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
 
 # Read the ecological divergence through time
 read_sim(root, "EI")
@@ -50,5 +53,7 @@ read_sim(root, c("EI", "Fst"), by = c(1, 3))
 
 # Even locus-specific data in the wide-format
 read_sim(root, "genome_Fst", by = 300)
+
+}
 
 }

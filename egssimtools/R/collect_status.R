@@ -1,6 +1,7 @@
 #' Collect SLURM exit status
 #'
-#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param simulations Either path to a root directory containing simulation
+#' folders, or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param level Recursion level
@@ -9,12 +10,16 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
 #' root <- "data"
 #'
 #' # Should return not found with the example data because these simulations
 #' # were run locally, not on SLURM
 #' collect_status(root, pattern = "example", level = 1)
+#'
+#' }
 #'
 #' @export
 

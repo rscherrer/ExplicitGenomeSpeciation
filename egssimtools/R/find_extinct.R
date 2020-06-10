@@ -1,6 +1,7 @@
 #' Find extinct simulations
 #'
-#' @param sims Either path to a root directory containing simulation folders, or a vector of simulation folders
+#' @param sims Either path to a root directory containing simulation folders,
+#' or a vector of simulation folders
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param level Recursion level
@@ -10,10 +11,14 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data"
+#' root <- "data"
 #'
 #' find_extinct(root, pattern = "example_", level = 1)
+#'
+#' }
 #'
 #' @export
 

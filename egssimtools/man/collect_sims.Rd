@@ -23,31 +23,54 @@ collect_sims(
 )
 }
 \arguments{
-\item{root}{One of multiple paths to simulation folders or folders into which to recurse to look for simulation folders.}
+\item{root}{One of multiple paths to simulation folders or folders into
+which to recurse to look for simulation folders.}
 
 \item{variables}{Names of the variables to extract}
 
-\item{by, dupl, parnames, combine, as_numeric}{Parameters to be passed to \code{read_data}}
+\item{by, dupl, parnames, combine, as_numeric}{Parameters to be passed to
+\code{read_data}}
 
-\item{check_extant}{Whether to check for non-extinct and non-crashed simulation folders}
+\item{check_extant}{Whether to check for non-extinct and non-crashed
+simulation folders}
 
-\item{pattern}{Optional pattern to look for if simulation folders are searched by recursion}
+\item{pattern}{Optional pattern to look for if simulation folders are
+searched by recursion}
 
-\item{level}{Level of recursion. Defaults to 0 for no recursion (hen assumes that \code{root} is a vector of simulation folder paths).}
+\item{level}{Level of recursion. Defaults to 0 for no recursion (hen assumes
+that \code{root} is a vector of simulation folder paths).}
 
 \item{verbose}{Whether to display messages and progress bars}
 
 \item{id_column}{Optional name of the simulation identifier column}
 
-\item{architecture}{Whether to read a genetic architecture with the (locus-wise) data}
+\item{architecture}{Whether to read a genetic architecture with the
+(locus-wise) data}
 
 \item{archfile}{Name of the architecture file}
 
-\item{parfile}{Name of the parameter fiel}
+\item{parfile}{Name of the parameter file}
 }
 \value{
 A data frame
 }
 \description{
-Collect specified variables and parameters from across multiple simulation folders
+Collect specified variables and parameters from across multiple simulation
+folders
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
+# Collect simulation data with some parameters
+collect_sims(
+  root, c("time", "EI"), pattern = "example", level = 1,
+  check_extant = FALSE, parnames = c("ecosel", "hsymmetry")
+)
+
+}
+
 }

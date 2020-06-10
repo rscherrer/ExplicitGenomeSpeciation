@@ -18,23 +18,39 @@ collect_param(
 )
 }
 \arguments{
-\item{root}{One or multiple paths to simulation folders or folders into which to recurse to look for simulation folders}
+\item{root}{One or multiple paths to simulation folders or folders into
+which to recurse to look for simulation folders}
 
 \item{parnames, filename, combine, as_numeric}{Parameters for \code{read_parameters}}
 
 \item{verbose}{Whether to display messages}
 
-\item{pattern}{Optional pattern to look for if simulation folders are searched by recursion}
+\item{pattern}{Optional pattern to look for if simulation folders are
+searched by recursion}
 
-\item{level}{Level of recursion. Defaults to 0 for no recursion (then assumes that \code{root} is a vector of simulation folder paths)}
+\item{level}{Level of recursion. Defaults to 0 for no recursion (then
+assumes that \code{root} is a vector of simulation folder paths)}
 
 \item{id_column}{Optional name of the simulation identifier column}
 
-\item{check_extant}{Whether to check for non-extinct and non-crashed simulation folders (relevant only if a SLURM output file is present)}
+\item{check_extant}{Whether to check for non-extinct and non-crashed
+simulation folders (relevant only if a SLURM output file is present)}
 }
 \value{
 A data frame
 }
 \description{
 This is essentially a wrapper around \code{read_parameters}
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
+collect_param(root, c("ecosel", "hsymmetry"), pattern = "example", level = 1)
+
+}
+
 }

@@ -18,11 +18,18 @@ A logical
 Did a simulation go extinct?
 }
 \details{
-This function looks for the word "extinct" in the log file of the simulation
+This function looks for the word "extinct" in the log file of the
+simulation
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 is_extinct(root)
+
+}
 
 }

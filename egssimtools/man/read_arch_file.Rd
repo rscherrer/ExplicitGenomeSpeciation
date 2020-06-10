@@ -17,8 +17,14 @@ Read an architecture file
 }
 \examples{
 
-f <- system.file("extdata", "example_1", package = "egssimtools")
-f <- file.path(f, "architecture.txt")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+f <- file.path(root, "architecture.txt")
 read_arch_file(f)
+
+}
 
 }

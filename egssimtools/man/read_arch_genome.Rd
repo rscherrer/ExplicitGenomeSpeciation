@@ -12,14 +12,21 @@ read_arch_genome(folder, filename = "architecture.txt")
 \item{filename}{Name of the architecture file}
 }
 \value{
-A data frame with, for each locus, its location, trait, effect, dominance, chromosome and degree
+A data frame with, for each locus, its location, trait, effect,
+dominance, chromosome and degree
 }
 \description{
 Make a table from locus-specific genetic architecture details
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 read_arch_genome(root)
+
+}
 
 }

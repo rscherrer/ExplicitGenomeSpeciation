@@ -21,7 +21,13 @@ Fetch directories within directories
 }
 \examples{
 
-root <- system.file("extdata", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
 fetch_dirs(root, pattern = "example", level = 1)
+
+}
 
 }

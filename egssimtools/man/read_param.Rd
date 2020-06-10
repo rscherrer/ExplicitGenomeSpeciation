@@ -22,7 +22,8 @@ read_param(
 
 \item{combine}{Whether to paste together compound parameters}
 
-\item{flatten}{Whether to return a list of single values. If FALSE, some of the elements may be vectors of multiple values (compound parameters).}
+\item{flatten}{Whether to return a list of single values. If FALSE, some of
+the elements may be vectors of multiple values (compound parameters).}
 
 \item{as_numeric}{Which parameters to convert to numeric?}
 }
@@ -34,7 +35,13 @@ Read parameters
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 read_param(root)
+
+}
 
 }

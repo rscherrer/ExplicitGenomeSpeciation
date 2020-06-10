@@ -17,8 +17,14 @@ Get locus degrees
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 arch <- read_arch(root)
 get_degrees(arch)
+
+}
 
 }

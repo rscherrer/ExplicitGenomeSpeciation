@@ -26,8 +26,14 @@ Smoothen lines using LOESS
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 data <- read_genome(root, "genome_Fst", architecture = TRUE)
 smoothen_data(data, "time", "genome_Fst", line = "locus")
+
+}
 
 }

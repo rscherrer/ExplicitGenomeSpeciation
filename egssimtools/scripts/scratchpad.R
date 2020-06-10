@@ -2,30 +2,75 @@ rm(list = ls())
 
 library(egssimtools)
 library(tidyverse)
-library(ggsim)
+library(patchwork)
 
-root <- "/media/raphael/bigass/simulations/EGS/genomes3/"
-roots <- fetch_dirs(root, "sim", level = 2)
+roots <- fetch_dirs("data", pattern = "example", level = 1)
+root <- roots[1]
 
-root <- roots[150]
-archfile <- root %>%
-  str_replace("^.*arch", "arch") %>%
-  str_replace("txt.*$", "txt")
+# Example 1: plot speciation metrics through time
 
+data <- read_sim(root, c("EI", "RI", "SI"))
+data <- pivot_data(data, c("EI", "RI", "SI"))
 
+ggplot(data, aes(x = time, y = value, color = variable)) +
+  geom_line()
 
-data <- read_loci(root, "genome_Fst", architecture = TRUE, archfile = archfile)
-data <- data %>% mutate(locus = factor(locus))
-nloci <- length(unique(data$locus))
+# Example 2: plot trait distributions through time
 
-# Plot densities through time
+data <- read_pop(root, "individual_trait", by = 3)
+cols <- paste0("individual_trait", 1:3)
+newnames <- 0:2
+data <- pivot_data(data, cols, newnames)
+data <- data %>% rename(trait = "variable")
 
+ggplot(data, aes(x = time, y = value)) +
+  geom_bin2d(bins = 20) +
+  facet_grid(trait ~ .)
 
-# Plot lines
-data <- smoothen_data(data, x = "time", y = "genome_Fst", line = "locus", span = 0.2)
-p <- gglineplot(
-  data, x = "time", y = "genome_Fst", line = "locus",
-  mapping = aes(color = trait)
+# Example 3: compare simulation metrics across simulations
+
+variables <- c("time", "EI", "RI", "SI")
+data <- collect_sims(roots, variables, check_extant = FALSE, level = 0)
+data <- pivot_data(data, variables[-1])
+
+ggplot(data, aes(x = time, y = value, color = sim)) +
+  geom_line() +
+  facet_grid(. ~ variable)
+
+# Example 4: compare genome scans across simulations
+
+data <- collect_sims(
+  roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
+  level = 0, architecture = TRUE
 )
-p <- facettize(p, rows = "trait", prepend = "trait ")
-p
+data <- data %>% filter(time == last(time))
+
+ggplot(data, aes(x = locus, y = genome_Fst, color = trait)) +
+  geom_point() +
+  facet_grid(sim ~ .)
+
+# Example 5: compare Fst through time across traits and simulations
+
+data <- collect_sims(
+  roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
+  level = 0, architecture = TRUE
+)
+
+plot_this <- function(data) {
+
+  ggplot(data, aes(x = time, y = genome_Fst, alpha = factor(locus))) +
+    geom_line() +
+    guides(alpha = FALSE) +
+    facet_grid(trait ~ .)
+
+}
+
+data <- data %>%
+  group_by(sim) %>%
+  nest() %>%
+  mutate(fig = map(data, plot_this))
+
+wrap_plots(data$fig)
+
+# Example 6: plot a gene regulatory network
+

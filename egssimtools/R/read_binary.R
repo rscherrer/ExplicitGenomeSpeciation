@@ -7,11 +7,15 @@
 #'
 #' @examples
 #'
-#' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' \dontrun{
 #'
-#' f <- file.path(root, "example_1/time.dat")
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' f <- file.path(root, "time.dat")
 #' read_binary(f)
+#'
+#' }
 #'
 #' @export
 

@@ -14,10 +14,14 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data"
+#' root <- "data"
 #'
 #' find_missing(root, pattern = "example_", level = 1)
+#'
+#' }
 #'
 #' @export
 

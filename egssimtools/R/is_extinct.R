@@ -3,16 +3,21 @@
 #' @param folder Path to the folder
 #' @param logfile Name of the log file to read
 #'
-#' @details This function looks for the word "extinct" in the log file of the simulation
+#' @details This function looks for the word "extinct" in the log file of the
+#' simulation
 #'
 #' @return A logical
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' is_extinct(root)
+#'
+#' }
 #'
 #' @export
 

@@ -9,19 +9,23 @@
 #'
 #' @details The files `time.dat` and `population_size.dat` must be present
 #'
-#' @return A data frame
+#' @return A tibble
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' # Read individual trait values through time
 #' read_pop(root, "individual_trait", by = 3)
 #'
 #' # Read trait values, ecotypes and habitats
-#' variables <- c("individual_trait", "individual_ecotype", "individual_habitat")
+#' variables <- paste0("individual_", c("trait", "ecotype", "habitat"))
 #' read_pop(root, variables, by = c(3, 1, 1))
+#'
+#' }
 #'
 #' @export
 

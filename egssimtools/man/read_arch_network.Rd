@@ -23,7 +23,13 @@ Reads a genetic architecture and stores it into a \code{tbl_graph} object
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 read_arch_network(root)
+
+}
 
 }

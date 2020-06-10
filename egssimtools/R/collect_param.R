@@ -2,13 +2,17 @@
 #'
 #' This is essentially a wrapper around `read_parameters`
 #'
-#' @param root One or multiple paths to simulation folders or folders into which to recurse to look for simulation folders
+#' @param root One or multiple paths to simulation folders or folders into
+#' which to recurse to look for simulation folders
 #' @param parnames,filename,combine,as_numeric Parameters for `read_parameters`
 #' @param verbose Whether to display messages
-#' @param pattern Optional pattern to look for if simulation folders are searched by recursion
-#' @param level Level of recursion. Defaults to 0 for no recursion (then assumes that `root` is a vector of simulation folder paths)
+#' @param pattern Optional pattern to look for if simulation folders are
+#' searched by recursion
+#' @param level Level of recursion. Defaults to 0 for no recursion (then
+#' assumes that `root` is a vector of simulation folder paths)
 #' @param id_column Optional name of the simulation identifier column
-#' @param check_extant Whether to check for non-extinct and non-crashed simulation folders (relevant only if a SLURM output file is present)
+#' @param check_extant Whether to check for non-extinct and non-crashed
+#' simulation folders (relevant only if a SLURM output file is present)
 #'
 #' @return A data frame
 #'
@@ -39,7 +43,7 @@ collect_param <- function(
 ) {
 
   # Fetch simulation folders
-  root <- fetch_dirs(root, pattern = pattern, level = level)
+  if (level > 0) root <- fetch_dirs(root, pattern = pattern, level = level)
 
   # Find extant simulations if needed
   if (check_extant) {

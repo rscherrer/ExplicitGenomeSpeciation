@@ -7,7 +7,8 @@
 collect_status(simulations, pattern = "^sim_", verbose = TRUE, level = 0)
 }
 \arguments{
-\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{simulations}{Either path to a root directory containing simulation
+folders, or a vector of simulation folders}
 
 \item{pattern}{Pattern defining the simulation folders to look into}
 
@@ -20,4 +21,18 @@ A character vector
 }
 \description{
 Collect SLURM exit status
+}
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data"
+
+# Should return not found with the example data because these simulations
+# were run locally, not on SLURM
+collect_status(root, pattern = "example", level = 1)
+
+}
+
 }

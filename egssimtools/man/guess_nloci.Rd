@@ -9,7 +9,8 @@ guess_nloci(folder, variable = "genome_Fst")
 \arguments{
 \item{folder}{Path to the folder}
 
-\item{variable}{The locus-specific variable to use to guess the number of loci}
+\item{variable}{The locus-specific variable to use to guess the number of
+loci}
 }
 \value{
 An integer
@@ -22,7 +23,13 @@ The file \code{time.dat} must be present
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 guess_nloci(root)
+
+}
 
 }

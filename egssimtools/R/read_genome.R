@@ -4,23 +4,28 @@
 #'
 #' @param folder Path to the folder
 #' @param variables What variables to read (`time` is included by default)
-#' @param parnames,combine,as_numeric,architecture,archfile,parfile Parameters for `read_data`
+#' @param parnames,combine,as_numeric,architecture,archfile,parfile Parameters
+#' for `read_data`
 #' @param nloci Number of loci (automatically guessed if unspecified)
 #'
 #' @details The file `time.dat` must be present
 #'
-#' @return A data frame
+#' @return A tibble
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' # Read Fst throughout the genome
 #' read_genome(root, "genome_Fst")
 #'
 #' # Read multiple metrics and attach architecture
 #' read_genome(root, c("genome_Fst", "genome_Cst"), architecture = TRUE)
+#'
+#' }
 #'
 #' @export
 

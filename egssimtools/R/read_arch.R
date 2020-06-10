@@ -7,10 +7,14 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' # Location of the simulation folder
-#' root <- "egsimtools/data/example_1"
+#' root <- "data/example_1"
 #'
 #' read_arch(root)
+#'
+#' }
 #'
 #' @export
 

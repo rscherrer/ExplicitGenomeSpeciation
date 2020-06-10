@@ -17,7 +17,13 @@ Read the exit status of the simulation from the SLURM output file
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
 get_status(root)
+
+}
 
 }

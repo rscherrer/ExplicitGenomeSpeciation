@@ -34,13 +34,18 @@ The files \code{time.dat} and \code{population_size.dat} must be present
 }
 \examples{
 
-root <- system.file("extdata", "example_1", package = "egssimtools")
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
 
 # Read individual trait values through time
 read_pop(root, "individual_trait", by = 3)
 
 # Read trait values, ecotypes and habitats
-variables <- c("individual_trait", "individual_ecotype", "individual_habitat")
+variables <- paste0("individual_", c("trait", "ecotype", "habitat"))
 read_pop(root, variables, by = c(3, 1, 1))
+
+}
 
 }
