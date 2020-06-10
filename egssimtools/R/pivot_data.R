@@ -6,7 +6,7 @@
 #' @param variables The columns to pass as `cols` in `tidyr::pivot_longer`
 #' @param newnames Optional character vector of new names for `variables`
 #'
-#' @return A data frame
+#' @return A tibble
 #'
 #' @examples
 #'
@@ -39,10 +39,10 @@ pivot_data <- function(data, variables, newnames = NULL) {
 
   if (!is.null(newnames)) {
 
-    names(cols) <- newnames
+    names(variables) <- newnames
     data <- data %>%
       dplyr::mutate(variable = factor(variable)) %>%
-      dplyr::mutate(variable = forcats::fct_recode(variable, !!!cols))
+      dplyr::mutate(variable = forcats::fct_recode(variable, !!!variables))
 
   }
 

@@ -1,9 +1,11 @@
 ---
 title: "egssimtools: an R package for the analysis of a model of speciation"
 output:
-  pdf_document: default
+  pdf_document:
+    number_sections: true
   html_document:
     keep_md: yes
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,7 +23,7 @@ knitr::opts_chunk$set(
 
 The `ExplicitGenomeSpeciation` program is an simulation of a speciation event with explicit genetics and genotype-phenotype map (see the main page for details). This vignette introduces `egssimtools`, an R package that comes with the simulation program, containing a series of tools to read and analyze the simulation data within R. Here we will show how to use it with a few use cases. We assume that the program has been run and that simulation data have already been saved. Throughout the vignette we will use example simulation data from the `data` folder.  
 
-The functions in `egssimtools` provide an interface between the data saved by the simulation, which consist in binary files (see details on the main page), and the R environment. Specifically, these functions try as much as possible to produce data frames allowing to process, plot and analyze the many types of data that can be retrieved from the simulations in multiple ways, using the `tidyverse` workflow. As such, the functions make heavy use of the `tidyverse` packages and their outputs are tailored to eing use in `tidyverse` pipelines, especially plotting with `ggplot2`. We recommend the user to be familiar with the `tidyverse` and some of its extensions, such as `patchwork`, which we will use throughout this vignette.
+The functions in `egssimtools` provide an interface between the data saved by the simulation, which consist in binary files (see details on the main page), and the R environment. Specifically, these functions try as much as possible to produce data frames allowing to process, plot and analyze the many types of data that can be retrieved from the simulations in multiple ways, using the `tidyverse` workflow. As such, the functions make heavy use of the `tidyverse` packages and their outputs are tailored to eing use in `tidyverse` pipelines, especially plotting with `ggplot2`. We recommend the user to be familiar with the `tidyverse` and some of its extensions, such as `patchwork`, which we will use throughout this vignette. We refer the reader to the `ggplot2` documentation to customize the plots as needed, as this is out of the scope of this vignette.
 
 Because of the diversity of the simulation data, and the large number of ways they can be viewed, this package avoids providing ready-made functions to plot specific results directly from the simulation folders. Instead, we provide functions such that pretty much any plot can be produced in a few chunks of code only, with a common flow. We will go through examples here and explain the usage of the functions as we go.
 
@@ -57,7 +59,7 @@ root <- roots[1]
 
 The `fetch_dirs` function recursively searches for subdirectories within a folder, based on a `pattern` to match and a recursion `level`. It is a very versatile function that can be recycled for use in many other contexts, but comes in very handy here, when the folder structure of the data is very nested, for example.
 
-## 1. Plot speciation metrics through time 
+## Plot speciation metrics through time 
 
 The following code chunks read and plot ecological divergence, reproductive and spatial isolation through time for a given simulation. First, we read the data in:
 
@@ -76,18 +78,18 @@ data
 
 We can now plot lines through time for each variable using `ggplot2`:
 
-```{r, fig.width = 4, fig.height = 3}
+```{r, fig.width = 3, fig.height = 2, fig.align = "center"}
 ggplot(data, aes(x = time, y = value, color = variable)) +
   geom_line()
 ```
 
-## 2. Plot trait distributions through time
+## Plot trait distributions through time
 
 Here we want to plot "bin2d" plots, which are heatmap-density plots, of individual trait values through time. We first read the data:
 
 ```{r}
 data <- read_pop(root, "individual_trait", by = 3)
-tibble(data)
+data
 ```
 
 Here, `read_pop` is the equivalent of `read_sim` for individual-wise data, where the resulting data frame has one row per individual per time point. This format is ensured by specifying `by = 3`, meaning that the content of the `individual_trait.dat` file must be splitted into three columns, one for each trait.
@@ -96,21 +98,21 @@ Next, we pivot the data to the long format to be able to plot all three traits i
 
 ```{r}
 cols <- paste0("individual_trait", 1:3)
-newnames <- 0:2 # to match the C++ numbering of traits
+newnames <- paste0("trait ", 0:2) # to match the C++ numbering of traits
 data <- pivot_data(data, cols, newnames = newnames)
 data <- data %>% rename(trait = "variable")
-tibble(data)
+data
 ```
 
 Here, we gathered the three trait-columns into one, and used the `newnames` argument of the `pivot_data` function to replace the levels `individual_trait1`, `individual_trait2` and `individual_trait3` by `0`, `1` and `2`, within this column. We also renamed this column `trait`, which will make our plot more intuitive. We can now plot the distribution of trait values through time, facetted by trait:
 
-```{r, fig.width = 4, fig.height = 3}
+```{r, fig.width = 5, fig.height = 2, fig.align = "center"}
 ggplot(data, aes(x = time, y = value)) +
   geom_bin2d(bins = 20) +
-  facet_grid(trait ~ .)
+  facet_grid(. ~ trait)
 ```
 
-## 3. Compare genome-wide Fst across simulations
+## Compare genome-wide Fst across simulations
 
 Here, we want to plot the genome-wide Fst for each trait and each simulation. Because we want to read data from multiple simulations, we use `collect_sims` instead of `read_*`:
 
@@ -119,7 +121,7 @@ variables <- c("time", "Fst")
 data <- collect_sims(
   roots, variables, by = c(1, 3), check_extant = FALSE, level = 0
 )
-tibble(data)
+data
 ```
 
 The `collect_sims` function assembles data from multiple simulations into a single data frame. It internally calls `fetch_dirs`, hence the `level` argument, and so it can go find simulation folders in a nested folder structure provided a certain `pattern` in the naming.
@@ -132,16 +134,17 @@ The `check_extant` option can be used to find out which simulations did succesfu
 
 Again, we pivot the data by gathering the `Fst` columns into one, and we plot the data by facetting by trait:
 
-```{r}
-data <- pivot_data(data, variables[-1], newnames = newnames)
+```{r, fig.width = 5, fig.height = 2, fig.align = "center"}
+data <- pivot_data(data, paste0("Fst", 1:3), newnames = newnames)
 data <- data %>% rename(trait = "variable")
-tibble(data)
+data
 ggplot(data, aes(x = time, y = value, color = sim)) +
   geom_line() +
-  facet_grid(. ~ variable)
+  facet_grid(. ~ trait) +
+  ylab(parse(text = "F[ST]"))
 ```
 
-### 4. Compare genome scans across simulations
+### Compare genome scans across simulations
 
 Here we want to plot the genome-wide scan of Fst values at the end of the simulation, for each simulation. Again we use `collect_sims` to combine data from multiple simulations:
 
@@ -150,7 +153,7 @@ data <- collect_sims(
   roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
   level = 0, architecture = TRUE
 )
-tibble(data)
+data
 ```
 
 Here, however, `genome_Fst.dat` contains Fst values for each locus at each time step, and there are 300 loci in the simulations. Because we want to keep the locus as the unit of observation here, we cannot split `genome_Fst` to bring it down to the same size as `time`. Instead, we have to duplicate the `time` column as many times as there are loci. We do this with the `dupl` arguments, which takes how many times each variable should be duplicated.
@@ -161,14 +164,14 @@ Note that beause `genome_Fst` represents a single column, the data is already in
 
 We now make sure to only keep the last time point for each simulation, and we plot the genome scans:
 
-```{r}
+```{r, fig.width = 5, fig.height = 3, fig.align = "center"}
 data <- data %>% filter(time == last(time))
 ggplot(data, aes(x = locus, y = genome_Fst, color = trait)) +
   geom_point() +
   facet_grid(sim ~ .)
 ```
 
-### 5. Compare Fst through time across traits and simulations
+### Compare Fst through time across traits and simulations
 
 Here we want to produce line plots showing the trajectories through time of all the loci, facetted by trait, in multiple simulations. We could choose to show traits and simulations as two facetting dimensions in `facet_grid`, but for the sake of the example we will show each simulation in a separate plot and assemble them using `patchwork`. 
 
@@ -179,6 +182,8 @@ data <- collect_sims(
   roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
   level = 0, architecture = TRUE
 )
+data <- data %>% mutate(trait = str_replace(trait, "^", "trait "))
+data
 ```
 
 In order to make one plot per simulation, we will first prepare a function to make such a plot, which we will then repeatedly use for each simulation using the group-nest-map worflow of the tidyverse. The plotting function should take only one argument, which should be a data frame representing the subset of our data corresponding to a single simulation. If we pretend that `data` is such as subset, then the function
@@ -203,20 +208,20 @@ data <- data %>%
   group_by(sim) %>%
   nest() %>%
   mutate(fig = map(data, plot_this))
-tibble(data)
+data
 ```
 
-This is a typical tidyverse workflow. Here, we first group our dataset by simulation and nest ("compress") it, such that each row corresponds to a simulation and the data for each simulation has been "compressed" into a list-column, called `data`. The data has not disappeared, it is just contained into the different elements of the list column `data`,
+This is a typical tidyverse workflow. Here, we first group our dataset by simulation and nest ("compress") it, such that each row corresponds to a simulation and the data for each simulation has been "compressed" into a list-column, called `data`. The data has not disappeared, it is just contained into the different elements of the list column `data`.
 
-```{r}
-data$data[[1]]
+So, each element of the `data` column is a subset of the dataset that corresponds to a single simulation, which is what we want to apply our `plot_this` function to. This is done by using `mutate` to create a new list-column called `fig`, which will contain multiple `ggplot` objects. This new list-column is constructed by calling `map` from the `purrr` package, which will take care of applying `plot_this` to each element of the list-column `data`. We can check individual plots, for example, using:
+
+```{r, warning = FALSE, fig.width = 3, fig.height = 3, fig.align = "center"}
+data$fig[[1]]
 ```
-
-So, each element of the `data` column is a subset of the dataset that corresponds to a single simulation, which is what we want to apply our `plot_this` function to. This is done by using `mutate` to create a new list-column called `fig`, which will contain multiple `ggplot` objects. This new list-column is constructed by calling `map` from the `purrr` package, which will take care of applying `plot_this` to each element of the list-column `data`.
 
 We can assemble the multiple plots of the `fig` column with `patchwork`,
 
-```{r}
+```{r, warning = FALSE, fig.width = 7, fig.height = 3, fig.align = "center"}
 wrap_plots(data$fig)
 ```
 
@@ -227,7 +232,8 @@ data$figname <- sprintf("sim%s.png", 1:3)
 save_this <- function(figname, fig) {
   ggsave(figname, fig, width = 4, height = 3, dpi = 300)
 }
-data <- data %>% mutate(saved = walk2(figname, fig, save_this))
+#data <- data %>% mutate(saved = walk2(figname, fig, save_this))
+# uncomment to actually save the plots
 ```
 
 where we first prepare a column of file names for each figure, and then apply a custom `save_this` function to each combination of figure (`fig`) and file name (`figname`) using `walk2` (similar to `map`). 
@@ -254,7 +260,7 @@ data <- read_data(
   dupl = list("population_size", 1, 1),
   parnames = c("ecosel", "hsymmetry")
 )
-tibble(data)
+data
 ```
 
 The `by` and `dupl` arguments are telling the function how to assemble the data.
@@ -274,7 +280,7 @@ data <- read_pop(
   by = c(3, 1),
   parnames = c("ecosel", "hsymmetry")
 )
-tibble(data)
+data
 ```
 
 which takes care of the `dupl` argument for us because it knows that the resulting table will be individual-wise.
