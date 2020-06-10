@@ -74,6 +74,11 @@ ggplot(data, aes(x = locus, y = genome_Fst, color = trait)) +
   geom_point() +
   facet_grid(sim ~ .)
 
+## ---- fig.width = 3, fig.height = 3-------------------------------------------
+data <- read_genome(root, "genome_Fst")
+ggplot(data, aes(x = time, y = locus, fill = genome_Fst)) +
+  geom_tile()
+
 ## -----------------------------------------------------------------------------
 data <- collect_data(
   roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,

@@ -35,7 +35,9 @@ As this package comes as part of the `ExplicitGenomeSpeciation` repository, it c
 
 # Use cases
 
-Here we show how to use the package through a series of examples. First, we load the packages we will need:
+Here we show how to use the package through a series of examples. You can find all examples in the `scripts/examples.R` script. 
+
+First, we load the packages we will need:
 
 ```{r, message = FALSE}
 library(egssimtools)
@@ -144,7 +146,7 @@ ggplot(data, aes(x = time, y = value, color = sim)) +
   ylab(parse(text = "F[ST]"))
 ```
 
-### Compare genome scans across simulations
+## Compare genome scans across simulations
 
 Here we want to plot the genome-wide scan of Fst values at the end of the simulation, for each simulation. Again we use `collect_data` to combine data from multiple simulations:
 
@@ -171,7 +173,15 @@ ggplot(data, aes(x = locus, y = genome_Fst, color = trait)) +
   facet_grid(sim ~ .)
 ```
 
-### Compare Fst through time across traits and simulations
+## Plot Fst heatmap through time
+
+```{r, fig.width = 3, fig.height = 3}
+data <- read_genome(root, "genome_Fst")
+ggplot(data, aes(x = time, y = locus, fill = genome_Fst)) +
+  geom_tile()
+```
+
+## Compare Fst through time across traits and simulations
 
 Here we want to produce line plots showing the trajectories through time of all the loci, facetted by trait, in multiple simulations. We could choose to show traits and simulations as two facetting dimensions in `facet_grid`, but for the sake of the example we will show each simulation in a separate plot and assemble them using `patchwork`. 
 
@@ -238,7 +248,7 @@ save_this <- function(figname, fig) {
 
 where we first prepare a column of file names for each figure, and then apply a custom `save_this` function to each combination of figure (`fig`) and file name (`figname`) using `walk2` (similar to `map`). 
 
-## Guided tour of `read_data`
+# Guided tour of `read_data`
 
 Here we present the pivotal function of the package.
 
