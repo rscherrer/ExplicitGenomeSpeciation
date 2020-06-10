@@ -14,7 +14,9 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' \dontrun{
+#'
+#' root <- "data/example_1"
 #'
 #' # Plot the distribution of the ecological trait at three time points
 #' plot_pop_ridges(
@@ -26,6 +28,8 @@
 #'   root, "individual_trait", by = 3, j = 1, times = c(100, 200, 300),
 #'   facet_by = "trait"
 #' )
+#'
+#' }
 #'
 #' @export
 
@@ -40,8 +44,11 @@ plot_pop_ridges <- function(
   ...
 ) {
 
+  data <- read_pop(root, y, by = by)
+
+
   if (is.null(facet_by)) {
-    data <- read_indiv(root, y, by = by)
+
     ycol <- colnames(data)[grep(y, colnames(data))][j]
   } else {
     data <- read_indiv_long(

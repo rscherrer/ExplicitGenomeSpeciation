@@ -7,96 +7,128 @@ knitr::opts_chunk$set(
 ## ---- message = FALSE---------------------------------------------------------
 library(egssimtools)
 library(tidyverse)
-library(cowplot)
+library(patchwork)
 
 ## -----------------------------------------------------------------------------
-root <- "../data/example_1"
+roots <- fetch_dirs("../data", pattern = "example", level = 1)
+roots
+# we are within the "vignettes" folder, hence the ".."
+
+## -----------------------------------------------------------------------------
+root <- roots[1]
+
+## -----------------------------------------------------------------------------
+data <- read_sim(root, c("EI", "RI", "SI"))
+data
+
+## -----------------------------------------------------------------------------
+data <- pivot_data(data, c("EI", "RI", "SI"))
+data
+
+## ---- fig.width = 3, fig.height = 2, fig.align = "center"---------------------
+ggplot(data, aes(x = time, y = value, color = variable)) +
+  geom_line()
+
+## -----------------------------------------------------------------------------
+data <- read_pop(root, "individual_trait", by = 3)
+data
+
+## -----------------------------------------------------------------------------
+cols <- paste0("individual_trait", 1:3)
+newnames <- paste0("trait ", 0:2) # to match the C++ numbering of traits
+data <- pivot_data(data, cols, newnames = newnames)
+data <- data %>% rename(trait = "variable")
+data
+
+## ---- fig.width = 5, fig.height = 2, fig.align = "center"---------------------
+ggplot(data, aes(x = time, y = value)) +
+  geom_bin2d(bins = 20) +
+  facet_grid(. ~ trait)
+
+## -----------------------------------------------------------------------------
+variables <- c("time", "Fst")
+data <- collect_data(
+  roots, variables, by = c(1, 3), check_extant = FALSE, level = 0
+)
+data
+
+## ---- fig.width = 5, fig.height = 2, fig.align = "center"---------------------
+data <- pivot_data(data, paste0("Fst", 1:3), newnames = newnames)
+data <- data %>% rename(trait = "variable")
+data
+ggplot(data, aes(x = time, y = value, color = sim)) +
+  geom_line() +
+  facet_grid(. ~ trait) +
+  ylab(parse(text = "F[ST]"))
+
+## -----------------------------------------------------------------------------
+data <- collect_data(
+  roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
+  level = 0, architecture = TRUE
+)
+data
+
+## ---- fig.width = 5, fig.height = 3, fig.align = "center"---------------------
+data <- data %>% filter(time == last(time))
+ggplot(data, aes(x = locus, y = genome_Fst, color = trait)) +
+  geom_point() +
+  facet_grid(sim ~ .)
+
+## -----------------------------------------------------------------------------
+data <- collect_data(
+  roots, c("time", "genome_Fst"), dupl = c(300, 1), check_extant = FALSE,
+  level = 0, architecture = TRUE
+)
+data <- data %>% mutate(trait = str_replace(trait, "^", "trait "))
+data
+
+## -----------------------------------------------------------------------------
+plot_this <- function(data) {
+
+  ggplot(data, aes(x = time, y = genome_Fst, alpha = factor(locus))) +
+    geom_line() +
+    guides(alpha = FALSE) +
+    facet_grid(trait ~ .)
+
+}
+
+## -----------------------------------------------------------------------------
+data <- data %>%
+  group_by(sim) %>%
+  nest() %>%
+  mutate(fig = map(data, plot_this))
+data
+
+## ---- warning = FALSE, fig.width = 3, fig.height = 3, fig.align = "center"----
+data$fig[[1]]
+
+## ---- warning = FALSE, fig.width = 7, fig.height = 3, fig.align = "center"----
+wrap_plots(data$fig)
+
+## -----------------------------------------------------------------------------
+data$figname <- sprintf("sim%s.png", 1:3)
+save_this <- function(figname, fig) {
+  ggsave(figname, fig, width = 4, height = 3, dpi = 300)
+}
+#data <- data %>% mutate(saved = walk2(figname, fig, save_this))
+# uncomment to actually save the plots
+
+## -----------------------------------------------------------------------------
 data <- read_data(
-  root, variables = c("time", "EI", "RI", "SI"), 
+  root, 
+  variables = c("time", "individual_trait", "individual_ecotype"), 
+  by = c(1, 3, 1),
+  dupl = list("population_size", 1, 1),
   parnames = c("ecosel", "hsymmetry")
 )
-head(data, 4)
+data
 
 ## -----------------------------------------------------------------------------
-data <- read_data(root, variables = c("time", "Fst"), by = c(1, 3))
-head(data, 4)
-
-## -----------------------------------------------------------------------------
-data <- read_data(root, variables = c("time", "genome_Fst"), by = c(1, 300))
-head(data[, 1:6], 4)
-
-## -----------------------------------------------------------------------------
-data <- read_data(
-  root, variables = c("time", "genome_Fst", "genome_freq", "genome_varA"), 
-  dupl = c(300, 1, 1, 1)
+data <- read_pop(
+  root, 
+  variables = c("individual_trait", "individual_ecotype"),
+  by = c(3, 1),
+  parnames = c("ecosel", "hsymmetry")
 )
-head(data, 4)
-
-## -----------------------------------------------------------------------------
-data <- read_data(
-  root, variables = c("time", "individual_trait"), by = c(1, 3),
-  dupl = list("population_size", 1)
-)
-head(data, 4)
-
-## -----------------------------------------------------------------------------
-read_parameters(root, c("ecosel", "hsymmetry"))
-
-## ---- message = FALSE---------------------------------------------------------
-data <- collect_sims(
-  root = "../data", 
-  variables = c("time", "EI"), 
-  parnames = c("ecosel",  "hsymmetry"), 
-  id_column = "sim", 
-  level = 1,
-  pattern = "example",
-  verbose = FALSE)
-head(data, 4)
-
-## -----------------------------------------------------------------------------
-arch <- read_architecture(root)
-str(arch)
-
-## -----------------------------------------------------------------------------
-loci <- read_genome_architecture(root)
-head(loci, 4)
-
-## ---- fig.width = 6, fig.height = 2, align = "center"-------------------------
-dplot_genome_scan(root, y = "genome_Fst")
-
-## ---- fig.width = 4, fig.height = 5-------------------------------------------
-dplot_genome_heatmap(root, y = "genome_Fst")
-
-## ---- fig.width = 3, fig.height = 2-------------------------------------------
-dplot_genome_violin(root, y = "genome_Fst", x = "trait")
-
-## ---- fig.width = 4-----------------------------------------------------------
-dplot_genome_ridges(root, y = "genome_Fst", times = c(0, 1000, 5000, 10000, 15000))
-
-## ---- fig.width = 4-----------------------------------------------------------
-dplot_genome_lines(root, y = "genome_Fst")
-
-## ---- fig.width = 6, fig.height = 5-------------------------------------------
-dplot_network(root, y = "genome_Fst")
-
-## ---- fig.width = 3, fig.height = 2-------------------------------------------
-dplot_population_density(
-  root, y = "individual_trait", by = 3, j = 1, fill = "lightgreen"
-) +
-  labs(x = "Ecological trait", y = "Density") +
-  xlim(c(-2, 2))
-
-## ---- fig.width = 5, fig.height = 3-------------------------------------------
-dplot_population_bin2d(
-  root, y = "individual_trait", by = 3, j = 1, bins = 100
-) +
-  labs(x = "Time (generations)", y = "Ecological trait", fill = "Count") +
-  scale_fill_continuous(type = "viridis")
-
-## ---- fig.width = 6, fig.height = 2-------------------------------------------
-p1 <- dplot_simulation_line(root, y = "Fst", by = 3, j = 1) +
-  labs(x = "Time (generations)", y = parse(text = "F[ST]"))
-p2 <- dplot_simulation_line(root, y = "RI", x = "EI") +
-  labs(x = "Ecological divergence", y = "Reproductive isolation")
-plot_grid(p1, p2, labels = c("A", "B"))
+data
 

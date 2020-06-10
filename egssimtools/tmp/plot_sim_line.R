@@ -3,7 +3,8 @@
 #' @param root Path to the simulation folder
 #' @param y Variable to plot
 #' @param x Optional variable for the horizontal axis. Defaults to "time".
-#' @param by Numbers of columns in which to split variable `x` (only if `x` is not "time") and `y`. See `?read_data`.
+#' @param by Numbers of columns in which to split variable `x` (only if `x` is
+#' not "time") and `y`. See `?read_data`.
 #' @param j If variable `y` is splitted, which column to show?
 #' @param k If variable `x` is splitted, which column to show?
 #' @param ... Parameters to be passed to `geom_path`
@@ -12,9 +13,13 @@
 #'
 #' @examples
 #'
-#' root <- system.file("extdata", "example_1", package = "egssimtools")
+#' \dontrun{
+#'
+#' root <- "data/example_1"
 #' plot_sim_line(root, "EI")
 #' plot_sim_line(root, "RI", x = "EI")
+#'
+#' }
 #'
 #' @export
 
