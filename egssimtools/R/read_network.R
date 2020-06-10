@@ -60,7 +60,7 @@ read_network <- function(
 
     ntimes <- nrow(data) / nedges
     arch <- read_arch_network(folder, archfile, as_list = TRUE)$edges
-    arch <- purrr::map_dfr(seq(ntimes), ~ arch)
+    arch <- purrr::map_dfr(unique(data$time), ~ dplyr::mutate(arch, time = .x))
     data <- data %>% dplyr::right_join(arch)
 
   }

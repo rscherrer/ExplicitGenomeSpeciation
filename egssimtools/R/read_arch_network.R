@@ -37,7 +37,7 @@ read_arch_network <- function(
   edges <- purrr::map_dfr(
     edges$networks, ~ do.call("data.frame", .x), .id = "trait"
   )
-  edges <- edges %>% dplyr::mutate(trait = as.numeric(factor(trait)) - 1)
+  edges <- edges %>% dplyr::mutate(trait = factor(as.numeric(factor(trait))-1))
   edges <- edges %>% dplyr::rename(from = edges0, to = edges1, weight = weights)
   edges <- edges %>% dplyr::mutate(from = from + 1, to = to + 1) # C++ indexing
   edges <- edges %>% dplyr::mutate(edge = seq(nrow(edges)))

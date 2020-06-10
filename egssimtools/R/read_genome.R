@@ -60,7 +60,7 @@ read_genome <- function(
 
     ntimes <- nrow(data) / nloci
     arch <- read_arch_genome(folder, archfile)
-    arch <- purrr::map_dfr(seq(ntimes), ~ arch)
+    arch <- purrr::map_dfr(unique(data$time), ~ dplyr::mutate(arch, time = .x))
     data <- data %>% dplyr::right_join(arch)
 
   }
