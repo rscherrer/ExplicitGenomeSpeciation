@@ -2,6 +2,8 @@
 #'
 #' @param folder Path to the folder
 #' @param logfile Name of the log file to read
+#' @param slurm Whether to look up in the SLURM output file (instead of
+#' `logfile`)
 #'
 #' @details This function looks for the word "extinct" in the log file of the
 #' simulation
@@ -21,7 +23,9 @@
 #'
 #' @export
 
-is_extinct <- function(folder, logfile = "log.txt") {
+is_extinct <- function(folder, logfile = "log.txt", slurm = FALSE) {
+
+  if (slurm) logfile <- "^slurm.*out"
 
   i <- grep(logfile, list.files(folder))
   i <- i[length(i)]

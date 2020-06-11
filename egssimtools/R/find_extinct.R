@@ -5,6 +5,7 @@
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param level Recursion level
+#' @param slurm Whether to look into the SLURM output files
 #'
 #' @return A character vector of extinct simulations, or NULL if no simulation
 #'   is extinct
@@ -27,7 +28,8 @@ find_extinct <- function(
   sims,
   pattern = "^sim_",
   verbose = TRUE,
-  level = 0
+  level = 0,
+  slurm = FALSE
 ) {
 
   if (verbose) message("Looking for extinct simulations...")
@@ -36,7 +38,7 @@ find_extinct <- function(
   )
 
   # Check each one for extinction
-  extincts <- sapply(sims, is_extinct)
+  extincts <- sapply(sims, is_extinct, slurm)
 
   # Return the names of the extinct folders
   if (any(extincts)) return (sims[extincts])

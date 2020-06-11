@@ -4,12 +4,15 @@
 \alias{is_extinct}
 \title{Did a simulation go extinct?}
 \usage{
-is_extinct(folder, logfile = "log.txt")
+is_extinct(folder, logfile = "log.txt", slurm = FALSE)
 }
 \arguments{
 \item{folder}{Path to the folder}
 
 \item{logfile}{Name of the log file to read}
+
+\item{slurm}{Whether to look up in the SLURM output file (instead of
+\code{logfile})}
 }
 \value{
 A logical

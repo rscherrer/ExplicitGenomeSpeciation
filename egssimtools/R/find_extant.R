@@ -5,6 +5,7 @@
 #' @param pattern Pattern defining the simulation folders to look into
 #' @param verbose Whether to display messages
 #' @param level Recursion level
+#' @param slurm Parameter for `find_extinct`
 #'
 #' @return A vector of names of the simulation that did not go extinct
 #'
@@ -25,7 +26,8 @@ find_extant <- function(
   sims,
   pattern = "^sim_",
   verbose = TRUE,
-  level = 0
+  level = 0,
+  slurm = FALSE
 ) {
 
   if (verbose) message("Looking for extant simulations...")
@@ -36,7 +38,7 @@ find_extant <- function(
   # Look for missing and extinct simulations
   missings <- find_missing(sims, verbose = verbose)
   completed <- find_completed(sims, verbose = verbose)
-  extincts <- find_extinct(sims, verbose = verbose)
+  extincts <- find_extinct(sims, verbose = verbose, slurm = slurm)
 
   # Identify extant simulations
   if (!is.null(missings)) sims <- sims[!sims %in% missings]

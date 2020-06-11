@@ -4,7 +4,7 @@
 \alias{find_extinct}
 \title{Find extinct simulations}
 \usage{
-find_extinct(sims, pattern = "^sim_", verbose = TRUE, level = 0)
+find_extinct(sims, pattern = "^sim_", verbose = TRUE, level = 0, slurm = FALSE)
 }
 \arguments{
 \item{sims}{Either path to a root directory containing simulation folders,
@@ -15,6 +15,8 @@ or a vector of simulation folders}
 \item{verbose}{Whether to display messages}
 
 \item{level}{Recursion level}
+
+\item{slurm}{Whether to look into the SLURM output files}
 }
 \value{
 A character vector of extinct simulations, or NULL if no simulation
