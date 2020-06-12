@@ -1,11 +1,7 @@
 #' Find extinct simulations
 #'
-#' @param sims Either path to a root directory containing simulation folders,
-#' or a vector of simulation folders
-#' @param pattern Pattern defining the simulation folders to look into
-#' @param verbose Whether to display messages
-#' @param level Recursion level
-#' @param slurm Whether to look into the SLURM output files
+#' @param sims A vector of simulation folders
+#' @param ... Parameters for `is_extinct`
 #'
 #' @return A character vector of extinct simulations, or NULL if no simulation
 #'   is extinct
@@ -17,28 +13,18 @@
 #' # Location of the simulation folder
 #' root <- "data"
 #'
-#' find_extinct(root, pattern = "example_", level = 1)
+#' roots <- fetch_dirs(root, "example", level = 1)
+#' find_extinct(roots)
 #'
 #' }
 #'
 #' @export
 
 # How many simulations did go extinct?
-find_extinct <- function(
-  sims,
-  pattern = "^sim_",
-  verbose = TRUE,
-  level = 0,
-  slurm = FALSE
-) {
-
-  if (verbose) message("Looking for extinct simulations...")
-  if (level > 0) sims <- fetch_dirs(
-    sims, pattern = pattern, level = level
-  )
+find_extinct <- function(sims, ...) {
 
   # Check each one for extinction
-  extincts <- sapply(sims, is_extinct, slurm)
+  extincts <- purrr::map_lgl(sims, is_extinct, ...)
 
   # Return the names of the extinct folders
   if (any(extincts)) return (sims[extincts])

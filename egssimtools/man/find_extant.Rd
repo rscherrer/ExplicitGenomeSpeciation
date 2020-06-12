@@ -4,19 +4,12 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(sims, pattern = "^sim_", verbose = TRUE, level = 0, slurm = FALSE)
+find_extant(sims, ...)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders,
-or a vector of simulation folders}
+\item{sims}{A vector of simulation folders}
 
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{level}{Recursion level}
-
-\item{slurm}{Parameter for \code{find_extinct}}
+\item{...}{Parameters for \code{find_extinct}}
 }
 \value{
 A vector of names of the simulation that did not go extinct
@@ -31,7 +24,8 @@ Find extant simulations
 # Location of the simulation folder
 root <- "data"
 
-find_extant(root, pattern = "example_", level = 1)
+roots <- fetch_dirs(root, pattern = "example_", level = 1)
+find_extant(roots)
 
 }
 

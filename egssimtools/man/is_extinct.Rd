@@ -15,14 +15,15 @@ is_extinct(folder, logfile = "log.txt", slurm = FALSE)
 \code{logfile})}
 }
 \value{
-A logical
+A logical. Returns FALSE and ssues a warning if the log file
+cannot be found.
 }
 \description{
 Did a simulation go extinct?
 }
 \details{
 This function looks for the word "extinct" in the log file of the
-simulation
+simulation.
 }
 \examples{
 
@@ -32,6 +33,7 @@ simulation
 root <- "data/example_1"
 
 is_extinct(root)
+is_extinct(root, slurm = TRUE)
 
 }
 

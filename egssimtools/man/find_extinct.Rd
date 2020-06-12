@@ -4,19 +4,12 @@
 \alias{find_extinct}
 \title{Find extinct simulations}
 \usage{
-find_extinct(sims, pattern = "^sim_", verbose = TRUE, level = 0, slurm = FALSE)
+find_extinct(sims, ...)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders,
-or a vector of simulation folders}
+\item{sims}{A vector of simulation folders}
 
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{level}{Recursion level}
-
-\item{slurm}{Whether to look into the SLURM output files}
+\item{...}{Parameters for \code{is_extinct}}
 }
 \value{
 A character vector of extinct simulations, or NULL if no simulation
@@ -32,7 +25,8 @@ Find extinct simulations
 # Location of the simulation folder
 root <- "data"
 
-find_extinct(root, pattern = "example_", level = 1)
+roots <- fetch_dirs(root, "example", level = 1)
+find_extinct(roots)
 
 }
 

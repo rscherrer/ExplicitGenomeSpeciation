@@ -4,17 +4,10 @@
 \alias{collect_status}
 \title{Collect SLURM exit status}
 \usage{
-collect_status(simulations, pattern = "^sim_", verbose = TRUE, level = 0)
+collect_status(sims)
 }
 \arguments{
-\item{simulations}{Either path to a root directory containing simulation
-folders, or a vector of simulation folders}
-
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{level}{Recursion level}
+\item{sims}{A vector of simulation folders}
 }
 \value{
 A character vector
@@ -29,9 +22,11 @@ Collect SLURM exit status
 # Location of the simulation folder
 root <- "data"
 
+roots <- fetch_dirs(root, pattern = "example", level = 1)
+
 # Should return not found with the example data because these simulations
 # were run locally, not on SLURM
-collect_status(root, pattern = "example", level = 1)
+collect_status(roots)
 
 }
 

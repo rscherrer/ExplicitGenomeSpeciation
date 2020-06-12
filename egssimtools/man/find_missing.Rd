@@ -4,17 +4,10 @@
 \alias{find_missing}
 \title{Find missing simulations}
 \usage{
-find_missing(sims, pattern = "^sim_", verbose = TRUE, level = 0)
+find_missing(sims)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders, or
-a vector of simulation folders}
-
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{level}{Recursion level}
+\item{sims}{A vector of simulation folders}
 }
 \value{
 A character vector of missing simulations, or NULL if no simulation
@@ -34,7 +27,8 @@ simulations
 # Location of the simulation folder
 root <- "data"
 
-find_missing(root, pattern = "example_", level = 1)
+roots <- fetch_dirs(root, "example_", level = 1)
+find_missing(roots)
 
 }
 

@@ -4,17 +4,10 @@
 \alias{find_completed}
 \title{Find completed simulations}
 \usage{
-find_completed(sims, pattern = "^sim_", verbose = TRUE, level = 0)
+find_completed(sims)
 }
 \arguments{
-\item{sims}{Either path to a root directory containing simulation folders,
-or a vector of simulation folders}
-
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{level}{Recursion level}
+\item{sims}{A vector of simulation folders}
 }
 \value{
 A character vector with the paths to completed simulations
@@ -33,7 +26,8 @@ Applicable only to simulations run on a server with SLURM.
 # Location of the simulation folder
 root <- "data"
 
-find_completed(root, pattern = "example_", level = 1)
+roots <- fetch_dirs(roots, pattern = "example_", level = 1)
+find_completed(roots)
 
 }
 
