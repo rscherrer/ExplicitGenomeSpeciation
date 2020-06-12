@@ -4,10 +4,12 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(roots)
+find_extant(roots, ...)
 }
 \arguments{
 \item{roots}{Vector of simulation folders}
+
+\item{...}{Parameters for \code{is_extant}}
 }
 \value{
 A character vector

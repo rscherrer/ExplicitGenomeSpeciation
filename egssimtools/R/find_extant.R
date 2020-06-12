@@ -4,6 +4,7 @@
 #' not go extinct
 #'
 #' @param roots Vector of simulation folders
+#' @param ... Parameters for `is_extant`
 #'
 #' @return A character vector
 #'
@@ -18,9 +19,9 @@
 #'
 #' @export
 
-find_extant <- function(roots) {
+find_extant <- function(roots, ...) {
 
-  extant <- purrr::map_lgl(roots, is_extant)
+  extant <- purrr::map_lgl(roots, is_extant, ...)
   return(roots[extant])
 
 }
