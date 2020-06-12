@@ -4,27 +4,23 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(sims, ...)
+find_extant(roots)
 }
 \arguments{
-\item{sims}{A vector of simulation folders}
-
-\item{...}{Parameters for \code{find_extinct}}
+\item{roots}{Vector of simulation folders}
 }
 \value{
-A vector of names of the simulation that did not go extinct
+A character vector
 }
 \description{
-Find extant simulations
+Find simulations that did not crash, that successfully completed and that did
+not go extinct
 }
 \examples{
 
 \dontrun{
 
-# Location of the simulation folder
-root <- "data"
-
-roots <- fetch_dirs(root, pattern = "example_", level = 1)
+roots <- fetch_dirs("data", "example", 1)
 find_extant(roots)
 
 }

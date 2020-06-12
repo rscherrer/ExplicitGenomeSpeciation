@@ -2,38 +2,28 @@
 % Please edit documentation in R/is_extinct.R
 \name{is_extinct}
 \alias{is_extinct}
-\title{Did a simulation go extinct?}
+\title{Is a simulation extinct?}
 \usage{
-is_extinct(folder, logfile = "log.txt", slurm = FALSE)
+is_extinct(root, logfile = "log.txt", slurm = FALSE)
 }
 \arguments{
-\item{folder}{Path to the folder}
+\item{root}{Path to the simulation folder}
 
-\item{logfile}{Name of the log file to read}
+\item{logfile}{Optional log file name}
 
-\item{slurm}{Whether to look up in the SLURM output file (instead of
-\code{logfile})}
+\item{slurm}{Whether to check a SLURM output file as log file}
 }
 \value{
-A logical. Returns FALSE and ssues a warning if the log file
-cannot be found.
+A logical
 }
 \description{
-Did a simulation go extinct?
-}
-\details{
-This function looks for the word "extinct" in the log file of the
-simulation.
+Checks for the word "extinct" in the log file
 }
 \examples{
 
 \dontrun{
 
-# Location of the simulation folder
-root <- "data/example_1"
-
-is_extinct(root)
-is_extinct(root, slurm = TRUE)
+is_extinct("data/example_1")
 
 }
 

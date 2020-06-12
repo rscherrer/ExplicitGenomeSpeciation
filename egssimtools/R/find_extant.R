@@ -1,36 +1,26 @@
 #' Find extant simulations
 #'
-#' @param sims A vector of simulation folders
-#' @param ... Parameters for `find_extinct`
+#' Find simulations that did not crash, that successfully completed and that did
+#' not go extinct
 #'
-#' @return A vector of names of the simulation that did not go extinct
+#' @param roots Vector of simulation folders
+#'
+#' @return A character vector
 #'
 #' @examples
 #'
 #' \dontrun{
 #'
-#' # Location of the simulation folder
-#' root <- "data"
-#'
-#' roots <- fetch_dirs(root, pattern = "example_", level = 1)
+#' roots <- fetch_dirs("data", "example", 1)
 #' find_extant(roots)
 #'
 #' }
 #'
 #' @export
 
-find_extant <- function(sims, ...) {
+find_extant <- function(roots) {
 
-  # Look for missing and extinct simulations
-  missings <- find_missing(sims)
-  completed <- find_completed(sims)
-  extincts <- find_extinct(sims, ...)
-
-  # Identify extant simulations
-  if (!is.null(missings)) sims <- sims[!sims %in% missings]
-  if (!is.null(completed)) sims <- sims[sims %in% completed]
-  if (!is.null(extincts)) sims <- sims[!sims %in% extincts]
-
-  return (sims)
+  extant <- purrr::map_lgl(roots, is_extant)
+  return(roots[extant])
 
 }
