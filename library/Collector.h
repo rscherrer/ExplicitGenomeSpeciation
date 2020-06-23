@@ -132,10 +132,14 @@ public:
         return RI;
     }
 
-
-    double getVarP(const size_t &t) const // used in test
+    // used in test
+    double getVarP(const size_t &t) const
     {
         return varP[t][2u];
+    }
+    double getVarN(const size_t &t) const
+    {
+        return varN[t][2u];
     }
 
     // these getters are used in plotting

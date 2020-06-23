@@ -351,9 +351,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
             varA[genomescan[l].trait][eco] += genomescan[l].varA[eco];
 
             // Non-additive variance = V(gamma)
-            genomescan[l].varN[eco] = gexpec[aa] * gsumgen[eco][aa];
-            genomescan[l].varN[eco] += gexpec[Aa] * gsumgen[eco][Aa];
-            genomescan[l].varN[eco] += gexpec[AA] * gsumgen[eco][AA];
+            genomescan[l].varN[eco] = gcounts[eco][aa] * gexpec[aa] * gsumgen[eco][aa];
+            genomescan[l].varN[eco] += gcounts[eco][Aa] * gexpec[Aa] * gsumgen[eco][Aa];
+            genomescan[l].varN[eco] += gcounts[eco][AA] * gexpec[AA] * gsumgen[eco][AA];
             genomescan[l].varN[eco] *= -2.0;
             genomescan[l].varN[eco] += gcounts[eco][aa] * utl::sqr(gexpec[aa]);
             genomescan[l].varN[eco] += gcounts[eco][Aa] * utl::sqr(gexpec[Aa]);
@@ -386,9 +386,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         varD[genomescan[l].trait] += genomescan[l].varD;
 
         // Interaction variance (across ecotypes only) = V(epsilon)
-        genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
-        genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
-        genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
+        genomescan[l].varI = gcounts[tot][aa] * gmeans[aa] * gsumgen[tot][aa];
+        genomescan[l].varI += gcounts[tot][Aa] * gmeans[Aa] * gsumgen[tot][Aa];
+        genomescan[l].varI += gcounts[tot][AA] * gmeans[AA] * gsumgen[tot][AA];
         genomescan[l].varI *= -2.0;
         genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
         genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);

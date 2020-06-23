@@ -145,3 +145,23 @@ BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
   BOOST_CHECK_EQUAL(collector.getSI(), 0.0);
   BOOST_CHECK_EQUAL(collector.getRI(), 0.0);
 }
+
+BOOST_AUTO_TEST_CASE(FullAdditive)
+{
+    // Non-additive variance should be zero
+    std::clog << "Testing full additive scenario...\n";
+    Param pars;
+    pars.scaleA = {1.0, 1.0, 1.0};
+    pars.scaleD = {0.0, 0.0, 0.0};
+    pars.scaleI = {0.0, 0.0, 0.0};
+    pars.scaleE = {0.0, 0.0, 0.0};
+    GenArch arch = GenArch(pars);
+    MetaPop metapop = MetaPop(pars, arch);
+    metapop.cycle(pars, arch);
+    Collector collector = Collector(arch);
+    collector.analyze(metapop, pars, arch);
+    BOOST_CHECK_EQUAL(collector.getVarN(0u), 0.0);
+    BOOST_CHECK_EQUAL(collector.getVarN(1u), 0.0);
+    BOOST_CHECK_EQUAL(collector.getVarN(2u), 0.0);
+
+}
