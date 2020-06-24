@@ -19,7 +19,7 @@
 #'
 #' @export
 
-is_extant <- function(root, logfile = "log.txt", slurm = FALSE) {
+is_extant <- function(root, logfile = "^log.txt$", slurm = FALSE) {
 
   if (is_missing(root)) return(FALSE)
   if (slurm) if(!is_complete(root)) return(FALSE)

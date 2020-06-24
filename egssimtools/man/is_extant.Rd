@@ -4,7 +4,7 @@
 \alias{is_extant}
 \title{Is a simulation extant?}
 \usage{
-is_extant(root, logfile = "log.txt", slurm = FALSE)
+is_extant(root, logfile = "^log.txt$", slurm = FALSE)
 }
 \arguments{
 \item{root}{Path to the simulation folder}
