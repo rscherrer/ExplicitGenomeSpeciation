@@ -4,7 +4,7 @@
 \alias{is_extinct}
 \title{Is a simulation extinct?}
 \usage{
-is_extinct(root, logfile = "log.txt", slurm = FALSE)
+is_extinct(root, logfile = "^log.txt$", slurm = FALSE)
 }
 \arguments{
 \item{root}{Path to the simulation folder}

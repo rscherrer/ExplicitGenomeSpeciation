@@ -18,7 +18,7 @@
 #'
 #' @export
 
-is_extinct <- function(root, logfile = "log.txt", slurm = FALSE) {
+is_extinct <- function(root, logfile = "^log.txt$", slurm = FALSE) {
 
   if (slurm) logfile <- "^slurm.*out"
   file_id <- grep(logfile, list.files(root))
