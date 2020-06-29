@@ -117,9 +117,8 @@ public:
     {
         return locivalues[locus];
     }
-    size_t getZygosity(const size_t &locus) const
+    size_t getZygosity(const size_t &locus, const size_t &nloci) const
     {
-        const size_t nloci = genome.size() / 2u;
         const size_t zyg = genome.test(locus) + genome.test(locus + nloci);
         assert(zyg == 0u || zyg == 1u || zyg == 2u);
         return zyg;

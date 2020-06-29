@@ -197,7 +197,7 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
             const size_t eco = m.population[i].getEcotype();
             const double gen = m.population[i].getLocusValue(genomescan[l].id);
-            const size_t zyg = m.population[i].getZygosity(genomescan[l].id);
+            const size_t zyg = m.population[i].getZygosity(genomescan[l].id, p.nloci);
 
             ++gcounts[eco][zyg];
             gsumgen[eco][zyg] += gen;
@@ -351,9 +351,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
             varA[genomescan[l].trait][eco] += genomescan[l].varA[eco];
 
             // Non-additive variance = V(gamma)
-            genomescan[l].varN[eco] = gcounts[eco][aa] * gexpec[aa] * gsumgen[eco][aa];
-            genomescan[l].varN[eco] += gcounts[eco][Aa] * gexpec[Aa] * gsumgen[eco][Aa];
-            genomescan[l].varN[eco] += gcounts[eco][AA] * gexpec[AA] * gsumgen[eco][AA];
+            genomescan[l].varN[eco] = gexpec[aa] * gsumgen[eco][aa];
+            genomescan[l].varN[eco] += gexpec[Aa] * gsumgen[eco][Aa];
+            genomescan[l].varN[eco] += gexpec[AA] * gsumgen[eco][AA];
             genomescan[l].varN[eco] *= -2.0;
             genomescan[l].varN[eco] += gcounts[eco][aa] * utl::sqr(gexpec[aa]);
             genomescan[l].varN[eco] += gcounts[eco][Aa] * utl::sqr(gexpec[Aa]);
@@ -386,9 +386,9 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
         varD[genomescan[l].trait] += genomescan[l].varD;
 
         // Interaction variance (across ecotypes only) = V(epsilon)
-        genomescan[l].varI = gcounts[tot][aa] * gmeans[aa] * gsumgen[tot][aa];
-        genomescan[l].varI += gcounts[tot][Aa] * gmeans[Aa] * gsumgen[tot][Aa];
-        genomescan[l].varI += gcounts[tot][AA] * gmeans[AA] * gsumgen[tot][AA];
+        genomescan[l].varI = gmeans[aa] * gsumgen[tot][aa];
+        genomescan[l].varI += gmeans[Aa] * gsumgen[tot][Aa];
+        genomescan[l].varI += gmeans[AA] * gsumgen[tot][AA];
         genomescan[l].varI *= -2.0;
         genomescan[l].varI += gcounts[tot][aa] * utl::sqr(gmeans[aa]);
         genomescan[l].varI += gcounts[tot][Aa] * utl::sqr(gmeans[Aa]);
@@ -586,8 +586,8 @@ void Collector::analyze(const MetaPop &m, const Param &p, const GenArch &a)
 
             const double geni = m.population[k].getLocusValue(i);
             const double genj = m.population[k].getLocusValue(j);
-            const size_t zygi = m.population[k].getZygosity(i);
-            const size_t zygj = m.population[k].getZygosity(j);
+            const size_t zygi = m.population[k].getZygosity(i, p.nloci);
+            const size_t zygj = m.population[k].getZygosity(j, p.nloci);
 
             covgen += geni * genj;
             ++ggcounts[zygi][zygj];

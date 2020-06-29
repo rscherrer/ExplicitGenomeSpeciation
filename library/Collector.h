@@ -141,6 +141,27 @@ public:
     {
         return varN[t][2u];
     }
+    double getVarI(const size_t &t) const
+    {
+        return varI[t];
+    }
+    // Variance in locus-specific genetic value within a given genotype z
+    double calcLocusGenotypeVarG(const size_t &l, const size_t &z,
+     const MetaPop &m, const size_t &nloci) const
+    {
+        double ssq = 0.0;
+        double sum = 0.0;
+        size_t n = 0u;
+        for (size_t i = 0u; i < m.getSize(); ++i) {
+            const size_t zyg = m.population[i].getZygosity(l, nloci);
+            if (zyg != z) continue;
+            const double gen = m.population[i].getLocusValue(l);
+            ssq += utl::sqr(gen);
+            sum += gen;
+            ++n;
+        }
+        return n > 0u ? ssq / n - utl::sqr(sum / n) : 0.0;
+    }
 
     // these getters are used in plotting
     // they are not optimized - they are not called that often.

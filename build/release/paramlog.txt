@@ -43,5 +43,5 @@ archfile architecture.txt
 parfile paramlog.txt
 orderfile whattosave.txt
 logfile log.txt
-seed 1591704128873753424
+seed 1593443950073564113
 ntrials 100

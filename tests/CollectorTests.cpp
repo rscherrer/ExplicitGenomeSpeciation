@@ -127,6 +127,7 @@ BOOST_AUTO_TEST_CASE(MatingIsolationIsZeroIfOnlyOneSex)
 
 BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
 {
+
   std::clog << "Testing zero differentiation whatsoever...\n";
   Param pars;
   pars.demesizes = { 100u, 0u };
@@ -144,13 +145,17 @@ BOOST_AUTO_TEST_CASE(AllIsolationMetricsAreZeroIfOnlyOneEcotype)
   BOOST_CHECK_EQUAL(collector.getEI(), 0.0);
   BOOST_CHECK_EQUAL(collector.getSI(), 0.0);
   BOOST_CHECK_EQUAL(collector.getRI(), 0.0);
+
 }
 
-BOOST_AUTO_TEST_CASE(FullAdditive)
+BOOST_AUTO_TEST_CASE(NoResidualsIfFullAdditive)
 {
+
     // Non-additive variance should be zero
     std::clog << "Testing full additive scenario...\n";
     Param pars;
+    pars.allfreq = 0.8;
+    pars.ecosel = 0.0;
     pars.scaleA = {1.0, 1.0, 1.0};
     pars.scaleD = {0.0, 0.0, 0.0};
     pars.scaleI = {0.0, 0.0, 0.0};
@@ -160,8 +165,21 @@ BOOST_AUTO_TEST_CASE(FullAdditive)
     metapop.cycle(pars, arch);
     Collector collector = Collector(arch);
     collector.analyze(metapop, pars, arch);
-    BOOST_CHECK_EQUAL(collector.getVarN(0u), 0.0);
-    BOOST_CHECK_EQUAL(collector.getVarN(1u), 0.0);
-    BOOST_CHECK_EQUAL(collector.getVarN(2u), 0.0);
+
+    // For each genotype
+    for (size_t zyg = 0u; zyg < 3u; ++zyg) {
+        double varg = collector.calcLocusGenotypeVarG(5u, zyg, metapop,
+         pars.nloci);
+        assert(varg >= -0.00000001);
+        varg = varg < 0.00000001 ? 0.0 : varg;
+        BOOST_CHECK_EQUAL(varg, 0.0);
+    }
+
+    // For each trait
+    for (size_t trait = 0u; trait < 3u; ++trait) {
+        BOOST_CHECK_EQUAL(collector.getVarN(trait), 0.0);
+        BOOST_CHECK_EQUAL(collector.getVarI(trait), 0.0);
+    }
 
 }
+

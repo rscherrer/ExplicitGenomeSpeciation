@@ -292,3 +292,19 @@ BOOST_AUTO_TEST_CASE(EcotypeClassification)
   BOOST_CHECK(xmax0 < xmin1);
 
 }
+
+BOOST_AUTO_TEST_CASE(KnownInitialGeneticDiversityFromAlleleFreq)
+{
+    Param pars = Param();
+    const GenArch arch = GenArch(pars);
+    pars.allfreq = 0.0;
+    MetaPop pop0 = MetaPop(pars, arch);
+    pars.allfreq = 1.0;
+    MetaPop pop1 = MetaPop(pars, arch);
+    BOOST_CHECK_EQUAL(pop0.getAlleleSum(), 0u);
+    BOOST_CHECK_EQUAL(pop1.getAlleleSum(), pop1.getSize() * 2u * pars.nloci);
+    // pick random individual and random locus
+    BOOST_CHECK_EQUAL(pop0.getZygosity(10u, 1u, pars.nloci), 0u);
+    BOOST_CHECK_EQUAL(pop1.getZygosity(10u, 1u, pars.nloci), 2u);
+
+}

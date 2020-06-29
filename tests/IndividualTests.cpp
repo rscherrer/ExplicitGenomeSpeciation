@@ -14,6 +14,7 @@ BOOST_AUTO_TEST_CASE(GenerateOnlyZeroAlleles)
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
   BOOST_CHECK_EQUAL(ind.getAlleleSum(), 0u);
+  BOOST_CHECK_EQUAL(ind.getZygosity(0u, pars.nloci), 0u); // pick random locus
 }
 
 BOOST_AUTO_TEST_CASE(GenerateOnlyOneAlleles)
@@ -23,6 +24,7 @@ BOOST_AUTO_TEST_CASE(GenerateOnlyOneAlleles)
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
   BOOST_CHECK_EQUAL(ind.getAlleleSum(), 2u * pars.nloci);
+  BOOST_CHECK_EQUAL(ind.getZygosity(0u, pars.nloci), 2u); // pick random locus
 }
 
   // Test mate choice

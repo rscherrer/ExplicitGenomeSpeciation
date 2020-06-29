@@ -119,6 +119,19 @@ public:
         return population[i].getMidparent(trait);
     }
 
+    // Getters used in tests
+    size_t getAlleleSum() const {
+        size_t sum = 0u;
+        for (size_t i = 0u; i < population.size(); ++i) {
+            sum += population[i].getAlleleSum();
+        }
+        return sum;
+    }
+    size_t getZygosity(const size_t &i, const size_t &l,
+     const size_t &nloci) const {
+        return population[i].getZygosity(l, nloci);
+    }
+
     // Resetters used in tests
     void resetTraits(const size_t &trait, const double &x, const Param &p)
     {
