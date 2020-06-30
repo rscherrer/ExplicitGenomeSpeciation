@@ -12,6 +12,8 @@ class MetaPop
 {
 
     friend class Collector;
+    friend class Locus;
+    friend class Connexion;
     friend class Printer;
 
 public:

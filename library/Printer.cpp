@@ -112,10 +112,10 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
                 stf::write(c.genomescan[l].alpha, files[f]);
         else if (filenames[f] == "genome_meang")
             for (size_t l = 0u; l < c.genomescan.size(); ++l)
-                stf::write(c.genomescan[l].meang, files[f]);
+                stf::write(c.genomescan[l].meanG, files[f]);
         else if (filenames[f] == "genome_freq")
             for (size_t l = 0u; l < c.genomescan.size(); ++l)
-                stf::write(c.genomescan[l].freq, files[f]);
+                stf::write(c.genomescan[l].freqs[2u], files[f]);
         else if (filenames[f] == "network_corgen")
             for (size_t e = 0u; e < c.networkscan.size(); ++e)
                 stf::write(c.networkscan[e].corgen, files[f]);
