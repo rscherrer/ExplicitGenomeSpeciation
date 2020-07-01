@@ -21,7 +21,7 @@ Genome Individual::genomize(const Param &p) const
 
         // Use a bernoulli if common
         auto ismutation = rnd::bernoulli(p.allfreq);
-        for (size_t i = 0u; i < p.nloci * 2.0; ++i)
+        for (size_t i = 0u; i < p.nloci * 2u; ++i)
             if (ismutation(rnd::rng)) sequence.set(i);
 
     }
