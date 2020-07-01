@@ -684,8 +684,11 @@ void Connexion::calcCorFreq(const size_t &n,
 
 }
 
-// Calculate the variance in average effect due to epistasis
-double Connexion::calcAvgEffect(const Locus &locusi, const Locus &locusj,
+// Calculate the expected effect of genetic variation at locus i
+// on the variation in the additive effect of allele substitutions at locus j
+// This is mostly for plotting purposes, to detect genes that are
+// expected to modify the additive effects of their interacting partners
+double Connexion::calcBkgdEffect(const Locus &locusi, const Locus &locusj,
  const double &effectj, const double &weightij, const double &scaleA,
   const double &scaleI) const {
 
@@ -693,17 +696,19 @@ double Connexion::calcAvgEffect(const Locus &locusi, const Locus &locusj,
     const double additj = scaleA * effectj;
     const double ratioj = additj == 0.0 ? 0.0 : scaleI * weightij / additj;
     const double varexpi = locusi.varX;
-    return utl::sqr(utl::sqr(alphaj * ratioj) * varexpi);
+    return sqrt(utl::sqr(alphaj * ratioj) * varexpi);
 
 }
 
-// Calculate the variance in average effect due to epistasis (setter)
-void Connexion::calcAvgIJ(const std::vector<Locus> &genomescan,
+// Use this calculation in a setter for both partner loci i and j
+void Connexion::calcBkgdIJ(const std::vector<Locus> &genomescan,
  const GenArch &a, const Param &p) {
 
-    avgi = calcAvgEffect(genomescan[i], genomescan[j], a.effects[j], a.networks[trait].weights[id], p.scaleA[trait], p.scaleI[trait]);
+    avgi = calcBkgdEffect(genomescan[i], genomescan[j], a.effects[j],
+     a.networks[trait].weights[id], p.scaleA[trait], p.scaleI[trait]);
 
-    avgj = calcAvgEffect(genomescan[j], genomescan[i], a.effects[i], a.networks[trait].weights[id], p.scaleA[trait], p.scaleI[trait]);
+    avgj = calcBkgdEffect(genomescan[j], genomescan[i], a.effects[i],
+     a.networks[trait].weights[id], p.scaleA[trait], p.scaleI[trait]);
 
 }
 
@@ -776,7 +781,7 @@ void Collector::analyzeEdge(const size_t &e, const MetaPop &m, const GenArch &a,
     networkscan[e].calcCorGen(ecounts[tot], genomescan);
     networkscan[e].calcCorBreed(ecounts[tot], genomescan);
     networkscan[e].calcCorFreq(ecounts[tot], genomescan);
-    networkscan[e].calcAvgIJ(genomescan, a, p);
+    networkscan[e].calcBkgdIJ(genomescan, a, p);
 
 }
 

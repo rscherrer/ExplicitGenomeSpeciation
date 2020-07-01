@@ -160,9 +160,9 @@ class Connexion
     void calcCorGen(const size_t&, const std::vector<Locus>&);
     void calcCorBreed(const size_t&, const std::vector<Locus>&);
     void calcCorFreq(const size_t&, const std::vector<Locus>&);
-    void calcAvgIJ(const std::vector<Locus>&, const GenArch&, const Param&);
+    void calcBkgdIJ(const std::vector<Locus>&, const GenArch&, const Param&);
 
-    double calcAvgEffect(const Locus&, const Locus&, const double&,
+    double calcBkgdEffect(const Locus&, const Locus&, const double&,
      const double&, const double&, const double&) const;
 
     size_t id;
