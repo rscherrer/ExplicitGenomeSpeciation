@@ -4,7 +4,7 @@
 #'
 #' @param filename Path to the file to read
 #'
-#' @return A vector if integers
+#' @return A vector of integers
 #'
 #' @examples
 #'
