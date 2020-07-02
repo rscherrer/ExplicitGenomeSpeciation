@@ -289,3 +289,105 @@ bool Individual::determinesex() const
     auto getsex = rnd::bernoulli(0.5);
     return getsex(rnd::rng);
 }
+
+// Various getters
+//------------------
+
+// Getters called from outside
+bool Individual::getGender() const
+{
+    return gender;
+}
+size_t Individual::getEcotype() const
+{
+    return ecotype;
+}
+size_t Individual::getHabitat() const
+{
+    return habitat;
+}
+double Individual::getFitness() const
+{
+    return fitness;
+}
+double Individual::getTraitValue(const size_t &trait) const
+{
+    return traitvalues[trait];
+}
+double Individual::getMidparent(const size_t &trait) const
+{
+    return midparents[trait];
+}
+double Individual::getGenValue(const size_t &trait) const
+{
+    return genvalues[trait];
+}
+double Individual::getFeeding(const size_t &r) const
+{
+    return feeding[r];
+}
+double Individual::getLocusValue(const size_t &locus) const
+{
+    return locivalues[locus];
+}
+size_t Individual::getZygosity(const size_t &locus, const size_t &nloci) const
+{
+    const size_t zyg = genome.test(locus) + genome.test(locus + nloci);
+    assert(zyg == 0u || zyg == 1u || zyg == 2u);
+    return zyg;
+}
+
+// Return a 64bit-block from the genome of that individual
+unsigned long long Individual::getByte(const size_t &B) const
+{
+    std::bitset<64u> byte;
+    const size_t start = B * 64u;
+    size_t end = (B + 1u) * 64u;
+    if (end > genome.size()) end = genome.size();
+    for (size_t l = start, b = 0u; l < end; ++l, ++b)
+        if (genome.test(l)) byte.set(b);
+    return byte.to_ullong();
+}
+
+size_t Individual::getAlleleSum() const
+{
+    return genome.count();
+}
+double Individual::getExpression() const
+{
+    double sum = 0.0;
+    for (size_t locus = 0u; locus < transcriptome.size(); ++locus) {
+        sum += transcriptome[locus];
+    }
+    return sum;
+}
+
+// Force resetters
+//----------------
+
+// Change the trait value of an individual
+void Individual::resetTrait(const size_t &trait, const double &newvalue,
+ const Param &p)
+{
+    traitvalues[trait] = newvalue;
+    if (trait == 0u) {
+        feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] + 1.0));
+        feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] - 1.0));
+        assert(feeding[0u] >= 0.0);
+        assert(feeding[1u] >= 0.0);
+        assert(feeding[0u] <= 1.0);
+        assert(feeding[1u] <= 1.0);
+    }
+}
+
+// Change the ecotype of an individual
+void Individual::resetEcotype(const size_t &e)
+{
+    ecotype = e;
+}
+
+// Change the gender of an individual
+void Individual::resetGender(const bool &sex)
+{
+    gender = sex;
+}

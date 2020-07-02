@@ -3,10 +3,19 @@
 // Save individual whole genomes
 void Printer::freeze(const MetaPop &m, const Param &p)
 {
+    // Split the genome bitset into blocks of 64 bits
     const size_t nbytes = 2u * p.nloci / 64u + 1u;
+
+    // Save each block of each individual as a 64bit-integer
     for (size_t i = 0u; i < m.population.size(); ++i)
         for (size_t B = 0u; B < nbytes; ++B)
-                 stf::write(m.population[i].getByte(B), freezer);
+            stf::write(m.population[i].getByte(B), freezer);
+
+    // Using 64bit integers is a way to save space when saving full genomes
+    // The stf::write function saves in binary format, meaning that it will
+    // convert back the integers into their underlying bitsets
+    // The resulting binary output file should therefore be interpreted as
+    // a bit-wise array; each value (allele) is encoded by a single bit
 }
 
 void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)

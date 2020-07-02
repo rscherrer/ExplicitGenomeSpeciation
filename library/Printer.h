@@ -1,6 +1,9 @@
 #ifndef EXPLICITGENOMESPECIATION_PRINTER_H
 #define EXPLICITGENOMESPECIATION_PRINTER_H
 
+// This module is used to save data to output files, either from a MetaPop
+// (for raw data such as full genomes) or a Collector (for summary statistics),
+// or both
 
 #include "Utilities.h"
 #include "Collector.h"
