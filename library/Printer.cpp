@@ -1,5 +1,43 @@
 #include "Printer.h"
 
+// Constructor
+Printer::Printer(const std::string &orderfile) :
+    filenames(whattosave(orderfile)),
+    files({ }),
+    freezer(new std::ofstream)
+{
+
+    files.reserve(filenames.size());
+
+    // Open files
+    for (size_t f = 0u; f < filenames.size(); ++f) {
+
+        const std::string filename = filenames[f] + ".dat";
+        Stream out(new std::ofstream);
+        out->open(filename.c_str(), std::ios::binary);
+        if (!out->is_open()) {
+            std::string msg = "Unable to open output file " + filename;
+            throw std::runtime_error(msg);
+        }
+        files.push_back(out);
+    }
+
+    // Open the freezer
+    const std::string freezername = "freezer.dat";
+    freezer->open(freezername.c_str(), std::ios::binary);
+    if (!freezer->is_open()) {
+        std::string msg = "Unable to open output freezer file";
+        throw std::runtime_error(msg);
+    }
+
+}
+
+// Destructor
+Printer::~Printer()
+{
+    shutdown(); // close files
+}
+
 // Save individual whole genomes
 void Printer::freeze(const MetaPop &m, const Param &p)
 {

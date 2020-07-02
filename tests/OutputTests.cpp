@@ -73,3 +73,24 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
   BOOST_CHECK_EQUAL(popx.size() / 3u, cumulsize);
 
 }
+
+BOOST_AUTO_TEST_CASE(SavingFullGenomes)
+{
+
+    // Make a population of individuals with automatically generated
+    // genomes, either consisting of only 0 or 1-alleles
+    // Save the genomes to the freezer
+    // Read them back
+
+    std::clog << "Testing full genome saving...\n";
+
+    Param pars = Param();
+    pars.allfreq = 0.0;
+    GenArch arch = GenArch(pars);
+    MetaPop pop = MetaPop(pars, arch);
+    std::cout << pars.nloci << "\n";
+    std::cout << pars.demesizes[0u] << ' ' << pars.demesizes[1u] << '\n';
+    // Printer printer = Printer("test_freezer.dat");
+    // printer.freeze(pop, pars);
+
+}
