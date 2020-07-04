@@ -1,9 +1,0 @@
-Simulation started.
--5
--4
--3
--2
--1
-0
-1
-Simulation ended.

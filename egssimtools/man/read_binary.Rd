@@ -4,12 +4,13 @@
 \alias{read_binary}
 \title{Read binary file}
 \usage{
-read_binary(filename, digits = 8)
+read_binary(filename, nbytes = 8)
 }
 \arguments{
 \item{filename}{Path to the file}
 
-\item{digits}{Encoding}
+\item{nbytes}{The number of bytes constituting one value (e.g. 8 bytes
+for a double)}
 }
 \value{
 A numeric vector

@@ -21,8 +21,12 @@ read_genome(
 
 \item{variables}{What variables to read (\code{time} is included by default)}
 
-\item{parnames, combine, as_numeric, architecture, archfile, parfile}{Parameters
+\item{parnames, combine, as_numeric, parfile}{Parameters
 for \code{read_data}}
+
+\item{architecture}{Whether to attach genetic architecture data}
+
+\item{archfile}{Optional name of the genetic architecture file}
 
 \item{nloci}{Number of loci (automatically guessed if unspecified)}
 }

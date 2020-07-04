@@ -4,14 +4,14 @@
 \alias{read_arch_network}
 \title{Read gene network architecture}
 \usage{
-read_arch_network(folder, filename = "architecture.txt", as_df = FALSE)
+read_arch_network(folder, filename = "architecture.txt", as_list = FALSE)
 }
 \arguments{
 \item{folder}{Path to the simulation}
 
 \item{filename}{Optional architecture file name}
 
-\item{as_df}{Whether to return the output at a list of two data frames
+\item{as_list}{Whether to return the output at a list of two tibbles
 instead of a \code{tbl_graph}.}
 }
 \value{

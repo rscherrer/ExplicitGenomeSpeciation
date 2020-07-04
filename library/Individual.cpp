@@ -1,5 +1,66 @@
 #include "Individual.h"
 
+// Constructors
+//--------------
+
+// To generate an initial population
+Individual::Individual(const Param &pars, const GenArch &arch) :
+    genome(genomize(pars)),
+    transcriptome(std::vector<double>(pars.nloci, 0.0)),
+    locivalues(std::vector<double>(pars.nloci, 0.0)),
+    genvalues(std::vector<double>(3u, 0.0)),
+    traitvalues(std::vector<double>(3u, 0.0)),
+    midparents(std::vector<double>(3u, 0.0)),
+    fitness(1.0),
+    feeding(std::vector<double>(3u, 0.0)),
+    ecotype(0u),
+    habitat(0u),
+    gender(determinesex()),
+    alive(true),
+    adult(true)
+{
+    develop(pars, arch);
+
+    assert(transcriptome.size() == pars.nloci);
+    assert(traitvalues.size() == 3u);
+    assert(fitness >= 0.0);
+    assert(feeding[0u] >= 0.0);
+    assert(feeding[1u] >= 0.0);
+    assert(feeding[0u] <= 1.0);
+    assert(feeding[1u] <= 1.0);
+}
+
+// Newborn
+Individual::Individual(const Param &pars, const GenArch &arch,
+ const Individual &mom, const Individual &dad) :
+    genome(fecundate(mom, dad, pars, arch)),
+    transcriptome(std::vector<double>(pars.nloci, 0.0)),
+    locivalues(std::vector<double>(pars.nloci, 0.0)),
+    genvalues(std::vector<double>(3u, 0.0)),
+    traitvalues(std::vector<double>(3u, 0.0)),
+    midparents(calcmidparent(mom, dad)),
+    fitness(1.0),
+    feeding(std::vector<double>(2u, 0.0)),
+    ecotype(0u),
+    habitat(mom.getHabitat()),
+    gender(determinesex()),
+    alive(true),
+    adult(false)
+{
+    develop(pars, arch);
+
+    assert(transcriptome.size() == pars.nloci);
+    assert(traitvalues.size() == 3u);
+    assert(fitness >= 0.0);
+    assert(feeding[0u] >= 0.0);
+    assert(feeding[1u] >= 0.0);
+    assert(feeding[0u] <= 1.0);
+    assert(feeding[1u] <= 1.0);
+}
+
+// Member functions
+//-----------------
+
 Genome Individual::genomize(const Param &p) const
 {
 
@@ -21,7 +82,7 @@ Genome Individual::genomize(const Param &p) const
 
         // Use a bernoulli if common
         auto ismutation = rnd::bernoulli(p.allfreq);
-        for (size_t i = 0u; i < p.nloci * 2.0; ++i)
+        for (size_t i = 0u; i < p.nloci * 2u; ++i)
             if (ismutation(rnd::rng)) sequence.set(i);
 
     }
@@ -207,7 +268,8 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
 }
 
-std::vector<double> Individual::calcmidparent(const Individual &mom, const Individual &dad) const
+std::vector<double> Individual::calcmidparent(const Individual &mom,
+ const Individual &dad) const
 {
     std::vector<double> midtraits = std::vector<double>(3u, 0.0);
     for (size_t trait = 0u; trait < 3u; ++trait) {
@@ -288,4 +350,115 @@ bool Individual::determinesex() const
 {
     auto getsex = rnd::bernoulli(0.5);
     return getsex(rnd::rng);
+}
+
+// Various getters
+//------------------
+
+// Getters called from outside
+bool Individual::getGender() const
+{
+    return gender;
+}
+size_t Individual::getEcotype() const
+{
+    return ecotype;
+}
+size_t Individual::getHabitat() const
+{
+    return habitat;
+}
+double Individual::getFitness() const
+{
+    return fitness;
+}
+double Individual::getTraitValue(const size_t &trait) const
+{
+    return traitvalues[trait];
+}
+double Individual::getMidparent(const size_t &trait) const
+{
+    return midparents[trait];
+}
+double Individual::getGenValue(const size_t &trait) const
+{
+    return genvalues[trait];
+}
+double Individual::getFeeding(const size_t &r) const
+{
+    return feeding[r];
+}
+double Individual::getLocusValue(const size_t &locus) const
+{
+    return locivalues[locus];
+}
+size_t Individual::getZygosity(const size_t &locus, const size_t &nloci) const
+{
+    const size_t zyg = genome.test(locus) + genome.test(locus + nloci);
+    assert(zyg == 0u || zyg == 1u || zyg == 2u);
+    return zyg;
+}
+size_t Individual::getAlleleSum() const
+{
+    return genome.count();
+}
+double Individual::getExpression() const
+{
+    double sum = 0.0;
+    for (size_t locus = 0u; locus < transcriptome.size(); ++locus) {
+        sum += transcriptome[locus];
+    }
+    return sum;
+}
+
+// Return an individual genome in bitset format
+Genome Individual::getFullGenome() const {
+
+    return genome;
+
+    // Caution: the length of the genome is 10,000 because the bitset
+    // is of a constant, globally defined maximum size. Only the 2 * nloci
+    // first values are relevant
+}
+
+// Get the ith 64bit-chunk of the genome
+std::bitset<64u> Individual::getGenomeChunk(const size_t &i) const {
+
+    std::bitset<64u> chunk;
+    for (size_t l = 0u, k = l + i * 64u; l < 64u && k < 10000u; ++l, ++k)
+        if (genome.test(k)) chunk.set(l);
+
+    return chunk;
+
+}
+
+
+// Force resetters
+//----------------
+
+// Change the trait value of an individual
+void Individual::resetTrait(const size_t &trait, const double &newvalue,
+ const Param &p)
+{
+    traitvalues[trait] = newvalue;
+    if (trait == 0u) {
+        feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] + 1.0));
+        feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] - 1.0));
+        assert(feeding[0u] >= 0.0);
+        assert(feeding[1u] >= 0.0);
+        assert(feeding[0u] <= 1.0);
+        assert(feeding[1u] <= 1.0);
+    }
+}
+
+// Change the ecotype of an individual
+void Individual::resetEcotype(const size_t &e)
+{
+    ecotype = e;
+}
+
+// Change the gender of an individual
+void Individual::resetGender(const bool &sex)
+{
+    gender = sex;
 }

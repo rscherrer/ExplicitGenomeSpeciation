@@ -12,8 +12,6 @@ read_data(
   parnames = NULL,
   combine = FALSE,
   as_numeric = NULL,
-  architecture = FALSE,
-  archfile = "architecture.txt",
   parfile = "paramlog.txt"
 )
 }
@@ -35,12 +33,6 @@ is recycled if its length is one.}
 simulation data}
 
 \item{combine, as_numeric}{Parameters for \code{read_parameters}}
-
-\item{architecture}{Whether to read and append locus-wise genetic
-architecture. Make sure then that you are reading \code{variables} that are
-locus-specific variables in long-format (one column per variable).}
-
-\item{archfile}{Name of the architecture file, if needed}
 
 \item{parfile}{Name of the parameter file, if needed}
 }
