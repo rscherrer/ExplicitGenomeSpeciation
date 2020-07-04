@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(SaveAllGenomes)
     std::vector<size_t> originalChunks(pop.getSize() * nchunks);
     for (size_t i = 0u, k = 0u; i < pop.getSize(); ++i)
         for (size_t j = 0u; j < nchunks; ++j, ++k)
-            originalChunks[k] = pop.getGenomeChunk(i, j, pars.nloci).to_ulong();
+            originalChunks[k] = pop.getGenomeChunk(i, j).to_ulong();
 
     // Check that saved and original chunks of genomes are the same
     assert(genomeChunks.size() == originalChunks.size());

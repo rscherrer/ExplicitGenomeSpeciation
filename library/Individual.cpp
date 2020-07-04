@@ -422,11 +422,7 @@ Genome Individual::getFullGenome() const {
 }
 
 // Get the ith 64bit-chunk of the genome
-std::bitset<64u> Individual::getGenomeChunk(const size_t &i,
- const size_t &nloci) const {
-
-    const size_t nchunks = nloci * 2u / 64u + 1u;
-    assert(i < nchunks);
+std::bitset<64u> Individual::getGenomeChunk(const size_t &i) const {
 
     std::bitset<64u> chunk;
     for (size_t l = 0u, k = l + i * 64u; l < 64u && k < 10000u; ++l, ++k)

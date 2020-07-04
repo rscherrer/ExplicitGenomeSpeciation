@@ -42,7 +42,7 @@ public:
     size_t getAlleleSum() const;
     double getExpression() const;
     Genome getFullGenome() const;
-    std::bitset<64u> getGenomeChunk(const size_t&, const size_t&) const;
+    std::bitset<64u> getGenomeChunk(const size_t&) const;
 
     // Force resetters (for testing purposes)
     void resetTrait(const size_t&, const double&, const Param&);

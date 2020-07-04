@@ -52,7 +52,7 @@ void Freezer::saveIndivGenome(const Individual &ind, const size_t &n) {
     for (size_t i = 0u; i < nchunks; ++i) {
 
         // Integer representation of a 64bit-chunk of genome
-        const size_t chunk = ind.getGenomeChunk(i, n).to_ulong();
+        const size_t chunk = ind.getGenomeChunk(i).to_ulong();
         stf::write2(chunk, freezer);
 
     }

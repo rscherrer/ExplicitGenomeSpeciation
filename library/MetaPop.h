@@ -54,8 +54,7 @@ public:
     size_t getAlleleSum() const;
     size_t getZygosity(const size_t&, const size_t&, const size_t&) const;
     Genome getFullGenome(const size_t&) const;
-    std::bitset<64u> getGenomeChunk(const size_t&, const size_t&, const size_t&)
-     const;
+    std::bitset<64u> getGenomeChunk(const size_t&, const size_t&) const;
 
     void resetTraits(const size_t&, const double&, const Param&);
     void resetTraits(const size_t&, const size_t&, const double&, const Param&);

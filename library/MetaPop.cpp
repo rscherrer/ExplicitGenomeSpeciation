@@ -434,14 +434,14 @@ Genome MetaPop::getFullGenome(const size_t &i) const {
 }
 
 // Get a particular 64bit-genome chunk from a particular individual
-std::bitset<64u> MetaPop::getGenomeChunk(const size_t &i, const size_t &j,
- const size_t &nloci) const {
+std::bitset<64u> MetaPop::getGenomeChunk(const size_t &i, const size_t &j)
+ const {
 
     // i: the individual
     // j: the chunk id
     // nloci: number of loci in the genome
 
-    return population[i].getGenomeChunk(j, nloci);
+    return population[i].getGenomeChunk(j);
 
 }
 
