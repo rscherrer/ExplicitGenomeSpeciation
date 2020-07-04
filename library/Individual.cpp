@@ -268,7 +268,8 @@ void Individual::develop(const Param &p, const GenArch &arch)
 
 }
 
-std::vector<double> Individual::calcmidparent(const Individual &mom, const Individual &dad) const
+std::vector<double> Individual::calcmidparent(const Individual &mom,
+ const Individual &dad) const
 {
     std::vector<double> midtraits = std::vector<double>(3u, 0.0);
     for (size_t trait = 0u; trait < 3u; ++trait) {
