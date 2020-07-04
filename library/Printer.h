@@ -1,9 +1,8 @@
 #ifndef EXPLICITGENOMESPECIATION_PRINTER_H
 #define EXPLICITGENOMESPECIATION_PRINTER_H
 
-// This module is used to save data to output files, either from a MetaPop
-// (for raw data such as full genomes) or a Collector (for summary statistics),
-// or both
+// This module is used to save summary statistics from the Collector to output
+// files
 
 #include "Utilities.h"
 #include "Collector.h"
@@ -15,11 +14,10 @@ class Printer
 
 public:
 
-    Printer(const std::string& = "");
+    Printer(const std::string& = "", const bool& = true);
     ~Printer();
 
     void print(const size_t&, const Collector&, const MetaPop&);
-    void freeze(const MetaPop&, const Param&);
     void shutdown();
 
 private:
@@ -28,7 +26,6 @@ private:
 
     std::vector<std::string> filenames;
     vecStreams files;
-    Stream freezer;
 
 };
 

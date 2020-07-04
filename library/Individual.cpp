@@ -1,5 +1,66 @@
 #include "Individual.h"
 
+// Constructors
+//--------------
+
+// To generate an initial population
+Individual::Individual(const Param &pars, const GenArch &arch) :
+    genome(genomize(pars)),
+    transcriptome(std::vector<double>(pars.nloci, 0.0)),
+    locivalues(std::vector<double>(pars.nloci, 0.0)),
+    genvalues(std::vector<double>(3u, 0.0)),
+    traitvalues(std::vector<double>(3u, 0.0)),
+    midparents(std::vector<double>(3u, 0.0)),
+    fitness(1.0),
+    feeding(std::vector<double>(3u, 0.0)),
+    ecotype(0u),
+    habitat(0u),
+    gender(determinesex()),
+    alive(true),
+    adult(true)
+{
+    develop(pars, arch);
+
+    assert(transcriptome.size() == pars.nloci);
+    assert(traitvalues.size() == 3u);
+    assert(fitness >= 0.0);
+    assert(feeding[0u] >= 0.0);
+    assert(feeding[1u] >= 0.0);
+    assert(feeding[0u] <= 1.0);
+    assert(feeding[1u] <= 1.0);
+}
+
+// Newborn
+Individual::Individual(const Param &pars, const GenArch &arch,
+ const Individual &mom, const Individual &dad) :
+    genome(fecundate(mom, dad, pars, arch)),
+    transcriptome(std::vector<double>(pars.nloci, 0.0)),
+    locivalues(std::vector<double>(pars.nloci, 0.0)),
+    genvalues(std::vector<double>(3u, 0.0)),
+    traitvalues(std::vector<double>(3u, 0.0)),
+    midparents(calcmidparent(mom, dad)),
+    fitness(1.0),
+    feeding(std::vector<double>(2u, 0.0)),
+    ecotype(0u),
+    habitat(mom.getHabitat()),
+    gender(determinesex()),
+    alive(true),
+    adult(false)
+{
+    develop(pars, arch);
+
+    assert(transcriptome.size() == pars.nloci);
+    assert(traitvalues.size() == 3u);
+    assert(fitness >= 0.0);
+    assert(feeding[0u] >= 0.0);
+    assert(feeding[1u] >= 0.0);
+    assert(feeding[0u] <= 1.0);
+    assert(feeding[1u] <= 1.0);
+}
+
+// Member functions
+//-----------------
+
 Genome Individual::genomize(const Param &p) const
 {
 
@@ -361,6 +422,32 @@ double Individual::getExpression() const
     }
     return sum;
 }
+
+
+Genome Individual::getFullGenome() const {
+
+    return genome;
+
+    // Caution: the length of the genome is 10,000 because the bitset
+    // is of a constant, globally defined maximum size. Only the 2 * nloci
+    // first values are relevant
+}
+
+// Get the ith 64bit-chunk of the genome
+std::bitset<64u> Individual::getGenomeChunk(const size_t &i,
+ const size_t &nloci) const {
+
+    const size_t nchunks = nloci * 2u / 64u + 1u;
+    assert(i < nchunks);
+
+    std::bitset<64u> chunk;
+    for (size_t l = 0u, k = l + i * 64u; l < 64u && k < 10000u; ++l, ++k)
+        if (genome.test(k)) chunk.set(l);
+
+    return chunk;
+
+}
+
 
 // Force resetters
 //----------------

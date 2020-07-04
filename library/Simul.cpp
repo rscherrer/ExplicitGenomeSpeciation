@@ -41,7 +41,10 @@ int simulate(const std::vector<std::string> &args)
 
         // Create a printer
         const std::string order = pars.choosewhattosave ? pars.orderfile : "";
-        Printer printer = Printer(order);
+        Printer printer = Printer(order, pars.datsave);
+
+        // Open the freezer if needed
+        Freezer freezer = Freezer(pars.freezerfile, pars.gensave);
 
         // Open a log file
         std::ofstream logfile(pars.logfile);
@@ -75,8 +78,7 @@ int simulate(const std::vector<std::string> &args)
 
             // Save whole genomes if needed (space-consuming)
             if (timetofreeze(t, pars)) {
-                // collector.freeze(metapop, pars);
-                printer.freeze(metapop, pars);
+                if (pars.gensave) freezer.freeze(metapop, pars.nloci);
             }
 
             metapop.reproduce(pars, arch);

@@ -7,7 +7,7 @@
   // Simulation should reach tmax in the absence of mortality
 BOOST_AUTO_TEST_CASE(ConstantPopSizeWhenNoBirthNoDeath)
 {
-  std::clog << "Testing constant population size...\n";
+  // std::clog << "Testing constant population size...\n";
   Param pars;
   pars.tend = 10;
   pars.tburnin = 0;
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(ConstantPopSizeWhenNoBirthNoDeath)
 
 BOOST_AUTO_TEST_CASE(InstantExtinctionIfSurvivalIsZero)
 {
-  std::clog << "Testing instantaneous extinction...\n";
+  // std::clog << "Testing instantaneous extinction...\n";
   Param pars;
   pars.tend = 100;
   pars.tburnin = 0;
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(InstantExtinctionIfSurvivalIsZero)
   // Simulation should end prematurely with high mortality
 BOOST_AUTO_TEST_CASE(ProgressiveExtinctionWhenLowSurvival)
 {
-  std::clog << "Testing progressive extinction...\n";
+  // std::clog << "Testing progressive extinction...\n";
   Param pars;
   pars.tend = 100;
   pars.tburnin = 0;
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(ProgressiveExtinctionWhenLowSurvival)
   // habitat symmetry is zero
 BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
 {
-  std::clog << "Testing complete habitat asymmetry...\n";
+  // std::clog << "Testing complete habitat asymmetry...\n";
   Param pars;
   GenArch arch = GenArch(pars);
   pars.rdynamics = 1u;
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(HabitatsHaveOneResourceIfCompleteAsymmetry)
 
 BOOST_AUTO_TEST_CASE(NoDispersalLeavesHabitatsWithSameNumberOfIndividuals)
 {
-  std::clog << "Testing no dispersal...\n";
+  // std::clog << "Testing no dispersal...\n";
   Param pars;
   pars.demesizes = { 15u, 10u };
   pars.dispersal = 0.0; // no dispersal
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(NoDispersalLeavesHabitatsWithSameNumberOfIndividuals)
 
 BOOST_AUTO_TEST_CASE(AllIndividualsMigrateIfDispersalIsMax)
 {
-  std::clog << "Testing mass exodus...\n";
+  // std::clog << "Testing mass exodus...\n";
   Param pars;
   pars.demesizes = { 10u, 0u };
   pars.dispersal = 1.0; // 100% chance dispersal
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(AllIndividualsMigrateIfDispersalIsMax)
   // Check that a population has grown after reproduction
 BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
 {
-  std::clog << "Testing reproduction...\n";
+  // std::clog << "Testing reproduction...\n";
   Param pars;
   pars.capacity = 100.0;
   pars.dispersal = 0.0;
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(ReproductionHasProducedNewIndividuals)
 
 BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
 {
-  std::clog << "Testing that newborns do not die...\n";
+  // std::clog << "Testing that newborns do not die...\n";
   Param pars;
   pars.birth = 100.0; // relatively high birth rate
   pars.demesizes = { 10u, 0u };
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(PopulationWipeOutLeavesOnlyNewborns)
   // After feeding, the resources should be depleted
 BOOST_AUTO_TEST_CASE(ResourceIsDepletedAfterConsumption)
 {
-  std::clog << "Testing resource depletion...\n";
+  // std::clog << "Testing resource depletion...\n";
   Param pars;
   pars.hsymmetry = 1.0;
   pars.capacity = 10.0;
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(ResourceIsDepletedAfterConsumption)
   // Test logistic resource dynamics
 BOOST_AUTO_TEST_CASE(KnownLogisticResourceEquilibrium)
 {
-  std::clog << "Testing logistic resource equilibrium...\n";
+  // std::clog << "Testing logistic resource equilibrium...\n";
   Param pars;
   pars.rdynamics = 0u;
   pars.dispersal = 0.0;
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(KnownLogisticResourceEquilibrium)
   // Test logistic resource dynamics
 BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
 {
-  std::clog << "Testing chemostat resource equilibrium...\n";
+  // std::clog << "Testing chemostat resource equilibrium...\n";
   Param pars;
   pars.rdynamics = 1u;
   pars.inflow = 400.0;
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(KnownChemostatResourceEquilibrium)
 
 BOOST_AUTO_TEST_CASE(EcotypeClassification)
 {
-  std::clog << "Testing ecotype classification...\n";
+  // std::clog << "Testing ecotype classification...\n";
 
   Param pars;
   pars.rdynamics = 1u;
@@ -295,6 +295,7 @@ BOOST_AUTO_TEST_CASE(EcotypeClassification)
 
 BOOST_AUTO_TEST_CASE(KnownInitialGeneticDiversityFromAlleleFreq)
 {
+    // std::clog << "Testing known initial genetic diversity...\n";
     Param pars = Param();
     const GenArch arch = GenArch(pars);
     pars.allfreq = 0.0;

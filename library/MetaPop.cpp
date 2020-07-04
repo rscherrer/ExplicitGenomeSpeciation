@@ -325,15 +325,144 @@ void MetaPop::survive(const Param &p)
 
 }
 
+void MetaPop::exitburnin()
+{
+    isburnin = false;
+}
 
-// Others
+// Getters
+//--------
 
 bool MetaPop::isextinct() const
 {
     return population.size() == 0u;
 }
 
-void MetaPop::exitburnin()
+// Getters called from outside
+size_t MetaPop::getSize() const
 {
-    isburnin = false;
+    return population.size();
+}
+size_t MetaPop::getDemeSize(const size_t &h) const
+{
+    size_t size = 0u;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        if (population[i].getHabitat() == h) {
+            ++size;
+        }
+    }
+    return size;
+}
+double MetaPop::getResource(const size_t &h, const size_t &r) const
+{
+    return resources[h][r];
+}
+double MetaPop::getSumFitness() const
+{
+    double sum = 0.0;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        sum += population[i].getFitness();
+    }
+    return sum;
+}
+double MetaPop::getVarFitness() const
+{
+    double sum = 0.0;
+    double ssq = 0.0;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        sum += population[i].getFitness();
+        ssq += utl::sqr(population[i].getFitness());
+    }
+    const size_t n = population.size();
+    return ssq / n - utl::sqr(sum / n);
+}
+double MetaPop::getMeanTrait(const size_t &trait) const
+{
+    double mean = 0.0;
+    for (size_t i = 0u; i < population.size(); ++i)
+        mean += population[i].getTraitValue(trait);
+    return mean / population.size();
+}
+double MetaPop::getMeanEcotype(const size_t &h) const // can be removed
+{
+    double mean = 0.0;
+    size_t n = 0u;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        if (population[i].getHabitat() == h) {
+            ++n;
+            mean += population[i].getEcotype();
+        }
+    }
+    mean /= n;
+    return mean;
+}
+double MetaPop::getFitness(const size_t &i) const // can be removed
+{
+    return population[i].getFitness();
+}
+size_t MetaPop::getEcotype(const size_t &i) const
+{
+    return population[i].getEcotype();
+}
+size_t MetaPop::getHabitat(const size_t &i) const
+{
+    return population[i].getHabitat();
+}
+double MetaPop::getTrait(const size_t &i, const size_t &trait) const
+{
+    return population[i].getTraitValue(trait);
+}
+double MetaPop::getMidparent(const size_t &i, const size_t &trait) const
+{
+    return population[i].getMidparent(trait);
+}
+
+// Getters used in tests
+size_t MetaPop::getAlleleSum() const {
+    size_t sum = 0u;
+    for (size_t i = 0u; i < population.size(); ++i) {
+        sum += population[i].getAlleleSum();
+    }
+    return sum;
+}
+size_t MetaPop::getZygosity(const size_t &i, const size_t &l,
+ const size_t &nloci) const {
+    return population[i].getZygosity(l, nloci);
+}
+Genome MetaPop::getFullGenome(const size_t &i) const {
+    return population[i].getFullGenome();
+}
+
+// Get a particular 64bit-genome chunk from a particular individual
+std::bitset<64u> MetaPop::getGenomeChunk(const size_t &i, const size_t &j,
+ const size_t &nloci) const {
+
+    // i: the individual
+    // j: the chunk id
+    // nloci: number of loci in the genome
+
+    return population[i].getGenomeChunk(j, nloci);
+
+}
+
+// Resetters used in tests
+void MetaPop::resetTraits(const size_t &trait, const double &x, const Param &p)
+{
+    for (size_t i = 0u; i < population.size(); ++i){
+        population[i].resetTrait(trait, x, p);
+    }
+}
+void MetaPop::resetTraits(const size_t &trait, const size_t &h, const double &x,
+ const Param &p)
+{
+    for (size_t i = 0u; i < population.size(); ++i){
+        if (population[i].getHabitat() == h)
+            population[i].resetTrait(trait, x, p);
+    }
+}
+void MetaPop::resetGenders(const bool &sex)
+{
+    for (size_t i = 0u; i < population.size(); ++i) {
+        population[i].resetGender(sex);
+    }
 }

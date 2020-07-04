@@ -16,6 +16,7 @@ namespace tst
   void makeParamFileWithArchitecture();
   void makeParamFileWithMissingArchitecture();
   std::vector<double> readfile(const std::string&);
+  std::vector<size_t> readfile2(const std::string&);
 
 }
 

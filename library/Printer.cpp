@@ -1,59 +1,41 @@
 #include "Printer.h"
 
 // Constructor
-Printer::Printer(const std::string &orderfile) :
+Printer::Printer(const std::string &orderfile, const bool &datsave) :
     filenames(whattosave(orderfile)),
-    files({ }),
-    freezer(new std::ofstream)
+    files({ })
 {
 
-    files.reserve(filenames.size());
+    if (datsave) {
 
-    // Open files
-    for (size_t f = 0u; f < filenames.size(); ++f) {
+        files.reserve(filenames.size());
 
-        const std::string filename = filenames[f] + ".dat";
-        Stream out(new std::ofstream);
-        out->open(filename.c_str(), std::ios::binary);
-        if (!out->is_open()) {
-            std::string msg = "Unable to open output file " + filename;
-            throw std::runtime_error(msg);
+        // Open files
+        for (size_t f = 0u; f < filenames.size(); ++f) {
+
+            const std::string filename = filenames[f] + ".dat";
+            Stream out(new std::ofstream);
+            out->open(filename.c_str(), std::ios::binary);
+            if (!out->is_open()) {
+                std::string msg = "Unable to open output file " + filename;
+                throw std::runtime_error(msg);
+            }
+            files.push_back(out);
         }
-        files.push_back(out);
-    }
 
-    // Open the freezer
-    const std::string freezername = "freezer.dat";
-    freezer->open(freezername.c_str(), std::ios::binary);
-    if (!freezer->is_open()) {
-        std::string msg = "Unable to open output freezer file";
-        throw std::runtime_error(msg);
     }
 
 }
 
-// Destructor
-Printer::~Printer()
-{
-    shutdown(); // close files
+Printer::~Printer() {
+    shutdown();
 }
 
-// Save individual whole genomes
-void Printer::freeze(const MetaPop &m, const Param &p)
+void Printer::shutdown()
 {
-    // Split the genome bitset into blocks of 64 bits
-    const size_t nbytes = 2u * p.nloci / 64u + 1u;
-
-    // Save each block of each individual as a 64bit-integer
-    for (size_t i = 0u; i < m.population.size(); ++i)
-        for (size_t B = 0u; B < nbytes; ++B)
-            stf::write(m.population[i].getByte(B), freezer);
-
-    // Using 64bit integers is a way to save space when saving full genomes
-    // The stf::write function saves in binary format, meaning that it will
-    // convert back the integers into their underlying bitsets
-    // The resulting binary output file should therefore be interpreted as
-    // a bit-wise array; each value (allele) is encoded by a single bit
+    // Close files
+    for (size_t f = 0u; f < files.size(); ++f)
+        files[f]->close();
 }
 
 void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
@@ -194,14 +176,6 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
                     stf::write(m.getMidparent(i, trait), files[f]);
     }
 }
-
-void Printer::shutdown()
-{
-    // Close files
-    for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
-    freezer->close();
-}
-
 
 std::vector<std::string> Printer::whattosave(const std::string &filename) const
 {
