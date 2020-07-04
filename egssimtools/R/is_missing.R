@@ -1,6 +1,8 @@
 #' Is a simulation missing?
 #'
-#' @param folder Path to the folder
+#' Checks for the presence of `.dat` files
+#'
+#' @param root Path to the simulation folder
 #'
 #' @return A logical
 #'
@@ -8,18 +10,15 @@
 #'
 #' \dontrun{
 #'
-#' # Location of the simulation folder
-#' root <- "data/example_1"
-#'
-#' is_missing(root)
+#' is_missing("data/example_1")
 #'
 #' }
 #'
 #' @export
 
-is_missing <- function(folder) {
+is_missing <- function(root) {
 
-  # A simulation is missing if no data files are available
-  length(grep("\\.dat$", list.files(folder))) == 0
+  if (length(grep(".dat$", list.files(root))) == 0) return(TRUE)
+  return(FALSE)
 
 }

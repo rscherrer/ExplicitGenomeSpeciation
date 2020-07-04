@@ -8,7 +8,8 @@ SOURCES += \
     $$PWD/library/MetaPop.cpp \
     $$PWD/library/Simul.cpp \
     $$PWD/library/Collector.cpp \
-    $$PWD/library/Printer.cpp
+    $$PWD/library/Printer.cpp \
+    $$PWD/library/Freezer.cpp
 HEADERS += \
     $$PWD/library/GenArch.h \
     $$PWD/library/Param.h \
@@ -20,4 +21,5 @@ HEADERS += \
     $$PWD/library/Simul.h \
     $$PWD/library/Collector.h \
     $$PWD/library/Printer.h \
+    $$PWD/library/Freezer.h \
     $$PWD/library/rndutils.hpp

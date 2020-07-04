@@ -9,26 +9,31 @@
 
 BOOST_AUTO_TEST_CASE(GenerateOnlyZeroAlleles)
 {
+  // std::clog << "Testing 0-only genome generation...\n";
   Param pars;
   pars.allfreq = 0.0;
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
   BOOST_CHECK_EQUAL(ind.getAlleleSum(), 0u);
+  BOOST_CHECK_EQUAL(ind.getZygosity(0u, pars.nloci), 0u); // pick random locus
 }
 
 BOOST_AUTO_TEST_CASE(GenerateOnlyOneAlleles)
 {
+  // std::clog << "Testing 1-only genome generation...\n";
   Param pars;
   pars.allfreq = 1.0;
   GenArch arch = GenArch(pars);
   Individual ind = Individual(pars, arch);
   BOOST_CHECK_EQUAL(ind.getAlleleSum(), 2u * pars.nloci);
+  BOOST_CHECK_EQUAL(ind.getZygosity(0u, pars.nloci), 2u); // pick random locus
 }
 
   // Test mate choice
 
 BOOST_AUTO_TEST_CASE(HomogamousFemaleAcceptsIdenticalMale)
 {
+  // std::clog << "Testing homogamous mate choice...\n";
   Param pars;
   pars.allfreq = 0.5;
   pars.sexsel = 1.0;

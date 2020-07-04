@@ -4,8 +4,10 @@
 #'
 #' @param folder Path to the folder
 #' @param variables What variables to read (`time` is included by default)
-#' @param parnames,combine,as_numeric,architecture,archfile,parfile Parameters
+#' @param parnames,combine,as_numeric,parfile Parameters
 #' for `read_data`
+#' @param architecture Whether to attach genetic architecture data
+#' @param archfile Optional name of the genetic architecture file
 #' @param nloci Number of loci (automatically guessed if unspecified)
 #'
 #' @details The file `time.dat` must be present
@@ -46,18 +48,21 @@ read_genome <- function(
   data <- read_data(
     folder,
     c("time", variables),
-    by = rep(1, length(variables) + 1),
     dupl = c(nloci, rep(1, length(variables))),
     parnames = parnames,
     combine = combine,
     as_numeric = as_numeric,
-    architecture = architecture,
-    archfile = archfile,
     parfile = parfile
   )
+  data$locus <- rep(seq(nloci), nrow(data) / nloci)
 
-  if (!"locus" %in% colnames(data)) {
-    data$locus <- rep(seq(nloci), nrow(data) / nloci)
+  if (architecture) {
+
+    ntimes <- nrow(data) / nloci
+    arch <- read_arch_genome(folder, archfile)
+    arch <- purrr::map_dfr(unique(data$time), ~ dplyr::mutate(arch, time = .x))
+    data <- data %>% dplyr::right_join(arch)
+
   }
 
   return(data)

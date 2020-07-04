@@ -8,6 +8,7 @@
 #include "MetaPop.h"
 #include "Collector.h"
 #include "Printer.h"
+#include "Freezer.h"
 #include <stddef.h>
 #include <iostream>
 

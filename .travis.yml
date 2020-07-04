@@ -57,7 +57,7 @@ script:
  - echo "tend 1000" > parameters.txt
  - echo "tsave 100" >> parameters.txt
  - time ./EGS parameters.txt
- - gprof ./EGS parameters.txt > gprof.log
+ - gprof ./EGS > gprof.log
  - head gprof.log -n 1000
   
  # Get code coverage

@@ -15,61 +15,9 @@ class Individual {
 
 public:
 
-    // To generate an initial population
-    Individual(const Param &pars, const GenArch &arch) :
-        genome(genomize(pars)),
-        transcriptome(std::vector<double>(pars.nloci, 0.0)),
-        locivalues(std::vector<double>(pars.nloci, 0.0)),
-        genvalues(std::vector<double>(3u, 0.0)),
-        traitvalues(std::vector<double>(3u, 0.0)),
-        midparents(std::vector<double>(3u, 0.0)),
-        fitness(1.0),
-        feeding(std::vector<double>(3u, 0.0)),
-        ecotype(0u),
-        habitat(0u),
-        gender(determinesex()),
-        alive(true),
-        adult(true)
-    {
-        develop(pars, arch);
-
-        assert(transcriptome.size() == pars.nloci);
-        assert(traitvalues.size() == 3u);
-        assert(fitness >= 0.0);
-        assert(feeding[0u] >= 0.0);
-        assert(feeding[1u] >= 0.0);
-        assert(feeding[0u] <= 1.0);
-        assert(feeding[1u] <= 1.0);
-    }
-
-    // Newborn
-    Individual(const Param &pars, const GenArch &arch, const Individual &mom,
-     const Individual &dad) :
-        genome(fecundate(mom, dad, pars, arch)),
-        transcriptome(std::vector<double>(pars.nloci, 0.0)),
-        locivalues(std::vector<double>(pars.nloci, 0.0)),
-        genvalues(std::vector<double>(3u, 0.0)),
-        traitvalues(std::vector<double>(3u, 0.0)),
-        midparents(calcmidparent(mom, dad)),
-        fitness(1.0),
-        feeding(std::vector<double>(2u, 0.0)),
-        ecotype(0u),
-        habitat(mom.getHabitat()),
-        gender(determinesex()),
-        alive(true),
-        adult(false)
-    {
-        develop(pars, arch);
-
-        assert(transcriptome.size() == pars.nloci);
-        assert(traitvalues.size() == 3u);
-        assert(fitness >= 0.0);
-        assert(feeding[0u] >= 0.0);
-        assert(feeding[1u] >= 0.0);
-        assert(feeding[0u] <= 1.0);
-        assert(feeding[1u] <= 1.0);
-    }
-
+    Individual(const Param&, const GenArch&);
+    Individual(const Param&, const GenArch&, const Individual&,
+     const Individual&);
     ~Individual() {}
 
     // Life history
@@ -80,94 +28,26 @@ public:
     void survive(const bool&);
     void classify(const double&);
 
-    // Getters called from outside
-    bool getGender() const
-    {
-        return gender;
-    }
-    size_t getEcotype() const
-    {
-        return ecotype;
-    }
-    size_t getHabitat() const
-    {
-        return habitat;
-    }
-    double getFitness() const
-    {
-        return fitness;
-    }
-    double getTraitValue(const size_t &trait) const
-    {
-        return traitvalues[trait];
-    }
-    double getMidparent(const size_t &trait) const
-    {
-        return midparents[trait];
-    }
-    double getGenValue(const size_t &trait) const
-    {
-        return genvalues[trait];
-    }
-    double getFeeding(const size_t &r) const
-    {
-        return feeding[r];
-    }
-    double getLocusValue(const size_t &locus) const
-    {
-        return locivalues[locus];
-    }
-    size_t getZygosity(const size_t &locus) const
-    {
-        const size_t nloci = genome.size() / 2u;
-        const size_t zyg = genome.test(locus) + genome.test(locus + nloci);
-        assert(zyg == 0u || zyg == 1u || zyg == 2u);
-        return zyg;
-    }
-    unsigned long long getByte(const size_t &B) const
-    {
-        std::bitset<64u> byte;
-        const size_t start = B * 64u;
-        size_t end = (B + 1u) * 64u;
-        if (end > genome.size()) end = genome.size();
-        for (size_t l = start, b = 0u; l < end; ++l, ++b)
-            if (genome.test(l)) byte.set(b);
-        return byte.to_ullong();
-    }
-    size_t getAlleleSum() const
-    {
-        return genome.count();
-    }
-    double getExpression() const
-    {
-        double sum = 0.0;
-        for (size_t locus = 0u; locus < transcriptome.size(); ++locus) {
-            sum += transcriptome[locus];
-        }
-        return sum;
-    }
+    // Various getters
+    bool getGender() const;
+    size_t getEcotype() const;
+    size_t getHabitat() const;
+    double getFitness() const;
+    double getTraitValue(const size_t&) const;
+    double getMidparent(const size_t&) const;
+    double getGenValue(const size_t&) const;
+    double getFeeding(const size_t&) const;
+    double getLocusValue(const size_t&) const;
+    size_t getZygosity(const size_t&, const size_t&) const;
+    size_t getAlleleSum() const;
+    double getExpression() const;
+    Genome getFullGenome() const;
+    std::bitset<64u> getGenomeChunk(const size_t&) const;
 
-    // Force resetters
-    void resetTrait(const size_t &trait, const double &newvalue, const Param &p)
-    {
-        traitvalues[trait] = newvalue;
-        if (trait == 0u) {
-            feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] + 1.0));
-            feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[trait] - 1.0));
-            assert(feeding[0u] >= 0.0);
-            assert(feeding[1u] >= 0.0);
-            assert(feeding[0u] <= 1.0);
-            assert(feeding[1u] <= 1.0);
-        }
-    }
-    void resetEcotype(const size_t &e)
-    {
-        ecotype = e;
-    }
-    void resetGender(const bool &sex)
-    {
-        gender = sex;
-    }
+    // Force resetters (for testing purposes)
+    void resetTrait(const size_t&, const double&, const Param&);
+    void resetEcotype(const size_t&);
+    void resetGender(const bool&);
 
 private:
 

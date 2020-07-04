@@ -34,9 +34,15 @@ git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 
 Then navigate to the repository to access the program.
 
+# About
+
+The program was written in standard C++14 in Ubuntu Linux 18.04.4 LTS using QtCreator 4.9.2 (based on Qt 5.12.4). The source code needed to compile the program is in `library`. The program was tested using the Boost.Test library, with tests available in the `tests` folder. Tests were run by building the program in debug mode based on the instructions available for Qt in the `EGS_test.pro` file, using the Qmake build system. Qt instructions for a command-line release version, devoid of tests and with profiling turned on, are available in `EGS.pro`. Instructions for a GUI version, in release mode, are in `EGS_gui.pro`. Travis CI was used for continuous integration, see `.travis.yml`.
+
 # Build the program
 
-The program was written in standard C++14 on Ubuntu 18.04 using QtCreator. The project file `EGS.pro` contains all build instructions that were used to compile the program. The project file `EGS_test.pro` contains the build instructions for the debug version, which runs tests and assertions. Tests were written using the Boost.Test library. The project file `EGS_gui` contains the instructions for building the GUI. Qt is needed to build either of these versions from the `.pro` files. Alternatively you can build the program from source with the compiler of your choice.
+Build the command-line version of the program by compiling and linking the source files in `library` with `main.cpp` in the root of the repository. Specific instructions for building with Qt are available in the `EGS.pro` file.
+
+Alternatively, an `EGS` pre-compiled executable is available in the root directory. This executable was built by running the `build_target.sh` script on the Peregrine HPC Linux cluster of the University of Groningen, following the instructions in `cluster/README.md` (QMake version 3.1 from Qt version 5.14.1). This executable should run on a Linux machine, not sure about other platforms...
 
 # Run the program
 
@@ -228,6 +234,12 @@ This optional file contains a list of names of variables to save, if record, dat
 (Edges are ordered by trait.)
 
 Note that if you are choosing what variables to save, it is important to save "time" because the functions provided in the accompanying R package for analyses assume that this file is present. Also note that if you are going to save individual data, you may want to save "population_size" for the same reason.
+
+# Saving full genomes
+
+It is possible to save the full genomes of every individual every `tfreeze` time step, if `gensave` is set to 1. The option to save full genomes cannot be specified in the order file mentioned above. This means that the output file `freezer.dat`, containing these data, will automatically be generated every time the simulation runs. To not save anything in it, just set `ensave` to 0 and/or `tfreeze` to some time point greater than `tend`, this way, the condition for saving full genomes will never be met.
+
+Each value in a full genome is an allele at a specific position along one of the two haplotypes of that individual. Therefore, a genome contains twice as many values as there are loci, because the organisms are diploid. Each value is either 0 or 1 (the two possible alleles). Haplotypes are saved in turns, such that the first N values are all alleles of the first haplotype and the next N values are all alleles of the second haplotype, if N is the total number of loci. This does not mean that each saved individual genome is exactly 2N values long, though. In order to save space for this large amount of data, individual genomes are first split into blocks of 64 bits, and each block is converted into a 64bit integer, which is then saved to the `freezer` output file as binary. Therefore, the `freezer` output file must be interpreted on a bit-wise basis in order to retrieve the actual alleles of the individual (i.e. reading it as 64bit integers will show integer equivalents of chunks of 64 alleles). This also means that for each individual, a multiple of 64 bits will be written to the file, even if 2N alleles is not necessarily a multiple of 64. In other words, for each individual 2N bits will be written to file, and the remaining part of the last 64bit-chunk will be filled with zeros.
 
 # Analysis with egssimtools
 

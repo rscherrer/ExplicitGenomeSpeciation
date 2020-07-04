@@ -25,9 +25,6 @@
 
 guess_nloci <- function(folder, variable = "genome_Fst") {
 
-  time <- read_binary(paste0(folder, "/time.dat"))
-  ntimes <- length(time)
-  x <- read_binary(paste0(folder, "/", variable, ".dat"))
-  length(x) / ntimes
+  guess_nrows(folder, variable)
 
 }

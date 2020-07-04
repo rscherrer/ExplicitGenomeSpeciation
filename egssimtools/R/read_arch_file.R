@@ -20,7 +20,7 @@
 
 read_arch_file <- function(filename) {
 
-  archfile <- read.delim(filename, header = FALSE)[, 1]
+  archfile <- readLines(filename)
 
   begin <- grep("^Architecture:$", archfile)
   if (length(begin) == 0) stop(

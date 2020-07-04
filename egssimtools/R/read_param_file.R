@@ -24,7 +24,7 @@ read_param_file <- function(filename, parnames = NULL) {
   # Give it the path to the parameter file
   # And optionally the parameters you want it to read
 
-  paramlist <- read.delim(filename, header = FALSE)[, 1]
+  paramlist <- readLines(filename)
 
   # Extract values of the parameters
   parameters <- lapply(paramlist, function(p) {

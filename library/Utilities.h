@@ -38,7 +38,7 @@ namespace utl
 
 namespace stf // save to file
 {
-    void write(const unsigned long long&, std::shared_ptr<std::ofstream>&);
+    void write2(const size_t&, std::shared_ptr<std::ofstream>&);
     void write(const double&, std::shared_ptr<std::ofstream>&);
     void write(const std::vector<double>&, std::shared_ptr<std::ofstream>&);
 }

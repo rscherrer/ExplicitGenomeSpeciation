@@ -1,7 +1,8 @@
 #' Read binary file
 #'
 #' @param filename Path to the file
-#' @param digits Encoding
+#' @param nbytes The number of bytes constituting one value (e.g. 8 bytes
+#' for a double)
 #'
 #' @return A numeric vector
 #'
@@ -19,10 +20,10 @@
 #'
 #' @export
 
-read_binary <- function(filename, digits = 8) {
+read_binary <- function(filename, nbytes = 8) {
 
   # Number of values to read
-  n <- file.info(filename)$size / digits
+  n <- file.size(filename) / nbytes
 
   file <- file(filename, "rb")
   data <- readBin(file, numeric(), n)
