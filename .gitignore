@@ -45,3 +45,8 @@ Makefile.Release
 egs_gui_plugin_import.cpp
 ui_maindialog.h
 .Rproj.user
+
+# Decide later whether to make those available
+build/debug
+build/gui
+build/release
