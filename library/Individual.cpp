@@ -397,19 +397,6 @@ size_t Individual::getZygosity(const size_t &locus, const size_t &nloci) const
     assert(zyg == 0u || zyg == 1u || zyg == 2u);
     return zyg;
 }
-
-// Return a 64bit-block from the genome of that individual
-unsigned long long Individual::getByte(const size_t &B) const
-{
-    std::bitset<64u> byte;
-    const size_t start = B * 64u;
-    size_t end = (B + 1u) * 64u;
-    if (end > genome.size()) end = genome.size();
-    for (size_t l = start, b = 0u; l < end; ++l, ++b)
-        if (genome.test(l)) byte.set(b);
-    return byte.to_ullong();
-}
-
 size_t Individual::getAlleleSum() const
 {
     return genome.count();
@@ -423,7 +410,7 @@ double Individual::getExpression() const
     return sum;
 }
 
-
+// Return an individual genome in bitset format
 Genome Individual::getFullGenome() const {
 
     return genome;

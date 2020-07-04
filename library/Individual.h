@@ -39,7 +39,6 @@ public:
     double getFeeding(const size_t&) const;
     double getLocusValue(const size_t&) const;
     size_t getZygosity(const size_t&, const size_t&) const;
-    unsigned long long getByte(const size_t&) const;
     size_t getAlleleSum() const;
     double getExpression() const;
     Genome getFullGenome() const;
