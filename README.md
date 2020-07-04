@@ -34,9 +34,15 @@ git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 
 Then navigate to the repository to access the program.
 
+# About
+
+The program was written in standard C++14 in Ubuntu Linux 18.04.4 LTS using QtCreator 4.9.2 (based on Qt 5.12.4). The source code needed to compile the program is in `library`. The program was tested using the Boost.Test library, with tests available in the `tests` folder. Tests were run by building the program in debug mode based on the instructions available for Qt in the `EGS_test.pro` file, using the Qmake build system. Qt instructions for a command-line release version, devoid of tests and with profiling turned on, are available in `EGS.pro`. Instructions for a GUI version, in release mode, are in `EGS_gui.pro`. Travis CI was used for continuous integration, see `.travis.yml`.
+
 # Build the program
 
-The program was written in standard C++14 on Ubuntu 18.04 using QtCreator. The project file `EGS.pro` contains all build instructions that were used to compile the program. The project file `EGS_test.pro` contains the build instructions for the debug version, which runs tests and assertions. Tests were written using the Boost.Test library. The project file `EGS_gui` contains the instructions for building the GUI. Qt is needed to build either of these versions from the `.pro` files. Alternatively you can build the program from source with the compiler of your choice.
+Build the command-line version of the program by compiling and linking the source files in `library` with `main.cpp` in the root of the repository. Specific instructions for building with Qt are available in the `EGS.pro` file.
+
+Alternatively, an `EGS` pre-compiled executable is available in the root directory. This executable was built by running the `build_target.sh` script on the Peregrine HPC Linux cluster of the University of Groningen, following the instructions in `cluster/README.md` (QMake version 3.1 from Qt version 5.14.1). This executable should run on a Linux machine, not sure about other platforms...
 
 # Run the program
 
