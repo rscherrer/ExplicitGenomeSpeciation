@@ -1,6 +1,7 @@
 #' Read bitset
 #'
 #' Read a binary file bit-wise and return a vector of integers (0/1)
+#' (e.g. whole genomes of the whole population)
 #'
 #' @param filename Path to the file to read
 #'
@@ -22,8 +23,10 @@
 
 read_bitset <- function(filename) {
 
-  # Read raw bytes from file, convert them into bits then integers (0/1)
-  x <- readBin(file(filename, "rb"), raw(), n = file.size(filename))
-  return(as.integer(rawToBits(x)))
+  f <- file(filename, "rb")
+  n <- file.size(filename)
+  bytes <- readBin(f, raw(), n)
+  close(f)
+  return(as.integer(rawToBits(bytes)))
 
 }

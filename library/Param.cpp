@@ -339,7 +339,7 @@ void Param::write(std::ofstream &file) const
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
     file << "logfile " << logfile << '\n';
-    file << "freezerfile" << freezerfile << '\n';
+    file << "freezerfile " << freezerfile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }
