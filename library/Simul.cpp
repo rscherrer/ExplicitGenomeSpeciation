@@ -1,13 +1,18 @@
 #include "Simul.h"
 
-bool timetosave(const int &t,const Param &p)
+bool timetosave(const int &t, const Param &p)
 {
     return p.record && t >= 0 && t % p.tsave == 0;
 }
 
-bool timetofreeze(const int &t,const Param &p)
+bool timetofreeze(const int &t, const Param &p)
 {
-    return p.record && p.gensave && t >= 0 && t % p.tfreeze == 0;
+    if (p.tfreeze == 0 && t == 0) return true;
+    return p.record && p.gensave && t > 0 && t % p.tfreeze == 0;
+
+    // Note: the modulo of zero by some number is always zero, so make sure
+    // to set t > 0 as a condition otherwise time point zero will always be
+    // considered freezing time
 }
 
 int simulate(const std::vector<std::string> &args)
@@ -78,7 +83,7 @@ int simulate(const std::vector<std::string> &args)
 
             // Save whole genomes if needed (space-consuming)
             if (timetofreeze(t, pars)) {
-                if (pars.gensave) freezer.freeze(metapop, pars.nloci);
+                freezer.freeze(metapop, pars.nloci);
             }
 
             metapop.reproduce(pars, arch);
