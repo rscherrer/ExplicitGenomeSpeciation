@@ -49,7 +49,8 @@ int simulate(const std::vector<std::string> &args)
         Printer printer = Printer(order, pars.datsave);
 
         // Open the freezer if needed
-        Freezer freezer = Freezer(pars.freezerfile, pars.gensave);
+        Freezer freezer = Freezer(pars.freezerfile, pars.locifile,
+         pars.gensave);
 
         // Open a log file
         std::ofstream logfile(pars.logfile);
@@ -79,7 +80,7 @@ int simulate(const std::vector<std::string> &args)
                 // Save them to files
                 const size_t tu = static_cast<size_t>(t);
                 if (pars.datsave)
-                    printer.print(tu, collector, metapop, pars.nloci);
+                    printer.print(tu, collector, metapop);
             }
 
             // Save whole genomes if needed (space-consuming)

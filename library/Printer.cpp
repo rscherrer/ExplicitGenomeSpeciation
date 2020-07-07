@@ -38,8 +38,7 @@ void Printer::shutdown()
         files[f]->close();
 }
 
-void Printer::print(const size_t &t, const Collector &c, const MetaPop &m,
- const size_t &nloci)
+void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
 {
 
     for (size_t f = 0u; f < filenames.size(); ++f) {
@@ -175,10 +174,6 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m,
             for (size_t i = 0u; i < m.getSize(); ++i)
                 for (size_t trait = 0u; trait < 3u; ++trait)
                     stf::write(m.getMidparent(i, trait), files[f]);
-        else if (filenames[f] == "individual_locivalues")
-            for (size_t i = 0u; i < m.getSize(); ++i)
-                for (size_t locus = 0u; locus < nloci; ++i)
-                    stf::write(m.getLocusValue(i, locus), files[f]);
     }
 }
 
@@ -234,9 +229,6 @@ std::vector<std::string> Printer::whattosave(const std::string &filename) const
             "individual_habitat", // per individual
             "individual_trait", // per individual per trait
             "individual_midparent" // per individual per trait
-
-            // do not save individual_locivalues because this takes up too
-            // much space
 
         };
 
