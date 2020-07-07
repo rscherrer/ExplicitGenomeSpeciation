@@ -17,7 +17,7 @@ public:
     Printer(const std::string& = "", const bool& = true);
     ~Printer();
 
-    void print(const size_t&, const Collector&, const MetaPop&);
+    void print(const size_t&, const Collector&, const MetaPop&, const size_t&);
     void shutdown();
 
 private:

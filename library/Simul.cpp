@@ -78,7 +78,8 @@ int simulate(const std::vector<std::string> &args)
 
                 // Save them to files
                 const size_t tu = static_cast<size_t>(t);
-                if (pars.datsave) printer.print(tu, collector, metapop);
+                if (pars.datsave)
+                    printer.print(tu, collector, metapop, pars.nloci);
             }
 
             // Save whole genomes if needed (space-consuming)

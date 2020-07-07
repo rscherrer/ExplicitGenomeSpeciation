@@ -55,3 +55,8 @@ data <- data %>% mutate(allcount = hap1 + hap2)
 extra <- c("individual_ecotype")
 
 extradata <- read_pop(root, extra)
+extradata <- extradata %>% filter(time %in% t)
+extradata <- extradata %>% rename(ecotype = "individual_ecotype")
+extradata <- extradata %>% mutate(ind = seq(nrow(extradata)))
+
+data <- data %>% right_join(extradata)

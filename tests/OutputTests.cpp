@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(OutputFilesAreCorrectlyWritten)
 
     metapop.cycle(pars, arch);
     collector.analyze(metapop, pars, arch);
-    printer.print(static_cast<size_t>(t), collector, metapop);
+    printer.print(static_cast<size_t>(t), collector, metapop, pars.nloci);
 
     if (t != 9) lastgenfirst += metapop.getSize();
     else lastgensize = metapop.getSize();

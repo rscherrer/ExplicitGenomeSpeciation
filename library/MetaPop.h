@@ -51,6 +51,7 @@ public:
     size_t getHabitat(const size_t&) const;
     double getTrait(const size_t&, const size_t&) const;
     double getMidparent(const size_t&, const size_t&) const;
+    double getLocusValue(const size_t&, const size_t&) const;
     size_t getAlleleSum() const;
     size_t getZygosity(const size_t&, const size_t&, const size_t&) const;
     Genome getFullGenome(const size_t&) const;
