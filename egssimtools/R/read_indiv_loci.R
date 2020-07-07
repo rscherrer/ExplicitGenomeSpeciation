@@ -10,6 +10,8 @@
 #' the output data frame (read using `read_pop`)
 #' @param freezerfile File name of the freezer file
 #' @param locifile File name of the loci values file
+#' @param architecture Whether to add components of the genetic architecture
+#' @param archfile Genetic architecture file name
 #'
 #' @return A data frame
 #'
@@ -31,7 +33,9 @@ read_indiv_loci <- function(
   t = NULL,
   extra = NULL,
   freezerfile = "freezer.dat",
-  locifile = "locivalues.dat"
+  locifile = "locivalues.dat",
+  architecture = TRUE,
+  archfile = "architecture.txt"
 ) {
 
   filename <- file.path(root, freezerfile)
@@ -88,6 +92,12 @@ read_indiv_loci <- function(
     extradata <- extradata %>% dplyr::rename_all(~ stringr::str_replace(.x, "individual_", ""))
     extradata <- extradata %>% dplyr::mutate(ind = seq(nrow(extradata)))
     data <- data %>% dplyr::right_join(extradata)
+  }
+
+  # Add genetic architecture components if needed
+  if (architecture) {
+    arch <- read_arch_genome(root, archfile)
+    data <- data %>% dplyr::right_join(arch)
   }
 
   return(data)

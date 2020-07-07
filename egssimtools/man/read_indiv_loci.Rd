@@ -10,7 +10,9 @@ read_indiv_loci(
   t = NULL,
   extra = NULL,
   freezerfile = "freezer.dat",
-  locifile = "locivalues.dat"
+  locifile = "locivalues.dat",
+  architecture = TRUE,
+  archfile = "architecture.txt"
 )
 }
 \arguments{
@@ -26,6 +28,10 @@ the output data frame (read using \code{read_pop})}
 \item{freezerfile}{File name of the freezer file}
 
 \item{locifile}{File name of the loci values file}
+
+\item{architecture}{Whether to add components of the genetic architecture}
+
+\item{archfile}{Genetic architecture file name}
 }
 \value{
 A data frame
