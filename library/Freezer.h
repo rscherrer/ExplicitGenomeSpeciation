@@ -21,7 +21,8 @@ class Freezer
 
 public:
 
-    Freezer(const std::string& = "freezer.dat", const bool& = true);
+    Freezer(const std::string& = "freezer.dat",
+     const std::string& = "locivalues.dat", const bool& = true);
     ~Freezer();
 
     void freeze(const MetaPop&, const size_t&);
@@ -31,6 +32,7 @@ public:
 private:
 
     Stream freezer;
+    Stream locivalues;
 
 };
 

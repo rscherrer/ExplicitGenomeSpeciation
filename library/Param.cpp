@@ -52,6 +52,7 @@ Param::Param() :
     orderfile("whattosave.txt"),
     logfile("log.txt"),
     freezerfile("freezer.dat"),
+    locifile("locivalues.dat"),
     seed(makeDefaultSeed()),
     ntrials(100u)
 {
@@ -148,6 +149,8 @@ void Param::import(std::ifstream &file)
         else if (input == "parfile") file >> parfile;
         else if (input == "orderfile") file >> orderfile;
         else if (input == "logfile") file >> logfile;
+        else if (input == "freezerfile") file >> freezerfile;
+        else if (input == "locifile") file >> locifile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
         else
@@ -338,6 +341,8 @@ void Param::write(std::ofstream &file) const
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
     file << "logfile " << logfile << '\n';
+    file << "freezerfile " << freezerfile << '\n';
+    file << "locifile " << locifile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
 }

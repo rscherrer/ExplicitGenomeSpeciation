@@ -181,7 +181,7 @@ std::vector<std::string> Printer::whattosave(const std::string &filename) const
 {
     if (filename == "") {
 
-        // Save all possible variables if none defined
+        // Save the following variables if none defined
 
         return {
 

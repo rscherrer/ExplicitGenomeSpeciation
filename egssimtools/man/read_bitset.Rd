@@ -10,10 +10,11 @@ read_bitset(filename)
 \item{filename}{Path to the file to read}
 }
 \value{
-A vector if integers
+A vector of integers
 }
 \description{
 Read a binary file bit-wise and return a vector of integers (0/1)
+(e.g. whole genomes of the whole population)
 }
 \examples{
 

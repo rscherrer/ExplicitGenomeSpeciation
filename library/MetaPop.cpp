@@ -416,6 +416,10 @@ double MetaPop::getMidparent(const size_t &i, const size_t &trait) const
 {
     return population[i].getMidparent(trait);
 }
+double MetaPop::getLocusValue(const size_t &i, const size_t &locus) const
+{
+    return population[i].getLocusValue(locus);
+}
 
 // Getters used in tests
 size_t MetaPop::getAlleleSum() const {

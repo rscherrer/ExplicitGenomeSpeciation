@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(SaveAllGenomes)
     pars.allfreq = 0.9;
     pars.demesizes = { 10u, 0u };
     GenArch arch = GenArch(pars);
-    Freezer freezer = Freezer("freezer_test2.dat");
+    Freezer freezer = Freezer("freezer_test2.dat", "locivalues2.dat");
     MetaPop pop(MetaPop(pars, arch));
 
     // Save the genomes
@@ -144,5 +144,12 @@ BOOST_AUTO_TEST_CASE(SaveAllGenomes)
     assert(genomeChunks.size() == originalChunks.size());
     for (size_t k = 0u; k < genomeChunks.size(); ++k)
         BOOST_CHECK_EQUAL(genomeChunks[k], originalChunks[k]);
+
+    // Check that the loci values were saved correctly
+    std::vector<double> locivalues = tst::readfile("locivalues2.dat");
+
+    for (size_t i = 0u, k = 0u; i < pop.getSize(); ++i)
+        for (size_t l = 0u; l < pars.nloci; ++l, ++k)
+            BOOST_CHECK_EQUAL(locivalues[k], pop.getLocusValue(i, l));
 
 }

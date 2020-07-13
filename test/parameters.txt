@@ -1,0 +1,6 @@
+tend 10
+tsave 1
+tfreeze 11
+gensave 1
+tburnin 0
+
