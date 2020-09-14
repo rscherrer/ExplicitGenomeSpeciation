@@ -258,8 +258,8 @@ void Individual::develop(const Param &p, const GenArch &arch)
     }
 
     // Feeding rates
-    feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] + 1.0));
-    feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] - 1.0));
+    feeding[0u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] + p.peak));
+    feeding[1u] = exp(-p.ecosel * utl::sqr(traitvalues[0u] - p.peak));
 
     assert(feeding[0u] >= 0.0);
     assert(feeding[1u] >= 0.0);
