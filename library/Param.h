@@ -41,7 +41,7 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
-    double peak;
+    double ecoscale;
     std::vector<size_t> demesizes;
 
     // Genetic parameters

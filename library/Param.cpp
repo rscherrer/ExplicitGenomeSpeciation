@@ -16,7 +16,7 @@ Param::Param() :
     survival(0.8),
     sexsel(10.0),
     matingcost(0.01),
-    peak(1.0),
+    ecoscale(1.0),
     demesizes({ 100u, 0u }),
     nloci(90u), // cannot be provided
     nvertices({ 30u, 30u, 30u }),
@@ -109,7 +109,7 @@ void Param::import(std::ifstream &file)
         else if (input == "survival") file >> survival;
         else if (input == "sexsel") file >> sexsel;
         else if (input == "matingcost") file >> matingcost;
-        else if (input == "peak") file >> peak;
+        else if (input == "ecoscale") file >> ecoscale;
         else if (input == "demesizes")
             for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
         else if (input == "nvertices")
@@ -201,8 +201,8 @@ void Param::check() const
         msg = "Mate preference strength should be positive";
     if (matingcost < 0.0)
         msg = "Mate evaluation cost should be positive";
-    if (peak < 0.0)
-        msg = "Resource peak should be positive";
+    if (ecoscale < 0.0)
+        msg = "Ecological scale should be positive";
     if (capacity <= 0.0)
         msg = "Maximum resource capacity should be positive";
     if (replenish <= 0.0)
@@ -297,7 +297,7 @@ void Param::write(std::ofstream &file) const
     file << "survival " << survival << '\n';
     file << "sexsel " << sexsel << '\n';
     file << "matingcost " << matingcost << '\n';
-    file << "peak " << peak << '\n';
+    file << "ecoscale " << ecoscale << '\n';
     file << "demesizes ";
     for (size_t i = 0u; i < 2u; ++i) file << demesizes[i] << ' ';
     file << '\n';
