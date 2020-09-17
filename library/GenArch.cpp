@@ -77,12 +77,12 @@ std::vector<double> GenArch::makeEffects(const Param &p) const
     std::vector<double> sss = std::vector<double>(3u, 0.0);
 
     // Effect sizes are sampled from a two-sided Gamma distribution
-    auto getffect = rnd::gamma(p.effectshape, p.effectscale);
+    auto geteffect = rnd::gamma(p.effectshape, p.effectscale);
     auto isflipped = rnd::bernoulli(0.5);
 
     for (size_t locus = 0u; locus < p.nloci; ++locus) {
 
-        double effect = getffect(rnd::rng);
+        double effect = geteffect(rnd::rng);
         if (isflipped(rnd::rng)) effect *= -1.0;
         effectsizes[locus] = effect;
         sss[traits[locus]] += utl::sqr(effect);
