@@ -79,7 +79,11 @@ plot_genome_scatter <- function(
     if (!is.null(edge_size)) aes_string <- paste0(aes_string, ", size = get(edge_size)")
     aes_string <- paste0("ggplot2::aes(", aes_string, ")")
 
-    p <- p + ggplot2::geom_segment(data = edges, mapping = eval(rlang::parse_expr(aes_string)))
+    p <- p +
+      ggplot2::geom_segment(
+        data = edges, mapping = eval(rlang::parse_expr(aes_string)),
+        size = 0.5, alpha = 0.5
+      )
 
   }
 

@@ -40,6 +40,7 @@ Param::Param() :
     tend(10),
     tsave(10),
     tfreeze(100),
+    tpedigree(15000),
     talkative(true),
     record(true),
     datsave(true),
@@ -48,14 +49,18 @@ Param::Param() :
     archsave(false),
     archload(false),
     parsave(true),
+    pedigreesave(false),
     archfile("architecture.txt"),
     parfile("paramlog.txt"),
     orderfile("whattosave.txt"),
     logfile("log.txt"),
     freezerfile("freezer.dat"),
     locifile("locivalues.dat"),
+    pedigreefile("pedigree.dat"),
     seed(makeDefaultSeed()),
-    ntrials(100u)
+    ntrials(100u),
+    pedigreetrials(100u),
+    pedigreeoffspring(10u)
 {
 
     // Make sure parameter values make sense
@@ -139,6 +144,7 @@ void Param::import(std::ifstream &file)
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
         else if (input == "tfreeze") file >> tfreeze;
+        else if (input == "tpedigree") file >> tpedigree;
         else if (input == "talkative") file >> talkative;
         else if (input == "record") file >> record;
         else if (input == "datsave") file >> datsave;
@@ -147,14 +153,18 @@ void Param::import(std::ifstream &file)
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
+        else if (input == "pedigreesave") file >> pedigreesave;
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
         else if (input == "orderfile") file >> orderfile;
         else if (input == "logfile") file >> logfile;
         else if (input == "freezerfile") file >> freezerfile;
         else if (input == "locifile") file >> locifile;
+        else if (input == "pedigreefile") file >> pedigreefile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
+        else if (input == "pedigreetrials") file >> pedigreetrials;
+        else if (input == "pedigreeoffspring") file >> pedigreeoffspring;
         else
             throw std::runtime_error("Invalid parameter name: " + input);
 
@@ -335,6 +345,7 @@ void Param::write(std::ofstream &file) const
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
     file << "tfreeze " << tfreeze << '\n';
+    file << "tpedigree " << tpedigree << '\n';
     file << "talkative " << talkative << '\n';
     file << "record " << record << '\n';
     file << "datsave " << datsave << '\n';
@@ -343,13 +354,17 @@ void Param::write(std::ofstream &file) const
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';
+    file << "pedigreesave " << pedigreesave << '\n';
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
     file << "logfile " << logfile << '\n';
     file << "freezerfile " << freezerfile << '\n';
     file << "locifile " << locifile << '\n';
+    file << "pedigreefile " << pedigreefile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
+    file << "pedigreetrials " << pedigreetrials << '\n';
+    file << "pedigreeoffspring " << pedigreeoffspring << '\n';
 
 }

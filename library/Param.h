@@ -67,10 +67,11 @@ struct Param {
     double dominancevar;
 
     // Simulation parameters
-    int  tburnin;
-    int  tend;
-    int  tsave;
-    int  tfreeze;
+    int tburnin;
+    int tend;
+    int tsave;
+    int tfreeze;
+    int tpedigree;
     bool talkative;
     bool record;
     bool datsave;
@@ -79,14 +80,18 @@ struct Param {
     bool archsave;
     bool archload;
     bool parsave;
+    bool pedigreesave;
     std::string archfile;
     std::string parfile;
     std::string orderfile;
     std::string logfile;
     std::string freezerfile;
     std::string locifile;
+    std::string pedigreefile;
     size_t seed;
     size_t ntrials;
+    size_t pedigreetrials;
+    size_t pedigreeoffspring;
 
 };
 

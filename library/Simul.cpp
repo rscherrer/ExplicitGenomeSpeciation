@@ -15,6 +15,12 @@ bool timetofreeze(const int &t, const Param &p)
     // considered freezing time
 }
 
+bool timetopedigree(const int &t, const Param &p) {
+
+    return p.pedigreesave && t > 0 && t % p.tpedigree == 0;
+
+}
+
 int simulate(const std::vector<std::string> &args)
 {
 
@@ -57,6 +63,9 @@ int simulate(const std::vector<std::string> &args)
         std::cout << "Simulation started.\n";
         logfile << "Simulation started.\n";
 
+        // Open a pedigree file
+        Pedigree pedigree = Pedigree(pars.pedigreefile, pars.pedigreesave);
+
         // Loop through time
         for (int t = -pars.tburnin; t < pars.tend; ++t) {
 
@@ -81,12 +90,16 @@ int simulate(const std::vector<std::string> &args)
                 const size_t tu = static_cast<size_t>(t);
                 if (pars.datsave)
                     printer.print(tu, collector, metapop);
+
             }
 
             // Save whole genomes if needed (space-consuming)
-            if (timetofreeze(t, pars)) {
+            if (timetofreeze(t, pars))
                 freezer.freeze(metapop, pars.nloci);
-            }
+
+            // Analyze offspring distributions if needed
+            if (timetopedigree(t, pars))
+                pedigree.analyze(metapop, pars, arch);
 
             metapop.reproduce(pars, arch);
             metapop.survive(pars);

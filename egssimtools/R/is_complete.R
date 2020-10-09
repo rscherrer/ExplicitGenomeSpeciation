@@ -19,7 +19,7 @@
 
 is_complete <- function(root) {
 
-  if (read_slurm_status(root) == "COMPLETED") return(TRUE)
+  if (length(grep("COMPLETED", read_slurm_status(root))) > 0) return(TRUE)
   return(FALSE)
 
 }

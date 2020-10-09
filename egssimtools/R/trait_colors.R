@@ -6,6 +6,6 @@
 
 trait_colors <- function() {
 
-  c("forestgreen", "goldenrod", "grey")
+  c("forestgreen", "goldenrod", "darkgrey")
 
 }
