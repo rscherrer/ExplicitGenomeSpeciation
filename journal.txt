@@ -36,7 +36,7 @@ After running simulations of the epistatic speciation model with parameter value
 Roadmap:
 
 1) Make sure that this pattern exists and is consistent across simulations -- Yes it is
-2) Then, are these loci consistently evolving large effects? What determines what locus gets to become a large-effect locus? -- Yes they are consistent. They are loci with large degrees of strong edges
+2) Then, are these loci consistently evolving large effects? What determines what locus gets to become a large-effect locus? -- Yes they are consistent. They are loci with large degrees or strong edges
 3) It seemed that in additive simulations, low-effect loci did not reach high differentiation while many more did in epistatic simulations. I also need to clarify whether this is a true pattern. So far I considered low-effect loci to behave quasi neutrally, no matter the level of epistasis... -- That pattern does not actually exist
 4) In this new batch of simulations, very few simulations with both additive and epistatic effects reached speciation. This suggests that under this new parameter regime, differences between levels of epistasis in what parts of parameter space are favorable to speciation may be more obvious. To see that I need to launch many simulations to cover and map parameter space. -- In progress, will take a while
 5) I still have to figure out why, in some simulations where strong assortative mating (and speciation) should typically evolve, instead strong disassortative mating was observed.
@@ -58,6 +58,16 @@ Why do we see the evolution of disassortative mating in some cases? What we know
 
 To understand why assortment is disfavored, we need to understand what kind of offspring assortatively mating individuals produce. To do so, we are going to run an experiment. At some point during the simulation, we will pick a number of homogamic (same ecotype) and heterogamic (alternative ecotypes) male-female pairs, make them mate and produce offspring, and record the phenotype of the offspring. Code this into the C++ program.
 
+12/10/2020
+
+- Download all the wide simulations
+- Plot the heatmaps
+- Find occurrences of disassortative mating --> dig into that
+- Dominance simulations: from regular or explorewide?
+
+There is no disassortative mating evolving in wider simulations. Speciation happens under a more narrow range of parameters, and epistasis seems to be helping. So, to retrieve those simulations, better re-run full parameter space where the distance between the fitness peaks is not so large. But here we simulated the process with epistatic mating and neutral trait. Does that matter? I hope not. Now re-running original explore batch of simulations with all traits being epistatic, let us see if we recover the same results!
+
+
 
 send new version to rampal
 niche construction
@@ -65,9 +75,4 @@ sudden speciation
 
 other things to do:
 
-
-
-- read colin's changes in dewlap ms --> prob accept them
-- fix bug mentioned by anthony
-- photoshop the map
 - email to keep my abstract in MEEM2020?
