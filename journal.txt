@@ -67,12 +67,10 @@ To understand why assortment is disfavored, we need to understand what kind of o
 
 There is no disassortative mating evolving in wider simulations. Speciation happens under a more narrow range of parameters, and epistasis seems to be helping. So, to retrieve those simulations, better re-run full parameter space where the distance between the fitness peaks is not so large. But here we simulated the process with epistatic mating and neutral trait. Does that matter? I hope not. Now re-running original explore batch of simulations with all traits being epistatic, let us see if we recover the same results!
 
+28/10/2020
 
+Down time due to computer crash
 
-send new version to rampal
-niche construction
-sudden speciation
-
-other things to do:
-
-- email to keep my abstract in MEEM2020?
+Re-ran exploration across parameter space, called explore2
+Also re-ran the simulations that did not complete, now all explore2 are complete
+Re-ran explorewide simulations that did not complete (many of them were incorrectly labelled as incomplete, manually changed them to "COMPLETED (hacked)") -- only two of them today, running them locally. Those are now done.
