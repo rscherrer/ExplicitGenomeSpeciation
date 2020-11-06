@@ -4,10 +4,12 @@
 \alias{plot_trait_values}
 \title{Plot trait values through time}
 \usage{
-plot_trait_values(data)
+plot_trait_values(data, bins = 30)
 }
 \arguments{
 \item{data}{An individual-wise dataset where each trait is a different column.}
+
+\item{bins}{Number of bins to pass to \code{ggplot2::geom_bin2d}. Defaults to 30.}
 }
 \value{
 A ggplot
