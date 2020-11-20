@@ -145,6 +145,14 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
         else if (filenames[f] == "genome_freq")
             for (size_t l = 0u; l < c.genomescan.size(); ++l)
                 stf::write(c.genomescan[l].freqs[2u], files[f]);
+        else if (filenames[f] == "genome_freqs")
+            for (size_t l = 0u; l < c.genomescan.size(); ++l)
+                for (size_t e = 0u; e < 2u; ++e)
+                    stf::write(c.genomescan[l].freqs[e], files[f]);
+        else if (filenames[f] == "genome_hobs")
+            for (size_t l = 0u; l < c.genomescan.size(); ++l)
+                for (size_t e = 0u; e < 2u; ++e)
+                    stf::write(c.genomescan[l].hobs[e], files[f]);
         else if (filenames[f] == "network_corgen")
             for (size_t e = 0u; e < c.networkscan.size(); ++e)
                 stf::write(c.networkscan[e].corgen, files[f]);
@@ -220,6 +228,8 @@ std::vector<std::string> Printer::whattosave(const std::string &filename) const
             "genome_alpha", // per locus
             "genome_meang", // per locus
             "genome_freq", // per locus
+            "genome_freqs", // per locus per ecotype
+            "genome_hobs", // per locus per ecotype
             "network_corgen", // per edge
             "network_corbreed", // per edge
             "network_corfreq", // per edge
