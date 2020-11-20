@@ -51,6 +51,7 @@ class Locus
         covQG(0.0),
         h(0.0),
         H(0.0),
+        hobs(std::vector<double>(2u, 0.0)),
         tot(2u),
         all(3u),
         aa(0u),
@@ -77,6 +78,7 @@ class Locus
     void calcVarS(const size_t&, const size_t&, const size_t&);
     void calcHWithin(const size_t&, const size_t&, const size_t&);
     void calcHAcross();
+    void calcHObserved(const size_t&);
     void partitionVariance(const std::vector<size_t>&);
 
     size_t id;
@@ -116,6 +118,7 @@ class Locus
     double covQG;
     double h;
     double H;
+    std::vector<double> hobs;
 
     // Indices for readability
     const size_t tot; // across ecotypes
