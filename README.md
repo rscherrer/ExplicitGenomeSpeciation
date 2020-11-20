@@ -221,6 +221,8 @@ This optional file contains a list of names of variables to save, if record, dat
 | genome_alpha | Locus-specific average mutational effect | 1 per locus |
 | genome_meang | Locus-specific mean genetic value | 1 per locus |
 | genome_freq | Locus-specific allele frequency | 1 per locus |
+| genome_freqs | Locus-specific within-ecotype allele frequency | 1 per locus per ecotype |
+| genome_hobs | Locus-specific within-ecotype heterozygosity | 1 per locus per ecotype |
 | network_corgen | Edge-specific correlation in genetic values | 1 per edge |
 | network_corbreed | Edge-specific correlation in breeding values | 1 per edge |
 | network_corfreq | Edge-specific correlation in allele frequencies | 1 per edge |
