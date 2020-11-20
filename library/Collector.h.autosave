@@ -103,13 +103,13 @@ class Locus
     std::vector<double> varP; // phenotypic variance
     std::vector<double> varA; // additive variance
     std::vector<double> varN; // non-additive variance
-    std::vector<double> freqs; // allele frequencies
+    std::vector<double> freqs; // allele frequencies (of the derived allele A)
 
-    double varD;
-    double varI;
-    double varQ;
-    double varX;
-    double varS;
+    double varD; // dominance variance
+    double varI; // interaction variance
+    double varQ; // variance in allele counts
+    double varX; // variance in gene expression levels
+    double varS; // variance in 
     double Pst;
     double Gst;
     double Qst;
