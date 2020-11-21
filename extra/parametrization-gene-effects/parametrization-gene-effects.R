@@ -46,17 +46,17 @@ sample_epi <- function(n, shape = 1, scale = 1) {
 phi <- sample_add(10000, 5, 1)
 psi <- sample_epi(100000, 5, 1)
 
-hist(phi)
-hist(psi)
+#hist(phi)
+#hist(psi)
 
 n <- 1000
 e <- 10000
 shape_add <- 1
-shape_epi <- 0.12
+shape_epi <- 1
 scale_add <- 1
-scale_epi <- 1
+scale_epi <- 0.119
 
-set.seed(42)
+#set.seed(42)
 x <- purrr::map_dbl(seq(10000), ~ sum(sample_add(n, shape_add, scale_add)))
 y <- purrr::map_dbl(seq(10000), ~ sum(sample_epi(e, shape_epi, scale_epi)))
 
@@ -73,4 +73,4 @@ ggplot(data, aes(x = value, fill = variable)) +
   ) +
   labs(x = "Trait value", y = "Density", fill = NULL)
 
-#ggsave("gamma_param.png", width = 5, height = 3, dpi = 300)
+#ggsave("parametrized_trait_distributions.png", width = 5, height = 3, dpi = 300)
