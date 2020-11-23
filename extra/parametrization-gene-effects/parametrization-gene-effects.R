@@ -52,9 +52,9 @@ psi <- sample_epi(100000, 5, 1)
 n <- 1000
 e <- 10000
 shape_add <- 1
-shape_epi <- 1
+shape_epi <- 5
 scale_add <- 1
-scale_epi <- 0.119
+scale_epi <- 0.067
 
 #set.seed(42)
 x <- purrr::map_dbl(seq(10000), ~ sum(sample_add(n, shape_add, scale_add)))
