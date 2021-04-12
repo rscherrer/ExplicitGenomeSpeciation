@@ -22,7 +22,7 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ## Snapshots
 
-<img src="pics/example_traits.png" alt="drawing" height="100"/> <img src="pics/example_summaries.png" alt="drawing" height="100"/>
+<img src="pics/example_traits.png" alt="drawing" height="200"/> <img src="pics/example_summaries.png" alt="drawing" height="200"/>
 
 # Folder structure
 
