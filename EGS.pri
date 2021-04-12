@@ -9,7 +9,8 @@ SOURCES += \
     $$PWD/library/Simul.cpp \
     $$PWD/library/Collector.cpp \
     $$PWD/library/Printer.cpp \
-    $$PWD/library/Freezer.cpp
+    $$PWD/library/Freezer.cpp \
+    $$PWD/library/Pedigree.cpp
 HEADERS += \
     $$PWD/library/GenArch.h \
     $$PWD/library/Param.h \
@@ -22,4 +23,5 @@ HEADERS += \
     $$PWD/library/Collector.h \
     $$PWD/library/Printer.h \
     $$PWD/library/Freezer.h \
+    $$PWD/library/Pedigree.h \
     $$PWD/library/rndutils.hpp

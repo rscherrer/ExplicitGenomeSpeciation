@@ -183,6 +183,7 @@ void Locus::reset() {
     meanG = 0.0;
     h = 0.0;
     H = 0.0;
+    hobs = std::vector<double>(2u, 0.0);
 
     gcounts = utl::uzeros(3u, 4u);
     gsumgen = utl::zeros(3u, 4u);
@@ -448,6 +449,19 @@ void Locus::calcHAcross() {
     H = freqs[tot] * (1.0 - freqs[tot]);
     assert(H >= 0.0);
     assert(H <= 1.0);
+
+}
+
+// Measure observed heterozygosity within each ecotype
+void Locus::calcHObserved(const size_t &eco) {
+
+    const size_t n = gcounts[eco][3u];
+
+    // Observed heterozygosity is the ecotype frequency of heterozygotes
+    hobs[eco] = n > 0u ? gcounts[eco][1u] / n : 0.0;
+
+    assert(hobs[eco] >= 0.0);
+    assert(hobs[eco] <= 1.0);
 
 }
 
@@ -751,13 +765,16 @@ void Collector::analyzeLocus(const size_t &l, const MetaPop &m,
         varA[genomescan[l].trait][eco] += genomescan[l].varA[eco];
         varN[genomescan[l].trait][eco] += genomescan[l].varN[eco];
 
+        // Measure within-ecotype observed heterozygosity
+        if (eco < 2u) genomescan[l].calcHObserved(eco);
+
     }
 
     // Calculate dominance and interaction variance across the population
     genomescan[l].calcVarD(ecounts[tot]);
     genomescan[l].calcVarI(ecounts[tot]);
 
-    // Calculate heterozygosity
+    // Calculate expected heterozygosity
     genomescan[l].calcVarS(ecounts[0u], ecounts[1u], ecounts[tot]);
     genomescan[l].calcHWithin(ecounts[0u], ecounts[1u], ecounts[tot]);
     genomescan[l].calcHAcross();

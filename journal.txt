@@ -1,0 +1,76 @@
+17/9/2020
+
+The new set of simulations "wider" gave only 42 completed simulations out of 125. Simulations with both additive and epistatic components often did not complete speciation, as none of the parapatric scenarios did. According to Sander, increasing the scale of the fitness landscape (ecoscale parameter set to 5) should not change qualitatively the outcome of a simulation, but may delay when speciation happens, if it happens, because the net effect of selection on each locus is weak. This weak selection may also make drift more powerful and that may prevent speciation altogether. That may explain why so few simulations reached speciation.
+
+Possible ways out:
+
+1) Explore the whole parameter space again? Probably not, because the adaptive dynamics are the same.
+2) Increase simulation time? Why not, but will take longer to run
+3) Reduce the scale e.g. to 4? Sure but there will be fewer loci recruited, and this is our main concern
+
+Solution: start with increasing the time, run "wider" again. Then, let's see how many complete speciation. Let us simulate for 100,000 generations (go crazy) and give each job two hours.
+
+But wait, should we not change the parameters of the distributions of genetic effects? As it is now, additive simulations are biased to have no small effect loci, while epistatic ones do. If we want to detect differences that have nothing to do with a locus effect size, we may want to set them more even. Let us set the shape and scale to one for additive effects (so bilateral exponential distribution) and use our Mathematica script to infer what the parameters for the epistatic effects should be. If the scale parameter for the epistatic distribution is 1, then a suitable shape parameter value is 0.119.
+
+Okay, experiment "wider" is running on the cluster. 
+
+Let us see when this is done whether (1) simulations indeed completed speciation and (2) whether there are detectable differences between additive and epistatic simulations. For that, use the analysis pipeline that we are building. Better keep everything in one place so this pipeline can easily be re-used for different sets of simulations. Work on it now.
+
+22/09/2020
+
+- Complete the analysis pipeline into a self-contained block. DONE
+- Run the new simulations through it
+
+24/09/2020
+
+There was a mistake in the wider simulations. I set different parameters for the distribution of genetic effects in the architectures, but I forgot to re-generate new architectures, and instead re-used the same old ones, where the distribution of additive effects has no small values... This is fixed and now wider is running again on the cluster.
+
+01/10/2020
+
+Hi Rampal and Sander,
+
+Here is a summary of today's meeting with Sander (attached my draft manuscript with the state of the results so far):
+
+After running simulations of the epistatic speciation model with parameter values such as many loci would need to differentiate in order for species to diverge, I found one new result, namely, that in epistatic simulations a few loci seem to evolve very large effects on the phenotype. I say "evolve", because in epistatic simulations the phenotypic effect of a locus can change through time and is influenced by the genetic background of the locus. It seems that this pattern is not an artifactual consequence of how the phenotype is calculated, but indeed a property of epistasis. As a consequence, fewer loci are needed to differentiate to reach ecological divergence of the two species than in additive simulations.
+
+Roadmap:
+
+1) Make sure that this pattern exists and is consistent across simulations -- Yes it is
+2) Then, are these loci consistently evolving large effects? What determines what locus gets to become a large-effect locus? -- Yes they are consistent. They are loci with large degrees or strong edges
+3) It seemed that in additive simulations, low-effect loci did not reach high differentiation while many more did in epistatic simulations. I also need to clarify whether this is a true pattern. So far I considered low-effect loci to behave quasi neutrally, no matter the level of epistasis... -- That pattern does not actually exist
+4) In this new batch of simulations, very few simulations with both additive and epistatic effects reached speciation. This suggests that under this new parameter regime, differences between levels of epistasis in what parts of parameter space are favorable to speciation may be more obvious. To see that I need to launch many simulations to cover and map parameter space. -- In progress, will take a while
+5) I still have to figure out why, in some simulations where strong assortative mating (and speciation) should typically evolve, instead strong disassortative mating was observed.
+
+Cheers,
+Raph
+
+Large effect loci are indeed always present for the ecological trait in epistatic simulations, and absent from the other traits and from additive simulations. These loci are consistent across replicate simulations, meaning that the same loci tend to evolve a large effect. They tend to have a large effect from the very beginning of the simulation, but this impression may be due to smoothing used when rendering the animations, or to the resolution of data recording. It could indeed be that these loci go from a low effect to a large effect very early and rapidly. Regardless, the fact that such loci are only present for the ecological trait and not the other traits suggests that this is an evolved property of the network.
+
+We also found that the phenotypic effects of ecological loci are more stable through time than those of the other traits, most likely because selection (balancing on some loci, purifying on others) reduces variation in genetic background compared to the other traits.
+
+07/10/20
+
+Why do we see the evolution of disassortative mating in some cases? What we know so far:
+
+- Those cases rely on specificities of the genetic architecture: architectures that did produce such a pattern tend to reproduce it in about 10% of the cases, while they evolve the opposite pattern (assortative mating) in the remaining replicate cases. Architectures that did not evolve disassortative mating in the first place never do so in replicate simulations. So, for some specific architectures there seems to be a tipping point that is reached in some simulations, over which disassortative mating is selected for.
+
+- The offspring is never an intermediate between the parents, but instead of either parental type. This may not be always true though, as we see that in all those simulations the emergence of a third ecological specialist, more extreme in phenotype compared to the two high-fitness ecotypes. This third group has a low abundance, so it could very well be a sink. One possibility is that the few assortatively mating individuals produce such outliers (due to the specificities of the genetic architecture) and this would be the reason why disassortment is favored. But not sure.
+
+To understand why assortment is disfavored, we need to understand what kind of offspring assortatively mating individuals produce. To do so, we are going to run an experiment. At some point during the simulation, we will pick a number of homogamic (same ecotype) and heterogamic (alternative ecotypes) male-female pairs, make them mate and produce offspring, and record the phenotype of the offspring. Code this into the C++ program.
+
+12/10/2020
+
+- Download all the wide simulations
+- Plot the heatmaps
+- Find occurrences of disassortative mating --> dig into that
+- Dominance simulations: from regular or explorewide?
+
+There is no disassortative mating evolving in wider simulations. Speciation happens under a more narrow range of parameters, and epistasis seems to be helping. So, to retrieve those simulations, better re-run full parameter space where the distance between the fitness peaks is not so large. But here we simulated the process with epistatic mating and neutral trait. Does that matter? I hope not. Now re-running original explore batch of simulations with all traits being epistatic, let us see if we recover the same results!
+
+28/10/2020
+
+Down time due to computer crash
+
+Re-ran exploration across parameter space, called explore2
+Also re-ran the simulations that did not complete, now all explore2 are complete
+Re-ran explorewide simulations that did not complete (many of them were incorrectly labelled as incomplete, manually changed them to "COMPLETED (hacked)") -- only two of them today, running them locally. Those are now done.

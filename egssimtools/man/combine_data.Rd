@@ -4,32 +4,16 @@
 \alias{combine_data}
 \title{Collect data from across simulations}
 \usage{
-combine_data(
-  root,
-  check_extant = FALSE,
-  pattern = "sim_",
-  level = 0,
-  type = "data",
-  id_column = "sim",
-  ...
-)
+combine_data(roots, type = "data", id_column = "sim", archfiles = NULL, ...)
 }
 \arguments{
-\item{root}{One of multiple paths to simulation folders or folders into
-which to recurse to look for simulation folders.}
-
-\item{check_extant}{Whether to check for non-extinct and non-crashed
-simulation folders}
-
-\item{pattern}{Optional pattern to look for if simulation folders are
-searched by recursion}
-
-\item{level}{Level of recursion. Defaults to 0 for no recursion (then assumes
-that \code{root} is a vector of simulation folder paths).}
+\item{roots}{Paths to simulation folders}
 
 \item{type}{The \code{type} argument of \code{read_this}}
 
 \item{id_column}{Optional name of the simulation identifier column}
+
+\item{archfiles}{Optional vector of architecture file names, each to be passed with their respective simulation path to the \code{read_this} function. Must be the same length as \code{roots} (one architecture for each simulation). The architecture file will be searched for in the simulation folder, so avoid full paths. Only makes sens if \code{type} is "genome" or "network", ignored otherwise.}
 
 \item{...}{Parameters to be passed to \code{read_this}}
 }
