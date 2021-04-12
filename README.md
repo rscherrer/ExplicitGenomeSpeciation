@@ -22,10 +22,8 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ## Snapshots
 
-![example1](pics/example_traits.png) ![example2](pics/example_summaries.png)
-![example3](pics/example_fst.png) ![example4](pics/example_network.gif)
-
-![eanim](gifs/ecosystem.gif)![vanim](gifs/vigilance.gif)
+![example1](pics/example_traits.png =100x) ![example2](pics/example_summaries.png =100x)
+![example3](pics/example_fst.png =100x) ![example4](pics/example_network.gif =100x)
 
 # Folder structure
 
