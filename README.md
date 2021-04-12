@@ -8,7 +8,7 @@ This is an individual-based simulation of a population of sexual organisms evolv
 
 ## About
 
-This program was coded in C++14 in Ubuntu 18.04 LTS using QtCreator 4.9.2 (Qt 5.12.4), but should run on other platforms too.
+This program was written in C++14 in QtCreator 4.9.2 (Qt 5.12.4) on Ubuntu 18.04 LTS, but should run on other platforms too.
 
 ## Status
 
@@ -28,143 +28,71 @@ These are some possible outcomes of the model (produced in R):
 <img src="pics/example_fst.png" alt="drawing" height="200"/>
 <img src="pics/example_network.gif" alt="drawing" height="200"/>
 
-# Folder structure
+## Build
 
-The repository has the following folder structure:
+Build the main file `main.cpp` with your favorite compiler. All the additional source and header files needed are all in `library`. Alternatively you can find executable binaries in the folder `bin`, presently available for Linux only (gotta do that).
 
-* `ci`: Bash files needed by Travis for continuous integration to GitHub.
-* `library`: headers and source code for the simulation
-* `tests`: headers and source code for the tests
-* `gui`: headers and source code for the graphical user interface (GUI)
-* `cluster`: scripts to use the program on the Peregrine cluster
+## Usage
 
-# Download the program
+The program has a command-line interface (CLI). Running it on its own will run a simulation with default parameters (see below). Non-default parameters can be specified by providing a parameter file, i.e. a text file containing on each row the name of a parameter and the value it should take (e.g. `mutation 0.0001`). It should look something like:
 
-Download the repository by clicking the green button on the top right corner of the main GitHub page. Alternatively, you can download it from the command line using Git:
-
-```{bash}
-git clone https://github.com/rscherrer/ExplicitGenomeSpeciation
 ```
-
-Then navigate to the repository to access the program.
-
-# About
-
-The program was written in standard C++14 in Ubuntu Linux 18.04.4 LTS using QtCreator 4.9.2 (based on Qt 5.12.4). The source code needed to compile the program is in `library`. The program was tested using the Boost.Test library, with tests available in the `tests` folder. Tests were run by building the program in debug mode based on the instructions available for Qt in the `EGS_test.pro` file, using the Qmake build system. Qt instructions for a command-line release version, devoid of tests and with profiling turned on, are available in `EGS.pro`. Instructions for a GUI version, in release mode, are in `EGS_gui.pro`. Travis CI was used for continuous integration, see `.travis.yml`.
-
-# Build the program
-
-Build the command-line version of the program by compiling and linking the source files in `library` with `main.cpp` in the root of the repository. Specific instructions for building with Qt are available in the `EGS.pro` file.
-
-Alternatively, an `EGS` pre-compiled executable is available in the root directory. This executable was built by running the `build_target.sh` script on the Peregrine HPC Linux cluster of the University of Groningen, following the instructions in `cluster/README.md` (QMake version 3.1 from Qt version 5.14.1). This executable should run on a Linux machine, not sure about other platforms...
-
-# Run the program
-
-To run the program from the command line, use
-
-```{bash}
-./EGS
-```
-
-For non-default parameters you have to provide them in a parameter file, like this:
-
-```{bash}
 ./EGS parameters.txt
 ```
 
-# Parameters
+## Parameters
 
-The following table shows all the parameters of the program and their default values. All of them can be supplied by the user in a parameter file. The parameter file must contain on each line, the name of one parameter followed by a blank (e.g. space or tab) and the value(s) that this parameter must take. Parameter names must match those in the table. Parameters that are not in the parameter file will take default values. Parameters that take multiple values must be supplied as such, with values separated by blanks.
+Non-default parameters are supplied in a parameter file. The parameter file must contain on each line, the name of one parameter followed by a blank (e.g. space or tab) and the value(s) that this parameter must take. Parameter names must match those in the table. Parameters that are not in the parameter file will take default values. Parameters that take multiple values must be supplied as such, with values separated by blanks (e.g. `nvertices 30 30 30`).
 
-| Parameter | Meaning | Default |
-|----|:----:|----:|
-| rdynamics | Type of resource dynamics | 1 |
-| capacity | Resource carrying capacity | 1.0 |
-| replenish | Resource replenishment rate | 2375.0 |
-| inflow | Resource inflow rate | 400.0 |
-| outflow | Resource outflow rate | 100.0 |
-| hsymmetry | Habitat symmetry | 0.0 |
-| ecosel | Ecological divergent selection | 1.8 |
-| dispersal | Dispersal rate | 1.0E-2 |
-| birth | Birth rate | 1.0 |
-| survival | Survival rate | 0.8 |
-| sexsel | Sexual selection coefficient | 10.0 |
-| matingcost | Cost of mate choice | 0.01 |
-| demesizes | Initial population sizes | 100 0 |
-| nvertices | Numbers of loci | 30 30 30 |
-| nedges | Numbers of edges | 30 0 0 |
-| nchrom | Number of chromosomes | 3 |
-| mutation | Mutation rate | 1.0E-3 |
-| recombination | Recombination rate | 3.0 |
-| allfreq | Initial allele frequency | 0.2 |
-| scaleA | Additive scaling parameter | 1.0 1.0 1.0 |
-| scaleD | Dominance scaling parameter | 0.0 0.0 0.0 |
-| scaleI | Interaction scaling parameter | 0.0 0.0 0.0 |
-| scaleE | Environmental scaling parameter | 0.0 0.0 0.0 |
-| skews | Gene network skewness | 1.0 1.0 1.0 |
-| effectshape | Shape of the effect-size distribution | 2.0 |
-| effectscale | Scale of the effect-size distribution | 1.0 |
-| interactionshape | Shape of the interaction weight distribution | 5.0 |
-| interactionscale | Scale of the interaction weight distribution | 1.0 |
-| dominancevar | Scale of the dominance coefficient distribution | 1.0 |
-| tburnin | Duration of the burn-in | 0 |
-| tend | Duration of the simulation | 10 |
-| tsave | Frequency of data recording | 10 |
-| tfreeze | Frequency of individual whole genome sequencing | 100 |
-| talkative | Verbose during the simulation | 1 |
-| record | Whether to record data | 1 |
-| datsave | Whether to save data | 1 |
-| choosewhattosave | Whether to choose what variables to save | 0 |
-| gensave | Whether to save individual whole genomes | 0 |
-| archsave | Whether to save genetic architecture | 0 |
-| archload | Whether to load architecture from a file | 0 |
-| parsave | Whether to save parameters | 1 |
-| archfile | Architecture file | architecture.txt |
-| parfile | Parameter log file | paramlog.txt |
-| orderfile | File listing variables to save | whattosave.txt |
-| logfile | File capturing the console output | log.txt |
-| seed | Random seed | randomly generated |  
-| ntrials | Number of mating trials | 100 |
+We describe the different parameters (and their default value).
 
-Useful information about the parameters:
+Ecological parameters:
 
-* rdynamics: chemostat (1) or logistic (0) resource dynamics
+* `rdynamics` (default 1) is the type of resource dynamics (0 for *logistic dynamics*, which assume a biotic resource with an intrinsic growth and a carrying capacity, or 1 for *chemostat dynamics* with and inflow and outflow of some abiotic resource)
+* `replenish` (2375) and `capacity` (1) are the growth rate and carrying capacity, respectively, of the resources assuming logistic dynamics (`rdynamics 0`)
+* `inflow` (400) and `outflow` (100) are the absolute inflow and relative outflow rates of the resources, respectively, assuming chemostat dynamics (`rdynamics 1`)
+* `hsymmetry` (0) is the degree of homogeneity in resource distribution between the two habitats. It basically is a scaling factor to make the realized `replenish` (if logistic resource dynamics) or `inflow` (if chemostat resource dynamics) differ between the habitats, ranging between 0 and 1
+* `ecosel` (1.8) is the ecological trade-off in utilization between the two resources. It must be zero or positive, and the higher it is, the less efficient is utilizing both resources instead of specializing on a single one
+* `demesizes` (100, 0) are the number of individuals initialized in both habitats, respectively
+* `dispersal` (0.01) is the proportion of individuals sampled to switch habitats every generation
+* `birth` (1) is the base birth rate per female, independent of fitness
+* `survival` (0.8) is the probability of survival of adult individuals from one generation to the next (it takes one generation for newborns to become adults)
+* `sexsel` (10) is the sexual selection coefficient, a positive number mediating the general degree of choosiness of females towards males during the mating season
+* `matingcost` (0.01) is the fitness cost of choosy females (that run the risk of remaining unmated)
+* `ntrials` (100) is the number of mating trials to perform to measure the degree of reproductive isolation between the species
 
-* capacity and replenish: parameters of the logistic resource dynamics, only used if rdynamics is 0
+Genetic parameters:
 
-* inflow and outflow: parameters of the chemostat resource dynamics, only used if rdynamics is 1
+* `nvertices` (30, 30, 30) and `nedges` (30, 0, 0) are the numbers of loci and edges, respectively, in each of the three gene networks (one for each trait in the following order: ecological, mating and neutral). `nvertices` must be at least 2 for each trait, and `nedges` cannot be higher than n (n - 1) / 2 (complete graph), if n is the number of vertice for a given trait. In practice, the preferential attachment algorithm may fail to attach all the requested edges of the network if nedges is close to the maximum possible number of edges. In this case the program will return an error. The number of edges should be at least n-1, which ensures that the network is connected (all the nodes are attached).
+* `nchrom` (3) is the number of equally sized chromosomes
+* `mutation` (0.001) is the mutation rate per locus
+* `recombination` (3) is the recombination rate and corresponds more or less to the average number of crossovers during one recombination event. It is actually the rate of an exponential distribution describing the distance between successive crossover points
+* `allfreq` (0.2) is the initial frequency of the 1-allele in the population
+* `scaleA` (1, 1, 1), `scaleD` (0, 0, 0), `scaleI` (0, 0, 0) and `scaleE` (0, 0, 0) are scaling factors for each source of phenotypic variation in the quantitative genetics framework, i.e. additive, dominance, epistatic and environmental effects, respectively, for each of the three traits
+* `skews` (1, 1, 1) are the skewnesses of each of the three gene networks
+* `effectshape` (2) and `effectscale` (1) are the parameters of the distribution of additive effect sizes across loci. If the resulting distribution has variance 0, all the loci are assigned effect size 1
+* `interactionshape` (5) and `interactionscale` (1) are the parameters of the distribution of epistatic interaction weights across edges. If the resulting distribution has variance 0, all the edges are assigned interaction weight 1 
+* `dominancevar` (1) is the standard deviation of the distribution of dominance coefficients across loci. If 0, all the loci are assigned dominance coefficient 1
 
-* nvertices: must be at least 2 for each trait
+General simulation parameters:
 
-* nedges: cannot be higher than n (n - 1) / 2 (complete graph), if n is the number of vertice for a given trait. In practice, the preferential attachment algorithm may fail to attach all the requested edges of the network if nedges is close to the maximum possible number of edges. In this case the program will return an error. The number of edges should be at least n-1, which ensures that the network is connected (all the nodes are attached).
-
-* recombination: this is not a proportion, but the rate of an exponential distribution describing the distance between successive crossover points. It is more-or-less equivalent to the number of crossovers per genome per meiosis event.
-
-* allfreq: the frequency of the "1" allele in the initial population, as opposed to the "0" allele. There are only two possible alleles at any given locus.
-
-* scale parameters: those scale the effects of different components of the genotype-phenotype map. They take one value per trait. Make sure that the scaling coefficients sum up to 1 for each trait, otherwise different traits or simulations may not be comparable.
-
-* skew: a value of 1 produces a power law degree distribution, less than 1 produces a stretched exponential and more than 1 produces a star-shaped network
-
-* effect-size, dominance and interaction weight scale parameters: if the scale or variance of these distributions is 0, all effect-sizes or weights take the value 1.
-
-* tburnin, tend, tsave and tfreeze all are in numbers of generations
-
-* tfreeze determines when to save individual whole genomes. This uses a separate saving frequency from the rest of the data (which use tsave) because it is very space-consuming
-
-* talkative will print to the prompt the generation if set to 1
-
-* if record is 1, the collector module will analyze the data every tsave step. The data will be saved to files only if datsave is 1. All possible variables will be saved to files if hoosewhattosave is 0, otherwise the program will look into the file provided in orderfile for a list of the variables to save.
-
-* gensave needs to be 1 in order to save whole individual genomes (every tfreeze generations)
-
-* setting parsave to 1 will save all the parameters used to run the simulation to the file defined in parfile. This file may be used e.g. to retrieve the exact seed used in a simulation
-
-* archfile is a file containing the genetic architecture. If archsave is 1, the architecture is saved into this file, while if archload is 1, the architecture is loaded from this file.
-
-* The random seed is generated by default using the clock, but you can set your own integer instead
-
-* ntrials is the number of trials used to compute the degree of reproductive isolation
+* `tburnin` (0) is the duration of the burn-in period, in generations
+* `tend` (10) is the number of generations to simulate (after burn-in)
+* `tsave` (10) is the frequency at which to record the data
+* `tfreeze` (100) is the frequency at which to save the whole genomes of all individuals (separate because it takes a lot of space)
+* `talkative` (1) is either 0 or 1 and sets whether the simulation should print status information to the prompt
+* `record` (1) is either 0 or 1 and sets whether to record the data at all every `tsave` and `tfreeze` generations
+* `choosewhattosave` (0) is either 0 or 1 and sets whether the variables to save are specified in a separate file, the order file (see below). If 0 all of the output variables are saved every `tsave` generations except for whole genomes
+* `datsave` (1) sets whether to save the recorded variables (if `record` is 1) to files
+* `gensave` (0) is either 0 or 1 and sets whether whole genomes should be saved every `tfreeze` generations
+* `archsave` (0) is either 0 or 1 and sets whether the genetic architecture should be saved into a file (see below)
+* `archload` (0) sets whether the genetic architecture of the simulation should be loaded from a file instead of generated anew
+* `parsave` (1) sets whether to save the parameters of the simulation run to file, including the random seed
+* `archfile` (architecture.txt) is the name of the architecture file where the details of the genetic architecture must be loaded from, if `archload` is 1
+* `parfile` (paramlog.txt) is the name of the output parameter file where to save the parameters of the current simulation, if `parsave` is 1. This can be used e.g. to retrieve a random seed
+* `orderfile` (whattosave.txt) is the name of the order file where the list of variables to save is specified, if `choosewhattosave` is 1
+* `logfile` (log.txt) is the name of a file capturing the console output of the simulation
+* `seed` is the seed of the random number generator, and it is by default randomly generated based on the clock
 
 # Architecture file
 
@@ -194,7 +122,7 @@ Fields and subfields are separated from each other by line breaks.
 
 You will rarely have to make your own architecture file manually. The most common use case is to run a simulation with the archsave flag, save the genetic architecture in the file, and then re-use this architecture in another simulation with the archload flag and the same file.
 
-# Order file
+## Order file
 
 This optional file contains a list of names of variables to save, if record, datsave and choosewhattosave are all 1. Each variable is saved as a series of 64bit double precision floating point numbers in a binary file with the .dat extension (and so needs to be decoded to be read). This is to optimize space use and read / write speed. There is no saving during the burn-in period. The possible variables are:
 
@@ -251,21 +179,21 @@ This optional file contains a list of names of variables to save, if record, dat
 
 Note that if you are choosing what variables to save, it is important to save "time" because the functions provided in the accompanying R package for analyses assume that this file is present. Also note that if you are going to save individual data, you may want to save "population_size" for the same reason.
 
-# Saving full genomes
+## Saving full genomes
 
 It is possible to save the full genomes of every individual every `tfreeze` time step, if `gensave` is set to 1. The option to save full genomes cannot be specified in the order file mentioned above. This means that the output file `freezer.dat`, containing these data, will automatically be generated every time the simulation runs. To not save anything in it, just set `ensave` to 0 and/or `tfreeze` to some time point greater than `tend`, this way, the condition for saving full genomes will never be met.
 
 Each value in a full genome is an allele at a specific position along one of the two haplotypes of that individual. Therefore, a genome contains twice as many values as there are loci, because the organisms are diploid. Each value is either 0 or 1 (the two possible alleles). Haplotypes are saved in turns, such that the first N values are all alleles of the first haplotype and the next N values are all alleles of the second haplotype, if N is the total number of loci. This does not mean that each saved individual genome is exactly 2N values long, though. In order to save space for this large amount of data, individual genomes are first split into blocks of 64 bits, and each block is converted into a 64bit integer, which is then saved to the `freezer` output file as binary. Therefore, the `freezer` output file must be interpreted on a bit-wise basis in order to retrieve the actual alleles of the individual (i.e. reading it as 64bit integers will show integer equivalents of chunks of 64 alleles). This also means that for each individual, a multiple of 64 bits will be written to the file, even if 2N alleles is not necessarily a multiple of 64. In other words, for each individual 2N bits will be written to file, and the remaining part of the last 64bit-chunk will be filled with zeros.
 
-# Analysis with egssimtools
+## Analysis with egssimtools
 
 The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it. Check out the [vignette](egssimtools/doc/vignette.pdf) in `egsimtools/doc`.
 
-# Use on the cluster
+## Use on the Peregrine cluster
 
 Check out the README in folder `cluster`.
 
-# GUI
+## GUI
 
 GUI Tabs:
 
@@ -274,7 +202,10 @@ GUI Tabs:
 Extended coloration of histograms (Update 29-10-2019):
 ![GUI overview](https://github.com/rscherrer/ExplicitGenomeSpeciation/blob/thijs/gui/Screenshot_2019-10-29_11.37.21.png)
 
-# Downloads
+## Downloads
 
  * [Windows executable](http://richelbilderbeek.nl/EGS_gui.zip)
 
+## Extra
+
+Alternatively, an `EGS` pre-compiled executable is available in the root directory. This executable was built by running the `build_target.sh` script on the Peregrine HPC Linux cluster of the University of Groningen, following the instructions in `cluster/README.md` (QMake version 3.1 from Qt version 5.14.1). This executable should run on a Linux machine, not sure about other platforms...
