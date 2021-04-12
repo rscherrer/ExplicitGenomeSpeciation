@@ -22,7 +22,8 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ## Snapshots
 
-![example](pics/example_speciation.png)
+![example1](pics/example_traits.png) ![example2](pics/example_summaries.png)
+![example3](pics/example_fst.png) ![example4](pics/example_network.png)
 
 # Folder structure
 
