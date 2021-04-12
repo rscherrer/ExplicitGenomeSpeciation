@@ -1,5 +1,7 @@
 # ExplicitGenomeSpeciation
 
+This is an individual-based simulation of a population of sexual organisms evolving in a system with two habitats linked by dispersal. Individuals can utilize two resources in their environment, and the abundances of these resources between the two habitats can be tuned. Through genetic evolution, the organisms can adapt to utilize different resources, and under some circumstances this can lead to adaptive speciation, where two reproductively isolated species emerge from a single one. This model implements different kinds of genotype-phenotype mapping scenarios, encompassing the main sources of genetic variation from quantitative genetics: additive, dominance, epistatic and environmental effects of the genes on the traits. It can record a whole lot of different things, from the degree of reproductive isolation between the species to the genetic differentiation at each gene in the genome, and more. With it we can test whether different genetic architectures equally lead to speciation, and explore the traces that are left in the genome as speciation happen, in order to maybe help empiricists make better sense of the patterns found in nature.
+
 Branch|[![Travis CI logo](ci/pics/TravisCI.png)](https://travis-ci.org)|[![Codecov logo](ci/pics/Codecov.png)](https://www.codecov.io)
 ---|---|---
 master|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=master)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=master)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/master)
@@ -8,7 +10,6 @@ raph|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.s
 thijs|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=thijs)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=thijs)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/thijs)
 richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=richel)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=richel)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/richel)
 
-ExplicitGenomeSpeciation is a program that simulates the evolution of a species using individual-based modelling and incorporating explicit genomes and a flexible genotype-phenotype map.
 
 # Example simulation
 
