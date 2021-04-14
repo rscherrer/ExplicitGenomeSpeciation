@@ -51,6 +51,7 @@ class Locus
         covQG(0.0),
         h(0.0),
         H(0.0),
+        hobs(std::vector<double>(2u, 0.0)),
         tot(2u),
         all(3u),
         aa(0u),
@@ -77,28 +78,32 @@ class Locus
     void calcVarS(const size_t&, const size_t&, const size_t&);
     void calcHWithin(const size_t&, const size_t&, const size_t&);
     void calcHAcross();
+    void calcHObserved(const size_t&);
     void partitionVariance(const std::vector<size_t>&);
 
-    size_t id;
-    size_t trait;
+    size_t id; // locus number
+    size_t trait; // encoded trait
 
     // Per ecotype per genotype
-    std::vector<std::vector<size_t> > gcounts;
-    std::vector<std::vector<double> > gsumgen;
-    std::vector<std::vector<double> > gssqgen;
+    std::vector<std::vector<size_t> > gcounts; // matrix of genotype counts
+    std::vector<std::vector<double> > gsumgen; // matrix of sums of gen values
+    std::vector<std::vector<double> > gssqgen; // matrix of ssqs of gen values
+
+    // Note: the above matrices are used to compute all the subsequent
+    // statistics in an efficient way and avoid unnecessary loops
 
     // per genotype
-    std::vector<double> gbeta;
-    std::vector<double> gexpec;
-    std::vector<double> gmeans;
-    std::vector<double> gdelta;
+    std::vector<double> gbeta; // breeding values
+    std::vector<double> gexpec; // expected additive genetic values
+    std::vector<double> gmeans; // mean genetic values
+    std::vector<double> gdelta; // dominance deviations
 
     // per ecotype
-    std::vector<double> varG;
-    std::vector<double> varP;
-    std::vector<double> varA;
-    std::vector<double> varN;
-    std::vector<double> freqs;
+    std::vector<double> varG; // genetic variance
+    std::vector<double> varP; // phenotypic variance
+    std::vector<double> varA; // additive variance
+    std::vector<double> varN; // non-additive variance
+    std::vector<double> freqs; // allele frequencies
 
     double varD;
     double varI;
@@ -116,6 +121,7 @@ class Locus
     double covQG;
     double h;
     double H;
+    std::vector<double> hobs;
 
     // Indices for readability
     const size_t tot; // across ecotypes

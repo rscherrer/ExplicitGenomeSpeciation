@@ -16,6 +16,7 @@ class MetaPop
     friend class Connexion;
     friend class Printer;
     friend class Freezer;
+    friend class Pedigree;
 
 public:
 

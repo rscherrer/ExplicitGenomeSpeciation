@@ -25,7 +25,7 @@ read_slurm_status <- function(root) {
   slurm_lines <- readLines(file.path(root, slurm_file))
   i <- grep("^State", slurm_lines)
   if (length(i) == 0) {
-    stop(paste("row starting with 'status' not found in", slurm_file))
+    stop(paste("row starting with 'State' not found in", slurm_file))
   }
   status_line <- slurm_lines[i]
   status <- gsub("^.*\\: ", "", status_line)
