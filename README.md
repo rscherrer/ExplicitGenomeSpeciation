@@ -37,7 +37,7 @@ richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation
 
 ## Build
 
-Build the main file `main.cpp` with your favorite compiler. All the additional source and header files needed are all in `library`. Alternatively you can find executable binaries in the folder `bin`, presently available for Linux only (gotta do that).
+Build the main file `main.cpp` with your favorite compiler. All the additional source and header files needed are all in `library`.
 
 ## Usage
 
@@ -201,10 +201,6 @@ Extended coloration of histograms (Update 29-10-2019):
 ## Downloads
 
  * [Windows executable](http://richelbilderbeek.nl/EGS_gui.zip)
-
-## Extra
-
-Alternatively, an `EGS` pre-compiled executable is available in the root directory. This executable was built by running the `build_target.sh` script on the Peregrine HPC Linux cluster of the University of Groningen, following the instructions in `cluster/README.md` (QMake version 3.1 from Qt version 5.14.1). This executable should run on a Linux machine, not sure about other platforms...
 
 ## Disclaimer
 
