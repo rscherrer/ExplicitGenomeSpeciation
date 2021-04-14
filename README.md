@@ -108,6 +108,8 @@ General simulation parameters:
 * `pedigreeoffspring` (10) is the number of offspring to produce per mating in the pedigree experiment
 * `seed` is the seed of the random number generator, and it is by default randomly generated based on the clock
 
+Note: it is not so clear anymore why `record` must be set in order to save data, in addition to e.g. `datsave` or `gensave`.
+
 ## Genetic architecture
 
 The genetic architecture refers to the constant features of the genetic part of the program, that is, features that do not change through time and cannot evolve. These include the number of chromosomes, the numbers of loci and edges for each trait, the trait each locus codes for as well as its location in the genome, its additive effect size and its dominance coefficient, and finally the topology and distribution of interaction weights across edges within each of the three gene networks (one for each trait, the networks are independent).
