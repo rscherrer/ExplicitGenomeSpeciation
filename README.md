@@ -2,6 +2,14 @@
 
 Individual-based simulation of adaptive speciation with explicit genomes and genotype-phenotype map.
 
+## Snapshots
+
+These are some possible outcomes of the model (produced in R):
+
+<img src="pics/example_traits.png" alt="drawing" height="200"/> <img src="pics/example_summaries.png" alt="drawing" height="200"/>
+<img src="pics/example_fst.png" alt="drawing" height="200"/>
+<img src="pics/example_network.gif" alt="drawing" height="200"/>
+
 ## Model description
 
 This is an individual-based simulation of a population of sexual organisms evolving in a system with two habitats linked by dispersal. Individuals can utilize two resources in their environment, and the abundances of these resources between the two habitats can be tuned. Through genetic evolution, the organisms can adapt to utilize different resources, and under some circumstances this can lead to adaptive speciation, where two reproductively isolated species emerge from a single one. 
@@ -13,14 +21,6 @@ Each individual has a diploid genome with a discrete number of loci, which come 
 This model implements different kinds of genotype-phenotype mapping scenarios (i.e. how the loci code control the traits of the individuals), encompassing the main sources of genetic variation from quantitative genetics: additive, dominance, epistatic and environmental effects. To accomodate epistatic effects in particular, each trait has its own gene regulatory network, which can be built by the simulation using a preferential attachment algorithm, or specified externally, together with the additive effects, dominance coefficients, encoded traits and locations of the loci. 
 
 The simulation can record a whole lot of variables, from the degree of reproductive isolation between the species to the genetic differentiation at each gene in the genome, and more. It can be used to test whether different genetic architectures equally lead to speciation, or to explore the traces that are left in the genome as speciation happen, in order to maybe help empiricists make better sense of the patterns found in nature.
-
-## Snapshots
-
-These are some possible outcomes of the model (produced in R):
-
-<img src="pics/example_traits.png" alt="drawing" height="200"/> <img src="pics/example_summaries.png" alt="drawing" height="200"/>
-<img src="pics/example_fst.png" alt="drawing" height="200"/>
-<img src="pics/example_network.gif" alt="drawing" height="200"/>
 
 ## About
 
