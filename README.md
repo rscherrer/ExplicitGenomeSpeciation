@@ -60,6 +60,7 @@ Ecological parameters:
 * `inflow` (400) and `outflow` (100) are the absolute inflow and relative outflow rates of the resources, respectively, assuming chemostat dynamics (`rdynamics 1`)
 * `hsymmetry` (0) is the degree of homogeneity in resource distribution between the two habitats. It basically is a scaling factor to make the realized `replenish` (if logistic resource dynamics) or `inflow` (if chemostat resource dynamics) differ between the habitats, ranging between 0 and 1
 * `ecosel` (1.8) is the ecological trade-off in utilization between the two resources. It must be zero or positive, and the higher it is, the less efficient is utilizing both resources instead of specializing on a single one
+* `ecoscale` (1) is a scaling parameter for the phenotypic distance between the two ecological niches along the ecological trait axis. A value of 1 means that the peaks of the two niches in utilization efficiency are at -1 and +1, respectively. This parameter also scales the widths of the resource utilization curves accordingly
 * `demesizes` (100, 0) are the number of individuals initialized in both habitats, respectively
 * `dispersal` (0.01) is the proportion of individuals sampled to switch habitats every generation
 * `birth` (1) is the base birth rate per female, independent of fitness
@@ -87,6 +88,7 @@ General simulation parameters:
 * `tend` (10) is the number of generations to simulate (after burn-in)
 * `tsave` (10) is the frequency at which to record the data
 * `tfreeze` (100) is the frequency at which to save the whole genomes of all individuals (separate because it takes a lot of space)
+* `tpedigree` (15000) is the frequency at which to perform a pedigree experiment (see below)
 * `talkative` (1) is either 0 or 1 and sets whether the simulation should print status information to the prompt
 * `record` (1) is either 0 or 1 and sets whether to record the data at all every `tsave` and `tfreeze` generations
 * `choosewhattosave` (0) is either 0 or 1 and sets whether the variables to save are specified in a separate file, the order file (see below). If 0 all of the output variables are saved every `tsave` generations except for whole genomes
@@ -95,10 +97,15 @@ General simulation parameters:
 * `archsave` (0) is either 0 or 1 and sets whether the genetic architecture should be saved into a file (see below)
 * `archload` (0) sets whether the genetic architecture of the simulation should be loaded from a file instead of generated anew
 * `parsave` (1) sets whether to save the parameters of the simulation run to file, including the random seed
+* `pedigreesave` (0) set whether to perform pedigree experiments every `tpedigree` generations
 * `archfile` (architecture.txt) is the name of the architecture file where the details of the genetic architecture must be loaded from, if `archload` is 1
 * `parfile` (paramlog.txt) is the name of the output parameter file where to save the parameters of the current simulation, if `parsave` is 1. This can be used e.g. to retrieve a random seed
 * `orderfile` (whattosave.txt) is the name of the order file where the list of variables to save is specified, if `choosewhattosave` is 1
 * `logfile` (log.txt) is the name of a file capturing the console output of the simulation
+* `freezerfile` (freezer.dat) is the name of the binary file where to save individual whole genomes
+* `pedigreefile` (pedigree.dat) is the name of the binary file where to save the results of the pedigree experiment
+* `pedigreetrials` (100) is the number of mating trials to perform in the pedigree experiment
+* `pedigreeoffspring` (10) is the number of offspring to produce per mating in the pedigree experiment
 * `seed` is the seed of the random number generator, and it is by default randomly generated based on the clock
 
 ## Genetic architecture
@@ -166,7 +173,7 @@ By default the program will save all these variables. To save only some of them,
 
 ## Saving whole individual genomes
 
-Saving the whole genomes of all individuals through time takes a lot of space, for this reason this output is controlled separately from the other output variables. Set `gensave` to 1 to save these data every `tfreeze` generations in a _freezer file_ determined by the `freezerfile` parameter. The freezer file is automatically generated but can remain empty. 
+Saving the whole genomes of all individuals through time takes a lot of space, for this reason this output is controlled separately from the other output variables. Set `gensave` to 1 to save these data every `tfreeze` generations in a _freezer file_ determined by the `freezerfile` parameter. This also saves the genetic values of each locus in each individual every `tfreeze` generations in a _locus file_ determined by the `locifile` parameter (a bit weird). The freezer file and the locus file are automatically generated but can remain empty. 
 
 Each value in a full genome is an allele at a specific position along one of the two haplotypes of an individual. Therefore, a genome contains twice as many values as there are loci, because the organisms are diploid. Each value is either 0 or 1 (the two possible alleles). Haplotypes are saved in turns, such that the first N values are all alleles of the first haplotype and the next N values are all alleles of the second haplotype, if N is the total number of loci. This does not mean that each saved individual genome is exactly 2N values long, though. In order to save space for this large amount of data, individual genomes are first split into blocks of 64 bits, and each block is converted into a 64bit integer, which is then saved to the `freezerfile` as binary. Therefore, the `freezerfile` output file must be interpreted on a bit-wise basis in order to retrieve the actual alleles of the individual (i.e. reading it as 64bit integers will show integer equivalents of chunks of 64 alleles). This also means that for each individual, a multiple of 64 bits will be written to the file, even if 2N alleles is not necessarily a multiple of 64. In other words, for each individual 2N bits will be written to file, and the remaining part of the last 64bit-chunk will be filled with zeros.
 
