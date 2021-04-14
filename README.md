@@ -14,6 +14,14 @@ This model implements different kinds of genotype-phenotype mapping scenarios (i
 
 The simulation can record a whole lot of variables, from the degree of reproductive isolation between the species to the genetic differentiation at each gene in the genome, and more. It can be used to test whether different genetic architectures equally lead to speciation, or to explore the traces that are left in the genome as speciation happen, in order to maybe help empiricists make better sense of the patterns found in nature.
 
+## Snapshots
+
+These are some possible outcomes of the model (produced in R):
+
+<img src="pics/example_traits.png" alt="drawing" height="200"/> <img src="pics/example_summaries.png" alt="drawing" height="200"/>
+<img src="pics/example_fst.png" alt="drawing" height="200"/>
+<img src="pics/example_network.gif" alt="drawing" height="200"/>
+
 ## About
 
 This program was written in C++14 in QtCreator 4.9.2 (Qt 5.12.4) on Ubuntu 18.04 LTS, but should run on other platforms too.
@@ -27,14 +35,6 @@ develop|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciatio
 raph|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=raph)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=raph)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/raph)
 thijs|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=thijs)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=thijs)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/thijs)
 richel|[![Build Status](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation.svg?branch=richel)](https://travis-ci.org/rscherrer/ExplicitGenomeSpeciation)|[![codecov.io](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/coverage.svg?branch=richel)](https://codecov.io/github/rscherrer/ExplicitGenomeSpeciation/branch/richel)
-
-## Snapshots
-
-These are some possible outcomes of the model (produced in R):
-
-<img src="pics/example_traits.png" alt="drawing" height="200"/> <img src="pics/example_summaries.png" alt="drawing" height="200"/>
-<img src="pics/example_fst.png" alt="drawing" height="200"/>
-<img src="pics/example_network.gif" alt="drawing" height="200"/>
 
 ## Build
 
@@ -137,78 +137,51 @@ Also note that a randomly generated genetic architecture can be saved as a ready
 
 ## Saving data
 
-The 
+Many outputs can be saved through time in the simulation. To record data, set `record` to 1. To save the recorded data, set `datsave` to 1. (Why would we have recording but not saving again?) To save time and space, the data are saved as `.dat` binary files, with one file per variable. This means that each variable is saved as a vector of values (64 bit double precision floating point numbers). The following variables are saved every `tsave` timepoint:
 
-This optional file contains a list of names of variables to save, if record, datsave and choosewhattosave are all 1. Each variable is saved as a series of 64bit double precision floating point numbers in a binary file with the .dat extension (and so needs to be decoded to be read). This is to optimize space use and read / write speed. There is no saving during the burn-in period. The possible variables are:
+* `time`: every saved time point
+* `population_size`: total population size (so across both habitats)
+* `ecotype_size`: population size of each ecotype
+* `resources`: equilibrium resource concentration of each resource in each habitat
+* `means`: mean value of each trait across the whole population
+* `ecotype_means`: mean value of each trait in each ecotype
+* `varP`, `varG`, `varA`, `varD`, `varI`, `varN`: respectively the phenotypic, genetic, additive, dominance, interaction and non-additive variance for each trait
+* `varT`: variance in allele frequencies across loci coding for each trait
+* `Pst`, `Gst`, `Qst`, `Cst`: respectively the differentiation statistics between ecotypes for the phenotypic, genetic, additive and non-additive variance for each trait
+* `Fst`: fixation index, or genetic differentiation between the two ecotypes, for each trait
+* `EI`, `SI`, `RI`: ecological, spatial and reproductive isolation between ecotypes, respectively
+* `genome_varP`, `genome_varG`, `genome_varA`, `genome_varD`, `genome_varI`, `genome_varN`: respectively the phenotypic, genetic, additive, dominance, interaction and non-additive variance for each locus in the genome
+* `genome_Pst`, `genome_Gst`, `genome_Qst`, `genome_Cst`, `genome_Fst`: respectively the Pst, Gst, Qst, Cst and Fst for each locus
+* `genome_alpha`: the average mutational effect (i.e. slope of the regression of genetic values against genotypes across the whole population) of each locus
+* `genome_meang`: the mean genetic value of each locus in the whole population
+* `genome_freq`: the allele frequency (of the 1-allele) for each locus in the whole population
+* `genome_freqs`: the allele frequencies for each locus within each ecotype
+* `genome_hobs`: the (observed or expected?) heterozygosity for each locus within each ecotype
+* `network_corgen`, `network_corbreed`, `network_corfreq`: respectively the pairwise correlations in genetic value, breeding value and allele frequency between the two interacting loci for each edge in all three networks (ordered by trait)
+* `network_avgi`, `network_avgj`: the expected epistatic variance in average effect (define that maybe?) of the first and second interacting loci, respectively, for each edge
+* `individual_ecotype`, `individual_habitat`: the ecotype and habitat of each individual
+* `individual_trait`: the value of each trait for each individual
+* `individual_midparent`: the midparent phenotype (i.e. the mean between maternal and paternal values) for each trait for each individual 
 
-| Variable | Meaning | Values per timepoint |
-|----|:----:|----:|
-| time | Generation | 1 |
-| population_size | Number of individuals | 1 |
-| ecotype_size | Ecotype population size | 1 per ecotype |
-| resources | Equilibrium resource concentrations | 1 per habitat per resource |
-| means | Mean trait values | 1 per trait |
-| ecotype_means | Ecotype-mean trait values | 1 per trait per ecotype |
-| varP | Phenotypic variance | 1 per trait |
-| varG | Genetic variance | 1 per trait |
-| varA | Additive variance | 1 per trait |
-| varD | Dominance variance | 1 per trait |
-| varI | Interaction variance | 1 per trait |
-| varN | Non-additive variance | 1 per trait |
-| varT | Variance in allele frequencies | 1 per trait |
-| Pst | Phenotypic differentiation | 1 per trait |
-| Gst | Genetic effect differentiation | 1 per trait |
-| Qst | Additive effect differentiation | 1 per trait |
-| Cst | Non-additive effect differentiation | 1 per trait |
-| Fst | Genotypic differentiation | 1 per trait |
-| EI | Ecological isolation | 1 |
-| SI | Spatial isolation | 1 |
-| RI | Reproductive isolation | 1 |
-| genome_varP | Locus-specific phenotypic variance | 1 per locus |
-| genome_varG | Locus-specific genetic variance | 1 per locus |
-| genome_varA | Locus-specific additive variance | 1 per locus |
-| genome_varD | Locus-specific dominance variance | 1 per locus |
-| genome_varI | Locus-specific interaction variance | 1 per locus |
-| genome_varN | Locus-specific non-additive variance | 1 per locus |
-| genome_Pst | Locus-specific Pst | 1 per locus |
-| genome_Gst | Locus-specific Gst | 1 per locus |
-| genome_Qst | Locus-specific Qst | 1 per locus |
-| genome_Cst | Locus-specific Cst | 1 per locus |
-| genome_Fst | Locus-specific Fst | 1 per locus |
-| genome_alpha | Locus-specific average mutational effect | 1 per locus |
-| genome_meang | Locus-specific mean genetic value | 1 per locus |
-| genome_freq | Locus-specific allele frequency | 1 per locus |
-| genome_freqs | Locus-specific within-ecotype allele frequency | 1 per locus per ecotype |
-| genome_hobs | Locus-specific within-ecotype heterozygosity | 1 per locus per ecotype |
-| network_corgen | Edge-specific correlation in genetic values | 1 per edge |
-| network_corbreed | Edge-specific correlation in breeding values | 1 per edge |
-| network_corfreq | Edge-specific correlation in allele frequencies | 1 per edge |
-| network_avgi | First-partner edge-specific epistatic variance in average effect | 1 per edge |
-| network_avgj | Second-partner edge-specific epistatic variance in average effect | 1 per edge |
-| individual_ecotype | Individual ecotype | 1 per individual |
-| individual_habitat | Individual habitat | 1 per individual |
-| individual_trait | Individual trait values | 1 per individual per trait |
-| individual_midparent | Individual midparent trait values | 1 per individual per trait |
+By default the program will save all these variables. To save only some of them, you have to set `choosewhattosave` to 1 and provide a path to an _order file_ as the `orderfile` parameter (e.g. `orderfile whattosave.txt`). The order file should contain a list of names of variable to save, separated by any type of blanks (e.g. `time EI SI RI genome_Fst`).
 
-(Edges are ordered by trait.)
+## Saving whole individual genomes
 
-Note that if you are choosing what variables to save, it is important to save "time" because the functions provided in the accompanying R package for analyses assume that this file is present. Also note that if you are going to save individual data, you may want to save "population_size" for the same reason.
+Saving the whole genomes of all individuals through time takes a lot of space, for this reason this output is controlled separately from the other output variables. Set `gensave` to 1 to save these data every `tfreeze` generations in a _freezer file_ determined by the `freezerfile` parameter. The freezer file is automatically generated but can remain empty. 
 
-## Saving full genomes
+Each value in a full genome is an allele at a specific position along one of the two haplotypes of an individual. Therefore, a genome contains twice as many values as there are loci, because the organisms are diploid. Each value is either 0 or 1 (the two possible alleles). Haplotypes are saved in turns, such that the first N values are all alleles of the first haplotype and the next N values are all alleles of the second haplotype, if N is the total number of loci. This does not mean that each saved individual genome is exactly 2N values long, though. In order to save space for this large amount of data, individual genomes are first split into blocks of 64 bits, and each block is converted into a 64bit integer, which is then saved to the `freezerfile` as binary. Therefore, the `freezerfile` output file must be interpreted on a bit-wise basis in order to retrieve the actual alleles of the individual (i.e. reading it as 64bit integers will show integer equivalents of chunks of 64 alleles). This also means that for each individual, a multiple of 64 bits will be written to the file, even if 2N alleles is not necessarily a multiple of 64. In other words, for each individual 2N bits will be written to file, and the remaining part of the last 64bit-chunk will be filled with zeros.
 
-It is possible to save the full genomes of every individual every `tfreeze` time step, if `gensave` is set to 1. The option to save full genomes cannot be specified in the order file mentioned above. This means that the output file `freezer.dat`, containing these data, will automatically be generated every time the simulation runs. To not save anything in it, just set `ensave` to 0 and/or `tfreeze` to some time point greater than `tend`, this way, the condition for saving full genomes will never be met.
+## Analysis
 
-Each value in a full genome is an allele at a specific position along one of the two haplotypes of that individual. Therefore, a genome contains twice as many values as there are loci, because the organisms are diploid. Each value is either 0 or 1 (the two possible alleles). Haplotypes are saved in turns, such that the first N values are all alleles of the first haplotype and the next N values are all alleles of the second haplotype, if N is the total number of loci. This does not mean that each saved individual genome is exactly 2N values long, though. In order to save space for this large amount of data, individual genomes are first split into blocks of 64 bits, and each block is converted into a 64bit integer, which is then saved to the `freezer` output file as binary. Therefore, the `freezer` output file must be interpreted on a bit-wise basis in order to retrieve the actual alleles of the individual (i.e. reading it as 64bit integers will show integer equivalents of chunks of 64 alleles). This also means that for each individual, a multiple of 64 bits will be written to the file, even if 2N alleles is not necessarily a multiple of 64. In other words, for each individual 2N bits will be written to file, and the remaining part of the last 64bit-chunk will be filled with zeros.
-
-## Analysis with egssimtools
-
-The program comes with the R package `egssimtools`, which contains useful functions to read and process the data generated during the simulations. It is particularly handy to convert the binary data files saved by the program into workable data sets and vectors. The package comes with a vignette explaining how to use it. Check out the [vignette](egssimtools/doc/vignette.pdf) in `egsimtools/doc`.
+The program comes with the R package `egssimtools`, which contains functions to read the binary data generated by the simulations and process them into workable data sets and vectors. The package comes with a vignette explaining how to use it. Check out the [vignette](egssimtools/doc/vignette.pdf) in `egsimtools/doc`.
 
 ## Use on the Peregrine cluster
 
 Check out the README in folder `cluster`.
 
 ## GUI
+
+(I broke that unfortunately.)
 
 GUI Tabs:
 
