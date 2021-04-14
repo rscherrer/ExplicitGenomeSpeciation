@@ -164,7 +164,7 @@ Many outputs can be saved through time in the simulation. To record data, set `r
 * `genome_meang`: the mean genetic value of each locus in the whole population
 * `genome_freq`: the allele frequency (of the 1-allele) for each locus in the whole population
 * `genome_freqs`: the allele frequencies for each locus within each ecotype
-* `genome_hobs`: the (observed or expected?) heterozygosity for each locus within each ecotype
+* `genome_hobs`: the observed heterozygosity for each locus within each ecotype
 * `network_corgen`, `network_corbreed`, `network_corfreq`: respectively the pairwise correlations in genetic value, breeding value and allele frequency between the two interacting loci for each edge in all three networks (ordered by trait)
 * `network_avgi`, `network_avgj`: the expected epistatic variance in average effect (define that maybe?) of the first and second interacting loci, respectively, for each edge
 * `individual_ecotype`, `individual_habitat`: the ecotype and habitat of each individual
