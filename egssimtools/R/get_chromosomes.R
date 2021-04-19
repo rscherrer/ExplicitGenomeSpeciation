@@ -4,11 +4,22 @@
 #'
 #' @return A vector of chromosome indices for each locus
 #'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # Location of the simulation folder
+#' root <- "data/example_1"
+#'
+#' arch <- read_arch(root)
+#' get_chromosomes(arch)
+#'
+#' }
+#'
 #' @export
 
 get_chromosomes <- function(arch) {
 
-  library(tidyverse)
-  arch$locations %>% map_int(~ min(which(.x <= arch$chromosomes)))
+   purrr::map_int(arch$locations, ~ min(which(.x <= arch$chromosomes)))
 
 }

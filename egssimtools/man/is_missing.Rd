@@ -4,11 +4,23 @@
 \alias{is_missing}
 \title{Is a simulation missing?}
 \usage{
-is_missing(folder)
+is_missing(root)
 }
 \arguments{
-\item{folder}{Path to the folder}
+\item{root}{Path to the simulation folder}
+}
+\value{
+A logical
 }
 \description{
-Is a simulation missing?
+Checks for the presence of \code{.dat} files
+}
+\examples{
+
+\dontrun{
+
+is_missing("data/example_1")
+
+}
+
 }

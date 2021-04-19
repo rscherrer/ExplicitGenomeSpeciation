@@ -34,7 +34,7 @@ public:
         networks(makeNetworks(pars))
     {
 
-        assert(utl::sumu(pars.nvertices) == pars.nloci);
+        assert(utl::sum(pars.nvertices) == pars.nloci);
         assert(chromosomes.size() == pars.nchrom);
         assert(traits.size() == pars.nloci);
         assert(effects.size() == pars.nloci);
@@ -55,6 +55,10 @@ public:
     MultiNet networks;      // per trait
 
     // Getters called from tests
+    bool isConnected(const size_t &trait) const
+    {
+        return networks[trait].isConnected();
+    }
     size_t getNetworkSize() const
     {
         size_t nedges = 0u;

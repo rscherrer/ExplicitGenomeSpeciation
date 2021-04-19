@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>R: What the Package Does (Title Case)</title>
+<head><title>R: EGS Analysis Package</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
-<h1> What the Package Does (Title Case)
+<h1> EGS Analysis Package
 <img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
 </h1>
 <hr/>
@@ -21,8 +21,8 @@
 
 
 <table width="100%">
-<tr><td style="width: 25%;"><a href="collect_parameters.html">collect_parameters</a></td>
-<td>Collect parameters from multiple simulations</td></tr>
+<tr><td style="width: 25%;"><a href="collect_param.html">collect_param</a></td>
+<td>Combine parameters from multiple simulations</td></tr>
 <tr><td style="width: 25%;"><a href="collect_sims.html">collect_sims</a></td>
 <td>Collect simulation data</td></tr>
 <tr><td style="width: 25%;"><a href="collect_status.html">collect_status</a></td>
@@ -43,70 +43,42 @@
 <td>Get locus degrees</td></tr>
 <tr><td style="width: 25%;"><a href="get_status.html">get_status</a></td>
 <td>SLURM status</td></tr>
-<tr><td style="width: 25%;"><a href="hello.html">hello</a></td>
-<td>Hello, World!</td></tr>
+<tr><td style="width: 25%;"><a href="guess_nloci.html">guess_nloci</a></td>
+<td>Guess the number of loci</td></tr>
 <tr><td style="width: 25%;"><a href="is_extinct.html">is_extinct</a></td>
 <td>Did a simulation go extinct?</td></tr>
 <tr><td style="width: 25%;"><a href="is_missing.html">is_missing</a></td>
 <td>Is a simulation missing?</td></tr>
 <tr><td style="width: 25%;"><a href="mrep.html">mrep</a></td>
-<td>Repeat multiple elements multiple times</td></tr>
-<tr><td style="width: 25%;"><a href="plot_genome_distribution.html">plot_genome_distribution</a></td>
-<td>Plot densities from genome data</td></tr>
-<tr><td style="width: 25%;"><a href="plot_genome_heatmap.html">plot_genome_heatmap</a></td>
-<td>Genome heatmap</td></tr>
-<tr><td style="width: 25%;"><a href="plot_genome_scan.html">plot_genome_scan</a></td>
-<td>Genome scan</td></tr>
-<tr><td style="width: 25%;"><a href="plot_trait_density.html">plot_trait_density</a></td>
-<td>Heatmap of trait values through time</td></tr>
-<tr><td style="width: 25%;"><a href="plot_trait_density2D.html">plot_trait_density2D</a></td>
-<td>2D heatmap of trait densities</td></tr>
-<tr><td style="width: 25%;"><a href="plot_trait_histogram.html">plot_trait_histogram</a></td>
-<td>Histogram of trait values at a given time</td></tr>
-<tr><td style="width: 25%;"><a href="read_archfile.html">read_archfile</a></td>
-<td>Read an architecture file</td></tr>
-<tr><td style="width: 25%;"><a href="read_architecture.html">read_architecture</a></td>
+<td>Repeat many elements many times</td></tr>
+<tr><td style="width: 25%;"><a href="read_arch.html">read_arch</a></td>
 <td>Read architecture</td></tr>
+<tr><td style="width: 25%;"><a href="read_arch_file.html">read_arch_file</a></td>
+<td>Read an architecture file</td></tr>
+<tr><td style="width: 25%;"><a href="read_arch_genome.html">read_arch_genome</a></td>
+<td>Read locus-specific genome architecture</td></tr>
+<tr><td style="width: 25%;"><a href="read_arch_network.html">read_arch_network</a></td>
+<td>Read gene network architecture</td></tr>
 <tr><td style="width: 25%;"><a href="read_binary.html">read_binary</a></td>
 <td>Read binary file</td></tr>
 <tr><td style="width: 25%;"><a href="read_data.html">read_data</a></td>
 <td>Read simulation data</td></tr>
-<tr><td style="width: 25%;"><a href="read_ecotypes.html">read_ecotypes</a></td>
-<td>Read individual ecotypes</td></tr>
-<tr><td style="width: 25%;"><a href="read_ecotype_means.html">read_ecotype_means</a></td>
-<td>Read ecotype trait means</td></tr>
-<tr><td style="width: 25%;"><a href="read_ecotype_sizes.html">read_ecotype_sizes</a></td>
-<td>Read ecotype population size</td></tr>
-<tr><td style="width: 25%;"><a href="read_edges.html">read_edges</a></td>
-<td>Read edge-specific data</td></tr>
-<tr><td style="width: 25%;"><a href="read_genome_architecture.html">read_genome_architecture</a></td>
-<td>Read locus-specific genome architecture</td></tr>
-<tr><td style="width: 25%;"><a href="read_habitats.html">read_habitats</a></td>
-<td>Read individual habitats</td></tr>
-<tr><td style="width: 25%;"><a href="read_individuals.html">read_individuals</a></td>
-<td>Read individual data</td></tr>
-<tr><td style="width: 25%;"><a href="read_loci.html">read_loci</a></td>
-<td>Read locus-specific data</td></tr>
-<tr><td style="width: 25%;"><a href="read_means.html">read_means</a></td>
-<td>Read trait means</td></tr>
-<tr><td style="width: 25%;"><a href="read_parameters.html">read_parameters</a></td>
+<tr><td style="width: 25%;"><a href="read_genome.html">read_genome</a></td>
+<td>Read locus-specific data through time</td></tr>
+<tr><td style="width: 25%;"><a href="read_param.html">read_param</a></td>
 <td>Read parameters</td></tr>
-<tr><td style="width: 25%;"><a href="read_paramfile.html">read_paramfile</a></td>
+<tr><td style="width: 25%;"><a href="read_param_file.html">read_param_file</a></td>
 <td>Read a parameter file</td></tr>
-<tr><td style="width: 25%;"><a href="read_population.html">read_population</a></td>
-<td>Read population-wide data</td></tr>
-<tr><td style="width: 25%;"><a href="read_population_size.html">read_population_size</a></td>
-<td>Read total population size</td></tr>
-<tr><td style="width: 25%;"><a href="read_resources.html">read_resources</a></td>
-<td>Read resource concentrations</td></tr>
-<tr><td style="width: 25%;"><a href="read_time.html">read_time</a></td>
-<td>Read time record</td></tr>
-<tr><td style="width: 25%;"><a href="read_time_if.html">read_time_if</a></td>
-<td>Read time only if available</td></tr>
+<tr><td style="width: 25%;"><a href="read_pop.html">read_pop</a></td>
+<td>Read individual data through time</td></tr>
+<tr><td style="width: 25%;"><a href="read_sim.html">read_sim</a></td>
+<td>Read simulation summary through time</td></tr>
 <tr><td style="width: 25%;"><a href="rename_str.html">rename_str</a></td>
 <td>Function to rename the columns of a data frame given a character vector</td></tr>
 <tr><td style="width: 25%;"><a href="set_param_file.html">set_param_file</a></td>
 <td>Set up parameter file</td></tr>
+<tr><td style="width: 25%;"><a href="smoothen_data.html">smoothen_data</a></td>
+<td>Smoothen lines using LOESS</td></tr>
 <tr><td style="width: 25%;"><a href="str2vec.html">str2vec</a></td>
 <td>String to numeric vector</td></tr>
 </table>

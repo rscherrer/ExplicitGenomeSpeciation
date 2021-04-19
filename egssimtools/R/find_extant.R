@@ -1,33 +1,27 @@
 #' Find extant simulations
 #'
-#' @param simulations Either path to a root directory containing simulation folders, or a vector of simulation folders
-#' @param pattern Pattern defining the simulation folders to look into
-#' @param verbose Whether to display messages
-#' @param pb Whether to display a progress bar
-#' @param level Recursion level
+#' Find simulations that did not crash, that successfully completed and that did
+#' not go extinct
 #'
-#' @return A vector of names of the simulation folders that completed
+#' @param roots Vector of simulation folders
+#' @param ... Parameters for `is_extant`
+#'
+#' @return A character vector
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' roots <- fetch_dirs("data", "example", 1)
+#' find_extant(roots)
+#'
+#' }
 #'
 #' @export
 
-find_extant <- function(simulations, pattern = "^sim_", verbose = TRUE, pb = TRUE, level = 0) {
+find_extant <- function(roots, ...) {
 
-  library(pbapply)
-
-  if (!verbose) pb <- FALSE else message("Looking for extant simulations...")
-  if (pb) thislapply <- pblapply else thislapply <- lapply
-  if (level > 0) simulations <- fetch_dirs(simulations, pattern = pattern, level = level)
-
-  # Look for missing and extinct simulations
-  missings <- find_missing(simulations, verbose = verbose, pb = pb)
-  completed <- find_completed(simulations, verbose = verbose, pb = pb)
-  extincts <- find_extinct(simulations, verbose = verbose, pb = pb)
-
-  # Identify extant simulations
-  if (!is.null(missings)) simulations <- simulations[!simulations %in% missings]
-  if (!is.null(completed)) simulations <- simulations[simulations %in% completed]
-  if (!is.null(extincts)) simulations <- simulations[!simulations %in% extincts]
-
-  return (simulations)
+  extant <- purrr::map_lgl(roots, is_extant, ...)
+  return(roots[extant])
 
 }

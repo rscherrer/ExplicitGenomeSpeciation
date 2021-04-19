@@ -1,0 +1,264 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9970,        256]
+NotebookOptionsPosition[      8383,        223]
+NotebookOutlinePosition[      8802,        240]
+CellTagsIndexPosition[      8759,        237]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Parametrization of additive and non-additive effects", "Title",
+ CellChangeTimes->{{3.800360920558805*^9, 
+  3.800360933323667*^9}},ExpressionUUID->"285e1ae0-191b-4d13-9dd1-\
+fd8b8ce5b85b"],
+
+Cell["\<\
+Use this script to find the right parametrization for additive and epistatic \
+effects such that both are expected to produce equivalent phenotypic \
+distributions if the genotypes are totally random.\
+\>", "Text",
+ CellChangeTimes->{{3.800360821678524*^9, 3.800360910343799*^9}, {
+  3.8148708573107967`*^9, 
+  3.814870857974662*^9}},ExpressionUUID->"d7a4638e-989c-4061-9a78-\
+34cf05a39857"],
+
+Cell["We want to solve the following equation:", "Text",
+ CellChangeTimes->{{3.80036128491432*^9, 
+  3.800361289175811*^9}},ExpressionUUID->"a646d2d9-d38f-4bef-a282-\
+875d537ce96d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "k", " ", "is", " ", "the", " ", "shape", " ", "parameter", " ", "and", 
+    " ", "\[Theta]", " ", "is", " ", "the", " ", "scale", " ", "parameter"}], 
+   " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"eq", " ", "=", " ", 
+    RowBox[{
+     FractionBox[
+      RowBox[{
+       SuperscriptBox[
+        SubscriptBox["\[Theta]", "\[Omega]"], "2"], 
+       RowBox[{"Gamma", "[", 
+        RowBox[{
+         SubscriptBox["k", "\[Omega]"], "+", "2"}], "]"}], 
+       RowBox[{"Gamma", "[", 
+        SubscriptBox["k", "\[Eta]"], "]"}]}], 
+      RowBox[{
+       SuperscriptBox[
+        SubscriptBox["\[Theta]", "\[Eta]"], "2"], 
+       RowBox[{"Gamma", "[", 
+        RowBox[{
+         SubscriptBox["k", "\[Eta]"], "+", "2"}], "]"}], 
+       RowBox[{"Gamma", "[", 
+        SubscriptBox["k", "\[Omega]"], "]"}]}]], "\[Equal]", 
+     FractionBox[
+      RowBox[{"2", " ", "n"}], 
+      RowBox[{"3", " ", "e"}]]}]}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.800361009103402*^9, 3.800361192949003*^9}, {
+  3.814874189311419*^9, 3.814874233621956*^9}},
+ CellLabel->"In[69]:=",ExpressionUUID->"c7a7d62d-6616-49fc-809a-32b74c746a39"],
+
+Cell["\<\
+Enter parameter values here, except for the one that must be solved (assign \
+it to itself, like in the following example):\
+\>", "Text",
+ CellChangeTimes->{{3.8003612941323566`*^9, 3.800361303402467*^9}, {
+  3.814874808729837*^9, 
+  3.814874818173503*^9}},ExpressionUUID->"4520bfda-976a-4d6d-b27c-\
+ef9afac4ab40"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pars", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Theta]", "\[Eta]"], "\[Rule]", "1"}], ",", 
+     RowBox[{
+      SubscriptBox["\[Theta]", "\[Omega]"], "\[Rule]", 
+      SubscriptBox["\[Theta]", "\[Omega]"]}], ",", 
+     RowBox[{
+      SubscriptBox["k", "\[Eta]"], "\[Rule]", "1"}], ",", 
+     RowBox[{
+      SubscriptBox["k", "\[Omega]"], "\[Rule]", "5"}], ",", 
+     RowBox[{"n", "\[Rule]", "100"}], ",", 
+     RowBox[{"e", "\[Rule]", "1000"}]}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.800361206803664*^9, 3.800361270063141*^9}, {
+  3.8003613565367527`*^9, 3.800361369779386*^9}, {3.8003614198828382`*^9, 
+  3.8003614543829937`*^9}, {3.800361764650453*^9, 3.800361764737224*^9}, {
+  3.806905982358769*^9, 3.8069060118415813`*^9}, {3.81487195975205*^9, 
+  3.814871959858377*^9}, {3.81487209577813*^9, 3.8148720966262074`*^9}, {
+  3.814872367148799*^9, 3.814872368049116*^9}, {3.8148742434080553`*^9, 
+  3.8148742465299177`*^9}, {3.814874279008876*^9, 3.814874282787054*^9}, {
+  3.814874349699559*^9, 3.814874349853712*^9}, {3.814874382449636*^9, 
+  3.81487440233288*^9}, {3.814874537611652*^9, 3.8148745459496098`*^9}, {
+  3.8148745935227633`*^9, 3.814874611873885*^9}, {3.8148746725150347`*^9, 
+  3.814874713073085*^9}, {3.814874750381998*^9, 3.81487479803666*^9}, {
+  3.8148748385702677`*^9, 3.814874846065496*^9}},
+ CellLabel->"In[76]:=",ExpressionUUID->"9f555f6c-3ecf-4ee8-b0c3-e1cdb0b699c0"],
+
+Cell["\<\
+We use the following equation solver to find the missing parameter value:\
+\>", "Text",
+ CellChangeTimes->{{3.800361546032214*^9, 
+  3.800361557725449*^9}},ExpressionUUID->"52619917-af43-4b42-9138-\
+d9bcba1d4d2a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{"eq", "/.", "pars"}], ",", " ", 
+   SubscriptBox["\[Theta]", "\[Omega]"]}], "]"}]], "Input",
+ CellChangeTimes->{{3.800361311069162*^9, 3.800361338761568*^9}, {
+   3.8003615084602613`*^9, 3.8003615094976177`*^9}, {3.800361610317677*^9, 
+   3.800361694354175*^9}, {3.8148742861269817`*^9, 3.814874290083083*^9}, {
+   3.8148746264153547`*^9, 3.81487464602183*^9}, {3.814874754506053*^9, 
+   3.8148747588365517`*^9}, 
+   3.8148748549970512`*^9},ExpressionUUID->"2db58562-607c-49e9-b19c-\
+0ec2ac8e5a95"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Solve", "fexp", 
+   "\"Warning: \\!\\(\\*RowBox[{\\\"Solve\\\"}]\\) used FunctionExpand to \
+transform the system. Since FunctionExpand transformation rules are only \
+generically correct, the solution set might have been altered.\"", 2, 74, 48, 
+   30897520643286312408, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.814874646417183*^9, {3.814874767894445*^9, 3.814874801345694*^9}},
+ CellLabel->
+  "During evaluation of \
+In[74]:=",ExpressionUUID->"12e05a85-6427-405d-b2cd-ff23405323fc"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["k", "\[Omega]"], "\[Rule]", 
+     RowBox[{
+      FractionBox["1", "30"], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "15"}], "-", 
+        SqrtBox["345"]}], ")"}]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["k", "\[Omega]"], "\[Rule]", 
+     RowBox[{
+      FractionBox["1", "30"], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "15"}], "+", 
+        SqrtBox["345"]}], ")"}]}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.800361603734796*^9, 3.800361694896615*^9}, 
+   3.80036176867752*^9, {3.806905986806176*^9, 3.80690601482627*^9}, 
+   3.8094080850327997`*^9, 3.814871974278679*^9, 3.8148720996928043`*^9, 
+   3.814872370665998*^9, 3.814874316365889*^9, 3.814874353044121*^9, {
+   3.8148743863455553`*^9, 3.814874404191461*^9}, {3.814874616962844*^9, 
+   3.814874646423655*^9}, {3.8148747679432573`*^9, 3.814874801349957*^9}},
+ CellLabel->"Out[74]=",ExpressionUUID->"92f7c952-6b09-44b1-9d94-d5425039bc7a"]
+}, Open  ]],
+
+Cell["\<\
+If the solver did not work, for some reason, we use a numerical root-finding \
+algorithm. Less accurate, but more robust.\
+\>", "Text",
+ CellChangeTimes->{{3.800361573870104*^9, 
+  3.800361597569469*^9}},ExpressionUUID->"f43966fd-438f-42b4-b7ae-\
+c3e84ce553d4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"sol", "=", 
+  RowBox[{"FindRoot", "[", 
+   RowBox[{
+    RowBox[{"eq", "/.", "pars"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      SubscriptBox["\[Theta]", "\[Omega]"], ",", "0"}], "}"}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.8003615106228933`*^9, 3.800361525121558*^9}, {
+   3.814871518841312*^9, 3.814871519665266*^9}, {3.8148743041271267`*^9, 
+   3.814874308165618*^9}, {3.81487465151129*^9, 3.81487465423921*^9}, {
+   3.81487476426416*^9, 3.814874782608042*^9}, 
+   3.8148748573280077`*^9},ExpressionUUID->"f2900146-ef8c-4243-a23a-\
+0d1c8b85033c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   SubscriptBox["k", "\[Omega]"], "\[Rule]", "0.11913918736689065`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.800361339532708*^9, 3.8003613714894733`*^9}, {
+   3.8003614228184433`*^9, 3.800361456938073*^9}, 3.800361525885556*^9, 
+   3.80036169679423*^9, 3.800361771554598*^9, 3.806906033773108*^9, 
+   3.8094080986230516`*^9, 3.814871522245953*^9, 3.8148719761120443`*^9, 
+   3.814872101267148*^9, 3.814872372211103*^9, 3.814874357213719*^9, 
+   3.8148743879551563`*^9, 3.814874654660844*^9, {3.814874784500778*^9, 
+   3.814874803081277*^9}},
+ CellLabel->"Out[75]=",ExpressionUUID->"89250bb2-389d-4d78-bd40-aed7fd72b5d4"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{906, 552},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+Magnification:>0.75 Inherited,
+FrontEndVersion->"12.1 for Linux x86 (64-bit) (June 19, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"e4d245e7-9e6d-4ab9-9651-674f79632395"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 195, 3, 74, "Title",ExpressionUUID->"285e1ae0-191b-4d13-9dd1-fd8b8ce5b85b"],
+Cell[778, 27, 401, 8, 45, "Text",ExpressionUUID->"d7a4638e-989c-4061-9a78-34cf05a39857"],
+Cell[1182, 37, 181, 3, 27, "Text",ExpressionUUID->"a646d2d9-d38f-4bef-a282-875d537ce96d"],
+Cell[1366, 42, 1187, 32, 61, "Input",ExpressionUUID->"c7a7d62d-6616-49fc-809a-32b74c746a39"],
+Cell[2556, 76, 324, 7, 27, "Text",ExpressionUUID->"4520bfda-976a-4d6d-b27c-ef9afac4ab40"],
+Cell[2883, 85, 1480, 28, 24, "Input",ExpressionUUID->"9f555f6c-3ecf-4ee8-b0c3-e1cdb0b699c0"],
+Cell[4366, 115, 223, 5, 27, "Text",ExpressionUUID->"52619917-af43-4b42-9138-d9bcba1d4d2a"],
+Cell[CellGroupData[{
+Cell[4614, 124, 558, 11, 22, "Input",ExpressionUUID->"2db58562-607c-49e9-b19c-0ec2ac8e5a95"],
+Cell[5175, 137, 550, 12, 19, "Message",ExpressionUUID->"12e05a85-6427-405d-b2cd-ff23405323fc"],
+Cell[5728, 151, 1060, 27, 39, "Output",ExpressionUUID->"92f7c952-6b09-44b1-9d94-d5425039bc7a"]
+}, Open  ]],
+Cell[6803, 181, 271, 6, 27, "Text",ExpressionUUID->"f43966fd-438f-42b4-b7ae-c3e84ce553d4"],
+Cell[CellGroupData[{
+Cell[7099, 191, 588, 14, 22, "Input",ExpressionUUID->"f2900146-ef8c-4243-a23a-0d1c8b85033c"],
+Cell[7690, 207, 665, 12, 25, "Output",ExpressionUUID->"89250bb2-389d-4d78-bd40-aed7fd72b5d4"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

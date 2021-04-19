@@ -16,63 +16,7 @@
 
 struct Param {
 
-    Param() :
-        rdynamics(1u),
-        capacity(1.0),
-        replenish(2375.0),
-        inflow(400.0),
-        outflow(100.0),
-        hsymmetry(0.0),
-        ecosel(1.8),
-        dispersal(1.0E-2),
-        birth(1.0),
-        survival(0.8),
-        sexsel(10.0),
-        matingcost(0.01),
-        demesizes({ 100u, 0u }),
-        nloci(90u), // cannot be provided
-        nvertices({ 30u, 30u, 30u }),
-        nedges({ 30u, 0u, 0u }),
-        nchrom(3u),
-        mutation(1.0E-3),
-        recombination(3.0),
-        allfreq(0.2),
-        scaleA({ 1.0, 1.0, 1.0 }),
-        scaleD({ 0.0, 0.0, 0.0 }),
-        scaleI({ 0.0, 0.0, 0.0 }),
-        scaleE({ 0.0, 0.0, 0.0 }),
-        locusE({ 0.0, 0.0, 0.0 }), // cannot be provided
-        skews({ 1.0, 1.0, 1.0 }),
-        effectshape(2.0),
-        effectscale(1.0),
-        interactionshape(5.0),
-        interactionscale(1.0),
-        dominancevar(1.0),
-        tburnin(0),
-        tend(10),
-        tsave(10),
-        tfreeze(100),
-        talkative(true),
-        record(true),
-        datsave(true),
-        choosewhattosave(false),
-        gensave(false),
-        archsave(false),
-        archload(false),
-        parsave(true),
-        archfile("architecture.txt"),        
-        parfile("paramlog.txt"),
-        orderfile("whattosave.txt"),
-        seed(makeDefaultSeed()),
-        ntrials(100u)
-    {
-
-        // Make sure parameter values make sense
-        check();
-
-        // Seed the random number generator
-        rnd::rng.seed(seed);
-    }
+    Param();
 
     void read(const std::string&);
     void update();
@@ -97,6 +41,7 @@ struct Param {
     double survival;
     double sexsel;
     double matingcost;
+    double ecoscale;
     std::vector<size_t> demesizes;
 
     // Genetic parameters
@@ -122,10 +67,11 @@ struct Param {
     double dominancevar;
 
     // Simulation parameters
-    int  tburnin;
-    int  tend;
-    int  tsave;
-    int  tfreeze;
+    int tburnin;
+    int tend;
+    int tsave;
+    int tfreeze;
+    int tpedigree;
     bool talkative;
     bool record;
     bool datsave;
@@ -134,11 +80,18 @@ struct Param {
     bool archsave;
     bool archload;
     bool parsave;
+    bool pedigreesave;
     std::string archfile;
     std::string parfile;
     std::string orderfile;
+    std::string logfile;
+    std::string freezerfile;
+    std::string locifile;
+    std::string pedigreefile;
     size_t seed;
     size_t ntrials;
+    size_t pedigreetrials;
+    size_t pedigreeoffspring;
 
 };
 

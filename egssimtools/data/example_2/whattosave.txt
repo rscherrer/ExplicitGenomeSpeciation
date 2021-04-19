@@ -4,6 +4,9 @@ RI
 SI
 population_size
 individual_trait
+individual_ecotype
+individual_habitat
+individual_midparent
 Fst
 Gst
 Qst

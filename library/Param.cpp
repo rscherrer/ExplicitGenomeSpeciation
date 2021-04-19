@@ -1,5 +1,77 @@
 #include "Param.h"
 
+// Constructor
+//------------
+
+Param::Param() :
+    rdynamics(1u),
+    capacity(1.0),
+    replenish(2375.0),
+    inflow(400.0),
+    outflow(100.0),
+    hsymmetry(0.0),
+    ecosel(1.8),
+    dispersal(1.0E-2),
+    birth(1.0),
+    survival(0.8),
+    sexsel(10.0),
+    matingcost(0.01),
+    ecoscale(1.0),
+    demesizes({ 100u, 0u }),
+    nloci(90u), // cannot be provided
+    nvertices({ 30u, 30u, 30u }),
+    nedges({ 30u, 30u, 30u }),
+    nchrom(3u),
+    mutation(1.0E-3),
+    recombination(3.0),
+    allfreq(0.2),
+    scaleA({ 1.0, 1.0, 1.0 }),
+    scaleD({ 0.0, 0.0, 0.0 }),
+    scaleI({ 0.0, 0.0, 0.0 }),
+    scaleE({ 0.0, 0.0, 0.0 }),
+    locusE({ 0.0, 0.0, 0.0 }), // cannot be provided
+    skews({ 1.0, 1.0, 1.0 }),
+    effectshape(2.0),
+    effectscale(1.0),
+    interactionshape(5.0),
+    interactionscale(1.0),
+    dominancevar(1.0),
+    tburnin(0),
+    tend(10),
+    tsave(10),
+    tfreeze(100),
+    tpedigree(15000),
+    talkative(true),
+    record(true),
+    datsave(true),
+    choosewhattosave(false),
+    gensave(false),
+    archsave(false),
+    archload(false),
+    parsave(true),
+    pedigreesave(false),
+    archfile("architecture.txt"),
+    parfile("paramlog.txt"),
+    orderfile("whattosave.txt"),
+    logfile("log.txt"),
+    freezerfile("freezer.dat"),
+    locifile("locivalues.dat"),
+    pedigreefile("pedigree.dat"),
+    seed(makeDefaultSeed()),
+    ntrials(100u),
+    pedigreetrials(100u),
+    pedigreeoffspring(10u)
+{
+
+    // Make sure parameter values make sense
+    check();
+
+    // Seed the random number generator
+    rnd::rng.seed(seed);
+}
+
+// Member functions
+//-----------------
 
 // Create a default seed based on clock
 size_t Param::makeDefaultSeed()
@@ -42,6 +114,7 @@ void Param::import(std::ifstream &file)
         else if (input == "survival") file >> survival;
         else if (input == "sexsel") file >> sexsel;
         else if (input == "matingcost") file >> matingcost;
+        else if (input == "ecoscale") file >> ecoscale;
         else if (input == "demesizes")
             for (size_t i = 0u; i < 2u; ++i) file >> demesizes[i];
         else if (input == "nvertices")
@@ -71,6 +144,7 @@ void Param::import(std::ifstream &file)
         else if (input == "tend") file >> tend;
         else if (input == "tsave") file >> tsave;
         else if (input == "tfreeze") file >> tfreeze;
+        else if (input == "tpedigree") file >> tpedigree;
         else if (input == "talkative") file >> talkative;
         else if (input == "record") file >> record;
         else if (input == "datsave") file >> datsave;
@@ -79,11 +153,18 @@ void Param::import(std::ifstream &file)
         else if (input == "archsave") file >> archsave;
         else if (input == "archload") file >> archload;
         else if (input == "parsave") file >> parsave;
+        else if (input == "pedigreesave") file >> pedigreesave;
         else if (input == "archfile") file >> archfile;
         else if (input == "parfile") file >> parfile;
         else if (input == "orderfile") file >> orderfile;
+        else if (input == "logfile") file >> logfile;
+        else if (input == "freezerfile") file >> freezerfile;
+        else if (input == "locifile") file >> locifile;
+        else if (input == "pedigreefile") file >> pedigreefile;
         else if (input == "seed") file >> seed;
         else if (input == "ntrials") file >> ntrials;
+        else if (input == "pedigreetrials") file >> pedigreetrials;
+        else if (input == "pedigreeoffspring") file >> pedigreeoffspring;
         else
             throw std::runtime_error("Invalid parameter name: " + input);
 
@@ -99,7 +180,7 @@ void Param::import(std::ifstream &file)
 void Param::update()
 {
     rnd::rng.seed(seed);
-    nloci = utl::sumu(nvertices);
+    nloci = utl::sum(nvertices);
     check();
 }
 
@@ -130,6 +211,8 @@ void Param::check() const
         msg = "Mate preference strength should be positive";
     if (matingcost < 0.0)
         msg = "Mate evaluation cost should be positive";
+    if (ecoscale < 0.0)
+        msg = "Ecological scale should be positive";
     if (capacity <= 0.0)
         msg = "Maximum resource capacity should be positive";
     if (replenish <= 0.0)
@@ -140,12 +223,15 @@ void Param::check() const
         msg = "Resource inflow rate should be positive";
     if (outflow <= 0.0)
         msg = "Resource outflow rate should be positive";
-    if (nvertices[0u] <= 1u)
-        msg = "Numer of ecological loci should be at least two";
-    if (nvertices[1u] <= 1u)
-        msg = "Number of mating loci should be at least two";
-    if (nvertices[2u] <= 1u)
-        msg = "Number of neutral loci should be at least two";
+    for (size_t i = 0u; i < 3u; ++i)
+        if (nvertices[i] < 2u)
+            msg = "Number of loci per trait should be at least two";
+    for (size_t i = 0u; i < 3u; ++i) {
+        const size_t n = nvertices[i];
+        const bool cond = nedges[i] >= n - 1u && nedges[i] <= n * (n - 1u) / 2u;
+        if (!cond)
+            msg = "Number of edges per trait should be between n-1 and n(n-1)/2";
+    }
     if (nchrom == 0u)
         msg = "Number of chromosomes should be at least one";
     if (nloci <= 5u)
@@ -171,8 +257,6 @@ void Param::check() const
             msg = "Interaction scaling should be positive";
         if (scaleE[i] < 0.0)
             msg = "Environmental scaling should be positive";
-        if (nedges[i] >= nvertices[i] * (nvertices[i] - 1u) / 2u)
-            msg = "Number of edges is too large";
     }
     if (effectshape < 0.0)
         msg = "Effect size shape should be positive";
@@ -210,6 +294,7 @@ void Param::save() const
 
 void Param::write(std::ofstream &file) const
 {
+
     file << "rdynamics " << rdynamics << '\n';
     file << "capacity " << capacity << '\n';
     file << "replenish " << replenish << '\n';
@@ -222,6 +307,7 @@ void Param::write(std::ofstream &file) const
     file << "survival " << survival << '\n';
     file << "sexsel " << sexsel << '\n';
     file << "matingcost " << matingcost << '\n';
+    file << "ecoscale " << ecoscale << '\n';
     file << "demesizes ";
     for (size_t i = 0u; i < 2u; ++i) file << demesizes[i] << ' ';
     file << '\n';
@@ -259,6 +345,7 @@ void Param::write(std::ofstream &file) const
     file << "tend " << tend << '\n';
     file << "tsave " << tsave << '\n';
     file << "tfreeze " << tfreeze << '\n';
+    file << "tpedigree " << tpedigree << '\n';
     file << "talkative " << talkative << '\n';
     file << "record " << record << '\n';
     file << "datsave " << datsave << '\n';
@@ -267,9 +354,17 @@ void Param::write(std::ofstream &file) const
     file << "archsave " << archsave << '\n';
     file << "archload " << archload << '\n';
     file << "parsave " << parsave << '\n';
+    file << "pedigreesave " << pedigreesave << '\n';
     file << "archfile " << archfile << '\n';
     file << "parfile " << parfile << '\n';
     file << "orderfile " << orderfile << '\n';
+    file << "logfile " << logfile << '\n';
+    file << "freezerfile " << freezerfile << '\n';
+    file << "locifile " << locifile << '\n';
+    file << "pedigreefile " << pedigreefile << '\n';
     file << "seed " << seed << '\n';
     file << "ntrials " << ntrials << '\n';
+    file << "pedigreetrials " << pedigreetrials << '\n';
+    file << "pedigreeoffspring " << pedigreeoffspring << '\n';
+
 }

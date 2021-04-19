@@ -34,7 +34,7 @@ std::vector<size_t> GenArch::makeEncodedTraits(const Param &p) const
 
     assert(encoded.size() == p.nloci);
 
-    std::vector<size_t> nvertices = utl::uzeros(3u);
+    std::vector<size_t> nvertices = std::vector<size_t>(3u, 0u);
     for (size_t locus = 0u; locus < p.nloci; ++locus)
         ++nvertices[encoded[locus]];
 
@@ -69,19 +69,20 @@ std::vector<double> GenArch::makeLocations(const Param &p) const
 std::vector<double> GenArch::makeEffects(const Param &p) const
 {
 
-    if (p.effectshape == 0.0) return utl::zeros(p.nloci);
-    if (p.effectscale == 0.0) return utl::ones(p.nloci);
+    if (p.effectshape == 0.0) return std::vector<double>(p.nloci, 0.0);
+    if (p.effectscale == 0.0) return std::vector<double>(p.nloci, 1.0);
 
     std::vector<double> effectsizes(p.nloci);
-    std::vector<double> sss = utl::zeros(3u); // square rooted sum of squares
+    // square rooted sum of squares
+    std::vector<double> sss = std::vector<double>(3u, 0.0);
 
     // Effect sizes are sampled from a two-sided Gamma distribution
-    auto getffect = rnd::gamma(p.effectshape, p.effectscale);
+    auto geteffect = rnd::gamma(p.effectshape, p.effectscale);
     auto isflipped = rnd::bernoulli(0.5);
 
     for (size_t locus = 0u; locus < p.nloci; ++locus) {
 
-        double effect = getffect(rnd::rng);
+        double effect = geteffect(rnd::rng);
         if (isflipped(rnd::rng)) effect *= -1.0;
         effectsizes[locus] = effect;
         sss[traits[locus]] += utl::sqr(effect);
@@ -102,10 +103,11 @@ std::vector<double> GenArch::makeEffects(const Param &p) const
 std::vector<double> GenArch::makeDominances(const Param &p) const
 {
 
-    if (p.dominancevar == 0.0) return utl::ones(p.nloci);
+    if (p.dominancevar == 0.0) return std::vector<double>(p.nloci, 1.0);
 
     std::vector<double> coefficients(p.nloci);
-    std::vector<double> sss = utl::zeros(3u); // square rooted sum of squares
+    std::vector<double> sss = std::vector<double>(3u, 0.0);
+    // square rooted sum of squares
 
     // Dominance coefficients are sampled from a half-normal distribution
     auto getdominance = rnd::normal(0.0, p.dominancevar);
@@ -237,9 +239,9 @@ void GenArch::read(std::vector<Edge> &v, const size_t &n, const bool &id, std::i
     for (size_t p = 0u; p < n; ++p) {
         file >> x;
         if (id)
-            v[p].second = x;
+            v[p].second = static_cast<size_t>(x);
         else
-            v[p].first = x;
+            v[p].first = static_cast<size_t>(x);
     }
 
 }
@@ -261,7 +263,7 @@ void GenArch::load(const Param &pars)
 
     // Prepare to read parameters
     std::string field;
-    size_t nchrom;
+    size_t nchrom = 1u;
     size_t nloci = 0u;
 
     // Read in parameters of interest first
@@ -295,8 +297,8 @@ void GenArch::load(const Param &pars)
     assert(dominances.size() == nloci);
 
     // Prepare to read architecture
-    size_t trait;
-    size_t nedges;
+    size_t trait = 0u;
+    size_t nedges = 0u;
 
     // Read in architecture
     while (file >> field) {

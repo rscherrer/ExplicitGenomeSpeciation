@@ -4,28 +4,27 @@
 \alias{find_extant}
 \title{Find extant simulations}
 \usage{
-find_extant(
-  simulations,
-  pattern = "^sim_",
-  verbose = TRUE,
-  pb = TRUE,
-  level = 0
-)
+find_extant(roots, ...)
 }
 \arguments{
-\item{simulations}{Either path to a root directory containing simulation folders, or a vector of simulation folders}
+\item{roots}{Vector of simulation folders}
 
-\item{pattern}{Pattern defining the simulation folders to look into}
-
-\item{verbose}{Whether to display messages}
-
-\item{pb}{Whether to display a progress bar}
-
-\item{level}{Recursion level}
+\item{...}{Parameters for \code{is_extant}}
 }
 \value{
-A vector of names of the simulation folders that completed
+A character vector
 }
 \description{
-Find extant simulations
+Find simulations that did not crash, that successfully completed and that did
+not go extinct
+}
+\examples{
+
+\dontrun{
+
+roots <- fetch_dirs("data", "example", 1)
+find_extant(roots)
+
+}
+
 }

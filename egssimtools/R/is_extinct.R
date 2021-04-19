@@ -1,20 +1,31 @@
-#' Did a simulation go extinct?
+#' Is a simulation extinct?
 #'
-#' @param folder Path to the folder
+#' Checks for the word "extinct" in the log file
+#'
+#' @param root Path to the simulation folder
+#' @param logfile Optional log file name
+#' @param slurm Whether to check a SLURM output file as log file
+#'
+#' @return A logical
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' is_extinct("data/example_1")
+#'
+#' }
 #'
 #' @export
 
-is_extinct <- function(folder) {
+is_extinct <- function(root, logfile = "^log.txt$", slurm = FALSE) {
 
-  # Look for the word "extinct" in the SLURM output file
-
-  i <- grep("slurm.*out", list.files(folder))
-  if (length(i) == 0) { warning("missing SLURM output file"); return (FALSE) }
-  if (length(i) > 1) warning(paste0("More than one SLURM output file found in ", folder, ", taking the last one."))
-  i <- i[length(i)]
-  filename <- list.files(folder, full.names = TRUE)[i]
-  lines <- read.delim(filename, header = FALSE)[, 1]
-  length(grep("extinct", lines)) > 0
+  if (slurm) logfile <- "^slurm.*out"
+  file_id <- grep(logfile, list.files(root))
+  if (length(file_id) == 0) stop("log file not found")
+  log_file <- list.files(root)[file_id[length(file_id)]]
+  log_lines <- readLines(file.path(root, log_file))
+  return(length(grep("extinct", log_lines)) > 0)
 
 }
 

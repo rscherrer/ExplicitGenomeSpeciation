@@ -2,13 +2,29 @@
 % Please edit documentation in R/is_extinct.R
 \name{is_extinct}
 \alias{is_extinct}
-\title{Did a simulation go extinct?}
+\title{Is a simulation extinct?}
 \usage{
-is_extinct(folder)
+is_extinct(root, logfile = "^log.txt$", slurm = FALSE)
 }
 \arguments{
-\item{folder}{Path to the folder}
+\item{root}{Path to the simulation folder}
+
+\item{logfile}{Optional log file name}
+
+\item{slurm}{Whether to check a SLURM output file as log file}
+}
+\value{
+A logical
 }
 \description{
-Did a simulation go extinct?
+Checks for the word "extinct" in the log file
+}
+\examples{
+
+\dontrun{
+
+is_extinct("data/example_1")
+
+}
+
 }

@@ -15,3 +15,16 @@ A vector of chromosome indices for each locus
 \description{
 Get locus chromosomal locations
 }
+\examples{
+
+\dontrun{
+
+# Location of the simulation folder
+root <- "data/example_1"
+
+arch <- read_arch(root)
+get_chromosomes(arch)
+
+}
+
+}

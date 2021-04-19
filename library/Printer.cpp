@@ -1,12 +1,41 @@
 #include "Printer.h"
 
-// Save individual whole genomes
-void Printer::freeze(const MetaPop &m, const Param &p)
+// Constructor
+Printer::Printer(const std::string &orderfile, const bool &datsave) :
+    filenames(whattosave(orderfile)),
+    files({ })
 {
-    const size_t nbytes = 2u * p.nloci / 64u + 1u;
-    for (size_t i = 0u; i < m.population.size(); ++i)
-        for (size_t B = 0u; B < nbytes; ++B)
-                 stf::write(m.population[i].getByte(B), freezer);
+
+    if (datsave) {
+
+        files.reserve(filenames.size());
+
+        // Open files
+        for (size_t f = 0u; f < filenames.size(); ++f) {
+
+            const std::string filename = filenames[f] + ".dat";
+            Stream out(new std::ofstream);
+            out->open(filename.c_str(), std::ios::binary);
+            if (!out->is_open()) {
+                std::string msg = "Unable to open output file " + filename;
+                throw std::runtime_error(msg);
+            }
+            files.push_back(out);
+        }
+
+    }
+
+}
+
+Printer::~Printer() {
+    shutdown();
+}
+
+void Printer::shutdown()
+{
+    // Close files
+    for (size_t f = 0u; f < files.size(); ++f)
+        files[f]->close();
 }
 
 void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
@@ -112,10 +141,18 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
                 stf::write(c.genomescan[l].alpha, files[f]);
         else if (filenames[f] == "genome_meang")
             for (size_t l = 0u; l < c.genomescan.size(); ++l)
-                stf::write(c.genomescan[l].meang, files[f]);
+                stf::write(c.genomescan[l].meanG, files[f]);
         else if (filenames[f] == "genome_freq")
             for (size_t l = 0u; l < c.genomescan.size(); ++l)
-                stf::write(c.genomescan[l].freq, files[f]);
+                stf::write(c.genomescan[l].freqs[2u], files[f]);
+        else if (filenames[f] == "genome_freqs")
+            for (size_t l = 0u; l < c.genomescan.size(); ++l)
+                for (size_t e = 0u; e < 2u; ++e)
+                    stf::write(c.genomescan[l].freqs[e], files[f]);
+        else if (filenames[f] == "genome_hobs")
+            for (size_t l = 0u; l < c.genomescan.size(); ++l)
+                for (size_t e = 0u; e < 2u; ++e)
+                    stf::write(c.genomescan[l].hobs[e], files[f]);
         else if (filenames[f] == "network_corgen")
             for (size_t e = 0u; e < c.networkscan.size(); ++e)
                 stf::write(c.networkscan[e].corgen, files[f]);
@@ -148,19 +185,11 @@ void Printer::print(const size_t &t, const Collector &c, const MetaPop &m)
     }
 }
 
-void Printer::shutdown()
-{
-    // Close files
-    for (size_t f = 0u; f < files.size(); ++f) files[f]->close();
-    freezer->close();
-}
-
-
 std::vector<std::string> Printer::whattosave(const std::string &filename) const
 {
     if (filename == "") {
 
-        // Save all possible variables if none defined
+        // Save the following variables if none defined
 
         return {
 
@@ -199,6 +228,8 @@ std::vector<std::string> Printer::whattosave(const std::string &filename) const
             "genome_alpha", // per locus
             "genome_meang", // per locus
             "genome_freq", // per locus
+            "genome_freqs", // per locus per ecotype
+            "genome_hobs", // per locus per ecotype
             "network_corgen", // per edge
             "network_corbreed", // per edge
             "network_corfreq", // per edge
