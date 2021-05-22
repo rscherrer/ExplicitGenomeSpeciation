@@ -7,7 +7,6 @@ Maintainer: Raphael Scherrer <r.scherrer@rug.nl>
 Description: A set of tools to process and analyze the output of the EGS simulations.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Suggests: 
