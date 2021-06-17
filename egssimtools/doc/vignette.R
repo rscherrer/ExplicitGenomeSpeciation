@@ -203,10 +203,7 @@ plot_this <- function(data) {
   ggplot(
     data,
     aes(x = time, y = genome_Fst, color = trait, alpha = factor(locus))
-  ) +
-    geom_line() +
-    facet_grid(. ~ trait) +
-    guides(alpha = FALSE)
+  ); geom_line(); facet_grid(. ~ trait); guides(alpha = FALSE)
 
 }
 
@@ -238,10 +235,7 @@ plot_this <- function(root) {
   ggplot(
     data,
     aes(x = time, y = genome_Fst, color = trait, alpha = factor(locus))
-  ) +
-    geom_line() +
-    facet_grid(. ~ trait) +
-    guides(alpha = FALSE)
+  ); geom_line(); facet_grid(. ~ trait); guides(alpha = FALSE)
 
 }
 
